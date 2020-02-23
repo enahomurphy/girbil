@@ -3,12 +3,13 @@ import {
   Page,
   Swiper,
   SwiperSlide,
-
+  Button,
+  Icon,
 } from 'framework7-react';
 
 import { Collaborate, Team, Workflow } from '@/components/Illustration';
 import {
-  StyledSlide, SliderWrapper, SliderTitle, SliderText,
+  StyledSlide, SliderWrapper, SliderTitle, SliderText, AuthButtonsBlock, SocialBlock,
 } from './style';
 
 export default () => {
@@ -30,7 +31,7 @@ export default () => {
       Icon: Team,
     },
     {
-      title: 'A New Way To collaborate',
+      title: 'Supercharge your team workflow',
       info: {
         first: 'No more communication',
         second: 'mishap with Girbil',
@@ -44,10 +45,10 @@ export default () => {
       <SliderWrapper>
         <Swiper pagination scrollbar>
           {
-            slides.map(({ info, Icon, title }) => (
-              <SwiperSlide>
+            slides.map(({ info, Icon: SliderIcon, title }) => (
+              <SwiperSlide key={title}>
                 <StyledSlide>
-                  <Icon />
+                  <SliderIcon />
                 </StyledSlide>
                 <SliderTitle>{ title }</SliderTitle>
                 <SliderText>
@@ -60,6 +61,15 @@ export default () => {
           }
         </Swiper>
       </SliderWrapper>
+      <AuthButtonsBlock>
+        <Button fill>Sign up</Button>
+        <Button fill={false}>Login</Button>
+      </AuthButtonsBlock>
+      <SocialBlock>
+        <p>Or sign in with</p>
+        <Icon f7="logo_facebook" style={{ marginRight: '22px' }} />
+        <Icon f7="logo_google" />
+      </SocialBlock>
     </Page>
   );
 };

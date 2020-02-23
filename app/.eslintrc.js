@@ -31,11 +31,12 @@ module.exports = {
           "error",
           "info"
         ]
-      }
+      },
     ],
-    "jsx-a11y/label-has-associated-control": false,
-    "jsx-a11y/label-has-for": false,
-    "react/forbid-prop-types": false,
+    "import/extensions": "off",
+    "jsx-a11y/label-has-associated-control": "off",
+    "jsx-a11y/label-has-for": "off",
+    "react/forbid-prop-types": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "jsx-a11y/anchor-is-valid": "off",
@@ -44,10 +45,7 @@ module.exports = {
     "import/resolver": {
       alias: {
         map: [
-          ['components', './components'],
-          ['globals', './global'],
-          ['lib', './lib'],
-          ['modules', './modules']
+          ['@', './src'],
         ],
         "extensions": ['.js', '.jsx', '.ts', '.tsx'],
       }

@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -33,9 +34,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
     alias: {
-
       '@': resolvePath('src'),
-      components: resolvePath('src/components')
     },
 
   },
@@ -74,15 +73,14 @@ module.exports = {
       },
 
 
-
       {
         test: /\.css$/,
         use: [
           (env === 'development' ? 'style-loader' : {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: '../'
-            }
+              publicPath: '../',
+            },
           }),
           'css-loader',
           'postcss-loader',
@@ -94,8 +92,8 @@ module.exports = {
           (env === 'development' ? 'style-loader' : {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: '../'
-            }
+              publicPath: '../',
+            },
           }),
           'css-loader',
           'postcss-loader',
@@ -108,8 +106,8 @@ module.exports = {
           (env === 'development' ? 'style-loader' : {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: '../'
-            }
+              publicPath: '../',
+            },
           }),
           'css-loader',
           'postcss-loader',
@@ -122,8 +120,8 @@ module.exports = {
           (env === 'development' ? 'style-loader' : {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: '../'
-            }
+              publicPath: '../',
+            },
           }),
           'css-loader',
           'postcss-loader',
@@ -188,7 +186,7 @@ module.exports = {
         removeRedundantAttributes: true,
         removeScriptTypeAttributes: true,
         removeStyleLinkTypeAttributes: true,
-        useShortDoctype: true
+        useShortDoctype: true,
       } : false,
     }),
     new MiniCssExtractPlugin({

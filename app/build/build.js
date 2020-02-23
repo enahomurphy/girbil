@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable import/no-extraneous-dependencies */
 const webpack = require('webpack');
 const ora = require('ora');
 const rm = require('rimraf');
@@ -6,7 +8,7 @@ const config = require('./webpack.config.js');
 
 const env = process.env.NODE_ENV || 'development';
 const target = process.env.TARGET || 'web';
-const isCordova = target === 'cordova'
+const isCordova = target === 'cordova';
 
 const spinner = ora(env === 'production' ? 'building for production...' : 'building development version...');
 spinner.start();
@@ -21,7 +23,7 @@ rm(isCordova ? './cordova/www' : './www/', (removeErr) => {
     process.stdout.write(`${stats.toString({
       colors: true,
       modules: false,
-      children: false, // If you are using ts-loader, setting this to true will make TypeScript errors show up during build.
+      children: false,
       chunks: false,
       chunkModules: false,
     })}\n\n`);

@@ -16,10 +16,10 @@ import '../css/icons.css';
 import '../css/app.scss';
 
 // Import App Component
-import App from '../components/app.jsx';
+import App from '../app.jsx';
 
 // Init F7 Vue Plugin
-Framework7.use(Framework7React)
+Framework7.use(Framework7React);
 
 // Mount React App
 ReactDOM.render(

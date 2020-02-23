@@ -1,13 +1,13 @@
 import React from 'react';
 import Auth from './Auth';
 
-const SignUp = () => {
+const ResetPassword = () => {
   const props = {
-    title: 'Login',
-    buttonText: 'Login',
+    title: 'Reset password',
+    buttonText: 'Reset password',
     meta: {
-      path: '/reset-password/',
-      name: 'Forgot password?',
+      path: '/login/',
+      name: 'Have an account? Login.',
     },
     forms: [
       {
@@ -16,12 +16,7 @@ const SignUp = () => {
         placeholder: 'Your Email',
         label: 'Email',
       },
-      {
-        type: 'password',
-        name: 'password',
-        placeholder: 'Your Password',
-        label: 'Password',
-      },
+
     ],
     onSubmit: () => {},
   };
@@ -30,4 +25,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default ResetPassword;

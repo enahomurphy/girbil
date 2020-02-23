@@ -1,4 +1,4 @@
-import { ListInput } from 'framework7-react';
+import { ListInput, Link } from 'framework7-react';
 import styled from 'styled-components';
 
 
@@ -24,4 +24,12 @@ export const StyledListInput = styled(ListInput)`
   .item-content, .item-inner {
     padding: 0;
   }
+`;
+
+export const StyledLink = styled(Link)`
+  text-align: right;
+  width: 300px;
+  display: block;
+  margin: 0px auto;
+  color: #fff;
 `;

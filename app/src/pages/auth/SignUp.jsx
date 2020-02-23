@@ -1,15 +1,21 @@
 import React from 'react';
 import Auth from './Auth';
 
-const SignUp = () => {
+const Login = () => {
   const props = {
-    title: 'Login',
-    buttonText: 'Login',
+    title: 'Sign up',
+    buttonText: 'Sign up',
     meta: {
-      path: '/reset-password/',
-      name: 'Forgot password?',
+      path: '/login/',
+      name: 'Have an account? Login.',
     },
     forms: [
+      {
+        type: 'name',
+        name: 'name',
+        placeholder: 'Your Name',
+        label: 'Name',
+      },
       {
         type: 'email',
         name: 'email',
@@ -30,4 +36,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Login;

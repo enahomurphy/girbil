@@ -5,6 +5,7 @@ import {
   SwiperSlide,
   Button,
   Icon,
+  f7,
 } from 'framework7-react';
 
 import { Collaborate, Team, Workflow } from '@/components/Illustration';
@@ -62,7 +63,14 @@ export default () => {
         </Swiper>
       </SliderWrapper>
       <AuthButtonsBlock>
-        <Button fill>Sign up</Button>
+        <Button
+          onClick={() => {
+            f7.views.main.router.navigate('/login/', { animate: true });
+          }}
+          fill
+        >
+          Sign up
+        </Button>
         <Button fill={false}>Login</Button>
       </AuthButtonsBlock>
       <SocialBlock>

@@ -8,6 +8,7 @@ import {
 
 import cordovaApp from './js/cordova-app';
 import routes from './js/routes';
+import '@/css/theme.css';
 
 const MainApp = () => {
   const f7params = {

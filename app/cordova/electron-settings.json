@@ -1,7 +1,19 @@
 {
   "browserWindow": {
+    "width": 1000,
+    "height": 768,
+    "resizable": false,
     "webPreferences": {
       "nodeIntegration": true
+    },
+    "electron": {
+      "mac": {
+        "package": [
+          "tar.gz",
+          "zip",
+          "pkg"
+        ]
+      }
     }
   }
 }

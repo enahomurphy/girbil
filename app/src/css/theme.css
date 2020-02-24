@@ -1,6 +1,6 @@
 .md .theme-dark, .md.theme-blue {
   --f7-page-bg-color: #000000;
-  --f7-list-bg-color:#000000;
+  --f7-list-bg-color:  #000000;
 }
 
 :root {
@@ -8,4 +8,5 @@
   --f7-theme-color-shade: #6C63FF;
   --f7-theme-color-tint: #6C63FF;
   --f7-theme-color-rgb: 108, 99, 255;
+  --f7-list-bg-color: #000000;
 }

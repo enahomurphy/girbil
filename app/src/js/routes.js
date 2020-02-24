@@ -1,6 +1,7 @@
 import { } from 'framework7-react';
 import HomePage from '../pages/Home';
 import { Login, SignUp, ResetPasword } from '../pages/Auth';
+import Message from '../pages/Message/Message';
 
 const routes = [
   {
@@ -26,6 +27,14 @@ const routes = [
   {
     path: '/reset-password/',
     component: ResetPasword,
+    options: {
+      animate: true,
+      transition: 'f7-parallax',
+    },
+  },
+  {
+    path: '/messages',
+    component: Message,
     options: {
       animate: true,
       transition: 'f7-parallax',

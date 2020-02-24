@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Device } from 'framework7/framework7-lite.esm.bundle.js';
+import { Device } from 'framework7';
 import {
   App,
   View,
@@ -38,7 +38,7 @@ const MainApp = () => {
 
   return (
     <App params={f7params} themeDark>
-      <View main url="/login/" />
+      <View main url="/messages/" />
     </App>
   );
 };

@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
-@Entity()
+@Entity('users')
 @ObjectType()
 export default class User {
   @PrimaryGeneratedColumn('uuid')
@@ -16,10 +16,13 @@ export default class User {
   email?: string;
 
   @Column()
-  password: string;
+  password?: string;
 
   @Field()
-  @Column()
+  @Column({
+    name: 'is_verified',
+    type: 'boolean',
+  })
   isVerified?: boolean;
 
   @Column()

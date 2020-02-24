@@ -10,10 +10,10 @@ export enum MessageType {
   VIDEO = 'video',
 }
 
-@Entity()
+@Entity('messages')
 @ObjectType()
-export default class Group {
-  @PrimaryGeneratedColumn()
+export default class Message {
+  @PrimaryGeneratedColumn('uuid')
   readonly id: string;
 
   @Field()
@@ -21,12 +21,16 @@ export default class Group {
     type: 'enum',
     enum: MessageType,
     default: MessageType.VIDEO,
+    enumName: 'message_type',
   })
   type: MessageType;
 
   @Field()
   @OneToOne(() => User)
-  @Column()
+  @Column({
+    name: 'user_id',
+    type: 'uuid',
+  })
   userId?: string;
 
   @Field()
@@ -34,10 +38,15 @@ export default class Group {
   url?: string;
 
   @CreateDateColumn()
-  @Field()
+  @Field({
+    name: 'created_at',
+  })
   createdAt?: Date;
 
-  @Column()
+  @Column({
+    name: 'conversation_id',
+    type: 'uuid',
+  })
   @Field()
   conversationId?: string;
 }

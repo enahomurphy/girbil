@@ -7,9 +7,13 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 export class Message1582388402703 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(`
+      create type message_type as enum('text', 'video');
+  `);
+
+    await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS "messages" (
         id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-        type VARCHAR (255) NOT NULL,
+        type message_type DEFAULT 'video',
         user_id uuid,
         url VARCHAR (255),
         text TEXT,

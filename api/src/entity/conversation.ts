@@ -7,20 +7,21 @@ import User from './user';
 
 export enum ConversationType {
   USER = 'user',
-  GROUP = 'group',
+  CHANNEL = 'channel',
 }
 
-@Entity()
+@Entity('conversations')
 @ObjectType()
-export default class Group {
+export default class Conversation {
   @PrimaryGeneratedColumn('uuid')
-  readonly id: string;
+  readonly id?: string;
 
   @Field()
   @Column({
     type: 'enum',
     enum: ConversationType,
     default: ConversationType.USER,
+    enumName: 'conversation_type',
   })
   type: ConversationType;
 
@@ -35,14 +36,12 @@ export default class Group {
   receiver?: string;
 
   @Field()
-  @Column()
+  @Column('text')
   text?: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    name: 'created_at',
+  })
   @Field()
   createdAt?: Date;
-
-  @Column()
-  @Field()
-  conversationId?: string;
 }

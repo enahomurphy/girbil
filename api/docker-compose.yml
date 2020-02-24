@@ -17,8 +17,7 @@ services:
     networks:
       - girbil_network
     command: >
-      bash -c "yarn migrate && 
-            yarn dev" 
+      bash -c "yarn migrate && yarn dev" 
 
   postgres:
     container_name: girbil-db

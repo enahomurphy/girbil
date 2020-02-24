@@ -7,9 +7,12 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 export class Conversation1582388395220 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(`
+      create type conversation_type as enum('user', 'channel');
+    `);
+    await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS "conversations" (
         id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-        type VARCHAR (255) NOT NULL,
+        type conversation_type DEFAULT 'user',
         sender uuid,
         receiver uuid,
         text TEXT,
@@ -18,7 +21,7 @@ export class Conversation1582388395220 implements MigrationInterface {
     `);
 
     await queryRunner.query(`
-      CREATE UNIQUE INDEX sender_receiver_idx ON "conversations" (sender, receiver);
+      CREATE UNIQUE INDEX sender_receiver_type_idx ON "conversations" (sender, receiver, type);
     `);
   }
 

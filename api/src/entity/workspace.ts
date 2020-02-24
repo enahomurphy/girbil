@@ -5,7 +5,7 @@ import { Field, ObjectType } from 'type-graphql';
 
 import User from './user';
 
-@Entity()
+@Entity('workspaces')
 @ObjectType()
 export default class Workspace {
   @PrimaryGeneratedColumn('uuid')
@@ -21,7 +21,10 @@ export default class Workspace {
 
   @Field()
   @OneToOne(() => User)
-  @Column()
+  @Column({
+    name: 'user_id',
+    type: 'uuid',
+  })
   userId?: string;
 
   @Column()

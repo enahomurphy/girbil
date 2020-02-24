@@ -6,9 +6,9 @@ import { Field, ObjectType } from 'type-graphql';
 import User from './user';
 import Workspace from './workspace';
 
-@Entity()
+@Entity('channels')
 @ObjectType()
-export default class Group {
+export default class Channel {
   @PrimaryGeneratedColumn('uuid')
   readonly id: string;
 
@@ -22,15 +22,23 @@ export default class Group {
 
   @Field()
   @OneToOne(() => User)
-  @Column('uuid')
+  @Column({
+    type: 'uuid',
+    name: 'user_id',
+  })
   userId?: string;
 
   @Field()
   @OneToOne(() => Workspace)
-  @Column('uuid')
+  @Column({
+    type: 'uuid',
+    name: 'workspace_id',
+  })
   workspaceId?: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    name: 'last_updated_by',
+  })
   @OneToOne(() => User)
   @Field()
   lastUpdateBy?: Date;

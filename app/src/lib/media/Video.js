@@ -3,6 +3,7 @@ class Video {
     this.videoId = videoId;
     this.stream = new MediaStream();
     this.start = this.start.bind(this);
+    this.onStart = () => {};
 
     this.init();
   }
@@ -23,10 +24,7 @@ class Video {
     this.stream = stream;
     this.video.srcObject = stream;
     this.video.play();
-
-    if (this.onStart) {
-      this.onStart(this.stream);
-    }
+    this.onStart(this.stream);
   }
 
   error(error) {

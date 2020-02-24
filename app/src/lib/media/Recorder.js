@@ -1,6 +1,9 @@
+
 class Recorder {
-  constructor(stream) {
+  constructor(stream, thumbnailWidth, thumbnailHieght) {
     this.media = new MediaRecorder(stream, Recorder.options);
+    this.thumbnailWidth = thumbnailWidth;
+    this.thumbnailHieght = thumbnailHieght;
     this.chunks = [];
     this.onMediaData = this.onMediaData.bind(this);
     this.onMediaError = this.onMediaError.bind(this);
@@ -9,6 +12,9 @@ class Recorder {
     this.media.ondataavailable = this.onMediaData;
     this.media.onerror = this.onMediaError;
     this.media.onstop = this.onMediaStop;
+
+    this.onStop = () => {};
+    this.onError = () => {};
   }
 
   onMediaData(event) {
@@ -16,16 +22,17 @@ class Recorder {
   }
 
   onMediaError(error) {
-    console.info('started', this.chunks, error);
-    // TODO: Handle error properly
+    this.onError(error);
   }
 
   onMediaStop() {
-    this.download();
+    this.onStop(this.url);
   }
 
   stop() {
-    this.media.stop();
+    if (this.media.state !== 'inactive') {
+      this.media.stop();
+    }
   }
 
   pause() {
@@ -38,6 +45,38 @@ class Recorder {
 
   start() {
     this.media.start(10);
+  }
+
+  get thumbnail() {
+    return new Promise((resolve) => {
+      const canvas = document.createElement('canvas');
+      const video = document.createElement('video');
+      const ctx = canvas.getContext('2d');
+      video.src = this.url;
+      video.preload = 'metadata';
+      video.muted = true;
+      video.playsInline = true;
+
+      const onMetaLoaded = () => {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        video.play();
+      };
+
+      const timeUpdated = () => {
+        ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+        const image = canvas.toDataURL();
+        video.pause();
+        video.removeEventListener('timeupdate', timeUpdated);
+        video.removeEventListener('loadedmetadata', onMetaLoaded);
+        resolve(image);
+      };
+
+      video.addEventListener('timeupdate', timeUpdated);
+      video.addEventListener('loadedmetadata', onMetaLoaded);
+
+      return '';
+    });
   }
 
   static download() {

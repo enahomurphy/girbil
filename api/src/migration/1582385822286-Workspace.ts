@@ -22,6 +22,6 @@ export class Workspace1582385822286 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.query('DROP TABLE IF EXIST "workspaces"');
+    await queryRunner.dropTable('workspaces');
   }
 }

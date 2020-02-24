@@ -4,19 +4,19 @@
 
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class GroupUser1582388472085 implements MigrationInterface {
+export class ChannelsUser1582388472085 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(`
-      CREATE TABLE IF NOT EXISTS "group_users" (
+      CREATE TABLE IF NOT EXISTS "channel_users" (
         user_id uuid,
         group_id uuid,
         FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (group_id) REFERENCES groups(id)
+        FOREIGN KEY (group_id) REFERENCES channels(id)
       )
     `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.query('DROP TABLE IF EXIST "group_users"');
+    await queryRunner.dropTable('channel_users');
   }
 }

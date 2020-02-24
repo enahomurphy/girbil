@@ -20,6 +20,6 @@ export class Message1582388402703 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.query('DROP TABLE IF EXIST "messages"');
+    await queryRunner.dropTable('messages');
   }
 }

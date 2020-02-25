@@ -7,7 +7,7 @@ import {
 import faker from 'faker';
 
 import {
-  Workspace, User, Channel, ChannelType,
+  Workspace, User, Channel, ChannelType, ConversationType, Conversation, Message,
 } from '../../entity';
 
 export default class CreateWorkspaces implements Seeder {
@@ -32,6 +32,17 @@ export default class CreateWorkspaces implements Seeder {
         channel.users = users.filter((u, i) => i > max);
 
         await em.save(channel);
+
+        const conversation: Conversation = await factory(Conversation)(
+          { sender: workspace.userId, receiver: channel.id, type: ConversationType.CHANNEL },
+        ).seed();
+
+        await factory(Message)(
+          {
+            userId: faker.random.arrayElement(users.map(({ id }) => id)),
+            conversationId: conversation.id,
+          },
+        ).seedMany(2);
       });
     });
   }

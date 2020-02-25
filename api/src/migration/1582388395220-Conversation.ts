@@ -12,11 +12,11 @@ export class Conversation1582388395220 implements MigrationInterface {
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS "conversations" (
         id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-        type conversation_type DEFAULT 'user',
-        sender uuid,
-        receiver uuid,
-        text TEXT,
-        approved Boolean,
+        type conversation_type DEFAULT 'user' NOT NULL,
+        sender uuid NOT NULL,
+        receiver uuid NOT NULL,
+        approved Boolean NOT NULL,
+        created_at TIMESTAMP,
         FOREIGN KEY (sender) REFERENCES users(id)
       )
     `);

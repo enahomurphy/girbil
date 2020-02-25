@@ -12,11 +12,12 @@ export class Message1582388402703 implements MigrationInterface {
 
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS "messages" (
-        id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-        type message_type DEFAULT 'video',
-        user_id uuid,
-        url VARCHAR (255),
-        text TEXT,
+        id uuid PRIMARY KEY DEFAULT uuid_generate_v4() NOT NULL,
+        type message_type DEFAULT 'video' NOT NULL,
+        user_id uuid NOT NULL,
+        url VARCHAR (255) NULL,
+        thumbnail VARCHAR (255) NULL,
+        text TEXT NULL,
         created_at TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id)
       )

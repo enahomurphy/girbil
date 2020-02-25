@@ -39,15 +39,22 @@ export class Message {
 
   @Field()
   @Column({
+    nullable: true,
+  })
+  thumbnail?: string;
+
+  @Field()
+  @Column({
     name: 'text',
     type: 'text',
+    nullable: true,
   })
-  text?: boolean;
+  text?: string;
 
-  @CreateDateColumn()
-  @Field({
+  @CreateDateColumn({
     name: 'created_at',
   })
+  @Field()
   createdAt?: Date;
 
   @Column({

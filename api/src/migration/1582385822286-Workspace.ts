@@ -9,9 +9,9 @@ export class Workspace1582385822286 implements MigrationInterface {
       CREATE TABLE IF NOT EXISTS "workspaces" (
         id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
         name VARCHAR (255) NOT NULL,
-        about VARCHAR (255),
-        user_id uuid,
-        avatar VARCHAR (255)
+        about VARCHAR (255) NULL,
+        user_id uuid NOT NULL,
+        avatar VARCHAR (255) NULL
       );
     `);
 

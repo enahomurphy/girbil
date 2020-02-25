@@ -13,14 +13,18 @@ export class User {
   readonly id?: string;
 
   @Field()
-  @Column()
+  @Column({
+    nullable: true,
+  })
   name?: string;
 
   @Field()
   @Column()
   email?: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   password?: string;
 
   @Field()
@@ -30,7 +34,9 @@ export class User {
   })
   isVerified?: boolean;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   @Field()
   avatar?: string;
 

@@ -16,7 +16,9 @@ export class Workspace {
   name?: string;
 
   @Field()
-  @Column()
+  @Column({
+    nullable: true,
+  })
   about?: string;
 
   @Field()
@@ -27,7 +29,9 @@ export class Workspace {
   })
   userId?: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   @Field()
   avatar?: string;
 

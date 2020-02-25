@@ -21,7 +21,9 @@ export class Channel {
   name?: string;
 
   @Field()
-  @Column()
+  @Column({
+    nullable: true,
+  })
   about?: string;
 
   @Field()
@@ -54,7 +56,9 @@ export class Channel {
   @Field()
   lastUpdateBy?: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   @Field()
   avatar?: string;
 

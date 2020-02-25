@@ -8,11 +8,11 @@ export class User1582382978865 implements MigrationInterface {
     await queryRunner.query(`
         CREATE TABLE IF NOT EXISTS "users" (
           id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-          name VARCHAR (255),
+          name VARCHAR (255) NULL,
           email VARCHAR (255) NOT NULL,
-          password VARCHAR (255),
-          isVerified BOOLEAN DEFAULT false,
-          avatar VARCHAR (255),
+          password VARCHAR (255) NULL,
+          isVerified BOOLEAN DEFAULT false NOT NULL,
+          avatar VARCHAR (255) NULL,
           UNIQUE(email)
         )
     `);

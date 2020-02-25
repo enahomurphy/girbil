@@ -8,8 +8,8 @@ export class WorkspaceUser1582388478198 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS "workspace_users" (
-        user_id uuid,
-        workspace_id uuid,
+        user_id uuid NOT NULL,
+        workspace_id uuid NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users(id),
         FOREIGN KEY (workspace_id) REFERENCES workspaces(id)
       )

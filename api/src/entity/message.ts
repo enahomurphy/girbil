@@ -3,7 +3,7 @@ import {
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
-import User from './user';
+import { User } from './index';
 
 export enum MessageType {
   TEXT = 'text',
@@ -12,7 +12,7 @@ export enum MessageType {
 
 @Entity('messages')
 @ObjectType()
-export default class Message {
+export class Message {
   @PrimaryGeneratedColumn('uuid')
   readonly id: string;
 

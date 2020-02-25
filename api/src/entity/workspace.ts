@@ -1,13 +1,13 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, OneToOne,
+  Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToMany,
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
-import User from './user';
+import { User } from '.';
 
 @Entity('workspaces')
 @ObjectType()
-export default class Workspace {
+export class Workspace {
   @PrimaryGeneratedColumn('uuid')
   readonly id: string;
 
@@ -30,4 +30,7 @@ export default class Workspace {
   @Column()
   @Field()
   avatar?: string;
+
+  @ManyToMany(() => User, (user) => user.workspaces)
+  users: User[];
 }

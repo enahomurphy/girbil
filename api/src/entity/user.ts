@@ -1,9 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable,
+} from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
+
+import { Workspace } from '.';
+import { Channel } from './channel';
 
 @Entity('users')
 @ObjectType()
-export default class User {
+export class User {
   @PrimaryGeneratedColumn('uuid')
   readonly id?: string;
 
@@ -28,4 +33,32 @@ export default class User {
   @Column()
   @Field()
   avatar?: string;
+
+  @ManyToMany(() => Workspace, (workspace) => workspace.users)
+  @JoinTable({
+    name: 'workspace_users',
+    joinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'workspace_id',
+      referencedColumnName: 'id',
+    },
+  })
+  workspaces?: Workspace[];
+
+  @ManyToMany(() => Channel, (channel) => channel.users)
+  @JoinTable({
+    name: 'channel_users',
+    joinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'channel_id',
+      referencedColumnName: 'id',
+    },
+  })
+  channels?: Channel[];
 }

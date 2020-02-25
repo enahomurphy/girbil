@@ -9,9 +9,9 @@ export class WorkspaceUser1582388478198 implements MigrationInterface {
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS "workspace_users" (
         user_id uuid,
-        team_id uuid,
-        FOREIGN KEY (team_id) REFERENCES users(id),
-        FOREIGN KEY (team_id) REFERENCES workspaces(id)
+        workspace_id uuid,
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (workspace_id) REFERENCES workspaces(id)
       )
     `);
   }

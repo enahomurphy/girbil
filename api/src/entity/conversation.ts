@@ -3,7 +3,7 @@ import {
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
-import User from './user';
+import { User } from '.';
 
 export enum ConversationType {
   USER = 'user',
@@ -12,7 +12,7 @@ export enum ConversationType {
 
 @Entity('conversations')
 @ObjectType()
-export default class Conversation {
+export class Conversation {
   @PrimaryGeneratedColumn('uuid')
   readonly id?: string;
 

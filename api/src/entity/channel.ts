@@ -1,19 +1,18 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn,
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToMany,
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
-import User from './user';
-import Workspace from './workspace';
+import { User } from '.';
 
 export enum ChannelType {
   USER = 'user',
-  TEAM = 'team',
+  TEAM = 'workspace',
 }
 
 @Entity('channels')
 @ObjectType()
-export default class Channel {
+export class Channel {
   @PrimaryGeneratedColumn('uuid')
   readonly id: string;
 
@@ -35,21 +34,36 @@ export default class Channel {
   type: ChannelType;
 
   @Field()
-  @OneToOne(() => Workspace)
   @Column({
     type: 'uuid',
     name: 'owner_id',
   })
   ownerId?: string;
 
-  @CreateDateColumn({
-    name: 'last_updated_by',
-  })
-  @OneToOne(() => User)
   @Field()
-  lastUpdateBy?: Date;
+  @Column({
+    type: 'uuid',
+    name: 'user_id',
+  })
+  userId?: string;
+
+  @Column({
+    name: 'last_updated_by',
+    type: 'uuid',
+  })
+  @Field()
+  lastUpdateBy?: string;
 
   @Column()
   @Field()
   avatar?: string;
+
+  @CreateDateColumn({
+    name: 'updated_at',
+  })
+  @Field()
+  updatedAt?: Date;
+
+  @ManyToMany(() => User, (user) => user.channels)
+  users?: User[];
 }

@@ -6,6 +6,11 @@ import { Field, ObjectType } from 'type-graphql';
 import User from './user';
 import Workspace from './workspace';
 
+export enum ChannelType {
+  USER = 'user',
+  TEAM = 'team',
+}
+
 @Entity('channels')
 @ObjectType()
 export default class Channel {
@@ -21,20 +26,21 @@ export default class Channel {
   about?: string;
 
   @Field()
-  @OneToOne(() => User)
   @Column({
-    type: 'uuid',
-    name: 'user_id',
+    type: 'enum',
+    enum: ChannelType,
+    default: ChannelType.USER,
+    enumName: 'channel_type',
   })
-  userId?: string;
+  type: ChannelType;
 
   @Field()
   @OneToOne(() => Workspace)
   @Column({
     type: 'uuid',
-    name: 'workspace_id',
+    name: 'owner_id',
   })
-  workspaceId?: string;
+  ownerId?: string;
 
   @CreateDateColumn({
     name: 'last_updated_by',

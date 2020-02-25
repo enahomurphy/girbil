@@ -36,8 +36,8 @@ export default class Conversation {
   receiver?: string;
 
   @Field()
-  @Column('text')
-  text?: string;
+  @Column('boolean')
+  approved?: boolean;
 
   @CreateDateColumn({
     name: 'created_at',

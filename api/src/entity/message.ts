@@ -37,6 +37,13 @@ export default class Message {
   @Column()
   url?: string;
 
+  @Field()
+  @Column({
+    name: 'text',
+    type: 'text',
+  })
+  text?: boolean;
+
   @CreateDateColumn()
   @Field({
     name: 'created_at',

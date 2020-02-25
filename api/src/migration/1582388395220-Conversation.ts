@@ -16,6 +16,7 @@ export class Conversation1582388395220 implements MigrationInterface {
         sender uuid,
         receiver uuid,
         text TEXT,
+        approved Boolean,
         FOREIGN KEY (sender) REFERENCES users(id)
       )
     `);

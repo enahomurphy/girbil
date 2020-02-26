@@ -1,9 +1,11 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn,
+  Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn, JoinColumn,
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
 import { User } from '.';
+import { Channel } from './channel';
+import { Workspace } from './workspace';
 
 export enum ConversationType {
   USER = 'user',
@@ -18,6 +20,58 @@ export class Conversation {
 
   @Field()
   @Column({
+    name: 'sender_id',
+    type: 'uuid',
+  })
+  senderId?: string;
+
+  @Field()
+  @Column({
+    name: 'receiver_id',
+    type: 'uuid',
+  })
+  receiverId?: string;
+
+  @Field(() => User)
+  @Column({
+    name: 'workspace_id',
+    type: 'uuid',
+  })
+  workspaceId?: string;
+
+  @Field(() => User)
+  @OneToOne(() => User)
+  @JoinColumn({
+    name: 'sender_id',
+    referencedColumnName: 'id',
+  })
+  creator?: User
+
+  @Field(() => User)
+  @OneToOne(() => User)
+  @JoinColumn({
+    name: 'receiver_id',
+    referencedColumnName: 'id',
+  })
+  receiver?: User
+
+  @OneToOne(() => Channel)
+  @JoinColumn({
+    name: 'receiver_id',
+    referencedColumnName: 'id',
+  })
+  channel: Channel
+
+  @Field(() => Workspace)
+  @OneToOne(() => Workspace)
+  @JoinColumn({
+    name: 'workspace_id',
+    referencedColumnName: 'id',
+  })
+  workspace: Workspace
+
+  @Field()
+  @Column({
     type: 'enum',
     enum: ConversationType,
     default: ConversationType.USER,
@@ -26,22 +80,9 @@ export class Conversation {
   type: ConversationType;
 
   @Field()
-  @OneToOne(() => User)
-  @Column('uuid')
-  sender?: string;
-
-  @Field()
-  @OneToOne(() => User)
-  @Column('uuid')
-  receiver?: string;
-
-  @Field()
-  @Column('boolean')
-  approved?: boolean;
-
   @CreateDateColumn({
     name: 'created_at',
+    default: new Date(),
   })
-  @Field()
   createdAt?: Date;
 }

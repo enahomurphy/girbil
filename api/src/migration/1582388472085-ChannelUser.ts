@@ -10,6 +10,7 @@ export class ChannelsUser1582388472085 implements MigrationInterface {
       CREATE TABLE IF NOT EXISTS "channel_users" (
         user_id uuid NOT NULL,
         channel_id uuid NOT NULL,
+        accepted boolean DEFAULT false,
         FOREIGN KEY (user_id) REFERENCES users(id),
         FOREIGN KEY (channel_id) REFERENCES channels(id)
       )

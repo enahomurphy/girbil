@@ -4,13 +4,12 @@ import { define } from 'typeorm-seeding';
 import { Conversation, ConversationType } from '../../entity';
 
 define(Conversation, (faker: typeof Faker, settings: {
-  type: ConversationType; sender: string; receiver: string;
+  type: ConversationType; sender: string; receiver: string; workspaceId: string;
 }) => {
   const conversation = new Conversation();
   conversation.type = settings.type;
-  conversation.sender = settings.sender;
-  conversation.receiver = settings.receiver;
-  conversation.approved = settings.type === ConversationType.USER
-    ? faker.random.arrayElement([true, false]) : true;
+  conversation.senderId = settings.sender;
+  conversation.receiverId = settings.receiver;
+  conversation.workspaceId = settings.workspaceId;
   return conversation;
 });

@@ -40,6 +40,7 @@ export class User {
   @Field()
   avatar?: string;
 
+  @Field(() => Workspace)
   @ManyToMany(() => Workspace, (workspace) => workspace.users)
   @JoinTable({
     name: 'workspace_users',

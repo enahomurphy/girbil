@@ -1,14 +1,11 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToMany,
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn,
+  ManyToMany, JoinColumn, OneToOne, UpdateDateColumn,
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
 import { User } from '.';
-
-export enum ChannelType {
-  USER = 'user',
-  TEAM = 'workspace',
-}
+import { Workspace } from './workspace';
 
 @Entity('channels')
 @ObjectType()
@@ -28,33 +25,33 @@ export class Channel {
 
   @Field()
   @Column({
-    type: 'enum',
-    enum: ChannelType,
-    default: ChannelType.USER,
-    enumName: 'channel_type',
-  })
-  type: ChannelType;
-
-  @Field()
-  @Column({
-    type: 'uuid',
-    name: 'owner_id',
-  })
-  ownerId?: string;
-
-  @Field()
-  @Column({
     type: 'uuid',
     name: 'user_id',
   })
   userId?: string;
 
-  @Column({
-    name: 'last_updated_by',
-    type: 'uuid',
+  @OneToOne(() => User)
+  @JoinColumn({
+    name: 'user_id',
+    referencedColumnName: 'id',
   })
+  @Field(() => User)
+  user?: User
+
   @Field()
-  lastUpdateBy?: string;
+  @Column({
+    type: 'uuid',
+    name: 'workspace_id',
+  })
+  workspaceId?: string;
+
+  @Field(() => Workspace)
+  @OneToOne(() => Workspace)
+  @JoinColumn({
+    name: 'workspace_id',
+    referencedColumnName: 'id',
+  })
+  workspace?: Workspace;
 
   @Column({
     nullable: true,
@@ -62,8 +59,31 @@ export class Channel {
   @Field()
   avatar?: string;
 
+  @Column({
+    name: 'last_updated_by_id',
+    type: 'uuid',
+  })
+  @Field()
+  lastUpdateById?: string;
+
+  @Field(() => User)
+  @OneToOne(() => User)
+  @JoinColumn({
+    name: 'user_id',
+    referencedColumnName: 'id',
+  })
+  lastUpdatedBy?: User;
+
   @CreateDateColumn({
+    name: 'created_at',
+    default: new Date(),
+  })
+  @Field()
+  createdAt?: Date;
+
+  @UpdateDateColumn({
     name: 'updated_at',
+    default: new Date(),
   })
   @Field()
   updatedAt?: Date;

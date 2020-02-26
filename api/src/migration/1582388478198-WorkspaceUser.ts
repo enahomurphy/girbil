@@ -6,10 +6,15 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class WorkspaceUser1582388478198 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
+    await queryRunner.query('DROP TYPE IF EXISTS role_type');
+    await queryRunner.query(`
+      create type role_type as enum('owner', 'admin', 'researcher', 'contributor');
+    `);
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS "workspace_users" (
         user_id uuid NOT NULL,
         workspace_id uuid NOT NULL,
+        role role_type DEFAULT 'contributor' NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users(id),
         FOREIGN KEY (workspace_id) REFERENCES workspaces(id)
       )

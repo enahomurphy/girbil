@@ -7,19 +7,18 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 export class Message1582388402703 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(`
-      create type message_type as enum('text', 'video');
-  `);
-
-    await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS "messages" (
         id uuid PRIMARY KEY DEFAULT uuid_generate_v4() NOT NULL,
-        type message_type DEFAULT 'video' NOT NULL,
         user_id uuid NOT NULL,
+        conversation_id uuid NOT NULL,
         url VARCHAR (255) NULL,
         thumbnail VARCHAR (255) NULL,
+        parent_id uuid NULL,
         text TEXT NULL,
         created_at TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id)
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (conversation_id) REFERENCES conversations(id),
+        FOREIGN KEY (parent_id) REFERENCES messages(id)
       )
     `);
   }

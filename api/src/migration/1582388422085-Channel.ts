@@ -6,22 +6,20 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 export class Channels1582388422085 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(`
-      create type channel_type as enum('user', 'workspace');
-    `);
-
-    await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS "channels" (
         id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
         name VARCHAR (255) NOT NULL,
         about TEXT NULL,
         user_id uuid NOT NULL,
-        owner_id uuid NOT NULL,
-        type channel_type DEFAULT 'user' NOT NULL,
-        last_update_by uuid NOT NULL,
+        workspace_id uuid NOT NULL,
+        avatar VARCHAR(255) NULL,
+        last_updated_by_id uuid NOT NULL,
+        is_private Boolean DEFAULT false,
         created_at TIMESTAMP,
         updated_at TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (last_update_by) REFERENCES users(id)
+        FOREIGN KEY (last_updated_by_id) REFERENCES users(id),
+        FOREIGN KEY (workspace_id) REFERENCES workspaces(id)
       );
     `);
   }

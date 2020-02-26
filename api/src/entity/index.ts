@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 
 export { User } from './user';
-export { Channel, ChannelType } from './channel';
+export { Channel } from './channel';
 export { Conversation, ConversationType } from './conversation';
-export { Message, MessageType } from './message';
+export { Message } from './message';
 export { Workspace } from './workspace';

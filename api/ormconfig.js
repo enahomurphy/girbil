@@ -5,8 +5,8 @@ module.exports = {
   username: 'root',
   password: 'girbil',
   database: 'girbil',
-  synchronize: true,
-  logging: false,
+  synchronize: false,
+  logging: ['query'],
   entities: [
     'src/entity/**/*.ts',
   ],

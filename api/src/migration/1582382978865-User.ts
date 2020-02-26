@@ -11,7 +11,7 @@ export class User1582382978865 implements MigrationInterface {
           name VARCHAR (255) NULL,
           email VARCHAR (255) NOT NULL,
           password VARCHAR (255) NULL,
-          isVerified BOOLEAN DEFAULT false NOT NULL,
+          is_verified BOOLEAN DEFAULT false NOT NULL,
           avatar VARCHAR (255) NULL,
           UNIQUE(email)
         )

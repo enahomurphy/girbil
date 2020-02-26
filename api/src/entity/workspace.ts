@@ -1,5 +1,5 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToMany,
+  Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToMany, JoinColumn,
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
@@ -22,12 +22,19 @@ export class Workspace {
   about?: string;
 
   @Field()
-  @OneToOne(() => User)
   @Column({
     name: 'user_id',
     type: 'uuid',
   })
   userId?: string;
+
+  @Field()
+  @OneToOne(() => User)
+  @JoinColumn({
+    name: 'user_id',
+    referencedColumnName: 'id',
+  })
+  owner?: string;
 
   @Column({
     nullable: true,

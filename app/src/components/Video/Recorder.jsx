@@ -1,97 +1,60 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { useVideo } from 'react-use';
-import { Block, Icon, Button } from 'framework7-react';
+import { Icon, Button } from 'framework7-react';
 
 import Gallery from './Gallery';
+import {
+  BackIcon, StyledBlock, VideoWrapper, Header, RecorderBlock,
+} from './style';
 
-const VideoWrapper = styled.div`
-  /* width: 100%; */
-  /* height: 70%; */
-`;
-
-const BackIcon = styled.div`
-  background: #F14741;
-  border: 2px solid #FFFFFF;
-  box-sizing: border-box;
-  border-radius: 24px;
-  width: 32px;
-  height: 32px;
-  position: absolute;
-  left: 0px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  i {
-    font-size: 18px;
-  }
-`;
-
-const StyledBlock = styled(Block)`
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  position: relative;
-  padding: 0px;
-  margin: 0px 20px;
-`;
-
-const Header = styled.div`
-  position: absolute;
-  top: 0px;
-  width: 100%;
-  text-align: center;
-  margin-top: 25px;
-
-  h1 {
-    font: bold 24px/30px PT sans;
-    margin: 0 0 5px 0;
+const useVideoData = (message, id) => {
+  const { height, width } = window.screen;
+  const params = { height, width };
+  if (message) {
+    params.src = message.url;
+    return {
+      params,
+      isMessage: true,
+      autoPlay: true,
+    };
   }
 
-  p {
-    font: normal 14px/20px Lato;
-    margin: 0;
-  }
-`;
+  params.id = id;
+  return { params, isMessage: false };
+};
 
-const RecorderBlock = styled(Block)`
-  display : flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  position: absolute;
-  bottom: 0px;
-  margin: 0px;
-  padding: 0px;
-
-  a {
-    display: flex;
-    width: 64px;
-    height: 64px;
-    background-color: red;
-    border-radius: 100%;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 50px;
-
-    i {
-      color: #ffffff;
-    }
-  }
-`;
-
-const Recorder = ({ id }) => {
-  const [video] = useVideo({ id });
+const Recorder = ({
+  id, back, message, messages,
+}) => {
+  const { params, isMessage } = useVideoData(message, id);
+  const [video,, controls] = useVideo(params);
   const [recoding, setRecoding] = useState(false);
+
+  const play = () => {
+    if (isMessage) {
+      controls.play();
+    } else {
+      // record video;
+    }
+    setRecoding(true);
+  };
+
+  const pause = () => {
+    if (isMessage) {
+      controls.pause();
+    } else {
+      // handle stop record;
+    }
+    setRecoding(false);
+  };
+
   return (
     <VideoWrapper>
       {video}
       <Header>
         <StyledBlock>
-          <BackIcon>
+          <BackIcon onClick={back}>
             <Icon f7="arrow_left" />
           </BackIcon>
           <div>
@@ -102,20 +65,27 @@ const Recorder = ({ id }) => {
       </Header>
       <RecorderBlock>
         {
-          !recoding ? <Button onClick={() => setRecoding(true)} /> : (
-            <Button onClick={() => setRecoding(false)}>
+          !recoding ? <Button onClick={play} /> : (
+            <Button onClick={pause}>
               <Icon f7="pause" />
             </Button>
           )
         }
-        <Gallery />
+        <Gallery messages={messages} />
       </RecorderBlock>
     </VideoWrapper>
   );
 };
 
+Recorder.defaultProps = {
+  message: null,
+};
+
 Recorder.propTypes = {
   id: PropTypes.string.isRequired,
+  message: PropTypes.object,
+  back: PropTypes.func.isRequired,
+  messages: PropTypes.array.isRequired,
 };
 
 export default Recorder;

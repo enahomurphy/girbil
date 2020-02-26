@@ -11,7 +11,7 @@ const Login = () => {
     },
     forms: [
       {
-        type: 'name',
+        type: 'text',
         name: 'name',
         placeholder: 'Your Name',
         label: 'Name',

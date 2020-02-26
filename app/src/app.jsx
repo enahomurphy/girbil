@@ -38,7 +38,7 @@ const MainApp = () => {
 
   return (
     <App params={f7params} themeDark>
-      <View main url="/messages/" />
+      <View main url="/" />
     </App>
   );
 };

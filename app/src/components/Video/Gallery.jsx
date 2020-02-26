@@ -1,50 +1,30 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Swiper,
   SwiperSlide,
   Icon,
+  f7,
 } from 'framework7-react';
-import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
-const StyledSlide = styled.div`
-  width: 100;
-  height: 120px;
-  background: ${(props) => props.color};
-`;
+import {
+  StyledSlide, SliderWrapper, SliderNav, Right,
+} from './style';
 
-const SliderWrapper = styled.div`
-  width: 100%;
-  height: 120px;
-  background: red;
-`;
 
-const SliderNav = styled.div`
-  width: 32px;
-  height: 80px;
-  position: absolute;
-  background: rgba(0, 0, 0, 0.66);
-  border-radius: 0 5px 5px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2;
-  bottom: 20px;
-`;
-
-const Right = styled(SliderNav)`
-  right: 0px;
-  transform: rotate(-180deg);
-`;
-
-const Gallery = () => {
-  const [slides] = useState(Array(20).fill(1).map((value, index) => (
-    {
-      id: value + index,
-      url: '',
-      thumbnail: '',
-      color: ['red', 'blue', 'green', 'orange', 'gray'][Math.floor(Math.random() * 10)],
-    }
-  )));
+const Gallery = ({ messages }) => {
+  const onClick = (messageId) => () => {
+    f7.views.main.router.navigate(
+      {
+        name: 'messages',
+        params: { messageId },
+      },
+      {
+        animate: true,
+        transition: 'f7-fade',
+      },
+    );
+  };
 
   return (
     <SliderWrapper>
@@ -53,9 +33,9 @@ const Gallery = () => {
       </SliderNav>
       <Swiper params={{ slidesPerView: 3, spaceBetween: 0 }}>
         {
-          slides.map(({ id, color }) => (
+          messages.map(({ id, color }) => (
             <SwiperSlide key={id}>
-              <StyledSlide color={color} />
+              <StyledSlide onClick={onClick(id)} color={color} />
             </SwiperSlide>
           ))
         }
@@ -65,6 +45,10 @@ const Gallery = () => {
       </Right>
     </SliderWrapper>
   );
+};
+
+Gallery.propTypes = {
+  messages: PropTypes.array.isRequired,
 };
 
 export default Gallery;

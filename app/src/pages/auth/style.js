@@ -33,3 +33,11 @@ export const StyledLink = styled(Link)`
   margin: 0px auto;
   color: #fff;
 `;
+
+export const AuthWrapper = styled.div` 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+`;

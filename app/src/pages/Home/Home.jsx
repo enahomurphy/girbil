@@ -65,13 +65,20 @@ export default () => {
       <AuthButtonsBlock>
         <Button
           onClick={() => {
-            f7.views.main.router.navigate('/login/', { animate: true });
+            f7.views.main.router.navigate('/signup/', { animate: true });
           }}
           fill
         >
           Sign up
         </Button>
-        <Button fill={false}>Login</Button>
+        <Button
+          onClick={() => {
+            f7.views.main.router.navigate('/login/', { animate: true });
+          }}
+          fill={false}
+        >
+          Login
+        </Button>
       </AuthButtonsBlock>
       <SocialBlock>
         <p>Or sign in with</p>

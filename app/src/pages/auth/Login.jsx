@@ -1,4 +1,6 @@
 import React from 'react';
+import { f7 } from 'framework7-react';
+
 import Auth from './Auth';
 
 const SignUp = () => {
@@ -23,7 +25,17 @@ const SignUp = () => {
         label: 'Password',
       },
     ],
-    onSubmit: () => {},
+    onSubmit: () => {
+      f7.views.main.router.navigate(
+        {
+          name: 'messages',
+          params: { messageId: 1 },
+        },
+        {
+          animate: true,
+        },
+      );
+    },
   };
   return (
     <Auth {...props} />

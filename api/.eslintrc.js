@@ -15,6 +15,7 @@ module.exports = {
     'import/no-extraneous-dependencies': [2, { devDependencies: ['**/test.tsx', '**/test.ts'] }],
     '@typescript-eslint/indent': [2, 2],
     'import/prefer-default-export': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
     'import/extensions': [
       2,
       "ignorePackages",

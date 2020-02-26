@@ -9,7 +9,7 @@ define(User, (faker: typeof Faker) => {
   const firstName = faker.name.firstName(gender);
   const lastName = faker.name.lastName(gender);
   const name = `${firstName} ${lastName}`;
-  const email = faker.internet.email(firstName, lastName);
+  const email = faker.internet.email(firstName, lastName).toLowerCase();
 
   const user = new User();
   user.name = name;

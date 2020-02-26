@@ -1,7 +1,7 @@
-import User from './User';
+import UserRepo from './User';
 
-export { default as User } from './User';
+export { default as UserRepo } from './User';
 
 export default {
-  User,
+  UserRepo,
 };

@@ -8,12 +8,22 @@ class UserRepository extends Repository<User> {
     return this.findOne({ email });
   }
 
-  createUser(email: string, name?: string, password?: string): Promise<User> {
-    return this.save(this.create({
-      email: email.toLowerCase(),
-      password: hashPassword(password),
-      name,
-    }));
+  async createUser(email: string, name?: string, password?: string): Promise<User> {
+    try {
+      const user = await this.save(this.create({
+        email: email.toLowerCase(),
+        password: hashPassword(password),
+        name,
+      }));
+
+      return user;
+    } catch (error) {
+      if (error.message.match(/users_email_key/gmi)) {
+        throw new Error(`email ${email} already exist`);
+      }
+
+      throw new Error(error.message);
+    }
   }
 }
 

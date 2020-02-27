@@ -21,7 +21,7 @@ interface ContextArgs {
 const App = async (): Promise<string | undefined> => {
   try {
     const schema = await buildSchema({
-      resolvers: [`${__dirname}/modules/**/*resolver.ts`],
+      resolvers: [`${__dirname}/modules/**/*.resolver.ts`],
       authChecker: ({ context: { req } }) => !!req.session.userId,
     });
 
@@ -31,7 +31,9 @@ const App = async (): Promise<string | undefined> => {
     });
 
     const app: Express.Application = Express();
+
     app.use(Express.json());
+    app.use(Express.urlencoded({ extended: false }));
     app.use(compression());
     app.use(cors());
     app.use((req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
@@ -48,7 +50,7 @@ const App = async (): Promise<string | undefined> => {
       logger.info('server started on http://localhost:4000/graphql');
     });
   } catch (error) {
-    logger.error(error.message);
+    logger.error(error);
   }
 
   return Promise.resolve('done');

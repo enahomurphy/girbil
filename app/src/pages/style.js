@@ -1,24 +1,36 @@
 import styled from 'styled-components';
-import { BlockTitle, Block as F7Block, Button as F7Button } from 'framework7-react';
-
-export const Title = styled(BlockTitle)`
-  text-align: center;
-  font: bold 18px/24px PT Sans;
-  margin-bottom: 10px;
-`;
+import { Block as F7Block, Button as F7Button } from 'framework7-react';
 
 export const Text = styled(F7Block)`
   text-align: ${(props) => props.align};
-  font: normal 14px/20px Lato;
-  margin: 0px auto;
-  margin-bottom: 20px;
+  font: normal ${(props) => props.size}/20px Source Sans Pro;
+  margin: 0px;
+  margin-bottom: ${(props) => props.marginBottom};
   width: ${(props) => props.width};
   padding: 0;
+  color: ${(props) => props.color};
 `;
+
+
+export const Title = styled(Text)`
+  text-align: ${(props) => props.align};
+  font: bold ${(props) => props.size}/24px Source Sans Pro;
+  margin: ${(props) => props.margin};
+  color: ${(props) => props.color};
+`;
+
+Title.defaultProps = {
+  margin: '0 0 10px  0',
+  color: '#ffffff',
+  size: '18px',
+};
 
 Text.defaultProps = {
   align: 'center',
   width: '180px',
+  margin: '0 0  20px 0',
+  color: '#B5BBC1',
+  size: '14px',
 };
 
 export const Button = styled(F7Button)` 
@@ -39,6 +51,7 @@ Button.defaultProps = {
 export const Block = styled(F7Block)`
   display: ${(props) => props.type};
   justify-content: ${(props) => props.justify};
+  align-items: ${(props) => props.align};
   flex-direction: ${(props) => props.align};
   padding: ${(props) => props.padding};
   width: ${(props) => props.width};
@@ -50,6 +63,7 @@ Block.defaultProps = {
   justify: 'initial',
   align: 'initial',
   padding: 0,
+  direction: 'initial',
   width: 'initial',
   margin: '32px 0',
 };

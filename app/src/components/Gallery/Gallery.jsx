@@ -1,38 +1,52 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Swiper,
-  SwiperSlide,
   Icon,
+  f7,
 } from 'framework7-react';
 import PropTypes from 'prop-types';
 
 import {
-  StyledSlide, SliderWrapper, SliderNav, Right, SliderNavWrapper,
+  SliderWrapper, SliderNav, Right, SliderNavWrapper,
 } from './style';
+import ImageItem from './ImageItem';
 
-const Gallery = ({ messages, onClick }) => Boolean(messages.length) && (
-  <SliderWrapper>
-    <SliderNavWrapper>
-      <SliderNav>
-        <Icon f7="chevron_right" />
-      </SliderNav>
-    </SliderNavWrapper>
-    <Swiper params={{ slidesPerView: 3, spaceBetween: 0 }}>
-      {
-        messages.map(({ id, color }) => (
-          <SwiperSlide key={id}>
-            <StyledSlide onClick={() => onClick(id)} color={color} />
-          </SwiperSlide>
-        ))
-      }
-    </Swiper>
-    <SliderNavWrapper right>
-      <Right>
-        <Icon f7="chevron_left" />
-      </Right>
-    </SliderNavWrapper>
-  </SliderWrapper>
-);
+const Gallery = ({ messages, onClick }) => {
+  const [swiper, setSwiper] = useState({});
+  useEffect(() => {
+    if (messages.length) {
+      const slide = f7.swiper.get('.swiper-container');
+      setSwiper(slide);
+    }
+  }, [messages]);
+
+  return Boolean(messages.length) && (
+    <SliderWrapper>
+      <SliderNavWrapper>
+        <SliderNav onClick={() => swiper.slidePrev()}>
+          <Icon f7="chevron_right" />
+        </SliderNav>
+      </SliderNavWrapper>
+      <Swiper params={{ lazy: true, slidesPerView: 3, spaceBetween: 0 }}>
+        {
+          messages.map(({ id, thumbnail }) => (
+            <ImageItem
+              onClick={onClick}
+              key={id}
+              id={id}
+              thumbnail={thumbnail}
+            />
+          ))
+        }
+      </Swiper>
+      <SliderNavWrapper right onClick={() => swiper.slideNext()}>
+        <Right>
+          <Icon f7="chevron_left" />
+        </Right>
+      </SliderNavWrapper>
+    </SliderWrapper>
+  );
+};
 
 Gallery.propTypes = {
   messages: PropTypes.array.isRequired,

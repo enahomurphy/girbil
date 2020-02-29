@@ -2,8 +2,9 @@ import styled from 'styled-components';
 
 export const StyledSlide = styled.div`
   height: var(--gb-message-height);
-  background: ${(props) => props.color};
   box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const SliderWrapper = styled.div`
@@ -47,5 +48,26 @@ export const SliderNavWrapper = styled.div`
   position: absolute;
   width: 16px;
   top: 0;
-  right: ${({ right }) => (right ? 0 : 'initial')}
+  right: ${({ right }) => (right ? 0 : 'initial')};
+`;
+
+export const RecordingInfoContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  max-width: var(--gb-message-width);
+  width: 100%;
+  height: 20px;
+  align-items: center;
+  padding: 8px 2px 0 8px;
+  position: absolute;
+  top: 0;
+  box-sizing: border-box;
+  height: 35px;
+`;
+
+export const RecordingInfo = styled.div`
+  width: 8px;
+  height: 8px;
+  border-radius: 100%;
+  background: var(--gb-red);
 `;

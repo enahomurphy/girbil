@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Block, Button } from 'framework7-react';
+import { Block, Button, Range as f7Range } from 'framework7-react';
 
 export const VideoWrapper = styled.div`
   position: absolute;
@@ -80,7 +80,7 @@ export const BottomControls = styled(Block)`
   display: flex;
   justify-content: space-between;
   position: absolute;
-  bottom: 0;
+  bottom: 43px;
   width: 100%;
 `;
 
@@ -112,4 +112,20 @@ export const RewindControl = styled(Block)`
     font-size: 27px;
     cursor: pointer;
   }
+`;
+
+export const Range = styled(f7Range)`
+  .range-bar {
+    height: 5px;
+    z-index: 2;
+    background-color: rgba(199, 199, 199, 0.3);
+  }
+
+  .range-knob-wrap {
+    display: none;
+  }
+`;
+
+export const BufferWrapper = styled(Block)`
+  width: 100%;
 `;

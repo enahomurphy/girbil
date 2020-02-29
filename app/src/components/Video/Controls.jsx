@@ -4,6 +4,7 @@ import { Icon, Button } from 'framework7-react';
 import { Previous, Next } from '@/components/Icon';
 import Emoji from '@/components/Emoji';
 import Speed from './Speed';
+import Buffer from './Buffer';
 import {
   ControlContainer, ForwardControls, RewindControl, BottomControls,
 } from './style';
@@ -37,6 +38,7 @@ const Player = () => (
       <Speed onClick={() => {}} />
       <Emoji vertical reaction onClick={() => {}} />
     </BottomControls>
+    <Buffer duration={240 - 16} />
   </ControlContainer>
 );
 export default Player;

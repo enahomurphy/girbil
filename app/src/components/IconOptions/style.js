@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const EmojiContainer = styled.div`
+export const OptionsContainer = styled.div`
   width: ${({ vertical }) => (vertical ? '40px' : '200px')};
   height: ${({ vertical }) => (vertical ? '250px' : '40px')};
   background-color: #222222;
@@ -25,7 +25,7 @@ export const EmojiContainer = styled.div`
     background-color: transparent;
     padding: 0px;
     border-radius: 0px;
-    border-bottom: ${({ last, vertical }) => ((last || !vertical) ? 'none' : '1px solid #ffffff')};
+    border-bottom: ${({ vertical, last }) => ((last || !vertical) ? '0' : '1px solid #ffffff')};
     display: flex;
     justify-content: center;
     align-items: center;

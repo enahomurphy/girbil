@@ -92,7 +92,6 @@ export const Icon = styled(f7Icon)`
 
 Icon.defaultProps = {
   color: '#ffffff',
-
 };
 
 export const Link = styled(f7Link)`

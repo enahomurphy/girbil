@@ -36,7 +36,7 @@ const Gallery = ({ messages, onClick }) => {
       </SliderNavWrapper>
       <Swiper params={params}>
         {
-          messages.map(({ id, thumbnail, recording, state }) => (
+          messages.map(({ id, thumbnail, state }) => (
             <ImageItem
               onClick={onClick}
               key={id}

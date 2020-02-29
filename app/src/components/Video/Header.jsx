@@ -1,12 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Icon } from 'framework7-react';
 import { Title, Text } from '@/components/Style';
 import { BackIcon, StyledHeader } from './style';
 
-const Header = () => (
+const Header = ({ back, onClick }) => (
   <StyledHeader>
-    <BackIcon>
-      <Icon f7="arrow_left" />
+    <BackIcon onClick={onClick}>
+      <Icon f7={back ? 'arrow_left' : 'multiply'} />
     </BackIcon>
     <div>
       <Title margin="0 0 7px 0" size="24px" lower>
@@ -19,8 +20,14 @@ const Header = () => (
   </StyledHeader>
 );
 
-Header.propTypes = {
+Header.defaultProps = {
+  back: false,
+};
 
+
+Header.propTypes = {
+  back: PropTypes.bool,
+  onClick: PropTypes.string.isRequired,
 };
 
 export default Header;

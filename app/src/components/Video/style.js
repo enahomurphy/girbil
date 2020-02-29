@@ -11,8 +11,8 @@ export const VideoWrapper = styled.div`
 `;
 
 export const BackIcon = styled(Button)`
-  background: #337AF1;
-  border: 2px solid #FFFFFF;
+  background: ${({ back }) => (back ? 'var(--gb-accent)' : 'transparent')};
+  border: ${({ back }) => (back ? '2px solid #FFFFFF' : 'none')};
   box-sizing: border-box;
   border-radius: 24px;
   width: 32px;
@@ -63,33 +63,6 @@ export const StyledHeader = styled.div`
   }
 `;
 
-// export const RecorderBlock = styled(Block)`
-//   display : flex;
-//   justify-content: center;
-//   flex-direction: column;
-//   align-items: center;
-//   width: 100%;
-//   position: absolute;
-//   bottom: 0px;
-//   margin: 0px;
-//   padding: 0px;
-
-//   a {
-//     display: flex;
-//     width: 64px;
-//     height: 64px;
-//     background-color: #6C63FF;
-//     border-radius: 100%;
-//     justify-content: center;
-//     align-items: center;
-//     margin-bottom: 50px;
-
-//     i {
-//       color: #ffffff;
-//     }
-//   }
-// `;
-
 export const ControlContainer = styled.div`
   width: 100%;
   height: calc(100vh - var(--gb-message-height));
@@ -112,26 +85,31 @@ export const BottomControls = styled(Block)`
 `;
 
 export const ForwardControls = styled(Block)`
-  width: 225px;
-  display: flex;
-  justify-content: space-evenly;
+  width: 250px;
   margin: 0px auto 32px;
   padding: 0px;
- 
-  .button {
-    width: 40px;
-    height: 40px;
-    padding: 0px;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-  i {
-    font-size: 32px;
+  .button {
+    width: fit-content;
+    height: 68px;
+    padding: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;
 
 export const RewindControl = styled(Block)`
-  width: 200px;
+  width: 150px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   margin: 0px auto;
+
+  .icon {
+    font-size: 27px;
+    cursor: pointer;
+  }
 `;

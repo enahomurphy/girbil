@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon, Button } from 'framework7-react';
 
-import { Play } from '@/components/Icon';
+import { Previous, Next } from '@/components/Icon';
 import Emoji from '@/components/Emoji';
 import Speed from './Speed';
 import {
@@ -12,13 +12,21 @@ const Player = () => (
   <ControlContainer>
     <ForwardControls>
       <Button>
-        <Icon style={{ fontSize: '20px' }} f7="backward_end_fill" />
+        <Previous />
       </Button>
       <Button>
-        <Play />
+        <Icon
+          f7="play_fill"
+          color="#ffffff"
+          style={{
+            fontSize: '70px',
+            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.33)',
+            color: '#ffffff',
+          }}
+        />
       </Button>
       <Button>
-        <Icon style={{ fontSize: '20px' }} f7="forward_end_fill" />
+        <Next />
       </Button>
     </ForwardControls>
     <RewindControl>

@@ -22,7 +22,7 @@ const NewMessage = () => {
   return (
     <Page overflow="hidden">
       <NewMessageWrapper>
-        <Header />
+        <Header back />
         <RecorderButton recording />
         <VideoComponent video={video} />
       </NewMessageWrapper>

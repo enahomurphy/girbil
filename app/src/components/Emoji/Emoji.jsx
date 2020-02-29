@@ -7,7 +7,7 @@ import { Reaction } from '@/components/Icon';
 import emojis from './emojis';
 import { EmojiContainer, ReactionContainer } from './style';
 
-const Emoji = ({ onClick }) => {
+const Emoji = ({ onClick, vertical, reaction }) => {
   const [showEmoji, setShowEmoji] = useState(false);
 
   const onClickReaction = () => {
@@ -15,16 +15,20 @@ const Emoji = ({ onClick }) => {
   };
 
   return (
-    <ReactionContainer>
-      <Button onClick={onClickReaction}>
-        <Reaction />
-      </Button>
-      <EmojiContainer>
+    <ReactionContainer reaction={reaction} vertical={vertical}>
+      {
+        reaction && (
+          <Button onClick={onClickReaction}>
+            <Reaction />
+          </Button>
+        )
+      }
+      <EmojiContainer reaction={reaction} vertical={vertical}>
         {
           emojis.map((emoji, index) => (
             <Button
               key={emoji.name}
-              className={index === emojis.length - 1 && 'last'}
+              className={index === emojis.length - 1 ? '' : 'last'}
               tooltip={emoji.name}
               onClick={() => onClick(emoji)}
             >
@@ -44,10 +48,15 @@ const Emoji = ({ onClick }) => {
   );
 };
 
+Emoji.defaultProps = {
+  vertical: false,
+  reaction: false,
+};
+
 Emoji.propTypes = {
   onClick: PropTypes.func.isRequired,
-  reaction: PropTypes.bool.isRequired,
-  vertical: PropTypes.bool.isRequired,
+  reaction: PropTypes.bool,
+  vertical: PropTypes.bool,
 };
 
 export default Emoji;

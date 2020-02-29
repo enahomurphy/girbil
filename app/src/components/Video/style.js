@@ -63,29 +63,75 @@ export const StyledHeader = styled.div`
   }
 `;
 
-export const RecorderBlock = styled(Block)`
-  display : flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
+// export const RecorderBlock = styled(Block)`
+//   display : flex;
+//   justify-content: center;
+//   flex-direction: column;
+//   align-items: center;
+//   width: 100%;
+//   position: absolute;
+//   bottom: 0px;
+//   margin: 0px;
+//   padding: 0px;
+
+//   a {
+//     display: flex;
+//     width: 64px;
+//     height: 64px;
+//     background-color: #6C63FF;
+//     border-radius: 100%;
+//     justify-content: center;
+//     align-items: center;
+//     margin-bottom: 50px;
+
+//     i {
+//       color: #ffffff;
+//     }
+//   }
+// `;
+
+export const ControlContainer = styled.div`
   width: 100%;
-  position: absolute;
-  bottom: 0px;
-  margin: 0px;
-  padding: 0px;
+  height: calc(100vh - var(--gb-message-height));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
 
-  a {
-    display: flex;
-    width: 64px;
-    height: 64px;
-    background-color: #6C63FF;
-    border-radius: 100%;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 50px;
-
-    i {
-      color: #ffffff;
-    }
+  .button {
+    margin: 0px;
   }
+`;
+
+export const BottomControls = styled(Block)`
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+`;
+
+export const ForwardControls = styled(Block)`
+  width: 225px;
+  display: flex;
+  justify-content: space-evenly;
+  margin: 0px auto 32px;
+  padding: 0px;
+ 
+  .button {
+    width: 40px;
+    height: 40px;
+    padding: 0px;
+  }
+
+  i {
+    font-size: 32px;
+  }
+`;
+
+export const RewindControl = styled(Block)`
+  width: 200px;
+  display: flex;
+  justify-content: space-evenly;
+  margin: 0px auto;
 `;

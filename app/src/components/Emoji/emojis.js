@@ -1,26 +1,26 @@
 export default [
   {
-    name: 'like',
-    value: '👍',
+    value: 'like',
+    name: '👍',
   },
   {
-    name: 'love',
-    value: '❤️',
+    value: 'love',
+    name: '❤️',
   },
   {
-    name: 'funny',
-    value: '😁',
+    value: 'funny',
+    name: '😁',
   },
   {
-    name: 'sad',
-    value: '😔',
+    value: 'sad',
+    name: '😔',
   },
   {
-    name: 'thanks',
-    value: '🙏',
+    value: 'thanks',
+    name: '🙏',
   },
   {
-    name: 'bunny',
-    value: '🐭',
+    value: 'bunny',
+    name: '🐭',
   },
 ];

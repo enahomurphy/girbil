@@ -2,12 +2,13 @@ import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useClickAway } from 'react-use';
 import { Button } from 'framework7-react';
-import { Text } from '@/components/Style';
 
-import { OptionsContainer, ReactionContainer } from './style';
+import { Title } from '@/components/Style';
+
+import { OptionsContainer, ReactionContainer, StyledButton } from './style';
 
 const IconWithOptions = ({
-  onClick, vertical, reaction, options, icon,
+  onClick, vertical, reaction, options, icon, height, isEmoji, tooltip,
 }) => {
   const [showEmoji, setShowEmoji] = useState(!reaction);
   const ref = useRef(null);
@@ -23,12 +24,12 @@ const IconWithOptions = ({
   };
 
   return (
-    <ReactionContainer ref={ref} reaction={reaction} vertical={vertical}>
+    <ReactionContainer ref={ref} height={height} reaction={reaction} vertical={vertical}>
       {
         reaction && (
-          <Button style={{ height: '35px' }} onClick={onClickReaction}>
+          <StyledButton active={showEmoji} onClick={onClickReaction}>
             { icon }
-          </Button>
+          </StyledButton>
         )
       }
       {
@@ -39,17 +40,18 @@ const IconWithOptions = ({
                 <Button
                   key={option.name}
                   className={index === (options.length - 1) ? 'last' : ''}
-                  tooltip={option.name}
+                  tooltip={tooltip ? option.value : ''}
                   onClick={() => onClick(option)}
                 >
-                  <Text
+                  <Title
                     width="24px"
                     padding="0"
                     margin="0"
-                    size="24px"
+                    size={isEmoji ? '24px' : '12px'}
+                    color="#ffffff"
                   >
-                    {option.value}
-                  </Text>
+                    {option.name}
+                  </Title>
                 </Button>
               ))
             }
@@ -63,6 +65,9 @@ const IconWithOptions = ({
 IconWithOptions.defaultProps = {
   vertical: false,
   reaction: false,
+  height: '250px',
+  isEmoji: true,
+  tooltip: true,
 };
 
 IconWithOptions.propTypes = {
@@ -71,6 +76,9 @@ IconWithOptions.propTypes = {
   vertical: PropTypes.bool,
   options: PropTypes.array.isRequired,
   icon: PropTypes.element.isRequired,
+  height: PropTypes.string,
+  isEmoji: PropTypes.bool,
+  tooltip: PropTypes.bool,
 };
 
 export default IconWithOptions;

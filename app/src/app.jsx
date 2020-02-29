@@ -1,20 +1,24 @@
 import React, { useEffect } from 'react';
+import { hot } from 'react-hot-loader/root';
 import { Device } from 'framework7';
 import {
   App,
   View,
   f7ready,
 } from 'framework7-react';
+import { ApolloProvider } from '@apollo/react-hooks';
 
+import client from '@/lib/apollo';
 import cordovaApp from './js/cordova-app';
 import routes from './js/routes';
+
 import '@/css/theme.css';
 
 const MainApp = () => {
   const f7params = {
     id: 'io.framework7.girbil',
     name: 'girbil',
-    theme: 'auto',
+    theme: 'aurora',
     routes,
     input: {
       scrollIntoViewOnFocus: Device.cordova && !Device.electron,
@@ -37,10 +41,13 @@ const MainApp = () => {
   }, []);
 
   return (
-    <App params={f7params} themeDark>
-      <View main url="/" />
-    </App>
+    <ApolloProvider client={client}>
+      <App params={f7params} themeDark>
+        <View main url="/conversations/:conversationId/" />
+      </App>
+    </ApolloProvider>
   );
 };
 
-export default MainApp;
+export default hot(MainApp);
+// export default MainApp;

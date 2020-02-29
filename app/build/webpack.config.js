@@ -21,7 +21,7 @@ const isElectronWatch = process.env.ELECTRON_WATCH || false;
 module.exports = {
   mode: env,
   entry: {
-    app: './src/js/app.js',
+    entry: ['react-hot-loader/patch', './src/js/app.js'],
   },
   output: {
     path: resolvePath(isCordova ? (isElectronWatch ? 'cordova/platforms/electron/www' : 'cordova/www') : 'www'),
@@ -35,6 +35,7 @@ module.exports = {
     extensions: ['.js', '.jsx', '.json'],
     alias: {
       '@': resolvePath('src'),
+      'react-dom': '@hot-loader/react-dom',
     },
 
   },

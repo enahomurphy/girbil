@@ -1,5 +1,6 @@
-import { } from 'framework7-react';
-import { Messages, Conversations } from '@/pages/Conversations';
+import {
+  Conversation, Conversations, Message, NewMessage,
+} from '@/pages/Conversations';
 import { Login, SignUp, ResetPasword } from '@/pages/Auth';
 import HomePage from '@/pages/Home';
 
@@ -33,7 +34,7 @@ const routes = [
     },
   },
   {
-    name: 'conversation_messages',
+    name: 'conversations',
     path: '/conversations',
     component: Conversations,
     options: {
@@ -42,13 +43,21 @@ const routes = [
     },
   },
   {
-    name: 'conversations',
-    path: '/conversations/:conversationId/messages/:messageId',
-    component: Messages,
-    options: {
-      animate: true,
-      transition: 'f7-parallax',
-    },
+    name: 'conversation',
+    path: '/conversations/:conversationId',
+    component: Conversation,
+    tabs: [
+      {
+        path: '/',
+        id: 'record',
+        component: NewMessage,
+      },
+      {
+        path: '/:messageId',
+        id: 'view',
+        component: Message,
+      },
+    ],
   },
 ];
 

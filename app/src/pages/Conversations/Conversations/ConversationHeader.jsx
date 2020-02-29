@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Navbar, Searchbar, Link, NavRight, Icon,
 } from 'framework7-react';
-import { Title, Block } from '../style';
+import { Title, Block } from '@/pages/style';
 
 function ConversationHeader() {
   return (

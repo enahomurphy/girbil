@@ -1,9 +1,10 @@
+
 import React from 'react';
 import {
   Page, List, ListItem,
 } from 'framework7-react';
 import styled from 'styled-components';
-import { Text, Block } from '../style';
+import { Text, Block } from '../../style';
 
 import ConversationHeader from './ConversationHeader';
 import ConversationListItem from './ConversationListItem';
@@ -14,6 +15,7 @@ const StyledUser = styled(Block)`
   div {
     display: inline-block;
   }
+
   .active {
     width: 16px;
     height: 16px;

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { ListItem, Badge, Icon } from 'framework7-react';
-import { Title, Text, Block } from '../style';
+import { Title, Text, Block } from '@/pages/style';
 
 const Img = styled.img`
   width: 64px;
@@ -23,7 +23,7 @@ const StyledListItem = styled(ListItem)`
 
 const ConversationListItem = ({ unreadCount, user }) => (
   <StyledListItem
-    link="/conversations/4/messages/1"
+    link="/conversations/1"
     title={(
       <Block>
         <Title margin="0 0 5px 0" align="left">{user.name}</Title>
@@ -41,15 +41,13 @@ const ConversationListItem = ({ unreadCount, user }) => (
         {unreadCount && (<Badge color="red">{unreadCount}</Badge>)}
         <Icon f7="ellipsis_vertical" color="white " />
       </Block>
-  )}
+    )}
   >
     <Img alt={user.name} slot="media" src={user.avatar} width="80" />
   </StyledListItem>
 );
 
 ConversationListItem.propTypes = {
-  name: PropTypes.string.isRequired,
-  lastActive: PropTypes.string.isRequired,
   unreadCount: PropTypes.number.isRequired,
   user: PropTypes.object.isRequired,
 };

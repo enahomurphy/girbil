@@ -71,8 +71,6 @@ module.exports = {
           resolvePath('node_modules/ssr-window'),
         ],
       },
-
-
       {
         test: /\.css$/,
         use: [

@@ -1,7 +1,11 @@
-import Recorder from './Recorder';
+import Video, { useVideoData } from './Video';
+import Header from './Header';
 
-export { default as Recorder } from './Recorder';
+export {
+  Video, useVideoData, Header,
+};
 
 export default {
-  Recorder,
+  Video,
+  Header,
 };

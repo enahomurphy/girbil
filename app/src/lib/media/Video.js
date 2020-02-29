@@ -3,6 +3,9 @@ class Video {
     this.videoId = videoId;
     this.stream = new MediaStream();
     this.start = this.start.bind(this);
+    this.error = this.error.bind(this);
+    this.height = window.screen.availHeight;
+    this.width = window.screen.availWidth;
     this.onStart = () => {};
 
     this.init();
@@ -36,12 +39,11 @@ class Video {
   }
 
   static get constraints() {
-    const { width, height } = window.screen;
     const constraints = {
       audio: false,
       video: {
-        width: { min: width, ideal: width, max: width * 2 },
-        height: { min: height, ideal: height, max: height * 2 },
+        width: { min: this.width, ideal: this.width, max: this.width * 2 },
+        height: { min: this.height, ideal: this.height, max: this.height * 2 },
         framerate: 30,
       },
     };

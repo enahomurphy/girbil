@@ -1,29 +1,20 @@
 import styled from 'styled-components';
 import { Block, Button } from 'framework7-react';
 
-export const VideoWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  max-height: calc(100vh - var(--gb-message-height));
-  video {
-    object-fit: cover;
-  }
-`;
+export const VideoWrapper = styled.div``;
 
 export const BackIcon = styled(Button)`
-  background: #337AF1;
+  background: #6C63FF;
   border: 2px solid #FFFFFF;
   box-sizing: border-box;
   border-radius: 24px;
   width: 32px;
   height: 32px;
   position: absolute;
-  left: 16px;
-  top: 0pc;
+  left: 0px;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: var(--gb-back-z-index);
 
   i {
     font-size: 18px;
@@ -40,17 +31,12 @@ export const StyledBlock = styled(Block)`
   margin: 0px 20px;
 `;
 
-export const StyledHeader = styled.div`
+export const Header = styled.div`
   position: absolute;
   top: 0px;
   width: 100%;
   text-align: center;
-  margin-top: 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  cursor: pointer;
+  margin-top: 25px;
 
   h1 {
     font: bold 24px/30px PT sans;
@@ -88,4 +74,42 @@ export const RecorderBlock = styled(Block)`
       color: #ffffff;
     }
   }
+`;
+
+export const StyledSlide = styled.div`
+  width: 100;
+  height: 120px;
+  background: ${(props) => props.color};
+`;
+
+export const SliderWrapper = styled.div`
+  width: 100%;
+  height: 120px;
+  background: red;
+`;
+
+export const SliderNav = styled.div`
+  width: 32px;
+  height: 80px;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.66);
+  border-radius: 0 5px 5px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  bottom: 20px;
+`;
+
+export const Right = styled(SliderNav)`
+  right: 0px;
+  transform: rotate(-180deg);
+`;
+
+export const NewMessageWrapper = styled.div`
+  position: relative;
+  height: calc(100vh - var(--gb-message-height));
+  width: 100%;
+  display: flex;
+  justify-content: center;
 `;

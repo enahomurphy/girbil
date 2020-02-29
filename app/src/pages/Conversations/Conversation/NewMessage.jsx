@@ -9,6 +9,7 @@ import { Video } from '@/lib/media';
 import { Page } from '@/components/Style';
 import { NewMessageWrapper } from './style';
 
+
 const NewMessage = () => {
   const { params } = useVideoData(null, 'video');
   const [video] = useVideo(params);
@@ -27,10 +28,6 @@ const NewMessage = () => {
       </NewMessageWrapper>
     </Page>
   );
-};
-
-NewMessage.propTypes = {
-
 };
 
 export default NewMessage;

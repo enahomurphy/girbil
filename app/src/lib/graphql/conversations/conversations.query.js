@@ -3,10 +3,10 @@ import { gql } from 'apollo-boost';
 export const MESSAGES = gql`
   query messages {
     messages @client {
-      id,
-      url,
-      thumbnail,
-      color,
+      id
+      url
+      thumbnail
+      state
     }
   }
 `;
@@ -14,10 +14,10 @@ export const MESSAGES = gql`
 export const MESSAGE = gql`
   query message {
     message @client {
-      id,
-      url,
-      thumbnail,
-      color,
+      id
+      url
+      thumbnail
+      state
     }
   }
 `;

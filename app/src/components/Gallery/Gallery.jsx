@@ -1,9 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Swiper,
-  Icon,
-  f7,
-} from 'framework7-react';
+import React, { useEffect } from 'react';
+import { Swiper, Icon, f7 } from 'framework7-react';
 import PropTypes from 'prop-types';
 
 import {
@@ -12,35 +8,47 @@ import {
 import ImageItem from './ImageItem';
 
 const Gallery = ({ messages, onClick }) => {
-  const [swiper, setSwiper] = useState({});
   useEffect(() => {
     if (messages.length) {
       const slide = f7.swiper.get('.swiper-container');
-      setSwiper(slide);
+      if (messages[messages.length - 1].recording) {
+        slide.slideTo(messages.length);
+      }
     }
   }, [messages]);
+
+  const params = {
+    lazy: true,
+    slidesPerView: 3,
+    spaceBetween: 0,
+    navigation: {
+      nextEl: '.slide-forward',
+      prevEl: '.slide-backward',
+    },
+  };
 
   return Boolean(messages.length) && (
     <SliderWrapper>
       <SliderNavWrapper>
-        <SliderNav onClick={() => swiper.slidePrev()}>
-          <Icon f7="chevron_right" />
+        <SliderNav className="slide-backward">
+          <Icon f7="chevron_left" />
         </SliderNav>
       </SliderNavWrapper>
-      <Swiper params={{ lazy: true, slidesPerView: 3, spaceBetween: 0 }}>
+      <Swiper params={params}>
         {
-          messages.map(({ id, thumbnail }) => (
+          messages.map(({ id, thumbnail, recording, state }) => (
             <ImageItem
               onClick={onClick}
               key={id}
               id={id}
               thumbnail={thumbnail}
+              state={state}
             />
           ))
         }
       </Swiper>
-      <SliderNavWrapper right onClick={() => swiper.slideNext()}>
-        <Right>
+      <SliderNavWrapper right>
+        <Right className="slide-forward">
           <Icon f7="chevron_left" />
         </Right>
       </SliderNavWrapper>

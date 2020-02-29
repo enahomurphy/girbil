@@ -1,10 +1,12 @@
 import styled from 'styled-components';
+import { List } from 'framework7-react';
 
 export const StyledSlide = styled.div`
   height: var(--gb-message-height);
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
+  cursor: pointer;
 `;
 
 export const SliderWrapper = styled.div`
@@ -26,6 +28,7 @@ export const SliderNav = styled.div`
   align-items: center;
   width: 16px;
   cursor: pointer;
+  outline: none;
   
   &:hover {
     cursor: pointer;
@@ -49,6 +52,11 @@ export const SliderNavWrapper = styled.div`
   width: 16px;
   top: 0;
   right: ${({ right }) => (right ? 0 : 'initial')};
+
+  .swiper-button-disabled {
+    background-color: red;
+    display: none;
+  }
 `;
 
 export const RecordingInfoContainer = styled.div`
@@ -70,4 +78,68 @@ export const RecordingInfo = styled.div`
   height: 8px;
   border-radius: 100%;
   background: var(--gb-red);
+  z-index:4000;
+`;
+
+export const ImageItemOption = styled(List)` 
+  box-sizing: border-box;
+  border-radius: 5px;
+  background-color: #222222;
+
+  .item-content {
+    padding: 0;
+  }
+
+  &.list .item-inner {
+    padding: 0px;
+
+    .item-title {
+      font-size: 12px;
+    }
+
+    &::after {
+      background: none;
+    }
+  }
+
+
+  & ul li {
+    padding: 5px 16px;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--gb-accent);
+    }
+  }
+
+  & ul li:first-child {
+    padding: 0px;
+
+    &:hover {
+      background: none;
+    }
+  }
+`;
+
+export const RecordingItem = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background: var(--gb-medium-dark-gray);
+
+  .slider-thumbnail__context {
+    display: flex;
+    align-items:center;
+    margin-top: 6px;
+  }
+`;
+
+export const SliderThumbnail = styled.div`
+  width: 64px;
+  height: 64px;
+  border-radius: 100%;
+  background-image: url(${(props) => props.img});
 `;

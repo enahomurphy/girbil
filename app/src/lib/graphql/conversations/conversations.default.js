@@ -2,18 +2,18 @@
 export default {
   messages: Array(20).fill(1).map((value, index) => (
     {
-      id: value + index,
+      id: (value + index).toString(),
       url: `/static/vid${Math.ceil(Math.random() * 3)}.mp4`,
-      thumbnail: '',
-      color: ['red', 'blue', 'green', 'orange', 'gray'][Math.floor(Math.random() * 4)],
+      thumbnail: `https://i.picsum.photos/id/${index + value}/125/136.jpg`,
       __typename: `${value}_${index}`,
+      state: (index === 19) ? 'recording' : 'done',
     }
   )),
   message: {
     id: '',
     url: '',
     thumbnail: '',
-    color: '',
+    state: false,
     __typename: '',
   },
 };

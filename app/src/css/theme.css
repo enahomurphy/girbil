@@ -7,9 +7,9 @@
 }
 
 :root {
-  --f7-theme-color: #6C63FF;
-  --f7-theme-color-shade: #6C63FF;
-  --f7-theme-color-tint: #6C63FF;
+  --f7-theme-color: var(--gb-accent);
+  --f7-theme-color-shade: var(--gb-accent);
+  --f7-theme-color-tint: var(--gb-accent);
   --f7-theme-color-rgb: 108, 99, 255;
   --f7-list-bg-color: #000000;
   --f7-navbar-bg-color: #000000;
@@ -18,10 +18,12 @@
   --f7-bars-link-color: #ffffff;
   --f7-searchbar-search-icon-color: #ffffff;
   
-  --gb-black: #a09191;
+  --gb-black: #000000;
   --gb-white: #ffffff;
-  --gb-grey: #222222;
+  --gb-dark-grey: #222222;
+  --gb-medium-dark-gray: #636366;
   --gb-medium-grey: #999999;
+  --gb-light-grey: #EFEFEF;
   --gb-green: #33AB77;
   --gb-red: #F14741;
   --gb-accent: #337AF1;

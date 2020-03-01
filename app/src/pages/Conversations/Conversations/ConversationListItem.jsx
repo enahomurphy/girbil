@@ -1,31 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { ListItem, Badge, Icon } from 'framework7-react';
+import { Badge, Icon } from 'framework7-react';
 import { Title, Text, Block } from '@/pages/style';
-
-const Img = styled.img`
-  width: 64px;
-  height: 80px;
-  border-radius: 6px;
-`;
-
-const StyledListItem = styled(ListItem)`
-  list-style-type: none;
-  .item-link .item-inner {
-    padding: 0 16px 0 0;
-
-    &::before {
-      display: none;   
-    }
-  }
-`;
+import { Img, StyledListItem } from './style';
 
 const ConversationListItem = ({ unreadCount, user }) => (
   <StyledListItem
     link="/conversations/1"
     title={(
-      <Block>
+      <Block margin>
         <Title margin="0 0 5px 0" align="left">{user.name}</Title>
         <Text margin="0" align="left">
           {

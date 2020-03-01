@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Page } from 'framework7-react';
 import { useQuery } from '@apollo/react-hooks';
@@ -13,7 +12,6 @@ const Message = () => {
   const { data } = useQuery(query.MESSAGE);
   const { params } = useVideoData(data.message, 'video');
   const [video] = useVideo(params);
-
 
   return (
     <Page>

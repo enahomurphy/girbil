@@ -120,12 +120,10 @@ export const Range = styled(f7Range)`
     z-index: 2;
     background-color: rgba(199, 199, 199, 0.3);
   }
-
-  .range-knob-wrap {
-    display: none;
-  }
 `;
 
 export const BufferWrapper = styled(Block)`
   width: 100%;
+  position: absolute;
+  bottom: 0px;
 `;

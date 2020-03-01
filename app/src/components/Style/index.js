@@ -28,7 +28,7 @@ export const Title = styled(Text)`
   font: ${(props) => props.weight} ${(props) => props.size}/24px Source Sans Pro;
   margin: ${(props) => props.margin};
   color: ${(props) => props.color};
-  text-transform: ${(props) => (props.lower ? 'lowercase' : 'initial')};
+  text-transform: ${(props) => (props.transform)};
 `;
 
 Title.defaultProps = {
@@ -36,6 +36,7 @@ Title.defaultProps = {
   color: '#ffffff',
   size: '18px',
   weight: 'bold',
+  transform: 'initial',
 };
 
 export const Button = styled(F7Button)` 

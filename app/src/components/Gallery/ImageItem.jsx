@@ -4,10 +4,11 @@ import { SwiperSlide } from 'framework7-react';
 
 import ImageItemInfo from './ImageItemInfo';
 import ImageRecordingItem from './ImageRecordingItem';
+import ImageItemPlaying from './ImageItemPlaying';
 import { StyledSlide } from './style';
 
 const ImageItem = ({
-  onClick, id, thumbnail, state,
+  onClick, id, thumbnail, state, sender,
 }) => {
   const slideProps = {
     recording: state === 'recording',
@@ -25,6 +26,7 @@ const ImageItem = ({
       <ImageItemInfo recording={slideProps.recording} />
       <StyledSlide {...slideProps}>
         { slideProps.recording && <ImageRecordingItem thumbnail={thumbnail} /> }
+        { state === 'playing' && <ImageItemPlaying sender={sender} /> }
         { !slideProps.recording && <div className="swiper-lazy-preloader" /> }
       </StyledSlide>
     </SwiperSlide>
@@ -36,6 +38,7 @@ ImageItem.propTypes = {
   id: PropTypes.string.isRequired,
   thumbnail: PropTypes.string.isRequired,
   state: PropTypes.string.isRequired,
+  sender: PropTypes.object.isRequired,
 };
 
 export default React.memo(ImageItem);

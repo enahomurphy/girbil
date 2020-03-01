@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { List } from 'framework7-react';
 
 export const StyledSlide = styled.div`
+  min-height: var(--gb-message-height);
   height: var(--gb-message-height);
   box-sizing: border-box;
   display: flex;
@@ -142,4 +143,13 @@ export const SliderThumbnail = styled.div`
   height: 64px;
   border-radius: 100%;
   background-image: url(${(props) => props.img});
+`;
+
+export const PlayingItem = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;

@@ -10,6 +10,7 @@ import Header from './components/header';
 import Home from './pages/Home';
 import Signup from './pages/Signup';
 import Share from './pages/Share';
+import Download from './pages/Download';
 
 const App = () => (
   <Router>
@@ -19,6 +20,7 @@ const App = () => (
       <Route exact path="/signup" component={Home} />
       <Route exact path="/signup/:step" component={() => <Signup />} />
       <Route exact path="/share" component={Share} />
+      <Route exact path="/download" component={Download} />
       <Route path="/user/invite">
         <div>Invite user</div>
       </Route>

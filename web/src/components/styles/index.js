@@ -3,12 +3,13 @@ import styled from 'styled-components';
 export const Title = styled.h1`
   font-size: ${props => props.size};
   margin: ${props => props.margin};
-  width: 300px;
+  width: ${props => props.width};
 `;
 
 Title.defaultProps = {
   size: '24px',
   margin: '0',
+  width: 'initial',
 };
 
 export const Text = styled.p`

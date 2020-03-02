@@ -7,8 +7,7 @@ import { MainContainer, LayoutContainer } from './style';
 const Layout = ({ children, height, title }) => (
   <LayoutContainer>
     <MainContainer height={height}>
-      <Title>{title}</Title>
-
+      <Title width="312px">{title}</Title>
       {children}
     </MainContainer>
   </LayoutContainer>

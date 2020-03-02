@@ -3,7 +3,6 @@ import {
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
-import { Workspace } from '.';
 import { Channel } from './channel';
 
 @Entity('users')
@@ -39,33 +38,4 @@ export class User {
   })
   @Field()
   avatar?: string;
-
-  @Field(() => Workspace)
-  @ManyToMany(() => Workspace, (workspace) => workspace.users)
-  @JoinTable({
-    name: 'workspace_users',
-    joinColumn: {
-      name: 'user_id',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'workspace_id',
-      referencedColumnName: 'id',
-    },
-  })
-  workspaces?: Workspace[];
-
-  @ManyToMany(() => Channel, (channel) => channel.users)
-  @JoinTable({
-    name: 'channel_users',
-    joinColumn: {
-      name: 'user_id',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'channel_id',
-      referencedColumnName: 'id',
-    },
-  })
-  channels?: Channel[];
 }

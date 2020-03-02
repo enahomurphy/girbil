@@ -6,7 +6,7 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class UserOrganization1582381400005 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.query(`
+    await queryRunner.query(`    
       CREATE TABLE IF NOT EXISTS "user_organizations" (
         "user_id" uuid,
         "organization_id" uuid,

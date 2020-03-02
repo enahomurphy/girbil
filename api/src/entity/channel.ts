@@ -5,7 +5,7 @@ import {
 import { Field, ObjectType } from 'type-graphql';
 
 import { User } from '.';
-import { Workspace } from './workspace';
+import { Team } from './team';
 
 @Entity('channels')
 @ObjectType()
@@ -31,27 +31,23 @@ export class Channel {
   userId?: string;
 
   @OneToOne(() => User)
-  @JoinColumn({
-    name: 'user_id',
-    referencedColumnName: 'id',
-  })
   @Field(() => User)
   user?: User
 
   @Field()
   @Column({
     type: 'uuid',
-    name: 'workspace_id',
+    name: 'team_id',
   })
-  workspaceId?: string;
+  teamId?: string;
 
-  @Field(() => Workspace)
-  @OneToOne(() => Workspace)
+  @Field(() => Team)
+  @OneToOne(() => Team)
   @JoinColumn({
-    name: 'workspace_id',
+    name: 'team_id',
     referencedColumnName: 'id',
   })
-  workspace?: Workspace;
+  team?: Team;
 
   @Column({
     nullable: true,
@@ -68,10 +64,6 @@ export class Channel {
 
   @Field(() => User)
   @OneToOne(() => User)
-  @JoinColumn({
-    name: 'user_id',
-    referencedColumnName: 'id',
-  })
   lastUpdatedBy?: User;
 
   @CreateDateColumn({
@@ -87,7 +79,4 @@ export class Channel {
   })
   @Field()
   updatedAt?: Date;
-
-  @ManyToMany(() => User, (user) => user.channels)
-  users?: User[];
 }

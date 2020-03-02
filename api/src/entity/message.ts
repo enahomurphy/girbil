@@ -2,7 +2,6 @@ import {
   Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne, JoinColumn,
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
-import { Conversation } from './conversation';
 import { User } from './user';
 
 @Entity('messages')
@@ -13,15 +12,15 @@ export class Message {
 
   @Field()
   @Column({
-    name: 'user_id',
+    name: 'sender_id',
     type: 'uuid',
   })
-  userId?: string;
+  senderId?: string;
 
   @Field(() => User)
   @OneToOne(() => User)
   @JoinColumn({
-    name: 'user_id',
+    name: 'sender_id',
     referencedColumnName: 'id',
   })
   sender?: User
@@ -33,13 +32,19 @@ export class Message {
   @Field()
   conversationId?: string;
 
-  @Field(() => Conversation)
-  @OneToOne(() => Conversation)
-  @JoinColumn({
-    name: 'conversation_id',
-    referencedColumnName: 'id',
+  @Column({
+    name: 'organization_id',
+    type: 'uuid',
   })
-  workspace: Conversation;
+  @Field()
+  organizationId?: string;
+
+  @Column({
+    name: 'parent_id',
+    type: 'uuid',
+  })
+  @Field()
+  parent_id?: string;
 
   @Field()
   @Column()
@@ -57,7 +62,7 @@ export class Message {
     type: 'text',
     nullable: true,
   })
-  text?: string;
+  note?: string;
 
   @CreateDateColumn({
     name: 'created_at',

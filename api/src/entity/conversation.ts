@@ -1,11 +1,10 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn, JoinColumn,
+  Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn, JoinColumn, UpdateDateColumn,
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
 import { User } from '.';
 import { Channel } from './channel';
-import { Workspace } from './workspace';
 
 export enum ConversationType {
   USER = 'user',
@@ -20,10 +19,10 @@ export class Conversation {
 
   @Field()
   @Column({
-    name: 'sender_id',
+    name: 'creator_id',
     type: 'uuid',
   })
-  senderId?: string;
+  creatorId?: string;
 
   @Field()
   @Column({
@@ -32,17 +31,17 @@ export class Conversation {
   })
   receiverId?: string;
 
-  @Field(() => User)
+  @Field(() => Channel)
   @Column({
-    name: 'workspace_id',
+    name: 'channel_id',
     type: 'uuid',
   })
-  workspaceId?: string;
+  channelId?: string;
 
   @Field(() => User)
   @OneToOne(() => User)
   @JoinColumn({
-    name: 'sender_id',
+    name: 'creator_id',
     referencedColumnName: 'id',
   })
   creator?: User
@@ -57,18 +56,10 @@ export class Conversation {
 
   @OneToOne(() => Channel)
   @JoinColumn({
-    name: 'receiver_id',
+    name: 'channel_id',
     referencedColumnName: 'id',
   })
-  channel: Channel
-
-  @Field(() => Workspace)
-  @OneToOne(() => Workspace)
-  @JoinColumn({
-    name: 'workspace_id',
-    referencedColumnName: 'id',
-  })
-  workspace: Workspace
+  channel?: Channel
 
   @Field()
   @Column({
@@ -77,7 +68,7 @@ export class Conversation {
     default: ConversationType.USER,
     enumName: 'conversation_type',
   })
-  type: ConversationType;
+  type?: ConversationType;
 
   @Field()
   @CreateDateColumn({
@@ -85,4 +76,11 @@ export class Conversation {
     default: new Date(),
   })
   createdAt?: Date;
+
+  @Field()
+  @UpdateDateColumn({
+    name: 'updated_at',
+    default: new Date(),
+  })
+  updatedAt?: Date;
 }

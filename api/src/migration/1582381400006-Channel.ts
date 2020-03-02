@@ -14,9 +14,10 @@ export class Channel1582381400006 implements MigrationInterface {
         "is_private" boolean DEFAULT true,
         "user_id" uuid,
         "avatar" varchar,
-        "created_at" timestamp,
         "last_updated_by_id" uuid,
-        "organization_id" uuid
+        "organization_id" uuid,
+        "created_at" timestamp,
+        "updated_at" timestamp
       );
     `);
   }

@@ -1,4 +1,3 @@
-
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable class-methods-use-this */
@@ -11,7 +10,9 @@ export class Organization1582381400001 implements MigrationInterface {
         "id" uuid PRIMARY KEY,
         "name" varchar(255),
         "domain" varchar,
-        "created_at" timestamp
+        "user_id" uuid,
+        "created_at" timestamp,
+        UNIQUE(domain)
       );
     `);
   }

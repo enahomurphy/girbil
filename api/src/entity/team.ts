@@ -1,13 +1,13 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToMany, JoinColumn,
+  Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToMany, JoinColumn, CreateDateColumn,
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
 import { User } from '.';
 
-@Entity('workspaces')
+@Entity('teams')
 @ObjectType()
-export class Workspace {
+export class Team {
   @PrimaryGeneratedColumn('uuid')
   readonly id: string;
 
@@ -29,19 +29,29 @@ export class Workspace {
   userId?: string;
 
   @Field()
+  @Column({
+    name: 'organization_id',
+    type: 'uuid',
+  })
+  organizationId?: string;
+
+  @Field()
   @OneToOne(() => User)
   @JoinColumn({
     name: 'user_id',
     referencedColumnName: 'id',
   })
-  owner?: string;
+  user?: string;
+
+  @Field()
+  @CreateDateColumn({
+    name: 'created_at'
+  })
+  createdAt: string
 
   @Column({
     nullable: true,
   })
   @Field()
   avatar?: string;
-
-  @ManyToMany(() => User, (user) => user.workspaces)
-  users: User[];
 }

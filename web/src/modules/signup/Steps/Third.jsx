@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
 import LinkIcon from '@/components/icons/Link';
-import Layout from '../AuthLayout';
 import {
-  Title, Text, Input, Flex, Form,
-} from '../style';
+  Title, Text, Input, Form, Flex,
+} from '@/components/styles';
+import Layout from '@/components/layout';
 
 const First = () => {
   const [emails] = useState([

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Layout from '../AuthLayout';
-import { Title, Text, Input } from '../style';
+import { Title, Text, Input } from '@/components/styles';
+import Layout from '@/components/layout';
 
 const First = () => (
   <Layout title="Great, now create your organization">

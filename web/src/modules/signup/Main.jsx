@@ -2,10 +2,9 @@ import React, { Fragment } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import Google from '@/components/icons/Google';
-import Layout from './AuthLayout';
-import {
-  Text, DividerContainer, Footer, GoogleButton,
-} from './style';
+import Layout from '@/components/layout';
+import { Text } from '@/components/styles';
+import { DividerContainer, Footer, GoogleButton } from './style';
 
 const Main = () => {
   const history = useHistory();

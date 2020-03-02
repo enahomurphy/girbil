@@ -1,10 +1,10 @@
 import React, { useState, Fragment } from 'react';
 
 import Alert from '@/components/icons/Alert';
-import Layout from '../AuthLayout';
 import {
   Title, Text, Input, InputWrapper, Flex,
-} from '../style';
+} from '@/components/styles';
+import Layout from '@/components/layout';
 
 const Second = () => {
   const [state] = useState('error');
@@ -23,7 +23,14 @@ const Second = () => {
       </Text>
       <InputWrapper>
         <Input align="right" placeholder="Company" />
-        <Text weight="bold" color="#ffffff" margin="0 0 0 8px">.girbil.com</Text>
+        <Text
+          transform="lowercase"
+          weight="bold"
+          color="#ffffff"
+          margin="0 0 0 8px"
+        >
+          .girbil.com
+        </Text>
       </InputWrapper>
       <Flex margin="16px 0 90px 0">
         {
@@ -35,19 +42,18 @@ const Second = () => {
           )
         }
         {
-        state === 'error' && (
-          <Fragment>
-            <Alert />
-            <Text size="12px" margin="0 0 0 8px">
-              That URL is
-              <span className="danger"> unavailable</span>
-              . Please choose another.
-            </Text>
-          </Fragment>
-        )
-      }
+          state === 'error' && (
+            <Fragment>
+              <Alert />
+              <Text size="12px" margin="0 0 0 8px">
+                That URL is
+                <span className="danger"> unavailable</span>
+                . Please choose another.
+              </Text>
+            </Fragment>
+          )
+        }
       </Flex>
-
       <button className="primary" type="button">Continue</button>
     </Layout>
   );

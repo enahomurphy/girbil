@@ -14,7 +14,7 @@ export const MainContainer = styled.main`
   padding: 56px 48px 20px 48px;
   width: 456px;
   background: var(--gb-dark-grey);
-  min-height: 450px;
+  min-height: ${props => props.height};
   border-radius: 14px;
   height: ${props => props.height || 'initial'};
   position: relative;

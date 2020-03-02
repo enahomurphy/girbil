@@ -6,9 +6,10 @@ import {
   Redirect,
 } from 'react-router-dom';
 
+import Header from './components/header';
 import Home from './pages/Home';
 import Signup from './pages/Signup';
-import Header from './components/header';
+import Share from './pages/Share';
 
 const App = () => (
   <Router>
@@ -17,6 +18,7 @@ const App = () => (
       <Route exact path="/" render={() => <Redirect to="/signup" />} />
       <Route exact path="/signup" component={Home} />
       <Route exact path="/signup/:step" component={() => <Signup />} />
+      <Route exact path="/share" component={Share} />
       <Route path="/user/invite">
         <div>Invite user</div>
       </Route>

@@ -16,5 +16,6 @@ export const MainContainer = styled.main`
   background: var(--gb-dark-grey);
   min-height: 450px;
   border-radius: 14px;
-
+  height: ${props => props.height || 'initial'};
+  position: relative;
 `;

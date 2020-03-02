@@ -11,9 +11,9 @@
   "plugins": [
     [
       "module-resolver", {
-        "root": ["../"],
+        "root": ["./"],
         "alias": {
-          "@": "./web/src",
+          "@": "./src",
           "@shared": "../shared"
         }
       }

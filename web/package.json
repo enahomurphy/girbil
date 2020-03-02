@@ -11,12 +11,9 @@
     "start": "parcel src/public/index.html",
     "build-prod": "parcel build src/public/index.html"
   },
-  "alias": {
-    "@": "./src/*",
-    "@shared": "../shared"
-  },
   "dependencies": {
     "eslint-import-resolver-alias": "^1.1.2",
+    "prop-types": "^15.7.2",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-router-dom": "^5.1.2",
@@ -29,6 +26,7 @@
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",
     "@types/styled-components": "^4.1.16",
+    "babel-plugin-module-resolver": "^4.0.0",
     "eslint": "^5.14.1",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-react-app": "^4.0.1",

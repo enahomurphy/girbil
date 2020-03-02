@@ -1,0 +1,47 @@
+:root {
+  --gb-web-grey: #C9C9C9;
+  --gb-web-grey-medium: #999999;
+  --gb-web-grey-dark: #636366;
+  --gb-web-blue: #0A84FF;
+  --gb-web-text: #C9C9C9;
+  --gb-web-background: #E5E5E5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button {
+  height: 40px;
+  border-radius: 6px;
+  border: none;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 14px;
+  padding: 0px;
+  cursor: pointer;
+} 
+
+button.primary {
+  background-color: var(--gb-web-blue);
+  color: #ffffff
+}
+
+.btn.primary:hover {
+  opacity: 0.5;
+}
+
+h1 {
+  color: var(--gb-white);
+  font-family: Source Sans Pro;
+  font-weight: 900;
+  line-height: 30px;
+  font-size: 24px;
+}
+
+p {
+  color: var(--gb-web-text);
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 18px;
+}

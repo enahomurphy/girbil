@@ -1,6 +1,6 @@
 import ApolloClient, { InMemoryCache } from 'apollo-boost';
 
-import { data, resolvers } from './graphql';
+import { data, resolvers } from '.';
 
 const cache = new InMemoryCache();
 

@@ -6,6 +6,13 @@ export const UPDATE_MESSAGE = gql`
   }
 `;
 
+export const ADD_MESSAGE = gql`
+  mutation addMessage {
+    addMessage @client
+  }
+`;
+
 export default {
   UPDATE_MESSAGE,
+  ADD_MESSAGE,
 };

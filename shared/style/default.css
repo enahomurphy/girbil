@@ -1,0 +1,20 @@
+:root {
+  --gb-black: #000000;
+  --gb-white: #ffffff;
+  --gb-dark-grey: #222222;
+  --gb-medium-dark-gray: #636366;
+  --gb-medium-grey: #999999;
+  --gb-light-grey: #EFEFEF;
+  --gb-green: #33AB77;
+  --gb-red: #F14741;
+  --gb-accent: #337AF1;
+
+  --gb-max-width: 125px;
+  --gb-message-width: 125px;
+  --gb-message-height: 136px;
+
+  --gb-back-z-index: 2;
+  --gb-record-z-index: 2;
+
+  --gb-gallery-height: 120px;
+}

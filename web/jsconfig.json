@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "target": "es2017",
+    "baseUrl": "../",
+    "allowSyntheticDefaultImports": false,
+    "paths": {
+      "@/*": [
+        "web/src/*"
+      ],
+      "@shared/*": [
+        "shared/*"
+      ]
+    },
+  },
+  "include": [
+    "./src/**/*"
+  ],
+  "exclude": [
+    "./src/node_modules",
+    "./app",
+    "./shared/node_modules"
+  ]
+}

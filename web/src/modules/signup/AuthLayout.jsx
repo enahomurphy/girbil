@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Layout from '@/components/layout';
-import { Title, Text } from './style';
+import { Title } from './style';
 
 const AuthLayout = ({ children, height, title }) => (
   <Layout height={height}>

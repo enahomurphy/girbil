@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 
-import Google from '@/components/icons/Google';
+import Alert from '@/components/icons/Alert';
 import Layout from '../AuthLayout';
 import {
-  Title, Text, DividerContainer, Footer, GoogleButton, Input, InputWrapper,
+  Title, Text, Input, InputWrapper, Flex,
 } from '../style';
 
 const Second = () => {
-  const [state, setState] = useState(null);
+  const [state] = useState('error');
 
   return (
     <Layout title="Great, now create your organization">
@@ -25,25 +25,29 @@ const Second = () => {
         <Input align="right" placeholder="Company" />
         <Text weight="bold" color="#ffffff" margin="0 0 0 8px">.girbil.com</Text>
       </InputWrapper>
-      {
-         state === null && (
-           <Text size="12px" margin="16px 0 88px 0">
-             Your workspace URL can only contain lowercase letters,
-             numbers and dashes (and must start with a letter or number).
-           </Text>
-         )
-      }
-      {
+      <Flex margin="16px 0 90px 0">
+        {
+          state === null && (
+            <Text size="12px">
+              Your workspace URL can only contain lowercase letters,
+              numbers and dashes (and must start with a letter or number).
+            </Text>
+          )
+        }
+        {
         state === 'error' && (
-          <div>
-            <Text size="12px" margin="16px 0 88px 0">
+          <Fragment>
+            <Alert />
+            <Text size="12px" margin="0 0 0 8px">
               That URL is
-              <span> unavailable</span>
+              <span className="danger"> unavailable</span>
               . Please choose another.
             </Text>
-          </div>
+          </Fragment>
         )
       }
+      </Flex>
+
       <button className="primary" type="button">Continue</button>
     </Layout>
   );

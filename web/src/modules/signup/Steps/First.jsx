@@ -1,14 +1,11 @@
 import React from 'react';
 
-import Google from '@/components/icons/Google';
 import Layout from '../AuthLayout';
-import {
-  Title, Text, DividerContainer, Footer, GoogleButton, Input,
-} from '../style';
+import { Title, Text, Input } from '../style';
 
 const First = () => (
   <Layout title="Great, now create your organization">
-    <Text margin="32px 0 0 0">
+    <Text color="#666666" margin="32px 0 0 0">
       STEP 1 OF 3
     </Text>
     <Title size="18px" color="#ffffff" margin="5px 0 16px 0">
@@ -26,6 +23,6 @@ const First = () => (
     </Text>
     <button className="primary" type="button">Continue</button>
   </Layout>
-); 
+);
 
 export default First;

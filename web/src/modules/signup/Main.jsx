@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import Google from '@/components/icons/Google';
 import Layout from './AuthLayout';
 import {
-  Title, Text, DividerContainer, Footer, GoogleButton,
+  Text, DividerContainer, Footer, GoogleButton,
 } from './style';
 
 const Main = () => {
@@ -14,7 +14,7 @@ const Main = () => {
       <Fragment>
         <Text margin="16px 0 0 0">
           First, create your user Girbil account.
-          This account can be used across mutliple organizations.
+          This account can be used across multiple organizations.
         </Text>
         <Text
           size="18px"
@@ -45,7 +45,7 @@ const Main = () => {
         </Text>
         <Footer>
           <Text size="14px" align="center">
-            Giribil is made with
+            Girbil is made with
             <span role="img" aria-label="love">❤️</span>
             around the world by a remote team.
           </Text>

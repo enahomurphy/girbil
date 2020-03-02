@@ -3,7 +3,7 @@ import {
   useParams,
 } from 'react-router-dom';
 
-import { First, Second } from '@/modules/signup';
+import { First, Second, Third } from '@/modules/signup';
 
 const Signup = () => {
   const { step } = useParams();
@@ -13,6 +13,8 @@ const Signup = () => {
       return <First />;
     case '2':
       return <Second />;
+    case '3':
+      return <Third />;
     default:
       return null;
   }

@@ -12,6 +12,7 @@ import Signup from './pages/Signup';
 import Share from './pages/Share';
 import Download from './pages/Download';
 import NotFound from './pages/NotFound';
+import Oranizations from './pages/Oranizations';
 
 const App = () => (
   <Router>
@@ -22,6 +23,7 @@ const App = () => (
       <Route exact path="/signup/:step" component={() => <Signup />} />
       <Route exact path="/share" component={Share} />
       <Route exact path="/download" component={Download} />
+      <Route exact path="/organizations" component={Oranizations} />
       <Route exact path="*" component={NotFound} />
       <Route path="/user/invite">
         <div>Invite user</div>

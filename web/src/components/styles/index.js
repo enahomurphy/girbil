@@ -38,7 +38,6 @@ export const Input = styled.input`
   }
 `;
 
-
 export const InputWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -51,6 +50,9 @@ export const Flex = styled.div`
   align-items: ${props => props.align};
   flex-direction: ${props => props.direction};
   margin: ${props => props.margin};
+  width: ${props => props.width};
+  min-width: ${props => props.width};
+  border-bottom: ${props => (props.bordered ? '1px solid #ffffff' : 'none')};
 `;
 
 Flex.defaultProps = {
@@ -58,6 +60,7 @@ Flex.defaultProps = {
   direction: 'initial',
   justify: 'flex-start',
   align: 'center',
+  width: 'initial',
 };
 
 export const Form = styled.div`
@@ -65,3 +68,14 @@ export const Form = styled.div`
     margin-bottom: 24px;
   }
 `;
+
+export const Button = styled.button`
+  margin: ${props => props.margin};
+  width: ${props => props.width};
+  font-weight: ${props => props.weight};
+`;
+Button.defaultProps = {
+  weight: 'bold',
+  width: '100',
+  marign: '0',
+};

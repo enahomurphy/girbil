@@ -13,7 +13,6 @@ const MESSAGE_FRAGMENT = gql`
   }
 `;
 
-
 export const MESSAGES = gql`
   query messages {
     messages @client {

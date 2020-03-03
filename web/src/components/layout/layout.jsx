@@ -9,7 +9,7 @@ const Layout = ({
   children, height, title, loading,
 }) => (
   <LayoutContainer>
-    <MainContainer loading={loading} height={height}>
+    <MainContainer loading={loading.toString()} height={height}>
       {
         loading && (
           <LoadingOverlay>

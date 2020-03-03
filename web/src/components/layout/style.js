@@ -11,7 +11,7 @@ export const LayoutContainer = styled.div`
 
 export const MainContainer = styled.main`
   box-sizing: border-box;
-  padding: ${props => (props.loading ? '0' : '56px 48px 20px 48px')};
+  padding: ${props => (props.loading === 'true' ? '0' : '56px 48px 20px 48px')};
   width: 456px;
   background: var(--gb-dark-grey);
   min-height: ${props => props.height};

@@ -22,7 +22,6 @@
     "react-dom": "^16.8.0",
     "react-google-login": "^5.1.1",
     "react-router-dom": "^5.1.2",
-    "react-spinners": "^0.8.0",
     "react-toast-notifications": "^2.4.0",
     "route": "^0.2.5",
     "styled-components": "^5.0.1"

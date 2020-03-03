@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 
 import { mutation } from '@shared/graphql/auth';
+import { query } from '@shared/graphql/organizations';
 import Auth from './Auth';
 
 const Home = () => {
@@ -19,17 +20,28 @@ const Home = () => {
 
   const handleLogin = async ({ accessToken }) => {
     try {
-      const { data } = await loginUser({
-        variables: {
-          accessToken,
-          type: 'google',
+      const { data: { social: { token, organizations } } } = await loginUser({
+        variables: { accessToken, type: 'google' },
+        update: (store, { data: { social } }) => {
+          const data = store.readQuery({ query: query.ORGANIZATIONS });
+
+          data.organizations.push(...social.organizations);
+          store.writeQuery({
+            query: query.ORGANIZATIONS,
+            data,
+          });
         },
       });
 
-      localStorage.setItem('gb-token', data.social.token);
-      history.push('/signup/1');
+      localStorage.setItem('gb-token', token);
+
+      if (organizations.length) {
+        return history.push('/organizations');
+      }
+
+      return history.push('/signup/1');
     } catch (_) {
-      alert();
+      return alert();
     }
   };
 

@@ -24,6 +24,7 @@ export const LoadingOverlay = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
+  border-radius: 14px;
   display: flex;
   justify-content: center;
   align-items: center;

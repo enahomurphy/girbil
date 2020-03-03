@@ -1,7 +1,7 @@
 import { gql } from 'apollo-boost';
 
 const ORGANIZATION_FRAGMENT = gql`
-  fragment OrganizationParts on organization {
+  fragment OrganizationParts on Organization {
     id
     name
     domain

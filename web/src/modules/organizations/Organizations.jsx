@@ -1,21 +1,20 @@
 /* eslint-disable global-require */
 import React, { Fragment } from 'react';
-import { useApolloClient } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/react-hooks';
 
 import Layout from '@/components/layout';
-import get from '@shared/lib/get';
 import { query } from '@shared/graphql/organizations';
+import { get } from '@shared/lib';
 import {
   Flex, Title, Button, Text,
 } from '@/components/styles/index';
 
 const Organizations = () => {
-  const client = useApolloClient();
-  const data = client.readQuery({ query: query.ORGANIZATIONS });
+  const { data, loading } = useQuery(query.ORGANIZATIONS, { fetchPolicy: 'network-only' });
   const organizations = get(data, 'organizations', []);
 
   return (
-    <Layout loading={false} title="Oh no! That didn’t work...">
+    <Layout loading={loading} title="Welcome back!">
       <Fragment>
         <Text margin="16px 0 5px 0">
           You’re account already has access to ...
@@ -29,7 +28,7 @@ const Organizations = () => {
           >
             <Flex
               direction="column"
-              margin="0 0 20px 0"
+              margin="0"
               width="calc(100% - 80px)"
               align="left"
             >

@@ -9,7 +9,7 @@ const Authenticated = (props) => {
   const user = storage.payload;
   const { path } = props;
 
-  if (!user) {
+  if (!user && path !== '/signup') {
     return <Redirect path="/signup" />;
   }
 

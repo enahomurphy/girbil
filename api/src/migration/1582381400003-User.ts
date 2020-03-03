@@ -14,7 +14,7 @@ export class User1582381400003 implements MigrationInterface {
         "password" varchar NULL,
         "is_verified" varchar,
         "avatar" varchar,
-        "last_active" timestamp
+        "last_active" timestamp DEFAULT Now()
       );
     `);
   }

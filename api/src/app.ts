@@ -17,6 +17,7 @@ const App = async (): Promise<string | undefined> => {
       resolvers: [`${__dirname}/modules/**/*.resolver.ts`],
       authChecker: authorized,
       authMode: 'error',
+      dateScalarMode: 'timestamp',
     });
 
     const apolloServer = new ApolloServer({

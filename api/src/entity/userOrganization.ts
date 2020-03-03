@@ -14,14 +14,14 @@ export class UserOrganization {
     type: 'uuid',
     name: 'user_id',
   })
-  readonly userId?: string;
+  userId?: string;
 
   @Field()
   @PrimaryColumn({
     name: 'organization_id',
     type: 'uuid',
   })
-  readonly organizationId?: string;
+  organizationId?: string;
 
   @Field(() => Organization)
   @OneToOne(() => Organization, { eager: true })

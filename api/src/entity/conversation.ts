@@ -4,6 +4,7 @@ import {
 import { Field, ObjectType } from 'type-graphql';
 
 import { User } from './user';
+import { Channel } from './channel';
 
 export enum ConversationType {
   USER = 'user',

@@ -17,7 +17,7 @@ export class Message1582381400010 implements MigrationInterface {
         "read" jsonb,
         "reaction" jsonb[],
         "parent_id" uuid,
-        "created_at" timestamp
+        "created_at" timestamp DEFAULT Now()
       );
     `);
   }

@@ -1,5 +1,5 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable,
+  Entity, PrimaryGeneratedColumn, Column, ManyToMany,
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
@@ -40,11 +40,6 @@ export class User {
   @Field({ nullable: true })
   avatar?: string;
 
-  @ManyToMany('Organization', 'users')
-  @JoinTable({
-    name: 'user_organizations',
-    joinColumn: 'user_id',
-    inverseJoinColumn: 'organization_id',
-  })
+  @ManyToMany(() => Organization, (organization) => organization.users)
   organizations: Organization[];
 }

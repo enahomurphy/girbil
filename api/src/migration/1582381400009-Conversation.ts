@@ -12,7 +12,7 @@ export class Conversation1582381400009 implements MigrationInterface {
         "creator_id" uuid,
         "receiver_id" uuid,
         "channel_id" uuid,
-        "created_at" timestamp,
+        "created_at" timestamp DEFAULT Now(),
         "organization_id" uuid
       );
     `);

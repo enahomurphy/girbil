@@ -1,5 +1,5 @@
 import { EntityRepository, Repository, getRepository } from 'typeorm';
-import { Organization, UserOrganization } from '../entity';
+import { Organization, UserOrganization, User } from '../entity';
 
 @EntityRepository(Organization)
 class OrganizationRepository extends Repository<Organization> {
@@ -12,6 +12,22 @@ class OrganizationRepository extends Repository<Organization> {
       .getMany();
 
     return userOrganizations.map((uo) => uo.organization);
+  }
+
+  async createOrganization(name: string, user: User): Promise<Organization> {
+    const organization = new Organization();
+    organization.name = name;
+    organization.userId = user.id;
+
+    await this.manager.transaction(async (manager) => {
+      await manager.save(organization);
+      const userOrganization = new UserOrganization();
+      userOrganization.organizationId = organization.id;
+      userOrganization.userId = user.id;
+      await manager.save(userOrganization);
+    });
+
+    return organization;
   }
 }
 

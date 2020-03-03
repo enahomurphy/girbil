@@ -14,7 +14,7 @@ export class Teams1582381400002 implements MigrationInterface {
         "user_id" uuid,
         "about" int,
         "avatar" varchar,
-        "created_at" timestamp
+        "created_at" timestamp DEFAULT Now()
       );
     `);
   }

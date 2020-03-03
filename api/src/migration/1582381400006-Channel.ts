@@ -16,8 +16,8 @@ export class Channel1582381400006 implements MigrationInterface {
         "avatar" varchar,
         "last_updated_by_id" uuid,
         "organization_id" uuid,
-        "created_at" timestamp,
-        "updated_at" timestamp
+        "created_at" timestamp DEFAULT Now(),
+        "updated_at" timestamp DEFAULT Now()
       );
     `);
   }

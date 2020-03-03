@@ -1,7 +1,9 @@
 import { ObjectType, Field } from 'type-graphql';
 import {
-  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToMany,
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToMany, OneToOne, JoinTable,
 } from 'typeorm';
+
+import { User } from '.';
 
 @Entity('organizations')
 @ObjectType()
@@ -21,15 +23,34 @@ export class Organization {
   domain: string
 
   @Field({ nullable: true })
-  @Column()
-  user_id: string
+  @Column({
+    name: 'user_id',
+  })
+  userId: string
 
   @Field({ nullable: true })
   @CreateDateColumn({
     name: 'created_at',
   })
-  createdAt: string
+  createdAt: Date
 
-  @ManyToMany('User', 'organizations')
+  @Field(() => User, { nullable: true })
+  @OneToOne(() => User)
+  creator: User
+
+  @ManyToMany(() => User, (user) => user.organizations, {
+    cascade: true,
+  })
+  @JoinTable({
+    name: 'user_organizations',
+    joinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'organization_id',
+      referencedColumnName: 'id',
+    },
+  })
   users: User[];
 }

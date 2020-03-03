@@ -4,16 +4,16 @@ interface AWS {
 }
 
 interface Keys {
-  port: string;
-  authSecrete: string;
+  port: number;
+  authSecret: string;
   domain: string;
   clientURL: string;
   aws: AWS;
 }
 
 const keys: Keys = {
-  port: process.env.PORT,
-  authSecrete: process.env.AUTH_SECRET,
+  port: parseInt(process.env.PORT, 10),
+  authSecret: process.env.AUTH_SECRET,
   domain: process.env.DOMAIN,
   clientURL: process.env.clientURL,
   aws: {

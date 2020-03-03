@@ -1,5 +1,14 @@
 import loggerMiddleware from './requestLogger';
+import authenticated from './authenticated';
+import authorized from './authorized';
 
-export { default as passportMiddleware } from './passport';
+export {
+  authenticated,
+  loggerMiddleware,
+  authorized,
+};
 
-export default [loggerMiddleware];
+export default [
+  loggerMiddleware,
+  authenticated,
+];

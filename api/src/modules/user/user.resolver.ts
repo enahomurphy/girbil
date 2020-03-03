@@ -2,24 +2,23 @@
 import {
   Resolver,
   Query,
+  Authorized,
 } from 'type-graphql';
-import { plainToClass } from 'class-transformer';
+import { getCustomRepository } from 'typeorm';
 
-import User from '../../entity/user';
+import { User } from '../../entity';
+import { UserRepo } from '../../repo';
 
-@Resolver()
+// @Authorized('ADMIN')
+@Resolver(User)
 class UserResolver {
-  private readonly items: User[] = plainToClass(User, [{
-    id: 1,
-    email: 'enahomurphy@gmail.com',
-    isVerified: 'false',
-    avatar: 's',
-    name: 's',
-  }]);
+  private readonly userRepo = getCustomRepository(UserRepo);
 
+
+  @Authorized()
   @Query(() => User, { nullable: true })
   async user(): Promise<User> {
-    return this.items[0];
+    return Promise.resolve(this.userRepo.first());
   }
 }
 

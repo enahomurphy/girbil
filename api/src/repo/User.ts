@@ -1,4 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
+import { plainToClass } from 'class-transformer';
 import { User } from '../entity';
 import { hashPassword } from '../utils/password';
 
@@ -42,7 +43,20 @@ class UserRepository extends Repository<User> {
       email: email.toLowerCase(),
       name,
       isVerified: verified,
+      avatar,
     }));
+  }
+
+  static select(user: User): User {
+    const userToUpdate: User = { ...user };
+    delete userToUpdate.password;
+    return plainToClass(User, user);
+  }
+
+  async first(): Promise<User> {
+    const user = await this.findOne();
+
+    return UserRepository.select(user);
   }
 }
 

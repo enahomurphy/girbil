@@ -3,7 +3,7 @@ import {
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
-import { Channel } from './channel';
+import { Organization } from './organization';
 
 @Entity('users')
 @ObjectType()
@@ -38,4 +38,13 @@ export class User {
   })
   @Field()
   avatar?: string;
+
+  @Field()
+  @ManyToMany(() => Organization)
+  @JoinTable({
+    name: 'user_organizations',
+    joinColumn: 'user_id',
+    inverseJoinColumn: 'organization_id',
+  })
+  organizations?: Organization;
 }

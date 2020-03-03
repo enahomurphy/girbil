@@ -1,5 +1,6 @@
 import * as jwt from 'jsonwebtoken';
-import { User } from 'src/entity';
+import { User } from '../entity';
+import { keys } from '../config';
 
 export const options = {
   issuer: 'girbil.com',
@@ -13,5 +14,16 @@ export const sign = (payload: User): string => {
     ...payload,
   };
 
-  return jwt.sign(setting, process.env.AUTH_SECRET);
+  return jwt.sign(setting, keys.authSecret);
+};
+
+export const decode = (token?: string): User => {
+  try {
+    if (token) {
+      return jwt.verify(token, keys.authSecret);
+    }
+    return null;
+  } catch (err) {
+    return null;
+  }
 };

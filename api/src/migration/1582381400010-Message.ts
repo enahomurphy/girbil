@@ -8,7 +8,7 @@ export class Message1582381400010 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS "messages" (
-        "id" uuid PRIMARY KEY,
+        "id" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
         "sender_id" uuid,
         "conversation_id" uuid,
         "video" varchar,

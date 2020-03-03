@@ -8,7 +8,7 @@ export class Channel1582381400006 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS "channels" (
-        "id" uuid PRIMARY KEY,
+        "id" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
         "name" varchar(255),
         "about" text,
         "is_private" boolean DEFAULT true,

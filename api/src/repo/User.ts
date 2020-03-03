@@ -25,6 +25,25 @@ class UserRepository extends Repository<User> {
       throw new Error(error.message);
     }
   }
+
+  async findOrCreateGoogleUser(
+    email: string,
+    avatar: string,
+    name: string,
+    verified: boolean,
+  ): Promise<User> {
+    const user = await this.findOne({ email });
+
+    if (user) {
+      return user;
+    }
+
+    return this.save(this.create({
+      email: email.toLowerCase(),
+      name,
+      isVerified: verified,
+    }));
+  }
 }
 
 export default UserRepository;

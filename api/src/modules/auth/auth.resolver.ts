@@ -8,9 +8,10 @@ import { getCustomRepository } from 'typeorm';
 import { UserRepo } from '../../repo';
 import { AuthType } from './auth.type';
 import { UserInput } from '../user/user.input';
-import { LoginInput } from './login.input';
+import { LoginInput, SocialInput } from './auth.input';
 import { sign } from '../../utils/jwt';
 import { isValidPassword } from '../../utils/password';
+import google from  '../../services/google';
 
 @Resolver(AuthType)
 class AuthResolver {
@@ -45,6 +46,21 @@ class AuthResolver {
 
     delete user.password;
     return AuthType.createAuth(sign(user));
+  }
+
+  @Mutation(() => AuthType)
+  async social(@Arg('input') { accessToken, type }: SocialInput): Promise<AuthType> {    
+    const googleUser = await google.getGoogleUser(accessToken)
+    console.log(googleUser);
+    const user = await this.userRepo.findOrCreateGoogleUser(
+      googleUser.email,
+      googleUser.avatar,
+      googleUser.name,
+      googleUser.verified
+    );
+
+    delete user.password;
+    return AuthType.createAuth(sign(user))
   }
 }
 

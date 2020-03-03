@@ -8,3 +8,12 @@ export class LoginInput {
   @Field()
   password: string
 }
+
+@InputType()
+export class SocialInput {
+  @Field()
+  accessToken: string
+
+  @Field()
+  type: string
+}

@@ -8,7 +8,6 @@ import { buildSchema } from 'type-graphql';
 
 import logger from './utils/logger';
 import middleware, { passportMiddleware } from './middleware';
-import routes from './routes';
 
 interface Context {
   req: Express.Request;
@@ -42,7 +41,6 @@ const App = async (): Promise<string | undefined> => {
     });
     app.use(passport.initialize());
     app.use(middleware);
-    routes(app, passport);
 
     apolloServer.applyMiddleware({ app });
 

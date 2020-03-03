@@ -1,14 +1,26 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Title } from '@/components/styles';
+import Loader from '@shared/components/icons/Loader';
 
-import { MainContainer, LayoutContainer } from './style';
+import { MainContainer, LayoutContainer, LoadingOverlay } from './style';
 
-const Layout = ({ children, height, title }) => (
+const Layout = ({
+  children, height, title, loading,
+}) => (
   <LayoutContainer>
-    <MainContainer height={height}>
-      <Title width="312px">{title}</Title>
-      {children}
+    <MainContainer loading={loading} height={height}>
+      {
+        loading && (
+          <LoadingOverlay>
+            <Loader />
+          </LoadingOverlay>
+        )
+      }
+      <Fragment>
+        <Title width="312px">{title}</Title>
+        {children}
+      </Fragment>
     </MainContainer>
   </LayoutContainer>
 );
@@ -21,6 +33,7 @@ Layout.propTypes = {
   children: PropTypes.element.isRequired,
   height: PropTypes.string,
   title: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 export default Layout;

@@ -2,8 +2,9 @@
 import React, { useState } from 'react';
 
 import Layout from '@/components/layout';
-import { Text } from '@/components/styles';
-import { Flex, Title, Button } from '@/components/styles/index';
+import {
+  Flex, Title, Button, Text,
+} from '@/components/styles/index';
 
 const Organizations = () => {
   const [accounts] = useState([

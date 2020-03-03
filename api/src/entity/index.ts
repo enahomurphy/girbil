@@ -5,3 +5,5 @@ export { Channel } from './channel';
 export { Conversation, ConversationType } from './conversation';
 export { Message } from './message';
 export { Team } from './team';
+export { Organization } from './organization';
+export { UserOrganization } from './userOrganization';

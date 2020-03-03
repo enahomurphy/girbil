@@ -3,8 +3,7 @@ import {
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
-import { User } from '.';
-import { Channel } from './channel';
+import { User } from './user';
 
 export enum ConversationType {
   USER = 'user',
@@ -31,7 +30,7 @@ export class Conversation {
   })
   receiverId?: string;
 
-  @Field(() => Channel)
+  @Field()
   @Column({
     name: 'channel_id',
     type: 'uuid',
@@ -47,14 +46,14 @@ export class Conversation {
   creator?: User
 
   @Field(() => User)
-  @OneToOne(() => User)
+  @OneToOne('Channel')
   @JoinColumn({
     name: 'receiver_id',
     referencedColumnName: 'id',
   })
   receiver?: User
 
-  @OneToOne(() => Channel)
+  @OneToOne('Channel')
   @JoinColumn({
     name: 'channel_id',
     referencedColumnName: 'id',

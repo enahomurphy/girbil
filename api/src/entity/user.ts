@@ -26,7 +26,7 @@ export class User {
   })
   password?: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({
     name: 'is_verified',
     type: 'boolean',
@@ -36,15 +36,14 @@ export class User {
   @Column({
     nullable: true,
   })
-  @Field()
+  @Field({ nullable: true })
   avatar?: string;
 
-  @Field()
-  @ManyToMany(() => Organization)
+  @ManyToMany('Organization', 'users')
   @JoinTable({
     name: 'user_organizations',
     joinColumn: 'user_id',
     inverseJoinColumn: 'organization_id',
   })
-  organizations?: Organization;
+  organizations: Organization[];
 }

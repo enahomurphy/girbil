@@ -1,5 +1,7 @@
 import { ObjectType, Field } from 'type-graphql';
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import {
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToMany,
+} from 'typeorm';
 
 @Entity('organizations')
 @ObjectType()
@@ -7,23 +9,26 @@ export class Organization {
   @PrimaryGeneratedColumn('uuid')
   readonly id: string
 
-  @Field()
+  @Field({ nullable: true })
   @Column()
   name: string
 
-  @Field()
+  @Field({ nullable: true })
   @Column({
     unique: true,
   })
   domain: string
 
-  @Field()
+  @Field({ nullable: true })
   @Column()
   user_id: string
 
-  @Field()
+  @Field({ nullable: true })
   @CreateDateColumn({
-    name: 'created_at'
+    name: 'created_at',
   })
   createdAt: string
+
+  @ManyToMany('User', 'organizations')
+  users: User[];
 }

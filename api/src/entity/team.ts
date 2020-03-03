@@ -1,5 +1,5 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToMany, JoinColumn, CreateDateColumn,
+  Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, CreateDateColumn,
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
@@ -45,7 +45,7 @@ export class Team {
 
   @Field()
   @CreateDateColumn({
-    name: 'created_at'
+    name: 'created_at',
   })
   createdAt: string
 

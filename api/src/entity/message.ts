@@ -2,7 +2,7 @@ import {
   Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne, JoinColumn,
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
-import { User } from './user';
+import { User } from '.';
 
 @Entity('messages')
 @ObjectType()

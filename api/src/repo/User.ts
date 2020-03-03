@@ -1,5 +1,4 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { plainToClass } from 'class-transformer';
 import { User } from '../entity';
 import { hashPassword } from '../utils/password';
 
@@ -17,7 +16,7 @@ class UserRepository extends Repository<User> {
         name,
       }));
 
-      return user;
+      return UserRepository.select(user);
     } catch (error) {
       if (error.message.match(/users_email_key/gmi)) {
         throw new Error(`email ${email} already exist`);
@@ -33,24 +32,25 @@ class UserRepository extends Repository<User> {
     name: string,
     verified: boolean,
   ): Promise<User> {
-    const user = await this.findOne({ email });
+    let user = await this.findOne({ email });
 
-    if (user) {
-      return user;
+    if (!user) {
+      user = await this.save(this.create({
+        email: email.toLowerCase(),
+        name,
+        isVerified: verified,
+        avatar,
+      }));
     }
 
-    return this.save(this.create({
-      email: email.toLowerCase(),
-      name,
-      isVerified: verified,
-      avatar,
-    }));
+    return UserRepository.select(user);
   }
 
   static select(user: User): User {
     const userToUpdate: User = { ...user };
+    userToUpdate.isVerified = Boolean(user.isVerified === 'true');
     delete userToUpdate.password;
-    return plainToClass(User, user);
+    return userToUpdate;
   }
 
   async first(): Promise<User> {

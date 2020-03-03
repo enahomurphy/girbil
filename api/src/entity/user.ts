@@ -9,6 +9,7 @@ import { Organization } from './organization';
 @ObjectType()
 export class User {
   @PrimaryGeneratedColumn('uuid')
+  @Field()
   readonly id?: string;
 
   @Field()

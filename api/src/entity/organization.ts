@@ -7,6 +7,7 @@ import {
 @ObjectType()
 export class Organization {
   @PrimaryGeneratedColumn('uuid')
+  @Field()
   readonly id: string
 
   @Field({ nullable: true })

@@ -6,22 +6,22 @@ import {
   FieldResolver,
   ResolverInterface,
 } from 'type-graphql';
-import { getCustomRepository, getRepository } from 'typeorm';
+import { getCustomRepository } from 'typeorm';
 
-import { UserRepo } from '../../repo';
+import { UserRepo, OrganizationRepo } from '../../repo';
 import { AuthType } from './auth.type';
 import { UserInput } from '../user/user.input';
 import { LoginInput, SocialInput } from './auth.input';
 import { sign } from '../../utils/jwt';
 import { isValidPassword } from '../../utils/password';
 import { getGoogleUser } from '../../services/google';
-import { Organization, UserOrganization } from '../../entity';
+import { Organization } from '../../entity';
 
 @Resolver(AuthType)
 class AuthResolver implements ResolverInterface<AuthType> {
   private readonly userRepo = getCustomRepository(UserRepo);
 
-  private readonly userOrganizationRepo = getRepository(UserOrganization);
+  private readonly orgRepo = getCustomRepository(OrganizationRepo);
 
   @Mutation(() => AuthType)
   async signup(@Arg('input') { email, password, name }: UserInput): Promise<AuthType> {
@@ -66,18 +66,12 @@ class AuthResolver implements ResolverInterface<AuthType> {
     );
 
     delete user.password;
-
     return AuthType.createAuth(sign(user), user);
   }
 
   @FieldResolver()
   async organizations(@Root() auth: AuthType): Promise<Organization[]> {
-    const userOrganizations = await this.userOrganizationRepo.createQueryBuilder('organization')
-      .where('organization.userId = :id', { id: auth.user.id })
-      .leftJoinAndSelect('organization.organization', 'organizations')
-      .getMany();
-
-    return userOrganizations.map((uo) => uo.organization);
+    return this.orgRepo.findUserOrganizations(auth.user.id);
   }
 }
 

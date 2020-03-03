@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Google from '@/components/icons/Google';
 import Layout from '@/components/layout';
 import { Text } from '@/components/styles';
-import { DividerContainer, Footer, GoogleButton } from '../signup/style';
+import { DividerContainer, Footer, GoogleButton } from '../style';
 
 const Home = ({ onLoginSuccess, onLoginError, loading }) => (
   <Layout loading={loading} title="Let’s get started!">

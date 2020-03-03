@@ -5,6 +5,7 @@ import { useToasts } from 'react-toast-notifications';
 
 import { mutation } from '@shared/graphql/auth';
 import { query } from '@shared/graphql/organizations';
+import { storage } from '@shared/lib';
 import Auth from './Auth';
 
 const Home = () => {
@@ -33,7 +34,7 @@ const Home = () => {
         },
       });
 
-      localStorage.setItem('gb-token', token);
+      storage.setToken(token);
 
       if (organizations.length) {
         return history.push('/organizations');

@@ -1,6 +1,7 @@
 /* eslint-disable global-require */
 import React, { Fragment } from 'react';
 import { useQuery } from '@apollo/react-hooks';
+import { useHistory } from 'react-router-dom';
 
 import Layout from '@/components/layout';
 import { query } from '@shared/graphql/organizations';
@@ -10,6 +11,7 @@ import {
 } from '@/components/styles/index';
 
 const Organizations = () => {
+  const { push } = useHistory();
   const { data, loading } = useQuery(query.ORGANIZATIONS, { fetchPolicy: 'network-only' });
   const organizations = get(data, 'organizations', []);
 
@@ -42,7 +44,7 @@ const Organizations = () => {
         <Text margin="60px 0 32px 0">
           Or you can create a new organization.
         </Text>
-        <button type="submit" className="primary">Create new Organization</button>
+        <button onClick={() => push('/organizations/create')} type="button" className="primary">Create new Organization</button>
       </Fragment>
     </Layout>
   );

@@ -3,9 +3,11 @@ import {
   useParams,
 } from 'react-router-dom';
 
-import { First, Second, Third } from '@/modules/signup';
+import First from './Steps/First';
+import Second from './Steps/Second';
+import Third from './Steps/Third';
 
-const Signup = () => {
+const Create = () => {
   const { step } = useParams();
 
   switch (step) {
@@ -20,4 +22,4 @@ const Signup = () => {
   }
 };
 
-export default Signup;
+export default Create;

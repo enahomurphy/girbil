@@ -15,7 +15,9 @@ import Signup from './modules/Signup';
 import Share from './pages/Share';
 import Download from './pages/Download';
 import NotFound from './pages/NotFound';
-import Organizations from './pages/Organizations';
+import Organizations from './modules/organizations';
+
+import { Authenticated } from './components/protected';
 
 const App = () => (
   <ApolloProvider client={client}>
@@ -28,11 +30,11 @@ const App = () => (
         <Header />
         <Switch>
           <Route exact path="/" render={() => <Redirect to="/signup" />} />
-          <Route exact path="/signup" component={Home} />
+          <Authenticated exact path="/signup" component={Home} />
           <Route exact path="/signup/:step" component={() => <Signup />} />
           <Route exact path="/share" component={Share} />
           <Route exact path="/download" component={Download} />
-          <Route exact path="/organizations" component={Organizations} />
+          <Authenticated exact path="/organizations" component={Organizations} />
           <Route exact path="*" component={NotFound} />
           <Route path="/user/invite">
             <div>Invite user</div>

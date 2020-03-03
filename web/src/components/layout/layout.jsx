@@ -27,13 +27,14 @@ const Layout = ({
 
 Layout.defaultProps = {
   height: '650px',
+  loading: false,
 };
 
 Layout.propTypes = {
   children: PropTypes.element.isRequired,
   height: PropTypes.string,
   title: PropTypes.string.isRequired,
-  loading: PropTypes.bool.isRequired,
+  loading: PropTypes.bool,
 };
 
 export default Layout;

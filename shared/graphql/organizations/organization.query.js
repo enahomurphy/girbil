@@ -10,7 +10,7 @@ const ORGANIZATION_FRAGMENT = gql`
 
 export const ORGANIZATIONS = gql`
   query organizations {
-    organizations @client {
+    organizations {
       ...OrganizationParts
     }
   }

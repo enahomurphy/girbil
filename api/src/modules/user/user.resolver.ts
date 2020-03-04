@@ -9,7 +9,6 @@ import { getCustomRepository } from 'typeorm';
 import { User } from '../../entity';
 import { UserRepo } from '../../repo';
 
-// @Authorized('ADMIN')
 @Resolver(User)
 class UserResolver {
   private readonly userRepo = getCustomRepository(UserRepo);

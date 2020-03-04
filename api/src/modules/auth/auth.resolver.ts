@@ -5,23 +5,30 @@ import {
   Resolver,
   FieldResolver,
   ResolverInterface,
+  Authorized,
 } from 'type-graphql';
-import { getCustomRepository } from 'typeorm';
+import { getCustomRepository, getRepository } from 'typeorm';
 
 import { UserRepo, OrganizationRepo } from '../../repo';
-import { AuthType } from './auth.type';
-import { UserInput } from '../user/user.input';
-import { LoginInput, SocialInput } from './auth.input';
-import { sign } from '../../utils/jwt';
+import { Organization, Invite, UserOrganization } from '../../entity';
 import { isValidPassword } from '../../utils/password';
 import { getGoogleUser } from '../../services/google';
-import { Organization } from '../../entity';
+import { sign, inviteToken } from '../../utils/jwt';
+import { LoginInput, SocialInput, InviteInput } from './auth.input';
+import { UserInput } from '../user/user.input';
+import { AuthType } from './auth.type';
+import { InviteEmails } from '../../interfaces';
+import { sendInvites } from '../../services/email';
 
 @Resolver(AuthType)
 class AuthResolver implements ResolverInterface<AuthType> {
   private readonly userRepo = getCustomRepository(UserRepo);
 
   private readonly orgRepo = getCustomRepository(OrganizationRepo);
+
+  private readonly inviteRepo = getRepository(Invite);
+
+  private readonly userOrgRepo = getRepository(UserOrganization);
 
   @Mutation(() => AuthType)
   async signup(@Arg('input') { email, password, name }: UserInput): Promise<AuthType> {
@@ -67,6 +74,49 @@ class AuthResolver implements ResolverInterface<AuthType> {
 
     delete user.password;
     return AuthType.createAuth(sign(user), user);
+  }
+
+  @Mutation(() => String, { nullable: true })
+  async invite(@Arg('input') { emails, organizationId }: InviteInput): Promise<string> {
+    const organization = await this.orgRepo.findOne({ where: { id: organizationId } });
+    let invites = [emails].map((email) => ({
+      email,
+      organizationId: organization.id,
+    }));
+
+    const findInviteQuery = await this.inviteRepo.createQueryBuilder('invites');
+
+    // @TODO make sure user does not already belong to the organization
+
+    invites.forEach(({ email, organizationId: orgId }) => {
+      findInviteQuery.orWhere('email = :email and organization_id = :orgId ', { email, orgId });
+    });
+
+    const existingInvites = await findInviteQuery.getMany();
+
+    if (existingInvites.length) {
+      const map = new Map();
+
+      existingInvites.forEach(({ email, organizationId: orgId }) => {
+        map.set(orgId, email);
+      });
+
+      invites = invites.filter(({ email, organizationId: orgId }) => !(
+        map.has(orgId) && map.get(orgId) === email));
+    }
+
+    if (invites.length) {
+      const createdInvites: InviteEmails = await this.inviteRepo.insert(invites);
+      const inviteEmails = createdInvites.generatedMaps.map((invite, index) => ({
+        email: invites[index].email,
+        token: inviteToken(`${invite.id}+${organizationId}`),
+        organization,
+      }));
+
+      sendInvites(inviteEmails);
+    }
+
+    return 'sent';
   }
 
   @FieldResolver()

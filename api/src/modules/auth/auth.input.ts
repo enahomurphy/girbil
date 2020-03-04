@@ -1,5 +1,7 @@
-/* eslint-disable max-classes-per-file */
 import { Field, InputType } from 'type-graphql';
+import {
+  IsEmail, ValidateNested, IsArray, IsUUID,
+} from 'class-validator';
 
 @InputType()
 export class LoginInput {
@@ -17,4 +19,15 @@ export class SocialInput {
 
   @Field()
   type: string
+}
+
+@InputType()
+export class InviteInput {
+  @Field(() => String)
+  @IsEmail({ each: true })
+  emails: string
+
+  @Field()
+  @IsUUID()
+  organizationId: string
 }

@@ -11,7 +11,7 @@ export class AuthType {
   @Field({ nullable: true })
   user?: User
 
-  @Field(() => Organization, { nullable: true })
+  @Field(() => [Organization], { nullable: true })
   organizations?: Organization[]
 
   static createAuth(token: string, user?: User, organizations?: Organization): AuthType {

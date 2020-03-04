@@ -1,14 +1,14 @@
 import Faker from 'faker';
 
 import { define } from 'typeorm-seeding';
-import { Workspace } from '../../entity';
+import { Team } from '../../entity';
 
-define(Workspace, (faker: typeof Faker, settings: { userId: string }) => {
-  const workspace = new Workspace();
-  workspace.name = faker.company.companyName();
-  workspace.about = faker.company.bs();
-  workspace.userId = settings.userId;
-  workspace.avatar = faker.image.avatar();
+define(Team, (faker: typeof Faker, settings: { userId: string }) => {
+  const team = new Team();
+  team.name = faker.company.companyName();
+  team.about = faker.company.bs();
+  team.userId = settings.userId;
+  team.avatar = faker.image.avatar();
 
-  return workspace;
+  return team;
 });

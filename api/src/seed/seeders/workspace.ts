@@ -7,25 +7,25 @@ import {
 import faker from 'faker';
 
 import {
-  Workspace, User, Channel, ConversationType, Conversation, Message,
+  Team, User, Channel, ConversationType, Conversation, Message,
 } from '../../entity';
 
-export default class CreateWorkspaces implements Seeder {
+export default class CreateTeams implements Seeder {
   public async run(factory: Factory): Promise<any> {
     const connection = getConnection();
     const em = connection.createEntityManager();
 
     await times(10, async () => {
       const user: User = await factory(User)().seed();
-      const workspace = await factory(Workspace)({ userId: user.id }).make();
+      const team = await factory(Team)({ userId: user.id }).make();
       const users: User[] = await factory(User)().seedMany(10);
 
-      workspace.users = users;
-      await em.save(workspace);
+      team.users = users;
+      await em.save(team);
 
       await times(10, async () => {
         const channel: Channel = await factory(Channel)(
-          { workspaceId: workspace.id, userId: workspace.userId },
+          { teamId: team.id, userId: team.userId },
         ).make();
 
         const max = faker.random.number({ min: 2, max: 8 });
@@ -35,10 +35,10 @@ export default class CreateWorkspaces implements Seeder {
 
         const conversation: Conversation = await factory(Conversation)(
           {
-            sender: workspace.userId,
+            sender: team.userId,
             receiver: channel.id,
             type: ConversationType.CHANNEL,
-            workspaceId: workspace.id,
+            teamId: team.id,
           },
         ).seed();
 

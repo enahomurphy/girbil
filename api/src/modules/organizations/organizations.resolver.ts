@@ -1,4 +1,3 @@
-
 import {
   Resolver,
   Query,
@@ -6,18 +5,21 @@ import {
   Ctx,
   Arg,
   Mutation,
+  ResolverInterface,
+  FieldResolver,
+  Root,
 } from 'type-graphql';
-import { getCustomRepository } from 'typeorm';
+import { getCustomRepository, getRepository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { Organization, User } from '../../entity';
+import { Organization, User, UserOrganization } from '../../entity';
 import { ContextType } from '../../interfaces';
 import { OrganizationRepo } from '../../repo';
 import { CreateOrganizationType } from './organization.type';
 import { sign } from '../../utils/jwt';
 
 @Resolver(Organization)
-class UserResolver {
+class OrganizationResolver implements ResolverInterface<Organization> {
   private readonly orgRepo = getCustomRepository(OrganizationRepo);
 
   @Authorized()
@@ -62,11 +64,29 @@ class UserResolver {
       @Ctx(){ user }: ContextType,
   ): Promise<CreateOrganizationType> {
     const organization = await this.orgRepo.createOrganization(name.toLowerCase(), domain, user);
-    const tokenOrg = plainToClass(Organization, { id: organization.id });
-    const tokenPayload = sign(plainToClass(User, { ...user, organization: tokenOrg }));
 
-    return CreateOrganizationType.create(tokenPayload, organization);
+    return CreateOrganizationType.create(organization);
   }
 }
 
-export default UserResolver;
+@Resolver(CreateOrganizationType)
+export class CreateOrganizationTypeResolver implements ResolverInterface<CreateOrganizationType> {
+  private readonly userOrgRepo = getRepository(UserOrganization);
+
+  @FieldResolver()
+  async token(@Root() org: CreateOrganizationType, @Ctx(){ user }: ContextType): string {
+    const userOrg = await this.userOrgRepo.findOne({
+      where: {
+        userId: user.id,
+        organizationId: org.organization.id,
+      },
+    });
+
+    const { id, domain } = org.organization;
+    const tokenOrg = plainToClass(Organization, { id, domain, role: userOrg.role });
+    const tokenPayload = sign(plainToClass(User, { ...user, organization: tokenOrg }));
+    return tokenPayload;
+  }
+}
+
+export default OrganizationResolver;

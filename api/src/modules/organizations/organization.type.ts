@@ -8,10 +8,10 @@ export class CreateOrganizationType {
   @Field(() => Organization, { nullable: true })
   organization: Organization
 
-  @Field({ nullable: true })
-  token: string
+  @Field(() => String, { nullable: true })
+  token?: string
 
-  static create(token: string, organization: Organization): AuthType {
+  static create(organization: Organization, token?: string): AuthType {
     return plainToClass(CreateOrganizationType, { token, organization });
   }
 }

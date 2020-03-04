@@ -5,7 +5,6 @@ import {
   Resolver,
   FieldResolver,
   ResolverInterface,
-  Authorized,
 } from 'type-graphql';
 import { getCustomRepository, getRepository } from 'typeorm';
 

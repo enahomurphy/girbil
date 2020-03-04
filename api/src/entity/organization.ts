@@ -28,6 +28,8 @@ export class Organization {
   })
   userId?: string
 
+  role?: string
+
   @Field({ nullable: true })
   @CreateDateColumn({
     name: 'created_at',
@@ -38,9 +40,7 @@ export class Organization {
   @OneToOne(() => User)
   creator?: User
 
-  @ManyToMany(() => User, (user) => user.organizations, {
-    cascade: true,
-  })
+  @ManyToMany(() => User, (user) => user.organizations)
   @JoinTable({
     name: 'user_organizations',
     joinColumn: {

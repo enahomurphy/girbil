@@ -6,11 +6,6 @@ import { Field, ObjectType } from 'type-graphql';
 import { User } from './user';
 import { Channel } from './channel';
 
-export enum ConversationType {
-  USER = 'user',
-  CHANNEL = 'channel',
-}
-
 @Entity('conversations')
 @ObjectType()
 export class Conversation {
@@ -61,14 +56,6 @@ export class Conversation {
   })
   channel?: Channel
 
-  @Field()
-  @Column({
-    type: 'enum',
-    enum: ConversationType,
-    default: ConversationType.USER,
-    enumName: 'conversation_type',
-  })
-  type?: ConversationType;
 
   @Field()
   @CreateDateColumn({

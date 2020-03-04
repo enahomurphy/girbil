@@ -1,5 +1,7 @@
 import { EntityRepository, Repository, getRepository } from 'typeorm';
-import { Organization, UserOrganization, User } from '../entity';
+import {
+  Organization, UserOrganization, User, RoleType,
+} from '../entity';
 
 @EntityRepository(Organization)
 class OrganizationRepository extends Repository<Organization> {
@@ -26,6 +28,7 @@ class OrganizationRepository extends Repository<Organization> {
         const userOrganization = new UserOrganization();
         userOrganization.organizationId = organization.id;
         userOrganization.userId = user.id;
+        userOrganization.role = RoleType.OWNER;
         await manager.save(userOrganization);
       });
 

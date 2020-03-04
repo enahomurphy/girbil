@@ -1,5 +1,5 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, ManyToMany,
+  Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToOne,
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
@@ -42,4 +42,8 @@ export class User {
 
   @ManyToMany(() => Organization, (organization) => organization.users)
   organizations: Organization[];
+
+  @Field(() => Organization, { nullable: true })
+  @OneToOne(() => Organization)
+  organization?: Organization[];
 }

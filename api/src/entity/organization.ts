@@ -20,23 +20,23 @@ export class Organization {
   @Column({
     unique: true,
   })
-  domain: string
+  domain?: string
 
   @Field({ nullable: true })
   @Column({
     name: 'user_id',
   })
-  userId: string
+  userId?: string
 
   @Field({ nullable: true })
   @CreateDateColumn({
     name: 'created_at',
   })
-  createdAt: Date
+  createdAt?: Date
 
   @Field(() => User, { nullable: true })
   @OneToOne(() => User)
-  creator: User
+  creator?: User
 
   @ManyToMany(() => User, (user) => user.organizations, {
     cascade: true,
@@ -52,5 +52,5 @@ export class Organization {
       referencedColumnName: 'id',
     },
   })
-  users: User[];
+  users?: User[];
 }

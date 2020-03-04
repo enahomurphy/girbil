@@ -27,3 +27,16 @@ export const decode = (token?: string): User => {
     return null;
   }
 };
+
+export const inviteToken = (payload: string): string => jwt.sign(payload, keys.authSecret);
+
+export const decodeInviteToken = (token: string): string => {
+  try {
+    if (token) {
+      return jwt.verify(token, keys.authSecret);
+    }
+    return null;
+  } catch (err) {
+    return null;
+  }
+};

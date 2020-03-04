@@ -7,3 +7,4 @@ export { Message } from './message';
 export { Team } from './team';
 export { Organization } from './organization';
 export { UserOrganization } from './userOrganization';
+export { Invite } from './invites';

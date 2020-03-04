@@ -27,6 +27,7 @@ const Organizations = () => {
             key={id}
             bordered={index !== (organizations.length - 1)}
             margin="32px 0 0 0"
+            padding="0 0 16px 0"
           >
             <Flex
               direction="column"

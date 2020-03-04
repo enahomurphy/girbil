@@ -6,9 +6,12 @@ class TokenStorage {
   }
 
   get payload() {
-    return this.token ? decode(this.token) : null;
+    try {
+      return this.token ? decode(this.token) : null;
+    } catch (_) {
+      return null;
+    }
   }
-
   get token() {
     return localStorage.getItem(this.key);
   }

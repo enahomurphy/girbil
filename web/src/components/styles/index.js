@@ -50,6 +50,7 @@ export const Flex = styled.div`
   align-items: ${props => props.align};
   flex-direction: ${props => props.direction};
   margin: ${props => props.margin};
+  padding: ${props => props.padding};
   width: ${props => props.width};
   min-width: ${props => props.width};
   border-bottom: ${props => (props.bordered ? '1px solid #ffffff' : 'none')};
@@ -57,6 +58,7 @@ export const Flex = styled.div`
 
 Flex.defaultProps = {
   margin: '0',
+  padding: '0',
   direction: 'initial',
   justify: 'flex-start',
   align: 'center',

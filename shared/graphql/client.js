@@ -5,10 +5,25 @@ import { storage } from '../lib'
 
 const cache = new InMemoryCache();
 
+const defaultOptions = {
+  watchQuery: {
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all',
+  },
+  query: {
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all',
+  },
+  mutate: {
+    errorPolicy: 'all',
+  },
+};
+
 const client = new ApolloClient({
   uri: 'http://localhost:8081/graphql',
   cache,
   resolvers,
+  defaultOptions,
   request: (operation) => {
     operation.setContext({
       headers: {
@@ -17,6 +32,7 @@ const client = new ApolloClient({
     })
   }
 });
+client.defaultOptions = defaultOptions;
 
 cache.writeData({ data });
 

@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { GoogleLogin } from 'react-google-login';
 import PropTypes from 'prop-types';
 
-import Google from '@/components/icons/Google';
+import GoogleIcon from '@/components/icons/Google';
 import Layout from '@/components/layout';
 import { Text } from '@/components/styles';
 import { DividerContainer, Footer, GoogleButton } from '../style';
@@ -28,7 +28,7 @@ const Home = ({ onLoginSuccess, onLoginError, loading }) => (
         render={renderProps => (
           <GoogleButton className="primary" onClick={renderProps.onClick} disabled={renderProps.disabled}>
             <span>
-              <Google />
+              <GoogleIcon />
             </span>
             Continue with Google
           </GoogleButton>

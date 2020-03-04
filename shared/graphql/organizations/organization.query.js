@@ -1,6 +1,6 @@
 import { gql } from 'apollo-boost';
 
-const ORGANIZATION_FRAGMENT = gql`
+export const ORGANIZATION_FRAGMENT = gql`
   fragment OrganizationParts on Organization {
     id
     name
@@ -17,6 +17,17 @@ export const ORGANIZATIONS = gql`
   ${ORGANIZATION_FRAGMENT}
 `;
 
+
+export const GET_ORGANIZATION_BY_DOMAIN = gql`
+  query organizationByDomain($domain: String!) {
+    organizationByDomain(domain: $domain) {
+      ...OrganizationParts
+    }
+  }
+  ${ORGANIZATION_FRAGMENT}
+`;
+
 export default {
   ORGANIZATIONS,
+  GET_ORGANIZATION_BY_DOMAIN
 };

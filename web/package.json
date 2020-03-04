@@ -23,6 +23,7 @@
     "react-google-login": "^5.1.1",
     "react-router-dom": "^5.1.2",
     "react-toast-notifications": "^2.4.0",
+    "react-use": "^13.27.0",
     "route": "^0.2.5",
     "styled-components": "^5.0.1"
   },

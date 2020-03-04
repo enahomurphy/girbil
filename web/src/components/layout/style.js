@@ -18,6 +18,21 @@ export const MainContainer = styled.main`
   border-radius: 14px;
   height: ${props => props.height || 'initial'};
   position: relative;
+  overflow: hidden;
+  scrollbar-width: thin;
+  &:hover {
+    overflow-y: scroll;
+    overflow: overlay;
+  }
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 100px;
+  }
 `;
 
 export const LoadingOverlay = styled.div`

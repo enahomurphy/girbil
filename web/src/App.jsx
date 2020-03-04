@@ -33,7 +33,7 @@ const App = () => (
           <Route exact path="/share" component={Share} />
           <Route exact path="/download" component={Download} />
           <Authenticated exact path="/organizations" component={Organizations} />
-          <Authenticated exact path="/organizations/create" render={() => <Redirect to="/organization/create/1" />} />
+          <Authenticated exact path="/organizations/create" component={Create} />
           <Authenticated exact path="/organization/create/:step" component={() => <Create />} />
           <Route exact path="*" component={NotFound} />
           <Route path="/user/invite">

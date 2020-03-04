@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { Title, Text, Input } from '@/components/styles';
 import Layout from '@/components/layout';
 
-const First = () => (
+const First = ({ handleChange, next }) => (
   <Layout title="Great, now create your organization">
     <Text color="#666666" margin="32px 0 0 0">
       STEP 1 OF 3
@@ -17,12 +18,18 @@ const First = () => (
       organizations, so we recommend creating one for your
       entire company, non-profit, etc.
     </Text>
-    <Input placeholder="Organization Name (e.g., company name)" />
-    <Text size="12px" margin="16px 0 88px 0">
+    <Input name="name" onChange={handleChange} placeholder="Organization Name (e.g., company name)" />
+    <Text name="name" size="12px" margin="16px 0 88px 0">
       The name will usually be the name of your company, non-profit, etc.
     </Text>
-    <button className="primary" type="button">Continue</button>
+    <button onClick={next} className="primary" type="button">Continue</button>
   </Layout>
 );
+
+First.propTypes = {
+  handleChange: PropTypes.func.isRequired,
+  next: PropTypes.func.isRequired,
+};
+
 
 export default First;

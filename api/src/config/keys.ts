@@ -3,12 +3,20 @@ interface AWS {
   secret: string;
 }
 
+interface Email {
+  sparkpost: string;
+  secret: string;
+}
+
 interface Keys {
   port: number;
   authSecret: string;
   domain: string;
   clientURL: string;
   aws: AWS;
+  email: Email;
+  environment: string;
+  url: string;
 }
 
 const keys: Keys = {
@@ -20,6 +28,11 @@ const keys: Keys = {
     key: process.env.AWS_ACCESS_SECRET,
     secret: process.env.AWS_ACCESS_SECRET,
   },
+  email: {
+    sparkpost: process.env.SPARK_POST,
+  },
+  environment: process.env.NODE_ENV,
+  url: process.env.NODE_ENV !== 'production' ? 'http://localhost:1234' : 'https://girbil.com',
 };
 
 export default keys;

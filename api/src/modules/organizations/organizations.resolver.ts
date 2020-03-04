@@ -24,9 +24,16 @@ class UserResolver {
   }
 
   @Authorized()
+  @Query(() => Organization, { description: 'find organization matching query domain' })
+  async organizationByDomain(@Arg('domain') domain: string): Promise<Organization> {
+    const organization = await this.orgRepo.findOne({ where: { domain } });
+    return organization || {};
+  }
+
+  @Authorized()
   @Mutation(() => Organization)
   async addOrganization(
-    @Arg('name') name?: string, @Ctx(){ user }: ContextType,
+    @Arg('name') name: string, @Ctx(){ user }: ContextType,
   ): Promise<Organization> {
     return this.orgRepo.createOrganization(name, user);
   }

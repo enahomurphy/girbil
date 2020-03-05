@@ -13,7 +13,6 @@ export const ADD_ORGANIZATION = gql`
   ${ORGANIZATION_FRAGMENT}
 `;
 
-
 export default {
   ADD_ORGANIZATION,
 };

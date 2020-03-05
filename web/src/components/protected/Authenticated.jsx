@@ -19,7 +19,7 @@ const Authenticated = (props) => {
   }
 
   return (
-    <Route user={user} {...props} />
+    <Route {...props} />
   );
 };
 

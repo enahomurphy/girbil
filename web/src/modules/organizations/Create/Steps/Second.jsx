@@ -60,13 +60,15 @@ const Second = ({
         )
       }
       {
-          valid && (
-            <Text>
-              Good news! Your organization name is available as your Girbil URL.
-              We’ve pre-filled it for you, but feel free to change it.
-            </Text>
-          )
-        }
+        valid && (
+          <Text>
+            Good news! Your organization name is
+            <span className="success"> available </span>
+            as your Girbil URL.
+            We’ve pre-filled it for you, but feel free to change it.
+          </Text>
+        )
+      }
     </Flex>
     <button
       onClick={next}

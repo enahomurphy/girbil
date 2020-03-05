@@ -22,6 +22,15 @@ export const SOCIAL_LOGIN = gql`
   }
 `;
 
+export const INVITE = gql`
+  mutation invite($emails: [String!]!) {
+    invite(input: {
+      emails: $emails
+    })
+  }
+`
+
 export default {
-  SOCIAL_LOGIN
+  SOCIAL_LOGIN,
+  INVITE
 }

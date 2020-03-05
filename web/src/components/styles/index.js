@@ -18,6 +18,7 @@ export const Text = styled.p`
   font-size: ${props => props.size};
   text-align: ${props => props.align};
   position: ${props => props.position};
+  cursor: ${props => (props.cursor ? 'pointer' : 'initial')};
   font-weight: ${props => props.weight};
 `;
 
@@ -53,6 +54,7 @@ export const Flex = styled.div`
   padding: ${props => props.padding};
   width: ${props => props.width};
   min-width: ${props => props.width};
+  cursor: ${props => (props.cursor ? 'pointer' : 'initial')};
   border-bottom: ${props => (props.bordered ? '1px solid #ffffff' : 'none')};
 `;
 
@@ -76,8 +78,20 @@ export const Button = styled.button`
   width: ${props => props.width};
   font-weight: ${props => props.weight};
 `;
+
 Button.defaultProps = {
   weight: 'bold',
   width: '100',
   marign: '0',
 };
+
+export const InputWithError = styled.div`
+  margin-bottom: 24px;
+
+  & input {
+    margin: 0 0 5px 0;
+  }
+  span {
+    color: var(--gb-red);
+  }
+`;

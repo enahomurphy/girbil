@@ -9,7 +9,6 @@ import { get, storage } from '@shared/lib';
 
 import First from './Steps/First';
 import Second from './Steps/Second';
-import Third from './Steps/Third';
 
 const Create = () => {
   const { push } = useHistory();
@@ -77,8 +76,6 @@ const Create = () => {
           domain={domain}
         />
       );
-    case '3':
-      return <Third />;
     default:
       return null;
   }

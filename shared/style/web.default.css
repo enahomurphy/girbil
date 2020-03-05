@@ -97,3 +97,7 @@ input::placeholder {
 .danger {
   color: var(--gb-red);
 }
+
+.success {
+  color: var(--gb-green);
+}

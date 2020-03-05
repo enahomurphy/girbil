@@ -11,10 +11,11 @@ import { ToastProvider } from 'react-toast-notifications';
 import client from '@shared/graphql/client';
 import Header from './components/header';
 import Home from './modules/home/Home';
-import Share from './pages/Share';
-import Download from './pages/Download';
-import NotFound from './pages/NotFound';
+import Share from './modules/share';
+import Download from './modules/Download';
+import NotFound from './modules/NotFound';
 import Organizations, { Create } from './modules/organizations';
+import Invite from './modules/invite';
 
 import { Authenticated } from './components/protected';
 
@@ -34,7 +35,7 @@ const App = () => (
           <Route exact path="/download" component={Download} />
           <Authenticated exact path="/organizations" component={Organizations} />
           <Authenticated exact path="/organizations/create" component={Create} />
-          <Authenticated exact path="/organization/create/:step" component={() => <Create />} />
+          <Authenticated exact path="/organizations/invite" component={Invite} />
           <Route exact path="*" component={NotFound} />
           <Route path="/user/invite">
             <div>Invite user</div>

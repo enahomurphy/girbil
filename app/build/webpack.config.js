@@ -2,6 +2,7 @@
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ThreadsPlugin = require('threads-plugin');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
@@ -36,6 +37,7 @@ module.exports = {
     alias: {
       '@': resolvePath('src'),
       'react-dom': '@hot-loader/react-dom',
+      '@shared': path.join(__dirname, '../../shared'),
     },
 
   },
@@ -157,6 +159,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new ThreadsPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(env),
       'process.env.TARGET': JSON.stringify(target),

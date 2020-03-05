@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import LinkIcon from '@/components/icons/Link';
 import Layout from '@/components/layout';
+import AddIcon from '@/components/icons/Add';
 import { isEmail } from '@shared/lib';
 import {
   Title, Text, Input, Form, Flex, InputWithError,
@@ -57,13 +58,24 @@ const Invite = ({
           ))
         }
         </Form>
-        <Flex cursor margin="0 0 48px 0">
-          <LinkIcon />
+        <Flex cursor margin="0">
+          <AddIcon />
           <Text
             cursor
             margin="0 0 0 8px"
             color="#fffff"
             onClick={addEmail}
+          >
+            Add another
+          </Text>
+        </Flex>
+        <Flex cursor margin="80px 0 48px 0">
+          <LinkIcon />
+          <Text
+            cursor
+            margin="0 0 0 8px"
+            color="#fffff"
+            onClick={() => {}}
           >
             Share invite link
           </Text>

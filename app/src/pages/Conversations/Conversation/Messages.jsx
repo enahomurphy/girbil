@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { f7 } from 'framework7-react';
 
-import { mutation, query } from '@/lib/graphql/conversations';
 import Gallery from '@/components/Gallery';
+import { mutation, query } from '@shared/graphql/conversations';
 
 const Messages = () => {
   const [loadMessages, { data, loading }] = useLazyQuery(query.MESSAGES);

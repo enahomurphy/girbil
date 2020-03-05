@@ -3,7 +3,7 @@ import { Page } from 'framework7-react';
 import { useQuery } from '@apollo/react-hooks';
 import { useVideo } from 'react-use';
 
-import { query } from '@/lib/graphql/conversations';
+import { query } from '@shared/graphql/conversations';
 import {
   Video, Header, useVideoData, Controls,
 } from '@/components/Video';

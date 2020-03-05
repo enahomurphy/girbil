@@ -7,7 +7,7 @@ import {
 import faker from 'faker';
 
 import {
-  Team, User, Channel, ConversationType, Conversation, Message,
+  Team, User, Channel, Conversation, Message,
 } from '../../entity';
 
 export default class CreateTeams implements Seeder {
@@ -37,7 +37,6 @@ export default class CreateTeams implements Seeder {
           {
             sender: team.userId,
             receiver: channel.id,
-            type: ConversationType.CHANNEL,
             teamId: team.id,
           },
         ).seed();

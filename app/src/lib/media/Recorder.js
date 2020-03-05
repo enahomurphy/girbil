@@ -1,4 +1,3 @@
-
 class Recorder {
   constructor(stream, thumbnailWidth, thumbnailHieght) {
     this.media = new MediaRecorder(stream, Recorder.options);
@@ -79,13 +78,13 @@ class Recorder {
     });
   }
 
-  static download() {
-    // TODO
-  }
-
   get url() {
     const blob = new Blob(this.chunks, { type: 'video/webm' });
     return window.URL.createObjectURL(blob);
+  }
+
+  get file() {
+    return new Blob(this.chunks, { type: 'video/webm' });
   }
 
   static get options() {

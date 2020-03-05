@@ -11,7 +11,8 @@ const Gallery = ({ messages, onClick }) => {
   useEffect(() => {
     if (messages.length) {
       const slide = f7.swiper.get('.swiper-container');
-      if (messages[messages.length - 1].recording) {
+      if (messages[messages.length - 1].state === 'recording') {
+        slide.update();
         slide.slideTo(messages.length);
       }
     }
@@ -36,7 +37,9 @@ const Gallery = ({ messages, onClick }) => {
       </SliderNavWrapper>
       <Swiper params={params}>
         {
-          messages.map(({ id, thumbnail, state, sender }) => (
+          messages.map(({
+            id, thumbnail, state, sender,
+          }) => (
             <ImageItem
               onClick={onClick}
               key={id}

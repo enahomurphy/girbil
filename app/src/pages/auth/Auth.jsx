@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import {
   Title, Button, Block,
-} from '@/pages/style';
+} from '@/components/Style';
 import {
   StyledForm, StyledListInput, StyledLink, AuthWrapper,
 } from './style';

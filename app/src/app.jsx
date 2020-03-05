@@ -8,7 +8,7 @@ import {
 } from 'framework7-react';
 import { ApolloProvider } from '@apollo/react-hooks';
 
-import client from '@/lib/apollo';
+import client from '@shared/graphql/client';
 import cordovaApp from './js/cordova-app';
 import routes from './js/routes';
 
@@ -32,22 +32,19 @@ const MainApp = () => {
 
   useEffect(() => {
     f7ready((f7) => {
-      // Init cordova APIs (see cordova-app.js)
       if (Device.cordova) {
         cordovaApp.init(f7);
       }
-      // Call F7 APIs here
     });
   }, []);
 
   return (
     <ApolloProvider client={client}>
       <App params={f7params} themeDark>
-        <View main url="/conversations/:conversationId/" />
+        <View main url="/conversations" />
       </App>
     </ApolloProvider>
   );
 };
 
 export default hot(MainApp);
-// export default MainApp;

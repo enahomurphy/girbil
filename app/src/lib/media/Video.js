@@ -1,14 +1,13 @@
 class Video {
-  constructor(videoId) {
+  constructor(videoId, width, height) {
     this.videoId = videoId;
     this.stream = new MediaStream();
     this.start = this.start.bind(this);
     this.error = this.error.bind(this);
-    this.height = window.screen.availHeight;
-    this.width = window.screen.availWidth;
+    this.init = this.init.bind(this);
+    this.height = height || window.screen.height - 125;
+    this.width = width || window.screen.width;
     this.onStart = () => {};
-
-    this.init();
   }
 
   init() {
@@ -17,7 +16,7 @@ class Video {
 
   useMedia() {
     navigator.getUserMedia(
-      Video.constraints,
+      this.constraints,
       this.start,
       this.error,
     );
@@ -38,12 +37,12 @@ class Video {
     return document.getElementById(this.videoId);
   }
 
-  static get constraints() {
+  get constraints() {
     const constraints = {
-      audio: false,
+      audio: true,
       video: {
-        width: { min: this.width, ideal: this.width, max: this.width * 2 },
-        height: { min: this.height, ideal: this.height, max: this.height * 2 },
+        width: { min: 300, ideal: this.width, max: this.width },
+        height: { min: 500, ideal: this.height, max: this.height },
         framerate: 30,
       },
     };

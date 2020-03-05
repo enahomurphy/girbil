@@ -2,11 +2,14 @@
   "compilerOptions": {
     "jsx": "react",
     "target": "es2017",
-    "baseUrl": "./",
+    "baseUrl": "../",
     "allowSyntheticDefaultImports": false,
     "paths": {
       "@/*": [
-        "src/*"
+        "app/src/*"
+      ],
+      "@shared/*": [
+        "shared/*"
       ]
     },
     "module": "commonjs",

@@ -1,9 +1,18 @@
 .md .theme-dark, .md.theme-blue {
-  --f7-page-bg-color: #000000;
+  --f7-page-bg-color: var(--gb-dark-grey);
   --f7-searchbar-input-bg-color:#000000;
-  --f7-searchbar-input-bg-color: #000000;
   --f7-text-editor-bg-color: #000000;
   --f7-list-bg-color: #000000;
+}
+
+.aurora .theme-dark, .aurora.theme-dark {
+  --f7-page-bg-color: var(--gb-dark-grey);
+  --f7-searchbar-input-bg-color: var(--gb-dark-grey);
+  --f7-text-editor-bg-color: var(--gb-dark-grey);
+  --f7-list-bg-color: var(--gb-dark-grey);
+  --f7-navbar-border-color: var(--gb-dark-grey);
+  --f7-bars-border-color: var(--gb-dark-grey);
+  --f7-list-item-border-color: var(--gb-dark-grey);
 }
 
 :root {
@@ -12,11 +21,12 @@
   --f7-theme-color-tint: var(--gb-accent);
   --f7-theme-color-rgb: 108, 99, 255;
   --f7-list-bg-color: #000000;
-  --f7-navbar-bg-color: #000000;
+  --f7-navbar-bg-color: var(--gb-dark-grey);
   --f7-searchbar-input-bg-color: #000000;
   --f7-list-bg-color: #000000;
   --f7-bars-link-color: #ffffff;
   --f7-searchbar-search-icon-color: #ffffff;
+  --f7-page-bg-color: var(--gb-dark-grey);
   
   --gb-black: #000000;
   --gb-white: #ffffff;

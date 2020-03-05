@@ -1,25 +1,25 @@
-# empty-project
-
-Empty project.
+# Girbil web app
+This is the web based app for girbil. All authentication and account management is done
+with this app
 
 ## Building and running on localhost
 
 First install dependencies:
 
 ```sh
-npm install
+yarn install
 ```
 
 To run in hot module reloading mode:
 
 ```sh
-npm start
+yarn start
 ```
 
 To create a production build:
 
 ```sh
-npm run build-prod
+yarn run build-prod
 ```
 
 ## Running

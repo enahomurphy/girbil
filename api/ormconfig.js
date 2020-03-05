@@ -1,12 +1,12 @@
 module.exports = {
   type: 'postgres',
-  host: 'postgres',
-  port: 5432,
-  username: 'root',
-  password: 'girbil',
-  database: 'girbil',
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   synchronize: false,
-  logging: ['query'],
+  logging: ['development', 'test'].includes(process.env.NODE_ENV) ?  ['query'] : [],
   entities: [
     'src/entity/**/*.ts',
   ],

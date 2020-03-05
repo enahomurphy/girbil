@@ -35,15 +35,6 @@
       ".jsx",
       ".ts",
       ".tsx"
-    ],
-    "import/resolver": {
-      "alias": {
-        "map": [
-          ["@", "./src"],
-          ["@shared", "../shared"]
-        ],
-        "extensions": [".js", ".jsx"]
-      }
-    }
+    ]
   }
 }

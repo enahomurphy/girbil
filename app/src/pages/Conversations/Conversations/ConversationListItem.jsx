@@ -6,7 +6,7 @@ import { Img, StyledListItem } from './style';
 
 const ConversationListItem = ({ unreadCount, user }) => (
   <StyledListItem
-    link="/conversations/1"
+    link="/conversations/1/"
     title={(
       <Block margin>
         <Title margin="0 0 5px 0" align="left">{user.name}</Title>

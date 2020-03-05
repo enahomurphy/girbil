@@ -1,7 +1,9 @@
+
 import Express from 'express';
 import { getCustomRepository } from 'typeorm';
-import { UserRepo } from '../repo';
+import { UserRepo, OrganizationRepo } from '../repo';
 import { decode } from '../utils/jwt';
+import { Organization } from 'src/entity';
 
 const Authenticated = async (
   req: Express.Request,
@@ -14,10 +16,9 @@ const Authenticated = async (
   let user = decode(token);
 
   if (user) {
-    user = await userRepo.findOne({ id: user.id });
+    req.user = await userRepo.findOne({ id: user.id });
+    req.user.organization = user.organization;
   }
-
-  req.user = user;
 
   next();
 };

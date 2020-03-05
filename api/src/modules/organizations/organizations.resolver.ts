@@ -83,7 +83,12 @@ export class CreateOrganizationTypeResolver implements ResolverInterface<CreateO
     });
 
     const { id, domain } = org.organization;
-    const tokenOrg = plainToClass(Organization, { id, domain, role: userOrg.role });
+    const tokenOrg = plainToClass(Organization, {
+      id,
+      domain,
+      role: userOrg.role,
+      name: org.organization.name 
+    });
     const tokenPayload = sign(plainToClass(User, { ...user, organization: tokenOrg }));
     return tokenPayload;
   }

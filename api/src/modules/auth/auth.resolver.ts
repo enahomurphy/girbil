@@ -5,6 +5,8 @@ import {
   Resolver,
   FieldResolver,
   ResolverInterface,
+  Ctx,
+  Authorized
 } from 'type-graphql';
 import { getCustomRepository, getRepository } from 'typeorm';
 
@@ -16,7 +18,7 @@ import { sign, inviteToken } from '../../utils/jwt';
 import { LoginInput, SocialInput, InviteInput } from './auth.input';
 import { UserInput } from '../user/user.input';
 import { AuthType } from './auth.type';
-import { InviteEmails } from '../../interfaces';
+import { InviteEmails, ContextType } from '../../interfaces';
 import { sendInvites } from '../../services/email';
 
 @Resolver(AuthType)
@@ -75,10 +77,12 @@ class AuthResolver implements ResolverInterface<AuthType> {
     return AuthType.createAuth(sign(user), user);
   }
 
+  @Authorized('admin', 'owner')
   @Mutation(() => String, { nullable: true })
-  async invite(@Arg('input') { emails, organizationId }: InviteInput): Promise<string> {
-    const organization = await this.orgRepo.findOne({ where: { id: organizationId } });
-    let invites = [emails].map((email) => ({
+  async invite(@Arg('input') { emails }: InviteInput, @Ctx() { user }: ContextType ): Promise<string> {
+    const organization = await this.orgRepo.findOne({ where: { id: user.organization.id } });
+
+    let invites = Array.from(new Set(emails)).map((email) => ({
       email,
       organizationId: organization.id,
     }));
@@ -86,6 +90,7 @@ class AuthResolver implements ResolverInterface<AuthType> {
     const findInviteQuery = await this.inviteRepo.createQueryBuilder('invites');
 
     // @TODO make sure user does not already belong to the organization
+    // we don't want to send user invite if the user already joined the organization
 
     invites.forEach(({ email, organizationId: orgId }) => {
       findInviteQuery.orWhere('email = :email and organization_id = :orgId ', { email, orgId });
@@ -104,11 +109,12 @@ class AuthResolver implements ResolverInterface<AuthType> {
         map.has(orgId) && map.get(orgId) === email));
     }
 
+    console.log(invites);
     if (invites.length) {
       const createdInvites: InviteEmails = await this.inviteRepo.insert(invites);
       const inviteEmails = createdInvites.generatedMaps.map((invite, index) => ({
         email: invites[index].email,
-        token: inviteToken(`${invite.id}+${organizationId}`),
+        token: inviteToken(`${invite.id}+${invite.organizationId}`),
         organization,
       }));
 

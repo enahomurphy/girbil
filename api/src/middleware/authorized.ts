@@ -4,12 +4,17 @@ import ContextType from 'src/interfaces';
 const authChecker: AuthChecker<ContextType> = ({ context }, roles) => {
   const { user, res } = context;
 
-  if (!roles.length && !user) {
+  if (!user) {
     res.status(401);
     return false;
   }
 
-  if (!user) {
+  if (roles.length && !user.organization) {
+    res.status(403);
+    return false;
+  }
+
+  if (roles.length && !roles.includes(user.organization.role)) {
     res.status(403);
     return false;
   }

@@ -23,11 +23,7 @@ export class SocialInput {
 
 @InputType()
 export class InviteInput {
-  @Field(() => String)
-  @IsEmail({ each: true })
-  emails: string
-
-  @Field()
-  @IsUUID()
-  organizationId: string
+  @IsEmail({}, { each: true })
+  @Field(() => [String])
+  emails: string[]
 }

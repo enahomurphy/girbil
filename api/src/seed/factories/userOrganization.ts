@@ -11,6 +11,5 @@ define(UserOrganization, (faker: typeof Faker, settings: {
   userOrganization.organizationId = settings.organizationId;
   userOrganization.role = settings.role;
 
-
   return userOrganization;
 });

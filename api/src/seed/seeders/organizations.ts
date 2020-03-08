@@ -10,14 +10,10 @@ import {
   Team, User, Channel, Conversation, Message, Organization,
   UserOrganization, RoleType, ConversationType,
 } from '../../entity';
+import connectionCreator from '../helper/connectionCreator';
 
 export default class CreateTeams implements Seeder {
   public async run(factory: Factory): Promise<any> {
-    // create users
-    // create organizations
-    // add user to organization
-    // add users
-
     const connection = getConnection();
     const em = connection.createEntityManager();
 
@@ -38,6 +34,32 @@ export default class CreateTeams implements Seeder {
       const team = await factory(Team)({ userId: user.id, organizationId: organization.id }).make();
       const users: User[] = await factory(User)().seedMany(10);
 
+      await times(10, async (index) => {
+        const linkUserToOrganization = await factory(UserOrganization)({
+          userId: users[index].id,
+          organizationId: organization.id,
+          role: RoleType.USER,
+        }).make();
+
+        await em.save(linkUserToOrganization);
+      });
+
+      const userIds = users.map(({ id }) => id);
+
+      const conversationConnection = connectionCreator(userIds);
+
+
+      await times(10, async (index) => {
+        await factory(Conversation)(
+          {
+            creatorId: conversationConnection[index][0],
+            receiverId: conversationConnection[index][1],
+            organizationId: organization.id,
+            type: ConversationType.USER,
+          },
+        ).seed();
+      });
+
       team.users = users;
       await em.save(team);
 
@@ -45,7 +67,6 @@ export default class CreateTeams implements Seeder {
         const channel: Channel = await factory(Channel)(
           { ownerId: team.id, userId: team.userId, organizationId: organization.id },
         ).make();
-
 
         const max = faker.random.number({ min: 2, max: 8 });
         channel.users = users.filter((u, i) => i > max);

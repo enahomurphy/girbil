@@ -7,17 +7,35 @@ import {
 import faker from 'faker';
 
 import {
-  Team, User, Channel, Conversation, Message,
+  Team, User, Channel, Conversation, Message, Organization,
+  UserOrganization, RoleType, ConversationType,
 } from '../../entity';
 
 export default class CreateTeams implements Seeder {
   public async run(factory: Factory): Promise<any> {
+    // create users
+    // create organizations
+    // add user to organization
+    // add users
+
     const connection = getConnection();
     const em = connection.createEntityManager();
 
     await times(10, async () => {
       const user: User = await factory(User)().seed();
-      const team = await factory(Team)({ userId: user.id }).make();
+
+      const organization = await factory(Organization)({ userId: user.id }).make();
+      await em.save(organization);
+
+      const userOrganization = await factory(UserOrganization)({
+        userId: user.id,
+        organizationId: organization.id,
+        role: RoleType.OWNER,
+      }).make();
+
+      await em.save(userOrganization);
+
+      const team = await factory(Team)({ userId: user.id, organizationId: organization.id }).make();
       const users: User[] = await factory(User)().seedMany(10);
 
       team.users = users;
@@ -25,8 +43,9 @@ export default class CreateTeams implements Seeder {
 
       await times(10, async () => {
         const channel: Channel = await factory(Channel)(
-          { teamId: team.id, userId: team.userId },
+          { ownerId: team.id, userId: team.userId, organizationId: organization.id },
         ).make();
+
 
         const max = faker.random.number({ min: 2, max: 8 });
         channel.users = users.filter((u, i) => i > max);
@@ -35,9 +54,10 @@ export default class CreateTeams implements Seeder {
 
         const conversation: Conversation = await factory(Conversation)(
           {
-            sender: team.userId,
-            receiver: channel.id,
-            teamId: team.id,
+            creatorId: team.userId,
+            receiverId: channel.id,
+            organizationId: organization.id,
+            type: ConversationType.CHANNEL,
           },
         ).seed();
 
@@ -46,7 +66,7 @@ export default class CreateTeams implements Seeder {
             userId: faker.random.arrayElement(users.map(({ id }) => id)),
             conversationId: conversation.id,
           },
-        ).seedMany(2);
+        ).seedMany(faker.random.number({ min: 2, max: 10 }));
       });
     });
   }

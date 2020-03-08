@@ -1,35 +1,42 @@
-class Video {
+import Recorder from './Recorder';
+
+class Video extends Recorder {
   constructor(videoId, width, height) {
+    super();
+
     this.videoId = videoId;
     this.stream = new MediaStream();
-    this.start = this.start.bind(this);
-    this.error = this.error.bind(this);
-    this.init = this.init.bind(this);
-    this.height = height || window.screen.height - 125;
-    this.width = width || window.screen.width;
-    this.onStart = () => {};
+    this.height = width || window.screen.height - 125;
+    this.width = height || window.screen.width;
+
+    this.videoStart = this.videoStart.bind(this);
+    this.videoError = this.videoError.bind(this);
+    this.initVideo = this.initVideo.bind(this);
+
+    this.onVideoStart = () => {};
   }
 
-  init() {
+  initVideo() {
     this.useMedia();
   }
 
   useMedia() {
     navigator.getUserMedia(
       this.constraints,
-      this.start,
-      this.error,
+      this.videoStart,
+      this.videoError,
     );
   }
 
-  start(stream) {
+  videoStart(stream) {
     this.stream = stream;
     this.video.srcObject = stream;
     this.video.play();
-    this.onStart(this.stream);
+    this.onVideoStart(this.stream);
+    super.initRecorder(stream);
   }
 
-  error(error) {
+  videoError(error) {
     console.info(this.videoId, error);
   }
 
@@ -41,8 +48,8 @@ class Video {
     const constraints = {
       audio: true,
       video: {
-        width: { min: 300, ideal: this.width, max: this.width },
-        height: { min: 500, ideal: this.height, max: this.height },
+        width: { min: 100, ideal: this.width, max: this.width },
+        height: { min: 120, ideal: this.height, max: this.height },
         framerate: 30,
       },
     };

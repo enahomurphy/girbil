@@ -2,6 +2,7 @@ import {
   Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToOne,
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
+import { plainToClass } from 'class-transformer';
 
 import { Organization } from './organization';
 import { Team } from './team';
@@ -42,16 +43,27 @@ export class User {
   @Field({ nullable: true })
   avatar?: string;
 
+  @Field(() => Organization, { nullable: true })
+  @OneToOne(() => Organization)
+  organization?: Organization;
+
   @ManyToMany(() => Organization, (organization) => organization.users)
   organizations: Organization[];
 
   @ManyToMany(() => Team, (team) => team.users)
   teams?: Team[];
 
-  @Field(() => Organization, { nullable: true })
-  @OneToOne(() => Organization)
-  organization?: Organization[];
-
   @ManyToMany(() => Channel, (channel) => channel.users)
   channels?: Channel[];
+
+  get user(): User {
+    return plainToClass(User, {
+      id: this.id,
+      avatar: this.avatar,
+      name: this.avatar,
+      organization: this.organization,
+      isVerified: this.isVerified,
+      email: this.email,
+    });
+  }
 }

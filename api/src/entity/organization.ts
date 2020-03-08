@@ -3,6 +3,7 @@ import {
   Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToMany, OneToOne, JoinTable,
 } from 'typeorm';
 
+import { plainToClass } from 'class-transformer';
 import { User } from '.';
 
 @Entity('organizations')
@@ -32,6 +33,7 @@ export class Organization {
   })
   userId?: string
 
+  @Field()
   role?: string
 
   @Field({ nullable: true })
@@ -57,4 +59,14 @@ export class Organization {
     },
   })
   users?: User[];
+
+  get organization(): Organization {
+    return plainToClass(Organization, {
+      id: this.id,
+      role: this.role,
+      domain: this.domain,
+      name: this.name,
+      logo: this.logo,
+    });
+  }
 }

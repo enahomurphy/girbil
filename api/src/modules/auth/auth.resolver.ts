@@ -7,6 +7,7 @@ import {
   ResolverInterface,
   Ctx,
   Authorized,
+  Query,
 } from 'type-graphql';
 import { getCustomRepository, getRepository } from 'typeorm';
 
@@ -73,8 +74,7 @@ class AuthResolver implements ResolverInterface<AuthType> {
       googleUser.verified,
     );
 
-    delete user.password;
-    return AuthType.createAuth(sign(user), user);
+    return AuthType.createAuth(sign(user.user), user.user);
   }
 
   @Authorized('admin', 'owner')
@@ -126,6 +126,28 @@ class AuthResolver implements ResolverInterface<AuthType> {
   @FieldResolver()
   async organizations(@Root() auth: AuthType): Promise<Organization[]> {
     return this.orgRepo.findUserOrganizations(auth.user.id);
+  }
+
+
+  @Query(() => AuthType, { description: 'logs in user to an organization by creating an organization auth token' })
+  async organizationLogin(
+    @Arg('organizationId') organizationId: string,
+      @Ctx() { user, res }: ContextType,
+  ): Promise<AuthType> {
+    const org = await this.orgRepo.findUserOrganization(
+      user.id,
+      organizationId,
+    );
+
+    if (!org) {
+      res.status('403');
+      throw new Error('You do not belong to this organization');
+    }
+
+    const newUser = user.user;
+    newUser.organization = org.organization;
+
+    return AuthType.createAuth(sign(newUser), newUser);
   }
 }
 

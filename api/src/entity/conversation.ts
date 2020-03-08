@@ -1,10 +1,14 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn, JoinColumn, UpdateDateColumn,
+  Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn, JoinColumn,
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
 import { User } from './user';
-import { Channel } from './channel';
+
+export enum ConversationType {
+  USER = 'user',
+  CHANNEL = 'channel',
+}
 
 @Entity('conversations')
 @ObjectType()
@@ -28,10 +32,17 @@ export class Conversation {
 
   @Field()
   @Column({
-    name: 'channel_id',
+    name: 'organization_id',
     type: 'uuid',
   })
-  channelId?: string;
+  organizationId?: string;
+
+  @Field()
+  @CreateDateColumn({
+    name: 'created_at',
+    default: new Date(),
+  })
+  createdAt?: Date;
 
   @Field(() => User)
   @OneToOne(() => User)
@@ -41,33 +52,13 @@ export class Conversation {
   })
   creator?: User
 
-  @Field(() => User)
-  @OneToOne('Channel')
-  @JoinColumn({
-    name: 'receiver_id',
-    referencedColumnName: 'id',
+  @Column({
+    type: 'enum',
+    enum: ConversationType,
+    default: ConversationType.USER,
+    enumName: 'receiver_type',
+    name: 'receiver_type',
   })
-  receiver?: User
-
-  @OneToOne('Channel')
-  @JoinColumn({
-    name: 'channel_id',
-    referencedColumnName: 'id',
-  })
-  channel?: Channel
-
-
   @Field()
-  @CreateDateColumn({
-    name: 'created_at',
-    default: new Date(),
-  })
-  createdAt?: Date;
-
-  @Field()
-  @UpdateDateColumn({
-    name: 'updated_at',
-    default: new Date(),
-  })
-  updatedAt?: Date;
+  receiverType: string
 }

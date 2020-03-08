@@ -2,7 +2,7 @@
 
 export { User } from './user';
 export { Channel } from './channel';
-export { Conversation } from './conversation';
+export { Conversation, ConversationType } from './conversation';
 export { Message } from './message';
 export { Team } from './team';
 export { Organization } from './organization';

@@ -4,6 +4,8 @@ import {
 import { Field, ObjectType } from 'type-graphql';
 
 import { Organization } from './organization';
+import { Team } from './team';
+import { Channel } from './channel';
 
 @Entity('users')
 @ObjectType()
@@ -43,7 +45,13 @@ export class User {
   @ManyToMany(() => Organization, (organization) => organization.users)
   organizations: Organization[];
 
+  @ManyToMany(() => Team, (team) => team.users)
+  teams?: Team[];
+
   @Field(() => Organization, { nullable: true })
   @OneToOne(() => Organization)
   organization?: Organization[];
+
+  @ManyToMany(() => Channel, (channel) => channel.users)
+  channels?: Channel[];
 }

@@ -23,6 +23,10 @@ export class Organization {
   domain?: string
 
   @Field({ nullable: true })
+  @Column()
+  logo?: string
+
+  @Field({ nullable: true })
   @Column({
     name: 'user_id',
   })
@@ -44,11 +48,11 @@ export class Organization {
   @JoinTable({
     name: 'user_organizations',
     joinColumn: {
-      name: 'user_id',
+      name: 'userId',
       referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-      name: 'organization_id',
+      name: 'organizationId',
       referencedColumnName: 'id',
     },
   })

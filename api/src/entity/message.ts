@@ -17,27 +17,12 @@ export class Message {
   })
   senderId?: string;
 
-  @Field(() => User)
-  @OneToOne(() => User)
-  @JoinColumn({
-    name: 'sender_id',
-    referencedColumnName: 'id',
-  })
-  sender?: User
-
   @Column({
     name: 'conversation_id',
     type: 'uuid',
   })
   @Field()
   conversationId?: string;
-
-  @Column({
-    name: 'organization_id',
-    type: 'uuid',
-  })
-  @Field()
-  organizationId?: string;
 
   @Column({
     name: 'parent_id',
@@ -48,7 +33,7 @@ export class Message {
 
   @Field()
   @Column()
-  url?: string;
+  video?: string;
 
   @Field()
   @Column({
@@ -58,7 +43,7 @@ export class Message {
 
   @Field()
   @Column({
-    name: 'text',
+    name: 'note',
     type: 'text',
     nullable: true,
   })
@@ -69,4 +54,12 @@ export class Message {
   })
   @Field()
   createdAt?: Date;
+
+  @Field(() => User)
+  @OneToOne(() => User)
+  @JoinColumn({
+    name: 'sender_id',
+    referencedColumnName: 'id',
+  })
+  sender?: User
 }

@@ -14,7 +14,7 @@ export class Message1582381400010 implements MigrationInterface {
         "video" varchar,
         "thumbnail" varchar,
         "note" text,
-        "read" jsonb,
+        "read" jsonb[],
         "reaction" jsonb[],
         "parent_id" uuid,
         "created_at" timestamp DEFAULT Now()

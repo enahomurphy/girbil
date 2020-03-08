@@ -1,11 +1,10 @@
 import {
   Entity, PrimaryGeneratedColumn, Column, CreateDateColumn,
-  JoinColumn, OneToOne, UpdateDateColumn,
+  OneToOne, UpdateDateColumn, ManyToMany, JoinTable,
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
 import { User } from '.';
-import { Team } from './team';
 
 @Entity('channels')
 @ObjectType()
@@ -30,24 +29,12 @@ export class Channel {
   })
   userId?: string;
 
-  @OneToOne(() => User)
-  @Field(() => User)
-  user?: User
-
   @Field()
   @Column({
     type: 'uuid',
-    name: 'team_id',
+    name: 'owner_id',
   })
-  teamId?: string;
-
-  @Field(() => Team)
-  @OneToOne(() => Team)
-  @JoinColumn({
-    name: 'team_id',
-    referencedColumnName: 'id',
-  })
-  team?: Team;
+  ownerId?: string;
 
   @Column({
     nullable: true,
@@ -62,9 +49,13 @@ export class Channel {
   @Field()
   lastUpdateById?: string;
 
-  @Field(() => User)
-  @OneToOne(() => User)
-  lastUpdatedBy?: User;
+  @Column({
+    name: 'organization_id',
+    type: 'uuid',
+  })
+  @Field()
+  organizationId?: string;
+
 
   @CreateDateColumn({
     name: 'created_at',
@@ -79,4 +70,27 @@ export class Channel {
   })
   @Field()
   updatedAt?: Date;
+
+  @OneToOne(() => User)
+  @Field(() => User)
+  user?: User
+
+  @Field(() => User)
+  @OneToOne(() => User)
+  lastUpdatedBy?: User;
+
+  @Field(() => User)
+  @ManyToMany(() => User, (user) => user.channels)
+  @JoinTable({
+    name: 'channel_users',
+    joinColumn: {
+      name: 'channel_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+  })
+  users?: User[];
 }

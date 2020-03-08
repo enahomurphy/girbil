@@ -22,6 +22,7 @@ class ConversationRepository extends Repository<Conversation> {
           organizationId,
         },
       ],
+      relations: ['receiver', 'channel', 'creator'],
     });
 
     return conversations.map((conversation) => {
@@ -35,6 +36,44 @@ class ConversationRepository extends Repository<Conversation> {
       }
 
       return conversation;
+    });
+  }
+
+  async conversation(id: string, organizationId: string): Promise<Conversation> {
+    return this.manager.find(UserConversations, {
+      cache: true,
+      where: [
+        {
+          id,
+          organizationId,
+        },
+      ],
+    });
+  }
+
+  async hasUser(id: string, userId: string, organizationId: string): Promise<Conversation> {
+    return this.manager.findOne(UserConversations, {
+      cache: true,
+      where: [
+        {
+          id,
+          organizationId,
+          userId,
+          receiverType: ConversationType.CHANNEL,
+        },
+        {
+          id,
+          organizationId,
+          creatorId: userId,
+          receiverType: ConversationType.USER,
+        },
+        {
+          id,
+          organizationId,
+          receiverId: userId,
+          receiverType: ConversationType.USER,
+        },
+      ],
     });
   }
 }

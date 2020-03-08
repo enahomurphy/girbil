@@ -7,6 +7,7 @@ import { User } from '.';
 @Entity('messages')
 @ObjectType()
 export class Message {
+  @Field()
   @PrimaryGeneratedColumn('uuid')
   readonly id: string;
 
@@ -56,7 +57,7 @@ export class Message {
   createdAt?: Date;
 
   @Field(() => User)
-  @OneToOne(() => User)
+  @OneToOne(() => User, { eager: true })
   @JoinColumn({
     name: 'sender_id',
     referencedColumnName: 'id',

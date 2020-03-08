@@ -43,7 +43,6 @@ export class User {
   @Field({ nullable: true })
   avatar?: string;
 
-  @Field(() => Organization, { nullable: true })
   @OneToOne(() => Organization)
   organization?: Organization;
 

@@ -14,6 +14,7 @@ export enum ConversationType {
 @Entity('conversations')
 @ObjectType()
 export class Conversation {
+  @Field()
   @PrimaryGeneratedColumn('uuid')
   readonly id?: string;
 
@@ -30,7 +31,6 @@ export class Conversation {
   })
   receiverId?: string;
 
-  @Field()
   @Column({
     name: 'organization_id',
     type: 'uuid',
@@ -54,7 +54,7 @@ export class Conversation {
   @Field()
   receiverType: string
 
-  @OneToOne(() => User, { eager: true })
+  @OneToOne(() => User)
   @JoinColumn({
     name: 'creator_id',
     referencedColumnName: 'id',
@@ -62,7 +62,7 @@ export class Conversation {
   creator?: User
 
   @Field(() => User, { nullable: true })
-  @OneToOne(() => User, { eager: true })
+  @OneToOne(() => User)
   @JoinColumn({
     name: 'receiver_id',
     referencedColumnName: 'id',
@@ -70,7 +70,7 @@ export class Conversation {
   receiver?: User
 
   @Field(() => Channel, { nullable: true })
-  @OneToOne(() => Channel, { eager: true })
+  @OneToOne(() => Channel)
   @JoinColumn({
     name: 'channel_id',
     referencedColumnName: 'id',

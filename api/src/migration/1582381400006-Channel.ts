@@ -11,7 +11,7 @@ export class Channel1582381400006 implements MigrationInterface {
         "id" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
         "name" varchar(255),
         "about" text,
-        "is_private" boolean DEFAULT true,
+        "is_private" boolean DEFAULT false,
         "user_id" uuid,
         "avatar" varchar,
         "last_updated_by_id" uuid,

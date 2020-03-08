@@ -8,3 +8,4 @@ export { Team } from './team';
 export { Organization } from './organization';
 export { UserOrganization, RoleType } from './userOrganization';
 export { Invite } from './invites';
+export { UserConversations } from './userConversations';

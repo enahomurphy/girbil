@@ -9,6 +9,7 @@ import { User } from '.';
 @Entity('channels')
 @ObjectType()
 export class Channel {
+  @Field()
   @PrimaryGeneratedColumn('uuid')
   readonly id: string;
 
@@ -28,6 +29,13 @@ export class Channel {
     name: 'user_id',
   })
   userId?: string;
+
+  @Field()
+  @Column({
+    type: 'boolean',
+    name: 'is_private',
+  })
+  isPrivate?: boolean;
 
   @Field()
   @Column({
@@ -56,7 +64,6 @@ export class Channel {
   @Field()
   organizationId?: string;
 
-
   @CreateDateColumn({
     name: 'created_at',
     default: new Date(),
@@ -79,7 +86,6 @@ export class Channel {
   @OneToOne(() => User)
   lastUpdatedBy?: User;
 
-  @Field(() => User)
   @ManyToMany(() => User, (user) => user.channels)
   @JoinTable({
     name: 'channel_users',

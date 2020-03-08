@@ -4,6 +4,7 @@ import {
 import { Field, ObjectType } from 'type-graphql';
 
 import { User } from './user';
+import { Channel } from './channel';
 
 export enum ConversationType {
   USER = 'user',
@@ -16,7 +17,6 @@ export class Conversation {
   @PrimaryGeneratedColumn('uuid')
   readonly id?: string;
 
-  @Field()
   @Column({
     name: 'creator_id',
     type: 'uuid',
@@ -44,14 +44,6 @@ export class Conversation {
   })
   createdAt?: Date;
 
-  @Field(() => User)
-  @OneToOne(() => User)
-  @JoinColumn({
-    name: 'creator_id',
-    referencedColumnName: 'id',
-  })
-  creator?: User
-
   @Column({
     type: 'enum',
     enum: ConversationType,
@@ -61,4 +53,33 @@ export class Conversation {
   })
   @Field()
   receiverType: string
+
+  @OneToOne(() => User, { eager: true })
+  @JoinColumn({
+    name: 'creator_id',
+    referencedColumnName: 'id',
+  })
+  creator?: User
+
+  @Field(() => User, { nullable: true })
+  @OneToOne(() => User, { eager: true })
+  @JoinColumn({
+    name: 'receiver_id',
+    referencedColumnName: 'id',
+  })
+  receiver?: User
+
+  @Field(() => Channel, { nullable: true })
+  @OneToOne(() => Channel, { eager: true })
+  @JoinColumn({
+    name: 'channel_id',
+    referencedColumnName: 'id',
+  })
+  channel?: Channel
+
+  @Field({ nullable: true })
+  @Column({
+    name: 'user_id',
+  })
+  userId: string;
 }

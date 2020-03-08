@@ -8,7 +8,8 @@ import {
 import { getCustomRepository } from 'typeorm';
 
 import { ConversationRepo } from '../../repo';
-import { Conversation } from '../../entity';
+import { Conversation, UserConversations } from '../../entity';
+import { ContextType } from '../../interfaces';
 
 @Resolver(Conversation)
 class ConversationResolver implements ResolverInterface<Conversation> {
@@ -16,10 +17,11 @@ class ConversationResolver implements ResolverInterface<Conversation> {
 
   @Authorized()
   @Query(() => [Conversation])
-  async conversations(@Ctx() { user }: ContextType): Promise<Conversation[]> {
-    return this.conversationRepo.find({
-      creatorId: user.id,
-    });
+  async conversations(@Ctx() { user }: ContextType): Promise<UserConversations[]> {
+    return this.conversationRepo.conversations(
+      user.id,
+      user.organization.id,
+    );
   }
 }
 

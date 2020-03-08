@@ -6,7 +6,7 @@ import {
   FieldResolver,
   ResolverInterface,
   Ctx,
-  Authorized
+  Authorized,
 } from 'type-graphql';
 import { getCustomRepository, getRepository } from 'typeorm';
 
@@ -79,7 +79,7 @@ class AuthResolver implements ResolverInterface<AuthType> {
 
   @Authorized('admin', 'owner')
   @Mutation(() => String, { nullable: true })
-  async invite(@Arg('input') { emails }: InviteInput, @Ctx() { user }: ContextType ): Promise<string> {
+  async invite(@Arg('input') { emails }: InviteInput, @Ctx() { user }: ContextType): Promise<string> {
     const organization = await this.orgRepo.findOne({ where: { id: user.organization.id } });
 
     let invites = Array.from(new Set(emails)).map((email) => ({
@@ -109,7 +109,6 @@ class AuthResolver implements ResolverInterface<AuthType> {
         map.has(orgId) && map.get(orgId) === email));
     }
 
-    console.log(invites);
     if (invites.length) {
       const createdInvites: InviteEmails = await this.inviteRepo.insert(invites);
       const inviteEmails = createdInvites.generatedMaps.map((invite, index) => ({

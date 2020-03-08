@@ -87,7 +87,7 @@ export class CreateOrganizationTypeResolver implements ResolverInterface<CreateO
       id,
       domain,
       role: userOrg.role,
-      name: org.organization.name 
+      name: org.organization.name,
     });
     const tokenPayload = sign(plainToClass(User, { ...user, organization: tokenOrg }));
     return tokenPayload;

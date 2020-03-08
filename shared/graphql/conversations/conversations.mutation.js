@@ -1,8 +1,14 @@
 import { gql } from 'apollo-boost';
 
 export const UPDATE_MESSAGE = gql`
-  mutation updateMessage($id: String!) {
-    updateMessage(id: $id) @client
+  mutation updateMessage($id: String!, $thumbnail: String, $url: String) {
+    updateMessage(
+      input: {
+        thumbnail: $thumbnail
+        url: $url
+      }
+      id: $id
+    ) @client
   }
 `;
 

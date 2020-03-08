@@ -16,6 +16,10 @@ export const data = [
   return { ...acc, ...initial }
 }, {});
 
+export const typeDefs = [
+  conversations.types
+]
+
 export {
   conversations,
   auth,
@@ -25,4 +29,5 @@ export {
 export default {
   resolvers,
   data,
+  typeDefs,
 };

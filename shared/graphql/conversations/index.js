@@ -2,6 +2,7 @@ import initialState from './conversations.default';
 import resolver from './conversatios.resolver';
 import query from './conversations.query';
 import mutation from './conversations.mutation';
+import types from './conversations.types.gql';
 
 
 export { query };
@@ -12,4 +13,5 @@ export default {
   resolver,
   query,
   mutation,
+  types
 };

@@ -32,6 +32,7 @@ const client = new ApolloClient({
     })
   }
 });
+
 client.defaultOptions = defaultOptions;
 
 cache.writeData({ data });

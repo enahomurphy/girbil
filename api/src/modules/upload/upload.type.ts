@@ -4,8 +4,14 @@ import { Field, ObjectType } from 'type-graphql';
 @ObjectType()
 export class UploadType {
   @Field()
-  getURL: string;
+  postThumbnailURL: string
 
   @Field()
-  postURL: string;
+  getThumbnailURL: string
+
+  @Field()
+  postVideoURL: string
+
+  @Field()
+  getVideoURL: string
 }

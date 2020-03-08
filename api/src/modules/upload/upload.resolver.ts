@@ -2,18 +2,22 @@
 import {
   Resolver,
   Query,
+  Arg,
+  Authorized,
 } from 'type-graphql';
 
 import { UploadType } from './upload.type';
-import aws, { AWS } from '../../services/aws';
+import { AWS } from '../../interfaces';
+import aws from '../../services/aws';
 
 @Resolver(UploadType)
 class UploadResolver {
   private readonly aws: AWS = aws
 
+  @Authorized('user', 'admin', 'owner')
   @Query(() => UploadType, { nullable: true })
-  async getUploadURL(): Promise<UploadType> {
-    return this.aws.createSignedURL('/file.wepm', 'testing');
+  async getUploadURL(@Arg('id') id: string): Promise<string> {
+    return this.aws.getMessageUploadURL(id);
   }
 }
 

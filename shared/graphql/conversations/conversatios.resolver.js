@@ -1,3 +1,6 @@
+import { v4 as uuidv4 } from 'uuid';
+
+import { storage } from '@shared/lib'
 import { MESSAGES, CONVERSATION_MESSAGES } from './query';
 import { UPDATE_MESSAGE, ADD_MESSAGE } from './conversations.mutation';
 
@@ -28,6 +31,7 @@ export default {
       });
 
       const message = data.messages.find((m) => args.id === m.id);
+
       if (message) {
         const updatedMessage = {
           ...message,
@@ -54,30 +58,36 @@ export default {
         data: { message: message },
       });
     },
-    addMessage: (_, args, { cache }) => {
+    addMessage: (_, { conversationId }, { cache }) => {
       const data = cache.readQuery({
-        query: MESSAGES,
+        query: CONVERSATION_MESSAGES,
+        variables: { conversationId }
       });
 
-      const id = data.messages.length + 1;
+      const { id, avatar, name } = storage.payload;
       const message = {
-        id: id.toString(),
-        video: `/static/vid${Math.ceil(Math.random() * 3)}.mp4`,
-        thumbnail: `https://i.picsum.photos/id/${id + 1}/125/136.jpg`,
-        __typename: `${1}_${id}`,
+        id: uuidv4(),
+        video: '',
+        thumbnail: '',
+        conversationId,
         state: 'recording',
+        __typename: 'Message',
         sender: {
-          name: 'girbil bob',
-          createdAt: 'on Thursday 5:25 PM',
-          __typename: `${1}_${id}`,
+          id,
+          name,
+          avatar,
+          createdAt: new Date(),
+          __typename: 'User'
         },
       }
 
       const messages = [...data.messages, message];
+      const key = `messages({"conversationId":"${conversationId}"})`;
 
       cache.writeData({
-        ADD_MESSAGE,
-        data: { messages },
+        CONVERSATION_MESSAGES,
+        variables: { conversationId },
+        data: { [key]: messages },
       });
 
       return message

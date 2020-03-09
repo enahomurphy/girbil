@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "jwt-decode": "^2.2.0",
-    "lodash.merge": "^4.6.2"
+    "lodash.merge": "^4.6.2",
+    "uuid": "^7.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

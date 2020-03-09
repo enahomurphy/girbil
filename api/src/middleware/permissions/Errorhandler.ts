@@ -3,7 +3,7 @@ import {
 } from 'type-graphql';
 
 export class NotFoundError extends Error {
-  constructor(message = "The resource you're trying to access does nott exist") {
+  constructor(message = "The resource you're trying to access does not exist") {
     super(message);
   }
 }

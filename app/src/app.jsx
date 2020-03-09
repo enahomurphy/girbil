@@ -1,3 +1,4 @@
+import { ApolloProvider } from '@apollo/react-hooks';
 import React, { useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Device } from 'framework7';
@@ -6,7 +7,6 @@ import {
   View,
   f7ready,
 } from 'framework7-react';
-import { ApolloProvider } from '@apollo/react-hooks';
 
 import client from '@shared/graphql/client';
 import cordovaApp from './js/cordova-app';

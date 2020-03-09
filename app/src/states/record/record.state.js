@@ -43,6 +43,25 @@ const processing = {
   states: {
     idle: {
       on: {
+        GET_URLS: 'urls',
+        PROCESS: 'processing',
+      },
+    },
+    urls: {
+      invoke: {
+        src: 'getUploadUrls',
+        onDone: {
+          action: (context) => {
+            console.log(context);
+          },
+        },
+        onError: {
+          action: (error) => {
+            console.log(error);
+          },
+        },
+      },
+      on: {
         PROCESS: 'processing',
       },
     },
@@ -53,7 +72,10 @@ const processing = {
           target: 'idle',
         },
         onError: {
-          target: 'idle',
+          // target: 'idle',
+          action: () => {
+            console.log('an error occured');
+          },
         },
       },
     },

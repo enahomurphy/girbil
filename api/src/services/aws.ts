@@ -42,14 +42,14 @@ export function createSignedURL(name: string, type: string): Promise<UploadURL> 
   });
 }
 
-export async function getMessageUploadURL(id: string): Promise<UploadType> {
+export async function getMessageUploadURL(id: string, path: string): Promise<UploadType> {
   const thumbnail = createSignedURL(
-    `${id}-thumbnail`,
+    `${path}/${id}-thumbnail`,
     'image/gif',
   );
 
   const video = createSignedURL(
-    `${id}-message`,
+    `${path}/${id}-message`,
     'video/webm',
   );
 

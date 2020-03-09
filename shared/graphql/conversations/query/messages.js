@@ -11,7 +11,7 @@ export const getConversationMessages = () => {
     return getLazyMessages({
       variables: {
         conversationId
-      }
+      },
     });
   }
 

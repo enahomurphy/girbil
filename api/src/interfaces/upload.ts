@@ -7,5 +7,5 @@ export interface UploadURL {
 
 export interface AWS {
   createSignedURL: (url: string, type: string) => Promise<UploadURL>;
-  getMessageUploadURL: (id: string) => Promise<UploadType>;
+  getMessageUploadURL: (id: string, path: string) => Promise<UploadType>;
 }

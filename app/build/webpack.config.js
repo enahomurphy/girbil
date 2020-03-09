@@ -156,6 +156,11 @@ module.exports = {
 
         },
       },
+      {
+        test: /\.(graphql|gql)$/,
+        exclude: /node_modules/,
+        loader: 'graphql-tag/loader',
+      },
     ],
   },
   plugins: [
@@ -199,7 +204,6 @@ module.exports = {
         from: resolvePath('src/static'),
         to: resolvePath(isCordova ? 'cordova/www/static' : 'www/static'),
       },
-
     ]),
   ],
 };

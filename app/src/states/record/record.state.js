@@ -5,16 +5,32 @@ const thumbnail = {
   states: {
     idle: {
       on: {
-        CREATE: 'create',
+        UPLOAD_URL: {
+          target: 'url',
+          actions: assign((_, { urls }) => ({ urls }))
+        },
       },
     },
-    create: {
+    url: {
       on: {
-        DONE: 'done',
+        UPLOAD_THUMBNAIL: 'upload',
       },
     },
-    done: {
-      type: 'final',
+    upload: {
+      invoke: {
+        src: 'uploadThumbnail',
+        onDone: {
+          target: 'idle',
+        },
+        onError: {
+          // @TODO handle thumbnail upload failure
+          // ideas, cache for retry
+          // or retry twice before failing completely
+        },
+        on: {
+          DONE: 'idle',
+        },
+      }
     },
   },
 };
@@ -45,23 +61,16 @@ const processing = {
   states: {
     idle: {
       on: {
-        GET_URLS: 'urls',
+        GET_URLS: {
+          target: 'urls',
+          actions: assign((_, { message }) => ({ message }))
+        },
         PROCESS: 'processing',
       },
     },
     urls: {
       invoke: {
         src: 'getUploadUrls',
-        onDone: {
-          action: (context, data) => {
-            return assign({ user: (context, event) => event.data })
-          },
-        },
-        onError: {
-          action: (error) => {
-            console.log(error);
-          },
-        },
       },
       on: {
         PROCESS: 'processing',
@@ -74,10 +83,9 @@ const processing = {
           target: 'idle',
         },
         onError: {
-          // target: 'idle',
-          action: () => {
-            console.log('an error occured');
-          },
+          // @TODO handle video upload failure
+          // ideas, cache for retry
+          // or retry twice before failing completely
         },
       },
     },

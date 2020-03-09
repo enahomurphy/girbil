@@ -13,8 +13,9 @@ class Recorder {
     this.media = new MediaRecorder(new MediaStream());
 
     this.onRecordStop = () => {};
+    this.onRecordStart = () => {};
     this.onRecordError = () => {};
-    this.onRecordRecordThumbnail = () => {};
+    this.onRecordThumbnail = () => {};
   }
 
   initRecorder(stream) {
@@ -26,11 +27,6 @@ class Recorder {
   }
 
   onMediaData(event) {
-    if (!this.thumbnailChunk.length) {
-      this.thumbnailChunk.push(event.data);
-      this.onRecordRecordThumbnail(event.data);
-    }
-
     this.chunks.push(event.data);
   }
 
@@ -45,6 +41,7 @@ class Recorder {
   stopRecord() {
     if (this.media.state !== 'inactive') {
       this.media.stop();
+      this.reset();
     }
   }
 
@@ -59,11 +56,13 @@ class Recorder {
   startRecord() {
     if (this.media.state !== 'recording') {
       this.media.start(20);
+      this.onRecordStart(this.media);
     }
   }
 
   reset() {
     this.chunks = [];
+    this.thumbnailChunk = [];
   }
 
   file(name) {
@@ -75,9 +74,9 @@ class Recorder {
   }
 
   // @TODO move worker into porject
-  async thumbnail() {
+  async thumbnail(name) {
     const video = document.createElement('video');
-    video.src = this.url;
+    video.srcObject = this.stream;
     video.preload = 'metadata';
     video.muted = true;
     video.playsInline = true;
@@ -96,7 +95,7 @@ class Recorder {
     return new Promise((resolve) => {
       gif.on('finished', (blob) => {
         gif.freeWorkers.forEach((w) => w.terminate());
-        resolve(URL.createObjectURL(blob));
+        resolve(blob);
       });
 
       const timeUpdated = () => {

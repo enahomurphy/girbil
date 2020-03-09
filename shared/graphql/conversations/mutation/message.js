@@ -13,26 +13,7 @@ export const useSaveMessage = () => {
         video,
         thumbnail,
         conversationId,
-      },
-      update: (store, { data: { addMessage } }) => {
-        const data = cache.readQuery({
-          query: CONVERSATION_MESSAGES,
-          variables: { conversationId }
-        });
-
-        const messages = data.messages.filter((m) => m.id !== id);
-        const message = data.messages.find((m) => m.id === id);
-
-        const updatedMessage = { ...message, ...addMessage };
-
-        messages.push(updatedMessage);
-        
-        const key = `messages({"conversationId":"${conversationId}"})`;
-        store.writeQuery({
-          query: query.ORGANIZATIONS,
-          data: { [key]: messages },
-        });
-      },
+      }
     })
   }
 

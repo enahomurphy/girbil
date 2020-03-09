@@ -1,6 +1,23 @@
 import axios from 'axios';
 import { get } from '@shared/lib';
 
+export const uploadThumbnail = async (context, data) => {
+  const { thumbnail } = data;
+  const { message, urls } = context;
+  const uploadURL = get(urls, 'postThumbnailURL');
+  const file = new File([thumbnail], message.id, {
+    lastModified: (new Date()).getTime(),
+    type: 'image/gif',
+  });
+
+  await axios({
+    method: 'put',
+    url: uploadURL,
+    data: file,
+    headers: { 'content-type': file.type },
+  })
+};
+
 export const processing = async (context, data) => {
   const { saveMessage } = context;
   const { file, urls, conversationId, messageId } = data;
@@ -25,7 +42,7 @@ export const processing = async (context, data) => {
 
 export const getUploadUrls = async ({ getUploadURLS }, { message }) => {
   return getUploadURLS({
-    variables: { id: message.id },
+    variables: { id: message.id }
   });
 };
 
@@ -33,4 +50,5 @@ export const getUploadUrls = async ({ getUploadURLS }, { message }) => {
 export default {
   processing,
   getUploadUrls,
+  uploadThumbnail,
 };

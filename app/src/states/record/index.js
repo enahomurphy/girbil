@@ -9,7 +9,7 @@ const recordMachine = Machine(
     context: {
       video: null,
       thumbnail: '',
-      recorder: {},
+      message: {},
       addMessage: () => {},
       getUploadURLS: () => {},
     },

@@ -15,6 +15,7 @@ import { Video } from '@/lib/media';
 import { Page } from '@/components/Style';
 import { get } from '@shared/lib';
 import { NewMessageWrapper } from './style';
+import { getParam, getParams } from '@/lib';
 
 const NewMessage = () => {
   const { params } = useVideoData(null, 'video');
@@ -23,8 +24,12 @@ const NewMessage = () => {
 
   const [saveMessage] = mutation.useSaveMessage();
   const [addMessage, { data }] = useMutation(mutation.ADD_MESSAGE);
-  const [getUploadURLS, { data: urls }] = useLazyQuery(uploadQuery.UPLOAD_URLS);
   const [updateMessage] = useMutation(mutation.UPDATE_MESSAGE);
+  const [getUploadURLS, { data: urls }] = useLazyQuery(uploadQuery.UPLOAD_URLS, {
+    onCompleted: (data) => {
+      send('UPLOAD_URL', { urls: data.getUploadURL })
+    }
+  });
 
   const [{ matches }, send] = useMachine(RecordMachine, {
     context: {
@@ -32,16 +37,13 @@ const NewMessage = () => {
       updateMessage,
       getUploadURLS,
       saveMessage,
+      urls,
     },
   });
 
   const startRecord = () => {
-    const conversationId = get(
-      f7.views.main.router.currentRoute,
-      'params.conversationId',
-      '',
-    );
-
+    const conversationId = getParam('conversationId');
+  
     if (matches('record.idle')) {
       videoRecorder.startRecord();
       send('START');
@@ -55,17 +57,18 @@ const NewMessage = () => {
 
     if (matches('record.start')) {
       const messageId = get(data, 'addMessage.id');
-      const conversationId = get(
-        f7.views.main.router.currentRoute,
-        'params.conversationId',
-        '',
-      );
+
       const file = videoRecorder.file(messageId);
       videoRecorder.stopRecord();
       send('STOP');
       send('PROCESS', { file, urls, messageId, conversationId });
     }
   };
+
+  videoRecorder.onRecordStart = async () => {
+    const thumbnail = await videoRecorder.thumbnail('');
+    send('UPLOAD_THUMBNAIL', { thumbnail, urls });
+  }
 
   useEffect(() => {
     videoRecorder.initVideo();

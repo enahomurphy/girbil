@@ -1,3 +1,5 @@
+import { assign } from 'xstate';
+
 const thumbnail = {
   initial: 'idle',
   states: {
@@ -51,8 +53,8 @@ const processing = {
       invoke: {
         src: 'getUploadUrls',
         onDone: {
-          action: (context) => {
-            console.log(context);
+          action: (context, data) => {
+            return assign({ user: (context, event) => event.data })
           },
         },
         onError: {

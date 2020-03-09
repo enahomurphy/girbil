@@ -8,8 +8,8 @@ const recordMachine = Machine(
     type: 'parallel',
     context: {
       video: null,
+      thumbnail: '',
       recorder: {},
-      urls: {},
       addMessage: () => {},
       getUploadURLS: () => {},
     },

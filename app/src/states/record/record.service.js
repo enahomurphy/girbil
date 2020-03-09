@@ -1,21 +1,31 @@
 import axios from 'axios';
+import { get } from '@shared/lib';
 
 export const processing = async (context, data) => {
-  const { file, url } = data;
+  const { saveMessage } = context;
+  const { file, urls, conversationId, messageId } = data;
+  const uploadURL = get(urls, 'getUploadURL.postVideoURL', '');
+  const videoURL = get(urls, 'getUploadURL.getVideoURL');
+  const thumbnailURL = get(urls, 'getUploadURL.getThumbnailURL');
+
   await axios({
     method: 'put',
-    url,
+    url: uploadURL,
     data: file,
     headers: { 'content-type': file.type },
-  }).then(() => {
-    console.log(data);
-  })
-    .catch(console.error);
+  });
+
+  return saveMessage({
+    id: messageId,
+    conversationId,
+    video: videoURL,
+    thumbnail: thumbnailURL,
+  });
 };
 
-export const getUploadUrls = async ({ getUploadURLS }) => {
-  const data = await getUploadURLS({
-    variables: { id: 'sddsasdd' },
+export const getUploadUrls = async ({ getUploadURLS }, { message }) => {
+  return getUploadURLS({
+    variables: { id: message.id },
   });
 };
 

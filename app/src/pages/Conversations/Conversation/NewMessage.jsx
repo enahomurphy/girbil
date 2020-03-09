@@ -20,34 +20,50 @@ const NewMessage = () => {
   const { params } = useVideoData(null, 'video');
   const [video] = useVideo(params);
   const [videoRecorder] = useState(new Video('video'));
+
+  const [saveMessage] = mutation.useSaveMessage();
   const [addMessage, { data }] = useMutation(mutation.ADD_MESSAGE);
   const [getUploadURLS, { data: urls }] = useLazyQuery(uploadQuery.UPLOAD_URLS);
   const [updateMessage] = useMutation(mutation.UPDATE_MESSAGE);
+
   const [{ matches }, send] = useMachine(RecordMachine, {
     context: {
       addMessage,
       updateMessage,
       getUploadURLS,
+      saveMessage,
     },
   });
 
   const startRecord = () => {
-    const conversationId = get(f7.views.main.router.currentRoute, 'params.conversationId', '');
+    const conversationId = get(
+      f7.views.main.router.currentRoute,
+      'params.conversationId',
+      '',
+    );
 
     if (matches('record.idle')) {
-      addMessage({ variables: { conversationId } });
       videoRecorder.startRecord();
-      send('GET_URLS');
       send('START');
+      addMessage({
+        variables: { conversationId },
+        update: (_, { data: { addMessage } }) => {
+          send('GET_URLS', { message: addMessage });
+        }
+      });
     }
 
     if (matches('record.start')) {
-      const uploadURL = get(urls, 'getUploadURL.postVideoURL', '');
       const messageId = get(data, 'addMessage.id');
+      const conversationId = get(
+        f7.views.main.router.currentRoute,
+        'params.conversationId',
+        '',
+      );
       const file = videoRecorder.file(messageId);
       videoRecorder.stopRecord();
       send('STOP');
-      send('PROCESS', { file, url: uploadURL });
+      send('PROCESS', { file, urls, messageId, conversationId });
     }
   };
 

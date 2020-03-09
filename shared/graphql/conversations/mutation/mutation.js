@@ -24,8 +24,33 @@ export const READ_MESSAGE = gql`
   }
 `;
 
+export const SAVE_MESSAGE = gql`
+  mutation saveMessage(
+    $conversationId: String!
+    $id: String!
+    $video: String!
+    $thumbnail: String!
+  ) {
+    addMessage(
+      input: {
+        id: $id,
+        video: $video,
+        thumbnail: $thumbnail
+      }
+      conversationId: $conversationId
+    ) {
+      id
+      video
+      conversationId
+      thumbnail
+      state
+    }
+  }
+`;
+
 export default {
   UPDATE_MESSAGE,
   ADD_MESSAGE,
   READ_MESSAGE,
+  SAVE_MESSAGE,
 };

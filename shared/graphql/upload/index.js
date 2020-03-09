@@ -1,6 +1,6 @@
 import query from './upload.query';
 
-export { mutation, query };
+export { query };
 
 export default {
   query

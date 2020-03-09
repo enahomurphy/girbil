@@ -18,7 +18,14 @@ export const ADD_MESSAGE = gql`
   }
 `;
 
+export const READ_MESSAGE = gql`
+  mutation readMessage($id: String!, $conversationId: String!) {
+    readMessage(id: $id, conversationId: $conversationId) @client
+  }
+`;
+
 export default {
   UPDATE_MESSAGE,
   ADD_MESSAGE,
+  READ_MESSAGE,
 };

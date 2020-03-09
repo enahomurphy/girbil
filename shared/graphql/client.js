@@ -20,6 +20,7 @@ const defaultOptions = {
 };
 
 const client = new ApolloClient({
+  addTypename: true,
   uri: 'http://localhost:8081/graphql',
   cache,
   resolvers,

@@ -1,4 +1,4 @@
-import { MESSAGES } from './conversations.query';
+import { MESSAGES, CONVERSATION_MESSAGES } from './query';
 import { UPDATE_MESSAGE, ADD_MESSAGE } from './conversations.mutation';
 
 export default {
@@ -9,6 +9,16 @@ export default {
       });
 
       return data.messages;
+    },
+
+    message: (_, { args: { id } }, { cache }) => {
+      const data = cache.readQuery({
+        query: MESSAGES,
+      });
+      
+      const message = data.messages.find((m) => m.id === id);
+
+      return message;
     },
   },
   Mutation: {
@@ -31,6 +41,19 @@ export default {
       }
    
     },
+    readMessage: (_, { id, conversationId }, { cache }) => {
+      const data = cache.readQuery({
+        query: CONVERSATION_MESSAGES,
+        variables: { conversationId }
+      });
+      
+      const message = data.messages.find((m) => id === m.id);
+
+      cache.writeData({
+        UPDATE_MESSAGE,
+        data: { message: message },
+      });
+    },
     addMessage: (_, args, { cache }) => {
       const data = cache.readQuery({
         query: MESSAGES,
@@ -39,7 +62,7 @@ export default {
       const id = data.messages.length + 1;
       const message = {
         id: id.toString(),
-        url: `/static/vid${Math.ceil(Math.random() * 3)}.mp4`,
+        video: `/static/vid${Math.ceil(Math.random() * 3)}.mp4`,
         thumbnail: `https://i.picsum.photos/id/${id + 1}/125/136.jpg`,
         __typename: `${1}_${id}`,
         state: 'recording',

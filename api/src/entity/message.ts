@@ -50,6 +50,9 @@ export class Message {
   })
   note?: string;
 
+  @Field()
+  readonly state: string = 'done';
+
   @CreateDateColumn({
     name: 'created_at',
   })

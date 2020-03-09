@@ -70,16 +70,8 @@ export class Conversation {
   receiver?: User
 
   @Field(() => Channel, { nullable: true })
-  @OneToOne(() => Channel)
-  @JoinColumn({
-    name: 'channel_id',
-    referencedColumnName: 'id',
-  })
   channel?: Channel
 
   @Field({ nullable: true })
-  @Column({
-    name: 'user_id',
-  })
-  userId: string;
+  userId?: string;
 }

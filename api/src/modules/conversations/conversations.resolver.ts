@@ -15,7 +15,7 @@ import { ContextType } from '../../interfaces';
 class ConversationResolver implements ResolverInterface<Conversation> {
   private readonly conversationRepo = getCustomRepository(ConversationRepo);
 
-  @Authorized()
+  @Authorized('user', 'admin', 'owner')
   @Query(() => [Conversation])
   async conversations(@Ctx() { user }: ContextType): Promise<UserConversations[]> {
     return this.conversationRepo.conversations(

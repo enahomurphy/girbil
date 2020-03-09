@@ -8,7 +8,7 @@ export const useVideoData = (message, id) => {
   const params = { height: height - 120, width };
 
   if (message) {
-    params.src = message.url;
+    params.src = message.video;
     params.id = id;
     return {
       params,

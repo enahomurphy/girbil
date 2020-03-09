@@ -3,11 +3,19 @@ import { List } from 'framework7-react';
 
 export const StyledSlide = styled.div`
   min-height: var(--gb-message-height);
+  max-height: var(--gb-message-height);
   height: var(--gb-message-height);
+  min-width: var(--gb-max-width);
+  max-width: var(--gb-max-width);
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
   cursor: pointer;
+
+  .wiper-lazy-preloader {
+    min-height: var(--gb-message-height);
+    max-height: var(--gb-message-height);
+  }
 `;
 
 export const SliderWrapper = styled.div`

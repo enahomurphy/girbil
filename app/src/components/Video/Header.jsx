@@ -4,12 +4,12 @@ import { Icon } from 'framework7-react';
 import { Title, Text } from '@/components/Style';
 import { BackIcon, StyledHeader } from './style';
 
-const Header = ({ back, onClick }) => (
+const Header = ({ back, goBack, onClick }) => (
   <StyledHeader>
-    <BackIcon onClick={onClick}>
+    <BackIcon onClick={goBack}>
       <Icon f7={back ? 'arrow_left' : 'multiply'} />
     </BackIcon>
-    <div>
+    <div onClick={onClick}>
       <Title margin="0 0 7px 0" size="24px" transform="lowercase">
         <Icon f7="lock_fill" />
         DEV
@@ -27,7 +27,8 @@ Header.defaultProps = {
 
 Header.propTypes = {
   back: PropTypes.bool,
-  onClick: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+  goBack: PropTypes.func.isRequired,
 };
 
 export default Header;

@@ -11,7 +11,6 @@ export const Text = styled(F7Block)`
   color: ${(props) => props.color};
 `;
 
-
 export const Title = styled(Text)`
   text-align: ${(props) => props.align};
   font: bold ${(props) => props.size}/24px Source Sans Pro;

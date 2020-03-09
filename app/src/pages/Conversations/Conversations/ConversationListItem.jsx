@@ -4,9 +4,9 @@ import { Badge, Icon } from 'framework7-react';
 import { Title, Text, Block } from '@/pages/style';
 import { Img, StyledListItem } from './style';
 
-const ConversationListItem = ({ unreadCount, user }) => (
+const ConversationListItem = ({ unreadCount, user, id }) => (
   <StyledListItem
-    link="/conversations/1/"
+    link={`/conversations/${id}/`}
     title={(
       <Block margin>
         <Title margin="0 0 5px 0" align="left">{user.name}</Title>
@@ -33,6 +33,7 @@ const ConversationListItem = ({ unreadCount, user }) => (
 ConversationListItem.propTypes = {
   unreadCount: PropTypes.number.isRequired,
   user: PropTypes.object.isRequired,
+  id: PropTypes.string.isRequired,
 };
 
 export default ConversationListItem;

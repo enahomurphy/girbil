@@ -31,7 +31,7 @@ const NewMessage = () => {
     }
   });
 
-  const [{ matches }, send] = useMachine(RecordMachine, {
+  const [{ value, matches }, send] = useMachine(RecordMachine, {
     context: {
       addMessage,
       updateMessage,
@@ -58,6 +58,7 @@ const NewMessage = () => {
     if (matches('record.start')) {
       const messageId = get(data, 'addMessage.id');
 
+      
       const file = videoRecorder.file(messageId);
       videoRecorder.stopRecord();
       send('STOP');
@@ -72,7 +73,11 @@ const NewMessage = () => {
 
   useEffect(() => {
     videoRecorder.initVideo();
-  }, [videoRecorder]);
+
+    return () => {
+      videoRecorder.stop()
+    };
+  }, []);
 
   const goBack = () => {
     f7.view.current.router.back();
@@ -83,7 +88,7 @@ const NewMessage = () => {
       <NewMessageWrapper>
         <Header goBack={goBack} back />
         <RecorderButton onClick={startRecord} recording={matches('record.start')} />
-        <VideoComponent video={video} />
+        {<VideoComponent video={video} />}
       </NewMessageWrapper>
     </Page>
   );

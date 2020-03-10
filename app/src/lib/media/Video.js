@@ -12,6 +12,7 @@ class Video extends Recorder {
     this.videoStart = this.videoStart.bind(this);
     this.videoError = this.videoError.bind(this);
     this.initVideo = this.initVideo.bind(this);
+    this.stop = this.stop.bind(this);
 
     this.onVideoStart = () => {};
   }
@@ -38,6 +39,12 @@ class Video extends Recorder {
 
   videoError(error) {
     console.info(this.videoId, error);
+  }
+
+  stop() {
+    this.stream.getTracks().forEach((track) => {
+      track.stop();
+    });
   }
 
   get video() {

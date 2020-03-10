@@ -6,7 +6,6 @@ export const StyledSlide = styled.div`
   max-height: var(--gb-message-height);
   height: var(--gb-message-height);
   min-width: var(--gb-max-width);
-  max-width: var(--gb-max-width);
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
@@ -15,6 +14,11 @@ export const StyledSlide = styled.div`
   .wiper-lazy-preloader {
     min-height: var(--gb-message-height);
     max-height: var(--gb-message-height);
+  }
+
+  .swiper-slide {
+    background-position: center;
+    background-size: cover;
   }
 `;
 

@@ -26,7 +26,11 @@ const Home = ({ onLoginSuccess, onLoginError, loading }) => (
       <GoogleLogin
         clientId={process.env.GOOGLE_CLIENT_ID}
         render={renderProps => (
-          <GoogleButton className="primary" onClick={renderProps.onClick} disabled={renderProps.disabled}>
+          <GoogleButton
+            className="primary"
+            onClick={renderProps.onClick}
+            disabled={renderProps.disabled}
+          >
             <span>
               <GoogleIcon />
             </span>

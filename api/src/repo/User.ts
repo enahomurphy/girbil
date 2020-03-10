@@ -1,4 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
+import { plainToClass } from 'class-transformer';
+
 import { User } from '../entity';
 import { hashPassword } from '../utils/password';
 
@@ -50,7 +52,7 @@ class UserRepository extends Repository<User> {
     const userToUpdate: User = { ...user };
     userToUpdate.isVerified = Boolean(user.isVerified === 'true');
     delete userToUpdate.password;
-    return userToUpdate;
+    return plainToClass(User, userToUpdate);
   }
 
   async first(): Promise<User> {

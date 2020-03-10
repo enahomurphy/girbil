@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { storage } from '@shared/lib'
+import { storage } from '../../lib';
 import { MESSAGES, CONVERSATION_MESSAGES } from './query';
 import { UPDATE_MESSAGE, ADD_MESSAGE } from './mutation';
 

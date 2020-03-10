@@ -1,5 +1,6 @@
 import React from 'react';
 import { Icon, Button } from 'framework7-react';
+import PropTypes from 'prop-types';
 
 import { Previous, Next } from '@/components/Icon';
 import Emoji from '@/components/Emoji';
@@ -9,36 +10,71 @@ import {
   ControlContainer, ForwardControls, RewindControl, BottomControls,
 } from './style';
 
-const Player = () => (
+const Controls = ({
+  playing, play, pause, played, duration, seek, playBack,
+}) => (
   <ControlContainer>
-    <ForwardControls>
-      <Button>
-        <Previous />
-      </Button>
-      <Button>
-        <Icon
-          f7="play_fill"
-          color="#ffffff"
-          style={{
-            fontSize: '70px',
-            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.33)',
-            color: '#ffffff',
-          }}
-        />
-      </Button>
-      <Button>
-        <Next />
-      </Button>
-    </ForwardControls>
-    <RewindControl>
-      <Icon f7="gobackward_10" />
-      <Icon f7="goforward_10" />
-    </RewindControl>
+    {
+      !playing && (
+        (
+          <>
+            <ForwardControls>
+              <Button>
+                <Previous />
+              </Button>
+              <Button onClick={playing ? pause : play}>
+                <Icon
+                  f7={playing ? 'pause_fill' : 'play_fill'}
+                  color="#ffffff"
+                  style={{
+                    fontSize: '70px',
+                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.33)',
+                    color: '#ffffff',
+                  }}
+                />
+              </Button>
+              <Button>
+                <Next />
+              </Button>
+            </ForwardControls>
+            <RewindControl>
+              <div role="presentation" onClick={() => seek(-10)}>
+                <Icon onClick={alert} f7="gobackward_10" />
+              </div>
+              <div role="presentation" onClick={() => seek(10)}>
+                <Icon f7="goforward_10" />
+              </div>
+            </RewindControl>
+          </>
+        )
+      )
+    }
     <BottomControls>
-      <Speed onClick={() => {}} />
+      <Speed onClick={({ value }) => playBack(value)} />
       <Emoji vertical reaction onClick={() => {}} />
     </BottomControls>
-    <Buffer duration={240 - 16} />
+    {
+      duration && duration !== Infinity && (
+        <Buffer
+          duration={duration}
+          played={played}
+          seek={seek}
+          playing={playing}
+        />
+      )
+    }
   </ControlContainer>
 );
-export default Player;
+
+
+Controls.propTypes = {
+  playing: PropTypes.bool.isRequired,
+  play: PropTypes.func.isRequired,
+  pause: PropTypes.func.isRequired,
+  seek: PropTypes.func.isRequired,
+  duration: PropTypes.number.isRequired,
+  played: PropTypes.number.isRequired,
+  playBack: PropTypes.func.isRequired,
+};
+
+export default Controls;

@@ -14,8 +14,8 @@ import { RecorderButton } from '@/components/Recorder';
 import { Video } from '@/lib/media';
 import { Page } from '@/components/Style';
 import { get } from '@shared/lib';
+import { getParam } from '@/lib';
 import { NewMessageWrapper } from './style';
-import { getParam, getParams } from '@/lib';
 
 const NewMessage = () => {
   const { params } = useVideoData(null, 'video');
@@ -25,59 +25,62 @@ const NewMessage = () => {
   const [saveMessage] = mutation.useSaveMessage();
   const [addMessage, { data }] = useMutation(mutation.ADD_MESSAGE);
   const [updateMessage] = useMutation(mutation.UPDATE_MESSAGE);
-  const [getUploadURLS, { data: urls }] = useLazyQuery(uploadQuery.UPLOAD_URLS, {
-    onCompleted: (data) => {
-      send('UPLOAD_URL', { urls: data.getUploadURL })
-    }
-  });
-
-  const [{ value, matches }, send] = useMachine(RecordMachine, {
+  const [{ matches }, send] = useMachine(RecordMachine, {
     context: {
       addMessage,
       updateMessage,
-      getUploadURLS,
       saveMessage,
-      urls,
+    },
+  });
+
+  const [getUploadURLS, { data: urls }] = useLazyQuery(uploadQuery.UPLOAD_URLS, {
+    onCompleted: ({ getUploadURL }) => {
+      send('UPLOAD_URL', { urls: getUploadURL });
     },
   });
 
   const startRecord = () => {
     const conversationId = getParam('conversationId');
-  
+
     if (matches('record.idle')) {
       videoRecorder.startRecord();
       send('START');
       addMessage({
         variables: { conversationId },
-        update: (_, { data: { addMessage } }) => {
-          send('GET_URLS', { message: addMessage, conversationId });
-        }
+        update: (_, { data: messageData }) => {
+          send('GET_URLS', {
+            message: messageData.addMessage,
+            conversationId,
+            getUploadURLS,
+          });
+        },
       });
     }
 
     if (matches('record.start')) {
       const messageId = get(data, 'addMessage.id');
 
-      
       const file = videoRecorder.file(messageId);
       videoRecorder.stopRecord();
       send('STOP');
-      send('PROCESS', { file, urls, messageId, conversationId });
+      send('PROCESS', {
+        file, urls, messageId, conversationId,
+      });
     }
   };
 
   videoRecorder.onRecordStart = async () => {
     const thumbnail = await videoRecorder.thumbnail('');
     send('UPLOAD_THUMBNAIL', { thumbnail, urls });
-  }
+  };
 
   useEffect(() => {
     videoRecorder.initVideo();
 
     return () => {
-      videoRecorder.stop()
+      videoRecorder.stop();
     };
-  }, []);
+  }, [videoRecorder]);
 
   const goBack = () => {
     f7.view.current.router.back();
@@ -88,7 +91,7 @@ const NewMessage = () => {
       <NewMessageWrapper>
         <Header goBack={goBack} back />
         <RecorderButton onClick={startRecord} recording={matches('record.start')} />
-        {<VideoComponent video={video} />}
+        <VideoComponent video={video} />
       </NewMessageWrapper>
     </Page>
   );

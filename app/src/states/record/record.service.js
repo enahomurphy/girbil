@@ -15,12 +15,14 @@ export const uploadThumbnail = async (context, data) => {
     url: uploadURL,
     data: file,
     headers: { 'content-type': file.type },
-  })
+  });
 };
 
 export const processing = async (context, data) => {
   const { saveMessage } = context;
-  const { file, urls, conversationId, messageId } = data;
+  const {
+    file, urls, conversationId, messageId,
+  } = data;
   const uploadURL = get(urls, 'getUploadURL.postVideoURL', '');
   const videoURL = get(urls, 'getUploadURL.getVideoURL');
   const thumbnailURL = get(urls, 'getUploadURL.getThumbnailURL');
@@ -40,11 +42,11 @@ export const processing = async (context, data) => {
   });
 };
 
-export const getUploadUrls = async ({ getUploadURLS }, { message, conversationId }) => {
-  return getUploadURLS({
-    variables: { id: message.id, conversationId }
-  });
-};
+export const getUploadUrls = async (_, { getUploadURLS, message, conversationId }) => (
+  getUploadURLS({
+    variables: { id: message.id, conversationId },
+  })
+);
 
 
 export default {

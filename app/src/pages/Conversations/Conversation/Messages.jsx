@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import React, { useEffect } from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import { f7 } from 'framework7-react';
@@ -14,7 +13,8 @@ const Messages = () => {
   useEffect(() => {
     const conversationId = get(f7.views.main.router.currentRoute, 'params.conversationId', '');
     getMessages(conversationId);
-  }, []);
+  }, [getMessages]);
+
 
   const onClick = (messageId) => {
     const conversationId = get(f7.views.main.router.currentRoute, 'params.conversationId', '');

@@ -23,7 +23,7 @@ const ImageRecordingItem = ({ sender }) => (
       margin="0 0 0 8px"
       width="100px"
     >
-      {format(sender.createdAtt)}
+      {format(sender.createdAt)}
     </Title>
   </PlayingItem>
 );

@@ -14,8 +14,8 @@ const Idle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: ${({ recording }) => (recording ? 'var(--gb-white)' : 'var(--gb-red)')};
-  box-shadow: ${({ recording }) => (recording ? '0px 4px 4px rgba(0, 0, 0, 0.25)' : 'var(--gb-red)')};
+  background: ${({ recording }) => (recording ? 'rgba(255, 255, 255, 0.8)' : 'var(--gb-red)')};
+  box-shadow: ${({ recording }) => (recording ? '0px 4px 4px rgba(0, 0, 0, 0.25)' : '0px 4px 4px rgba(0, 0, 0, 0.25);')};
 `;
 
 const Recording = styled.div`

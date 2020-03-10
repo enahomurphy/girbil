@@ -1,5 +1,3 @@
-
-
 import React, { useEffect } from 'react';
 import { Swiper, Icon, f7 } from 'framework7-react';
 import PropTypes from 'prop-types';

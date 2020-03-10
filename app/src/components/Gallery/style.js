@@ -155,6 +155,8 @@ export const SliderThumbnail = styled.div`
   height: 64px;
   border-radius: 100%;
   background-image: url(${(props) => props.img});
+  background-position: center;
+  background-size: cover;
 `;
 
 export const PlayingItem = styled.div`

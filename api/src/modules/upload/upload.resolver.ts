@@ -2,14 +2,16 @@
 import {
   Resolver,
   Query,
-  Arg,
   Authorized,
   Ctx,
+  Args,
 } from 'type-graphql';
 
 import { UploadType } from './upload.type';
+import { UploadURLArgs } from './upload.args';
 import { AWS, ContextType } from '../../interfaces';
 import aws from '../../services/aws';
+import { CanView } from '../../middleware/permissions';
 
 @Resolver(UploadType)
 class UploadResolver {
@@ -17,11 +19,12 @@ class UploadResolver {
 
   @Authorized('user', 'admin', 'owner')
   @Query(() => UploadType, { nullable: true })
+  @CanView('conversation')
   async getUploadURL(
-    @Arg('id') id: string,
-      @Ctx() { user: { id: userId, organization } }: ContextType,
+    @Args() { id, conversationId }: UploadURLArgs,
+      @Ctx() { user: { organization } }: ContextType,
   ): Promise<string> {
-    const path = `${userId}/${organization.id}`;
+    const path = `${organization.id}/${conversationId}`;
     return this.aws.getMessageUploadURL(id, path);
   }
 }

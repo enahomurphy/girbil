@@ -40,9 +40,9 @@ export const processing = async (context, data) => {
   });
 };
 
-export const getUploadUrls = async ({ getUploadURLS }, { message }) => {
+export const getUploadUrls = async ({ getUploadURLS }, { message, conversationId }) => {
   return getUploadURLS({
-    variables: { id: message.id }
+    variables: { id: message.id, conversationId }
   });
 };
 

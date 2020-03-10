@@ -50,7 +50,7 @@ const NewMessage = () => {
       addMessage({
         variables: { conversationId },
         update: (_, { data: { addMessage } }) => {
-          send('GET_URLS', { message: addMessage });
+          send('GET_URLS', { message: addMessage, conversationId });
         }
       });
     }

@@ -1,5 +1,6 @@
 import { ListItem } from 'framework7-react';
-import { Block } from '@/pages/style';
+
+import { Title, Block } from '@/components/Style';
 import styled from 'styled-components';
 
 export const NavbarWrapper = styled.div`
@@ -12,18 +13,6 @@ export const NavbarWrapper = styled.div`
 
 export const StyledUser = styled(Block)`
   padding: 0 16px;
-
-  div {
-    background-color: transparent;
-  }
-
-  .active {
-    width: 16px;
-    height: 16px;
-    border-radius: 100px;
-    background: #33AB77;
-    margin-right: 10px
-  }
 `;
 
 export const Img = styled.img`
@@ -53,4 +42,30 @@ export const StyledListItem = styled(ListItem)`
       height: 16px;
     }
   }
+`;
+
+export const Active = styled.div`
+  box-sizing: border-box;
+  width: ${(props) => props.width};
+  height: ${(props) => props.height};
+  border-radius: 100px;
+  background-color: ${(props) => (props.active ? 'var(--gb-green)' : 'transparent')};
+  border: 2px solid ${(props) => (props.active ? 'var(--gb-green);' : '#999999')};
+  margin-right: 10px;
+`;
+
+Active.defaultProps = {
+  width: '16px',
+  height: '16px',
+};
+
+
+export const StyledTitle = styled(Title)`
+  text-align: left;
+  text-overflow: ellipsis
+  white-space: nowrap;
+  overflow: hidden;
+  margin: 0 9px 0 2px;
+  width: initial;
+  max-width: 140px;
 `;

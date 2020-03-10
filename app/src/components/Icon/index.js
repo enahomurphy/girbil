@@ -7,5 +7,6 @@ export { default as Add } from './Add';
 export { default as Settings } from './Settings';
 export { default as Search } from './Search';
 export { default as Lock } from './Lock';
+export { default as Chevron } from './Chevron';
 
 export default {};

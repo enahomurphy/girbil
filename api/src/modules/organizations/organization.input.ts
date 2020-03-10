@@ -9,7 +9,6 @@ export class GetOrganizationInput {
   userId: string
 }
 
-
 @InputType()
 export class AddOrgInput {
   @Field()

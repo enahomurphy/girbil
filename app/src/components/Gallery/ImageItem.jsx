@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { SwiperSlide } from 'framework7-react';
 
+import { get } from '@shared/lib';
 import ImageItemInfo from './ImageItemInfo';
 import ImageRecordingItem from './ImageRecordingItem';
 import ImageItemPlaying from './ImageItemPlaying';
@@ -10,9 +11,15 @@ import { StyledSlide } from './style';
 const ImageItem = ({
   onClick, id, thumbnail, state, sender,
 }) => {
+  let renderThumbnail = thumbnail;
+
+  if (state === 'recording') {
+    renderThumbnail = get(sender, 'avatar');
+  }
+
   const slideProps = {
     recording: state === 'recording',
-    'data-background': thumbnail,
+    'data-background': renderThumbnail,
     className: 'swiper-slide swiper-lazy',
     onClick: () => onClick(id),
   };
@@ -25,7 +32,7 @@ const ImageItem = ({
     <SwiperSlide key={id}>
       <ImageItemInfo recording={slideProps.recording} />
       <StyledSlide {...slideProps}>
-        { slideProps.recording && <ImageRecordingItem thumbnail={thumbnail} /> }
+        { slideProps.recording && <ImageRecordingItem thumbnail={renderThumbnail} /> }
         { state === 'playing' && <ImageItemPlaying sender={sender} /> }
         { !slideProps.recording && <div className="swiper-lazy-preloader" /> }
       </StyledSlide>

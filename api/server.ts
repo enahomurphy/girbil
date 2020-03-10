@@ -7,5 +7,5 @@ createConnection()
     app();
   })
   .catch((error) => {
-    logger.error(error)
-  })
+    logger.error(error);
+  });

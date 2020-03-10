@@ -1,18 +1,36 @@
+import { assign } from 'xstate';
+
 const thumbnail = {
   initial: 'idle',
   states: {
     idle: {
       on: {
-        CREATE: 'create',
+        UPLOAD_URL: {
+          target: 'url',
+          actions: assign((_, { urls }) => ({ urls }))
+        },
       },
     },
-    create: {
+    url: {
       on: {
-        DONE: 'done',
+        UPLOAD_THUMBNAIL: 'upload',
       },
     },
-    done: {
-      type: 'final',
+    upload: {
+      invoke: {
+        src: 'uploadThumbnail',
+        onDone: {
+          target: 'idle',
+        },
+        onError: {
+          // @TODO handle thumbnail upload failure
+          // ideas, cache for retry
+          // or retry twice before failing completely
+        },
+        on: {
+          DONE: 'idle',
+        },
+      }
     },
   },
 };
@@ -43,6 +61,18 @@ const processing = {
   states: {
     idle: {
       on: {
+        GET_URLS: {
+          target: 'urls',
+          actions: assign((_, { message }) => ({ message }))
+        },
+        PROCESS: 'processing',
+      },
+    },
+    urls: {
+      invoke: {
+        src: 'getUploadUrls',
+      },
+      on: {
         PROCESS: 'processing',
       },
     },
@@ -53,7 +83,9 @@ const processing = {
           target: 'idle',
         },
         onError: {
-          target: 'idle',
+          // @TODO handle video upload failure
+          // ideas, cache for retry
+          // or retry twice before failing completely
         },
       },
     },

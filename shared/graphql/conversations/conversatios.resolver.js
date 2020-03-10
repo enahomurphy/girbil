@@ -1,5 +1,8 @@
-import { MESSAGES } from './conversations.query';
-import { UPDATE_MESSAGE } from './conversations.mutation';
+import { v4 as uuidv4 } from 'uuid';
+
+import { storage } from '../../lib';
+import { MESSAGES, CONVERSATION_MESSAGES } from './query';
+import { UPDATE_MESSAGE, ADD_MESSAGE } from './mutation';
 
 export default {
   Query: {
@@ -10,44 +13,84 @@ export default {
 
       return data.messages;
     },
+
+    message: (_, { args: { id } }, { cache }) => {
+      const data = cache.readQuery({
+        query: MESSAGES,
+      });
+      
+      const message = data.messages.find((m) => m.id === id);
+
+      return message;
+    },
   },
   Mutation: {
-    updateMessage: (_, { id }, { cache }) => {
+    updateMessage: (_, args, { cache }) => {
       const data = cache.readQuery({
         query: MESSAGES,
       });
 
+      const message = data.messages.find((m) => args.id === m.id);
+
+      if (message) {
+        const updatedMessage = {
+          ...message,
+          url: args.input.url,
+          state: 'done'
+        }
+        cache.writeData({
+          UPDATE_MESSAGE,
+          data: { message: updatedMessage },
+        });
+      }
+   
+    },
+    readMessage: (_, { id, conversationId }, { cache }) => {
+      const data = cache.readQuery({
+        query: CONVERSATION_MESSAGES,
+        variables: { conversationId }
+      });
+      
       const message = data.messages.find((m) => id === m.id);
 
       cache.writeData({
         UPDATE_MESSAGE,
-        data: { message },
+        data: { message: message },
       });
     },
-    addMessage: (_, _id, { cache }) => {
+    addMessage: (_, { conversationId }, { cache }) => {
       const data = cache.readQuery({
-        query: MESSAGES,
+        query: CONVERSATION_MESSAGES,
+        variables: { conversationId }
       });
 
-      const id = data.messages.length + 1;
-
-      const messages = [...data.messages, {
-        id: id.toString(),
-        url: `/static/vid${Math.ceil(Math.random() * 3)}.mp4`,
-        thumbnail: `https://i.picsum.photos/id/${id + 1}/125/136.jpg`,
-        __typename: `${1}_${id}`,
+      const { id, avatar, name } = storage.payload;
+      const message = {
+        id: uuidv4(),
+        video: '',
+        thumbnail: '',
+        conversationId,
         state: 'recording',
+        __typename: 'Message',
         sender: {
-          name: 'girbil bob',
-          createdAt: 'on Thursday 5:25 PM',
-          __typename: `${1}_${id}`,
+          id,
+          name,
+          avatar,
+          createdAt: new Date(),
+          __typename: 'User'
         },
-      }];
+      }
+
+      const messages = [...data.messages, message];
+      const key = `messages({"conversationId":"${conversationId}"})`;
 
       cache.writeData({
-        UPDATE_MESSAGE,
-        data: { messages },
+        CONVERSATION_MESSAGES,
+        variables: { conversationId },
+        data: { [key]: messages },
       });
+
+      return message
     },
   },
 };

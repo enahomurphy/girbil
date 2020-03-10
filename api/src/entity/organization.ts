@@ -3,6 +3,7 @@ import {
   Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToMany, OneToOne, JoinTable,
 } from 'typeorm';
 
+import { plainToClass } from 'class-transformer';
 import { User } from '.';
 
 @Entity('organizations')
@@ -23,11 +24,16 @@ export class Organization {
   domain?: string
 
   @Field({ nullable: true })
+  @Column()
+  logo?: string
+
+  @Field({ nullable: true })
   @Column({
     name: 'user_id',
   })
   userId?: string
 
+  @Field()
   role?: string
 
   @Field({ nullable: true })
@@ -44,13 +50,23 @@ export class Organization {
   @JoinTable({
     name: 'user_organizations',
     joinColumn: {
-      name: 'user_id',
+      name: 'userId',
       referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-      name: 'organization_id',
+      name: 'organizationId',
       referencedColumnName: 'id',
     },
   })
   users?: User[];
+
+  get organization(): Organization {
+    return plainToClass(Organization, {
+      id: this.id,
+      role: this.role,
+      domain: this.domain,
+      name: this.name,
+      logo: this.logo,
+    });
+  }
 }

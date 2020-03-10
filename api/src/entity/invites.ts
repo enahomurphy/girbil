@@ -12,14 +12,6 @@ export class Invite {
   readonly id?: string;
 
   @Field()
-  @Column({
-    name: 'organization_id',
-    type: 'uuid',
-  })
-  @OneToOne(() => Organization)
-  organizationId?: string;
-
-  @Field()
   @Column()
   email?: string;
 
@@ -29,4 +21,12 @@ export class Invite {
     default: new Date(),
   })
   createdAt?: Date;
+
+  @Field()
+  @Column({
+    name: 'organization_id',
+    type: 'uuid',
+  })
+  @OneToOne(() => Organization)
+  organizationId?: string;
 }

@@ -1,5 +1,5 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne, JoinColumn,
+  Entity, PrimaryColumn, Column, CreateDateColumn, OneToOne, JoinColumn,
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 import { User } from '.';
@@ -7,8 +7,9 @@ import { User } from '.';
 @Entity('messages')
 @ObjectType()
 export class Message {
-  @PrimaryGeneratedColumn('uuid')
-  readonly id: string;
+  @Field()
+  @PrimaryColumn('uuid')
+  id: string;
 
   @Field()
   @Column({
@@ -17,27 +18,12 @@ export class Message {
   })
   senderId?: string;
 
-  @Field(() => User)
-  @OneToOne(() => User)
-  @JoinColumn({
-    name: 'sender_id',
-    referencedColumnName: 'id',
-  })
-  sender?: User
-
   @Column({
     name: 'conversation_id',
     type: 'uuid',
   })
   @Field()
   conversationId?: string;
-
-  @Column({
-    name: 'organization_id',
-    type: 'uuid',
-  })
-  @Field()
-  organizationId?: string;
 
   @Column({
     name: 'parent_id',
@@ -48,7 +34,7 @@ export class Message {
 
   @Field()
   @Column()
-  url?: string;
+  video?: string;
 
   @Field()
   @Column({
@@ -58,15 +44,26 @@ export class Message {
 
   @Field()
   @Column({
-    name: 'text',
+    name: 'note',
     type: 'text',
     nullable: true,
   })
   note?: string;
+
+  @Field()
+  readonly state: string = 'done';
 
   @CreateDateColumn({
     name: 'created_at',
   })
   @Field()
   createdAt?: Date;
+
+  @Field(() => User)
+  @OneToOne(() => User, { eager: true })
+  @JoinColumn({
+    name: 'sender_id',
+    referencedColumnName: 'id',
+  })
+  sender?: User
 }

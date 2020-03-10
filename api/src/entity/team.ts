@@ -1,5 +1,6 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, CreateDateColumn,
+  Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn,
+  CreateDateColumn, ManyToMany, JoinTable,
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
@@ -36,14 +37,6 @@ export class Team {
   organizationId?: string;
 
   @Field()
-  @OneToOne(() => User)
-  @JoinColumn({
-    name: 'user_id',
-    referencedColumnName: 'id',
-  })
-  user?: string;
-
-  @Field()
   @CreateDateColumn({
     name: 'created_at',
   })
@@ -54,4 +47,26 @@ export class Team {
   })
   @Field()
   avatar?: string;
+
+  @Field()
+  @OneToOne(() => User)
+  @JoinColumn({
+    name: 'user_id',
+    referencedColumnName: 'id',
+  })
+  user?: string;
+
+  @ManyToMany(() => User)
+  @JoinTable({
+    name: 'user_teams',
+    joinColumn: {
+      name: 'team_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+  })
+  users?: User[];
 }

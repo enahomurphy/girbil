@@ -6,7 +6,8 @@ import {
   FieldResolver,
   ResolverInterface,
   Ctx,
-  Authorized
+  Authorized,
+  Query,
 } from 'type-graphql';
 import { getCustomRepository, getRepository } from 'typeorm';
 
@@ -73,13 +74,12 @@ class AuthResolver implements ResolverInterface<AuthType> {
       googleUser.verified,
     );
 
-    delete user.password;
-    return AuthType.createAuth(sign(user), user);
+    return AuthType.createAuth(sign(user.user), user.user);
   }
 
   @Authorized('admin', 'owner')
   @Mutation(() => String, { nullable: true })
-  async invite(@Arg('input') { emails }: InviteInput, @Ctx() { user }: ContextType ): Promise<string> {
+  async invite(@Arg('input') { emails }: InviteInput, @Ctx() { user }: ContextType): Promise<string> {
     const organization = await this.orgRepo.findOne({ where: { id: user.organization.id } });
 
     let invites = Array.from(new Set(emails)).map((email) => ({
@@ -109,7 +109,6 @@ class AuthResolver implements ResolverInterface<AuthType> {
         map.has(orgId) && map.get(orgId) === email));
     }
 
-    console.log(invites);
     if (invites.length) {
       const createdInvites: InviteEmails = await this.inviteRepo.insert(invites);
       const inviteEmails = createdInvites.generatedMaps.map((invite, index) => ({
@@ -127,6 +126,28 @@ class AuthResolver implements ResolverInterface<AuthType> {
   @FieldResolver()
   async organizations(@Root() auth: AuthType): Promise<Organization[]> {
     return this.orgRepo.findUserOrganizations(auth.user.id);
+  }
+
+
+  @Query(() => AuthType, { description: 'logs in user to an organization by creating an organization auth token' })
+  async organizationLogin(
+    @Arg('organizationId') organizationId: string,
+      @Ctx() { user, res }: ContextType,
+  ): Promise<AuthType> {
+    const org = await this.orgRepo.findUserOrganization(
+      user.id,
+      organizationId,
+    );
+
+    if (!org) {
+      res.status('403');
+      throw new Error('You do not belong to this organization');
+    }
+
+    const newUser = user.user;
+    newUser.organization = org.organization;
+
+    return AuthType.createAuth(sign(newUser), newUser);
   }
 }
 

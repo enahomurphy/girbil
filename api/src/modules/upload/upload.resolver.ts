@@ -2,18 +2,30 @@
 import {
   Resolver,
   Query,
+  Authorized,
+  Ctx,
+  Args,
 } from 'type-graphql';
 
 import { UploadType } from './upload.type';
-import aws, { AWS } from '../../services/aws';
+import { UploadURLArgs } from './upload.args';
+import { AWS, ContextType } from '../../interfaces';
+import aws from '../../services/aws';
+import { CanView } from '../../middleware/permissions';
 
 @Resolver(UploadType)
 class UploadResolver {
   private readonly aws: AWS = aws
 
+  @Authorized('user', 'admin', 'owner')
   @Query(() => UploadType, { nullable: true })
-  async getUploadURL(): Promise<UploadType> {
-    return this.aws.createSignedURL('/file.wepm', 'testing');
+  @CanView('conversation')
+  async getUploadURL(
+    @Args() { id, conversationId }: UploadURLArgs,
+      @Ctx() { user: { organization } }: ContextType,
+  ): Promise<string> {
+    const path = `${organization.id}/${conversationId}`;
+    return this.aws.getMessageUploadURL(id, path);
   }
 }
 

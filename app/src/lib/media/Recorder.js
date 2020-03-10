@@ -1,19 +1,29 @@
+import GIF from 'gif.js.optimized';
+
 class Recorder {
-  constructor(stream, thumbnailWidth, thumbnailHieght) {
-    this.media = new MediaRecorder(stream, Recorder.options);
+  constructor(thumbnailWidth = 300, thumbnailHieght = 300) {
     this.thumbnailWidth = thumbnailWidth;
     this.thumbnailHieght = thumbnailHieght;
     this.chunks = [];
+    this.thumbnailChunk = [];
+
     this.onMediaData = this.onMediaData.bind(this);
     this.onMediaError = this.onMediaError.bind(this);
     this.onMediaStop = this.onMediaStop.bind(this);
+    this.media = new MediaRecorder(new MediaStream());
+
+    this.onRecordStop = () => {};
+    this.onRecordStart = () => {};
+    this.onRecordError = () => {};
+    this.onRecordThumbnail = () => {};
+  }
+
+  initRecorder(stream) {
+    this.media = new MediaRecorder(stream, Recorder.options);
 
     this.media.ondataavailable = this.onMediaData;
     this.media.onerror = this.onMediaError;
     this.media.onstop = this.onMediaStop;
-
-    this.onStop = () => {};
-    this.onError = () => {};
   }
 
   onMediaData(event) {
@@ -21,70 +31,93 @@ class Recorder {
   }
 
   onMediaError(error) {
-    this.onError(error);
+    this.onRecordError(error);
   }
 
   onMediaStop() {
-    this.onStop(this.url);
+    this.onRecordStop(this.url);
   }
 
-  stop() {
+  stopRecord() {
     if (this.media.state !== 'inactive') {
       this.media.stop();
+      this.reset();
     }
   }
 
-  pause() {
+  pauseRecord() {
     this.media.pause();
   }
 
-  resume() {
+  resumeRecord() {
     this.media.resume();
   }
 
-  start() {
-    this.media.start(10);
+  startRecord() {
+    if (this.media.state !== 'recording') {
+      this.media.start(20);
+      this.onRecordStart(this.media);
+    }
   }
 
-  get thumbnail() {
-    return new Promise((resolve) => {
-      const canvas = document.createElement('canvas');
-      const video = document.createElement('video');
-      const ctx = canvas.getContext('2d');
-      video.src = this.url;
-      video.preload = 'metadata';
-      video.muted = true;
-      video.playsInline = true;
+  reset() {
+    this.chunks = [];
+    this.thumbnailChunk = [];
+  }
 
-      const onMetaLoaded = () => {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        video.play();
-      };
+  file(name) {
+    const blob = new Blob(this.chunks, { type: 'video/webm' });
+    return new File([blob], name, {
+      lastModified: (new Date()).getTime(),
+      type: 'video/webm',
+    });
+  }
+
+  // @TODO move worker into porject
+  async thumbnail(name) {
+    const video = document.createElement('video');
+    video.srcObject = this.stream;
+    video.preload = 'metadata';
+    video.muted = true;
+    video.playsInline = true;
+    video.height = this.height;
+    video.width = this.width;
+    video.style.objectFit = 'contain';
+    video.play();
+
+    let time = 0;
+
+    const gif = new GIF({
+      workers: 4,
+      workerScript: '/static/workers/gif.js',
+    });
+
+    return new Promise((resolve) => {
+      gif.on('finished', (blob) => {
+        gif.freeWorkers.forEach((w) => w.terminate());
+        resolve(blob);
+      });
 
       const timeUpdated = () => {
-        ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-        const image = canvas.toDataURL();
-        video.pause();
-        video.removeEventListener('timeupdate', timeUpdated);
-        video.removeEventListener('loadedmetadata', onMetaLoaded);
-        resolve(image);
+        time += 1;
+        gif.addFrame(video, {
+          quality: 1, repeat: 'forever', copy: true, delay: 200,
+        });
+
+        if (time > 5) {
+          gif.render();
+          video.pause();
+          video.removeEventListener('timeupdate', timeUpdated);
+        }
       };
 
       video.addEventListener('timeupdate', timeUpdated);
-      video.addEventListener('loadedmetadata', onMetaLoaded);
-
-      return '';
     });
   }
 
   get url() {
     const blob = new Blob(this.chunks, { type: 'video/webm' });
     return window.URL.createObjectURL(blob);
-  }
-
-  get file() {
-    return new Blob(this.chunks, { type: 'video/webm' });
   }
 
   static get options() {

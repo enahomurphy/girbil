@@ -3,11 +3,23 @@ import { List } from 'framework7-react';
 
 export const StyledSlide = styled.div`
   min-height: var(--gb-message-height);
+  max-height: var(--gb-message-height);
   height: var(--gb-message-height);
+  min-width: var(--gb-max-width);
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
   cursor: pointer;
+
+  .wiper-lazy-preloader {
+    min-height: var(--gb-message-height);
+    max-height: var(--gb-message-height);
+  }
+
+  .swiper-slide {
+    background-position: center;
+    background-size: cover;
+  }
 `;
 
 export const SliderWrapper = styled.div`
@@ -143,6 +155,8 @@ export const SliderThumbnail = styled.div`
   height: 64px;
   border-radius: 100%;
   background-image: url(${(props) => props.img});
+  background-position: center;
+  background-size: cover;
 `;
 
 export const PlayingItem = styled.div`

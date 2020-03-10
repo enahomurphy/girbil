@@ -1,18 +1,23 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn, JoinColumn, UpdateDateColumn,
+  Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn, JoinColumn,
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 
 import { User } from './user';
 import { Channel } from './channel';
 
+export enum ConversationType {
+  USER = 'user',
+  CHANNEL = 'channel',
+}
+
 @Entity('conversations')
 @ObjectType()
 export class Conversation {
+  @Field()
   @PrimaryGeneratedColumn('uuid')
   readonly id?: string;
 
-  @Field()
   @Column({
     name: 'creator_id',
     type: 'uuid',
@@ -26,36 +31,11 @@ export class Conversation {
   })
   receiverId?: string;
 
-  @Field()
   @Column({
-    name: 'channel_id',
+    name: 'organization_id',
     type: 'uuid',
   })
-  channelId?: string;
-
-  @Field(() => User)
-  @OneToOne(() => User)
-  @JoinColumn({
-    name: 'creator_id',
-    referencedColumnName: 'id',
-  })
-  creator?: User
-
-  @Field(() => User)
-  @OneToOne('Channel')
-  @JoinColumn({
-    name: 'receiver_id',
-    referencedColumnName: 'id',
-  })
-  receiver?: User
-
-  @OneToOne('Channel')
-  @JoinColumn({
-    name: 'channel_id',
-    referencedColumnName: 'id',
-  })
-  channel?: Channel
-
+  organizationId?: string;
 
   @Field()
   @CreateDateColumn({
@@ -64,10 +44,34 @@ export class Conversation {
   })
   createdAt?: Date;
 
-  @Field()
-  @UpdateDateColumn({
-    name: 'updated_at',
-    default: new Date(),
+  @Column({
+    type: 'enum',
+    enum: ConversationType,
+    default: ConversationType.USER,
+    enumName: 'receiver_type',
+    name: 'receiver_type',
   })
-  updatedAt?: Date;
+  @Field()
+  receiverType: string
+
+  @OneToOne(() => User)
+  @JoinColumn({
+    name: 'creator_id',
+    referencedColumnName: 'id',
+  })
+  creator?: User
+
+  @Field(() => User, { nullable: true })
+  @OneToOne(() => User)
+  @JoinColumn({
+    name: 'receiver_id',
+    referencedColumnName: 'id',
+  })
+  receiver?: User
+
+  @Field(() => Channel, { nullable: true })
+  channel?: Channel
+
+  @Field({ nullable: true })
+  userId?: string;
 }

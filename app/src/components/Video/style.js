@@ -120,6 +120,18 @@ export const Range = styled(f7Range)`
     z-index: 2;
     background-color: rgba(199, 199, 199, 0.3);
   }
+
+  .range-knob {
+    margin-top: 1px;
+    display: none;
+  }
+
+  &:hover {
+    .range-knob {
+      margin-top: 1px;
+      display: block;
+    }
+  }
 `;
 
 export const BufferWrapper = styled(Block)`

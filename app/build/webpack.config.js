@@ -38,8 +38,10 @@ module.exports = {
       '@': resolvePath('src'),
       'react-dom': '@hot-loader/react-dom',
       '@shared': path.join(__dirname, '../../shared'),
+      react: path.join(__dirname, '../node_modules/react'),
+      'apollo-boost': path.join(__dirname, '../node_modules/apollo-boost'),
+      '@apollo/react-hooks': path.join(__dirname, '../node_modules/@apollo/react-hooks'),
     },
-
   },
   devtool: env === 'production' ? 'source-map' : 'eval',
   devServer: {
@@ -156,6 +158,11 @@ module.exports = {
 
         },
       },
+      {
+        test: /\.(graphql|gql)$/,
+        exclude: /node_modules/,
+        loader: 'graphql-tag/loader',
+      },
     ],
   },
   plugins: [
@@ -199,7 +206,6 @@ module.exports = {
         from: resolvePath('src/static'),
         to: resolvePath(isCordova ? 'cordova/www/static' : 'www/static'),
       },
-
     ]),
   ],
 };

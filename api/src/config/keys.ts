@@ -1,6 +1,14 @@
+
+interface S3 {
+  region: string;
+  bucket: string;
+}
+
 interface AWS {
   key: string;
   secret: string;
+  s3Bucket: string;
+  s3: S3;
 }
 
 interface Email {
@@ -25,8 +33,12 @@ const keys: Keys = {
   domain: process.env.DOMAIN,
   clientURL: process.env.clientURL,
   aws: {
-    key: process.env.AWS_ACCESS_SECRET,
+    key: process.env.AWS_ACCESS_KEY,
     secret: process.env.AWS_ACCESS_SECRET,
+    s3: {
+      bucket: process.env.AWS_ACCESS_BUCKET,
+      region: process.env.AWS_ACCESS_REGION
+    }
   },
   email: {
     sparkpost: process.env.SPARK_POST,

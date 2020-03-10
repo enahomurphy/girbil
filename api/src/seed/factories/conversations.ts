@@ -1,14 +1,15 @@
 import Faker from 'faker';
 
 import { define } from 'typeorm-seeding';
-import { Conversation } from '../../entity';
+import { Conversation, ConversationType } from '../../entity';
 
 define(Conversation, (faker: typeof Faker, settings: {
-  sender: string; receiver: string; teamId: string;
+  creatorId: string; receiverId: string; organizationId: string; type: ConversationType;
 }) => {
   const conversation = new Conversation();
-  conversation.senderId = settings.sender;
-  conversation.receiverId = settings.receiver;
-  conversation.teamId = settings.teamId;
+  conversation.creatorId = settings.creatorId;
+  conversation.receiverId = settings.receiverId;
+  conversation.organizationId = settings.organizationId;
+  conversation.receiverType = settings.type;
   return conversation;
 });

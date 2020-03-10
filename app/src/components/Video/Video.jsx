@@ -5,10 +5,10 @@ import { VideoWrapper } from './style';
 
 export const useVideoData = (message, id) => {
   const { height, width } = window.screen;
-  const params = { height: height - 120, width };
+  const params = { height: height - 126, width };
 
   if (message) {
-    params.src = message.url;
+    params.src = message.video;
     params.id = id;
     return {
       params,

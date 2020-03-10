@@ -40,7 +40,7 @@ const Home = () => {
         return history.push('/organizations');
       }
 
-      return history.push('/signup/1');
+      return history.push('/organizations/create');
     } catch (_) {
       return alert();
     }

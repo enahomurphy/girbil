@@ -10,10 +10,10 @@ export class Teams1582381400002 implements MigrationInterface {
       CREATE TABLE IF NOT EXISTS "teams" (
         "id" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
         "name" varchar NOT NULL,
-        "organization_id" uuid,
-        "user_id" uuid,
-        "about" int,
+        "about" text,
         "avatar" varchar,
+        "user_id" uuid,
+        "organization_id" uuid,
         "created_at" timestamp DEFAULT Now()
       );
     `);

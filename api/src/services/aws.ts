@@ -3,29 +3,27 @@ import { plainToClass } from 'class-transformer';
 
 import { keys } from '../config';
 import { UploadType } from '../modules/upload/upload.type';
+import { UploadURL } from '../interfaces';
 
 aws.config.update({
-  accessKeyId: keys.aws.secret,
-  secretAccessKey: keys.aws.key,
+  accessKeyId: keys.aws.key,
+  secretAccessKey: keys.aws.secret,
+  region: keys.aws.s3.region,
 });
 
-export interface AWS {
-  createSignedURL: (url: string, type: string) => Promise<UploadType>;
-}
-
-function createSignedURL(url: string, type: string): Promise<UploadType> {
+export function createSignedURL(name: string, type: string): Promise<UploadURL> {
   const options = {
     signatureVersion: 'v4',
-    endpoint: 'girbil.s3-accelerate.amazonaws.com',
+    endpoint: `${keys.aws.s3.bucket}.s3-accelerate.amazonaws.com`,
     useAccelerateEndpoint: true,
   };
 
   const s3Instance = new aws.S3(options);
 
   const params = {
-    Bucket: 'girbil',
+    Bucket: keys.aws.s3.bucket,
     ContentType: type,
-    Key: url,
+    Key: name,
     Expires: 60,
     ACL: 'public-read',
   };
@@ -36,7 +34,7 @@ function createSignedURL(url: string, type: string): Promise<UploadType> {
         return reject(err);
       }
 
-      return resolve(plainToClass(UploadType, {
+      return resolve(plainToClass(UploadURL, {
         postURL: signedURL,
         getURL: signedURL.split('?')[0],
       }));
@@ -44,5 +42,25 @@ function createSignedURL(url: string, type: string): Promise<UploadType> {
   });
 }
 
-export { createSignedURL };
-export default { createSignedURL };
+export async function getMessageUploadURL(id: string, path: string): Promise<UploadType> {
+  const thumbnail = createSignedURL(
+    `${path}/${id}-thumbnail.gif`,
+    'image/gif',
+  );
+
+  const video = createSignedURL(
+    `${path}/${id}-message.webm`,
+    'video/webm',
+  );
+
+  const urls = await Promise.all([thumbnail, video]);
+
+  return plainToClass(UploadType, {
+    postThumbnailURL: urls[0].postURL,
+    getThumbnailURL: urls[0].getURL,
+    postVideoURL: urls[1].postURL,
+    getVideoURL: urls[1].getURL,
+  });
+}
+
+export default { createSignedURL, getMessageUploadURL };

@@ -1,4 +1,5 @@
 import { EntityRepository, Repository, getRepository } from 'typeorm';
+import { plainToClass } from 'class-transformer';
 import {
   Organization, UserOrganization, User, RoleType,
 } from '../entity';
@@ -14,6 +15,22 @@ class OrganizationRepository extends Repository<Organization> {
       .getMany();
 
     return userOrganizations.map((uo) => uo.organization);
+  }
+
+  async findUserOrganization(userId: string, organizationId: string): Promise<Organization> {
+    const organization = await this.userOrgRepo.createQueryBuilder('organization')
+      .where('organization.userId = :userId and organization.organizationId = :organizationId', { userId, organizationId })
+      .leftJoinAndSelect('organization.organization', 'organizations')
+      .getOne();
+
+    if (organization) {
+      return plainToClass(Organization, {
+        ...organization.organization,
+        role: organization.role,
+      });
+    }
+
+    return null;
   }
 
   async createOrganization(name: string, domain: string, user: User): Promise<Organization> {

@@ -6,26 +6,14 @@ export const MESSAGE_FRAGMENT = gql`
     video
     thumbnail
     state
+    conversationId
+    parentId
   }
 `;
 
 export const MESSAGES = gql`
   query messages @client {
     messages {
-      ...MessageParts
-      sender {
-        id
-        name
-        avatar
-      }
-    }
-  }
-  ${MESSAGE_FRAGMENT}
-`;
-
-export const MESSAGE = gql`
-  query message {
-    message @client {
       ...MessageParts
       sender {
         id
@@ -60,8 +48,8 @@ export const USER_CONVERSATIONS = gql`
 `;
 
 export const CONVERSATION_MESSAGES = gql`
-  query userMessages($conversationId: String!) {
-    messages(conversationId: $conversationId) {
+  query userMessages($conversationId: String!, $messageId: String) {
+    messages(conversationId: $conversationId, messageId: $messageId) {
       ...MessageParts
       sender {
         id
@@ -74,9 +62,37 @@ export const CONVERSATION_MESSAGES = gql`
 `;
 
 
+export const GET_MESSAGES = gql`
+  query getMessages($conversationId: String!, $messageId: String) {
+    getMessages(conversationId: $conversationId, messageId: $messageId) @client {
+      ...MessageParts
+      sender {
+        id
+        name
+        avatar
+      }
+    }
+  }
+  ${MESSAGE_FRAGMENT}
+`;
+
+export const GET_MESSAGE = gql`
+  query getMessage($conversationId: String!, $messageId: String) {
+    getMessage(conversationId: $conversationId, messageId: $messageId) {
+      ...MessageParts
+      sender {
+        id
+        name
+        avatar
+      }
+    }
+  }
+  ${MESSAGE_FRAGMENT}
+`;
+
 export default {
   MESSAGES,
-  MESSAGE,
+  GET_MESSAGE,
   USER_CONVERSATIONS,
   CONVERSATION_MESSAGES
 };

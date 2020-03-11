@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/client';
 
 import { USER_CONVERSATIONS, MESSAGES } from './query';
 import { get } from '../../../lib';

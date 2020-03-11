@@ -1,4 +1,4 @@
-import { useMutation, useLazyQuery } from '@apollo/react-hooks';
+import { useMutation, useLazyQuery } from '@apollo/client';
 
 import { SAVE_MESSAGE } from './mutation'
 import { CONVERSATION_MESSAGES } from '../query'

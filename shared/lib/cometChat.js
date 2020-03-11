@@ -42,7 +42,7 @@ class Chat {
     }
   }
 
-  receiveRTMessage(listenerID) {
+  receiveMessage(listenerID) {
     CometChat.addMessageListener(
       listenerID,
       new CometChat.MessageListener({
@@ -135,7 +135,6 @@ class Chat {
       })
     );
   }
-
 }
 
 export default Chat;

@@ -17,7 +17,7 @@ export default class CreateTeams implements Seeder {
     const connection = getConnection();
     const em = connection.createEntityManager();
 
-    await times(10, async () => {
+    await times(1, async () => {
       const user: User = await factory(User)().seed();
 
       const organization = await factory(Organization)({ userId: user.id }).make();
@@ -82,12 +82,24 @@ export default class CreateTeams implements Seeder {
           },
         ).seed();
 
-        await factory(Message)(
+        const randomNumber = faker.random.number({ min: 2, max: 10 });
+
+        const messages: Message[] = await factory(Message)(
           {
             userId: faker.random.arrayElement(users.map(({ id }) => id)),
             conversationId: conversation.id,
           },
-        ).seedMany(faker.random.number({ min: 2, max: 10 }));
+        ).seedMany(randomNumber);
+
+        await times(randomNumber, async (messageIndex) => {
+          await factory(Message)(
+            {
+              userId: faker.random.arrayElement(users.map(({ id }) => id)),
+              conversationId: conversation.id,
+              parentId: messages[messageIndex].id,
+            },
+          ).seedMany(faker.random.number({ min: 2, max: 10 }));
+        });
       });
     });
   }

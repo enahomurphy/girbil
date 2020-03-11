@@ -28,8 +28,10 @@ class MessageResolver implements ResolverInterface<Message> {
   @ValidateArgs(MessagesArgs)
   @CanView('conversation')
   @Query(() => [Message])
-  async messages(@Args() { conversationId }: MessagesArgs): Promise<Message[]> {
-    return this.messageRepo.messages(conversationId);
+  async messages(
+    @Args() { conversationId, messageId }: MessagesArgs,
+  ): Promise<Message[]> {
+    return this.messageRepo.messages(conversationId, messageId);
   }
 
   @Authorized('user', 'admin', 'owner')

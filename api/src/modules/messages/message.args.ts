@@ -1,5 +1,7 @@
 import { ArgsType, Field, Int } from 'type-graphql';
-import { Max, Min, IsUUID } from 'class-validator';
+import {
+  Max, Min, IsUUID, ValidateIf,
+} from 'class-validator';
 
 @ArgsType()
 export class MessagesArgs {
@@ -15,4 +17,9 @@ export class MessagesArgs {
   @IsUUID()
   @Field()
   conversationId: string
+
+  @IsUUID()
+  @ValidateIf((e) => e.messageId)
+  @Field(() => String, { nullable: true })
+  messageId?: string
 }

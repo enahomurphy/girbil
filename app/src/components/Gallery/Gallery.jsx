@@ -19,7 +19,10 @@ const Gallery = ({ messages, onClick }) => {
   }, [messages]);
 
   const params = {
-    lazy: true,
+    lazy: {
+      loadPrevNext: true,
+      loadPrevNextAmount: 2,
+    },
     slidesPerView: 3,
     spaceBetween: 0,
     navigation: {
@@ -38,7 +41,7 @@ const Gallery = ({ messages, onClick }) => {
       <Swiper params={params}>
         {
           messages.map(({
-            id, thumbnail, state, sender,
+            id, thumbnail, state, sender, pullover,
           }) => (
             <ImageItem
               onClick={onClick}
@@ -46,6 +49,7 @@ const Gallery = ({ messages, onClick }) => {
               id={id}
               thumbnail={thumbnail}
               state={state}
+              pullover={pullover}
               sender={sender}
             />
           ))

@@ -2,6 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Badge, Icon } from 'framework7-react';
+
 import { Title, Text, Block } from '@/components/Style';
 import { Lock } from '@/components/Icon';
 import {

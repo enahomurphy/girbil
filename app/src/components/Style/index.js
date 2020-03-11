@@ -12,6 +12,7 @@ export const Text = styled(F7Block)`
   width: ${(props) => props.width};
   padding: ${(props) => props.padding};
   color: ${(props) => props.color};
+  text-transform: ${(props) => (props.transform)};
 `;
 
 Text.defaultProps = {
@@ -21,6 +22,7 @@ Text.defaultProps = {
   color: '#B5BBC1',
   size: '14px',
   padding: 0,
+  transform: 'initial',
 };
 
 export const Title = styled(Text)`

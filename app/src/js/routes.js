@@ -56,6 +56,42 @@ const routes = [
         path: '/:messageId',
         id: 'view',
         component: Message,
+        options: {
+          animate: true,
+          transition: 'f7-cover-v',
+        },
+      },
+    ],
+  },
+  {
+    name: 'thread',
+    path: '/conversations/:conversationId/:threadId/thread',
+    id: 'view',
+    component: Conversation,
+    options: {
+      animate: true,
+      transition: 'f7-cover-v',
+      props: {
+        isThread: true,
+      },
+    },
+    tabs: [
+      {
+        path: '/',
+        id: 'record',
+        component: NewMessage,
+        props: {
+          isThread: true,
+        },
+      },
+      {
+        path: '/:messageId',
+        id: 'view',
+        component: Message,
+        options: {
+          animate: true,
+          transition: 'f7-cover-v',
+        },
       },
     ],
   },

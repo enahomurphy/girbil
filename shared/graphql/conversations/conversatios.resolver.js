@@ -1,4 +1,3 @@
-import { MESSAGES } from './query';
 import { mutationResolver } from './mutation';
 import { queryResolver } from './query';
 

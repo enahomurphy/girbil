@@ -3,7 +3,13 @@ import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { data, resolvers } from '.';
 import { storage } from '../lib'
 
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+  typePolicies: {
+    Message: {
+      keyFields: ['id'],
+    }
+  }
+});
 
 const defaultOptions = {
   watchQuery: {
@@ -30,9 +36,9 @@ const client = new ApolloClient({
   defaultOptions
 });
 
-cache.writeQuery({
+client.writeQuery({
   query: gql`{ messages }`,
-  data,
+  data: { messages: [] }
 })
 
 export default client;

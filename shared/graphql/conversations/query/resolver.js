@@ -1,9 +1,12 @@
-import { MESSAGES } from './query';
+import { GET_MESSAGES } from './query';
 
 export const getMessages = (_, args, { cache }) => {
   console.log(args)
   const { messages } = cache.readQuery({
-    query: MESSAGES,
+    query: GET_MESSAGES,
+    variables: {
+      conversationId: args.conversationId
+    }
   });
   
   const foundMessages = messages

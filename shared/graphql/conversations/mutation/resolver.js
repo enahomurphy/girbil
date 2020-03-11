@@ -40,9 +40,15 @@ export const readMessage = (_, { id, conversationId }, { cache }) => {
 }
 
 export const addMessage = (_, { conversationId, messageId }, { cache }) => {
+  const variables = { conversationId };
+
+  if (messageId) {
+    variables.messageId = messageId;
+  }
+
   const data = cache.readQuery({
     query: CONVERSATION_MESSAGES,
-    variables: { conversationId }
+    variables,
   });
 
   const { id, avatar, name } = storage.payload;
@@ -67,9 +73,9 @@ export const addMessage = (_, { conversationId, messageId }, { cache }) => {
   const key = `messages({"conversationId":"${conversationId}"})`;
 
   cache.writeQuery({
-    CONVERSATION_MESSAGES,
-    variables: { conversationId },
-    data: { [key]: messages },
+    query: CONVERSATION_MESSAGES,
+    variables,
+    data: { messages },
   });
 
   return message

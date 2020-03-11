@@ -49,7 +49,7 @@ export const USER_CONVERSATIONS = gql`
 
 export const CONVERSATION_MESSAGES = gql`
   query userMessages($conversationId: String!, $messageId: String) {
-    messages(conversationId: $conversationId, messageId: $messageId) {
+    messages(conversationId: $conversationId, messageId: $messageId)  {
       ...MessageParts
       sender {
         id
@@ -61,10 +61,9 @@ export const CONVERSATION_MESSAGES = gql`
   ${MESSAGE_FRAGMENT}
 `;
 
-
 export const GET_MESSAGES = gql`
   query getMessages($conversationId: String!, $messageId: String) {
-    getMessages(conversationId: $conversationId, messageId: $messageId) @client {
+    messages(conversationId: $conversationId, messageId: $messageId) @client {
       ...MessageParts
       sender {
         id
@@ -78,7 +77,7 @@ export const GET_MESSAGES = gql`
 
 export const GET_MESSAGE = gql`
   query getMessage($conversationId: String!, $messageId: String) {
-    getMessage(conversationId: $conversationId, messageId: $messageId) {
+    messages(conversationId: $conversationId, messageId: $messageId) @client {
       ...MessageParts
       sender {
         id

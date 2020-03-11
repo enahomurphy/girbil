@@ -13,8 +13,8 @@ export const UPDATE_MESSAGE = gql`
 `;
 
 export const ADD_MESSAGE = gql`
-  mutation addMessage($conversationId: String!) {
-    addMessage(conversationId: $conversationId) @client
+  mutation addMessage($conversationId: String!, $messageId: String) {
+    addMessage(conversationId: $conversationId, messageId: $messageId) @client
   }
 `;
 

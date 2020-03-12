@@ -1,15 +1,5 @@
 import { gql } from 'apollo-boost';
-
-export const MESSAGE_FRAGMENT = gql`
-  fragment MessageParts on Message {
-    id
-    video
-    thumbnail
-    state
-    conversationId
-    parentId
-  }
-`;
+import { MESSAGE_FRAGMENT, CHANNEL_FRAGMENT, USER_FRAGMENT, CONVERSATION_FRAGMENT } from './fragments'
 
 export const MESSAGES = gql`
   query messages @client {
@@ -28,21 +18,46 @@ export const MESSAGES = gql`
 export const USER_CONVERSATIONS = gql`
   query conversations {
     conversations {
-      id
-      userId
-      receiverType
+      ...ConversationParts
       channel {
-        id
-        name
-        avatar
-        isPrivate
+        ...ChannelParts
       }
       receiver {
-        id
-        name
-        email
-        avatar
+        ...UserParts
       }
+    }
+  }
+  ${CONVERSATION_FRAGMENT}
+  ${CHANNEL_FRAGMENT}
+  ${USER_FRAGMENT}
+`;
+
+export const CONVERSATION = gql`
+  query conversation($conversationId: String!) {
+    conversation(conversationId: $conversationId) @client {
+      ...ConversationParts
+      channel {
+        ...ChannelParts
+      }
+      receiver {
+        ...UserParts
+      }
+    }
+  }
+  ${CONVERSATION_FRAGMENT}
+  ${CHANNEL_FRAGMENT}
+  ${USER_FRAGMENT}
+`;
+
+export const CONVERSATION_META = gql`
+  query conversationMeta($conversationId: String!) {
+    conversationMeta(conversationId: $conversationId) @client {
+      id
+      name
+      typeId
+      isPrivate
+      avatar
+      isChannel
     }
   }
 `;
@@ -77,7 +92,7 @@ export const GET_MESSAGES = gql`
 
 export const GET_MESSAGE = gql`
   query getMessage($conversationId: String!, $messageId: String) {
-    messages(conversationId: $conversationId, messageId: $messageId) @client {
+    message(conversationId: $conversationId, messageId: $messageId) @client {
       ...MessageParts
       sender {
         id

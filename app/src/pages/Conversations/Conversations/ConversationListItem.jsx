@@ -20,9 +20,9 @@ const ConversationListItem = ({
         weight="600"
         margin="0 0 5px 0"
       >
-        { (isChannel && !isPrivate) && <Title>#</Title> }
+        { (isChannel && !isPrivate) && <Title margin="0" width="20px">#</Title> }
         { (isChannel && isPrivate) && (
-          <span style={{ marginBottom: '1px' }}>
+          <span style={{ margin: '0 5px 1px 0' }}>
             <Lock />
           </span>
         )}

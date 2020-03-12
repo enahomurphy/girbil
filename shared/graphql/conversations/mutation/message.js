@@ -1,7 +1,6 @@
 import { useMutation, useLazyQuery } from '@apollo/client';
 
 import { SAVE_MESSAGE } from './mutation'
-import { CONVERSATION_MESSAGES } from '../query'
 
 export const useSaveMessage = () => {
   const [save, { data, loading, error }] = useMutation(SAVE_MESSAGE);

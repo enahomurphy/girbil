@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
-import { useMutation } from '@apollo/client';
 import { f7 } from 'framework7-react';
 import PropTypes from 'prop-types';
 
 import Gallery from '@/components/Gallery';
 import Emoji from '@/components/Emoji';
-import { mutation, query } from '@shared/graphql/conversations';
+import { query } from '@shared/graphql/conversations';
 
 const getPullOverLinks = (conversationId, isThread, { id }) => {
   const options = [
@@ -40,24 +39,18 @@ const getPullOverLinks = (conversationId, isThread, { id }) => {
 };
 
 
-const Messages = ({ conversationId, threadId, isThread }) => {
+const Messages = ({
+  conversationId, threadId, isThread,
+}) => {
   const [loadMessage, { messages, loading }] = query.useMessages(conversationId, threadId);
-  const [readMessage] = useMutation(mutation.READ_MESSAGE);
 
   useEffect(() => {
     loadMessage();
   }, [loadMessage]);
 
   const onClick = (id) => {
-    readMessage({
-      variables: {
-        id,
-        conversationId,
-      },
-    });
-
     const link = isThread
-      ? `/conversations/${conversationId}/${threadId}/thread/${id}`
+      ? `/conversations/${conversationId}/${threadId}/thread/${id}/`
       : `/conversations/${conversationId}/${id}`;
 
     f7.views.main.router.navigate(
@@ -70,7 +63,6 @@ const Messages = ({ conversationId, threadId, isThread }) => {
           isThread,
           conversationId,
         },
-        ignoreCache: true,
       },
     );
   };

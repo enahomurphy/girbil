@@ -46,6 +46,9 @@ const routes = [
     name: 'conversation',
     path: '/conversations/:conversationId',
     component: Conversation,
+    options: {
+      ignoreCache: true,
+    },
     tabs: [
       {
         path: '/',
@@ -57,6 +60,10 @@ const routes = [
         id: 'view',
         component: Message,
         options: {
+          ignoreCache: true,
+          props: {
+            isThread: false,
+          },
           animate: true,
           transition: 'f7-cover-v',
         },
@@ -81,6 +88,7 @@ const routes = [
         id: 'record',
         component: NewMessage,
         props: {
+          ignoreCache: true,
           isThread: true,
         },
       },
@@ -89,8 +97,7 @@ const routes = [
         id: 'view',
         component: Message,
         options: {
-          animate: true,
-          transition: 'f7-cover-v',
+          ignoreCache: true,
         },
       },
     ],

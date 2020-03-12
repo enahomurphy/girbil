@@ -8,23 +8,43 @@ import { query } from '@shared/graphql/conversations';
 import {
   Video, Header, useVideoData, Controls,
 } from '@/components/Video';
+import { get } from '@shared/lib';
 
-const Message = ({ isThread, messageId }) => {
-  const { data } = useQuery(query.MESSAGE);
-  const { params } = useVideoData(data.message, 'video');
+const Message = ({
+  isThread, messageId, threadId, conversationId,
+}) => {
+  const { data } = useQuery(
+    query.GET_MESSAGE, { variables: { conversationId, messageId: isThread && threadId } },
+  );
+  const { data: conversationMeta } = useQuery(
+    query.CONVERSATION_META,
+    { variables: { conversationId } },
+  );
+
+  const { params } = useVideoData(get(data, 'message', {}), 'video');
   const [video, state, controls] = useVideo({ url: params.src });
-
   const goBack = () => {
-    const { conversationId } = f7.views.main.router.currentRoute.params;
     const link = isThread
       ? `/conversations/${conversationId}/${messageId}/thread/`
       : `/conversations/${conversationId}/`;
     f7.view.current.router.navigate(link);
   };
 
+  const {
+    name = '',
+    isPrivate = false,
+  } = get(conversationMeta, 'conversationMeta', {});
+
   return (
     <Page>
-      <Header goBack={goBack} back={false} isThread={isThread} />
+      <Header
+        name={name}
+        isPrivate={isPrivate}
+        goBack={goBack}
+        back={false}
+        isThread={isThread}
+        onClick={() => {}}
+      />
       <Controls
         play={controls.play}
         pause={controls.pause}
@@ -41,7 +61,9 @@ const Message = ({ isThread, messageId }) => {
 
 Message.propTypes = {
   isThread: PropTypes.oneOfType([() => undefined, PropTypes.object]).isRequired,
+  threadId: PropTypes.oneOfType([() => undefined, PropTypes.object]).isRequired,
   messageId: PropTypes.oneOfType([() => undefined, PropTypes.object]).isRequired,
+  conversationId: PropTypes.string.isRequired,
 };
 
 export default Message;

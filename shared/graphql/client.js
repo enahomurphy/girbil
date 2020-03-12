@@ -37,8 +37,11 @@ const client = new ApolloClient({
 });
 
 client.writeQuery({
-  query: gql`{ messages }`,
-  data: { messages: [] }
+  query: gql`{
+    messages
+    conversationMeta
+  }`,
+  data,
 })
 
 export default client;

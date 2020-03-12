@@ -1,42 +1,64 @@
-import { GET_MESSAGES } from './query';
+import {
+  GET_MESSAGES,
+  CONVERSATION,
+  USER_CONVERSATIONS,
+  CONVERSATION_MESSAGES
+} from './query';
+import { get } from '../../../lib';
 
-export const getMessages = (_, args, { cache }) => {
-  console.log(args)
+export const message = (_, { conversationId, messageId }, { cache }) => {
+  const variables = { conversationId };
+  
+  if (messageId) {
+    variables.messageId = messageId;
+  }
+
   const { messages } = cache.readQuery({
-    query: GET_MESSAGES,
-    variables: {
-      conversationId: args.conversationId
+    query: CONVERSATION_MESSAGES,
+    variables
+  });
+
+  return messages.find((item) => {
+    if (messageId) {
+      return (item.parentId === messageId) && (item.conversationId === conversationId);
     }
+
+    return (item.conversationId === conversationId)
+  })
+}
+
+export const conversation = (_, { conversationId }, { cache }) => {
+  const { conversations } = cache.readQuery({
+    query: USER_CONVERSATIONS,
+    variables: { conversationId }
   });
   
-  const foundMessages = messages
-    .filter(({ id, conversationId, parentId }) => {
-      if (args.messageId) {
-        return (
-          (id === args.messageId) && 
-          (args.conversationId === conversationId)
-        );
-      }
+  const conversation = conversations.find(({ id }) => id === conversationId);
 
-      return (args.conversationId === conversationId) && (parentId === null);
-    });
+  return conversation;
+}
 
-    console.log(foundMessages, 'fpiun');
-
-  return foundMessages;
-};
-
-export const getMessage = (_, args, { cache }) => {
-  const { messages } = cache.readQuery({
-    query: MESSAGES,
-  });
-  
-  const message = messages.find(({ id, conversationId }) => {
-    return (
-      (id === args.messageId) && 
-      (args.conversationId === conversationId)
-    )
+export const conversationMeta = (_, { conversationId }, { cache }) => {
+  const { conversations } = cache.readQuery({
+    query: USER_CONVERSATIONS,
+    variables: { conversationId }
   });
 
-  return message;
+  const {
+    id,
+    receiverType,
+    receiver,
+    channel,
+  } = conversations.find(({ id }) => id === conversationId);
+
+  const data = {
+    id,
+    name: get(receiver || channel, 'name'),
+    typeId: get(receiver || channel, 'id'),
+    isPrivate: get(receiver || channel, 'isPrivate', false),
+    avatar: get(receiver || channel, 'avatar', false),
+    isChannel: receiverType === 'channel'
+  };
+
+  return data;
 }

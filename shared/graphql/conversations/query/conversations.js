@@ -9,3 +9,9 @@ export const getUserConversations = () => {
 
   return { conversations: get(data, 'conversations', []), loading }
 }
+
+export const conversation = () => {
+  const { data, loading, updateQuery } = useQuery(USER_CONVERSATIONS);
+
+  return { conversations: get(data, 'conversations', []), loading }
+}

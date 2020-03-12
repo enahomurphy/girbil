@@ -14,7 +14,7 @@ const useVideo = ({ width, height, url }) => {
   const [muted, setMuted] = useState(false);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [volume, setVolume] = useState(1);
-  const [loop, setLoop] = useState(0);
+  const [loop, setLoop] = useState(false);
   const [pip, setPip] = useState(false);
   const [light, setLight] = useState(false);
   const [controls] = useState(false);

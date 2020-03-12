@@ -10,6 +10,7 @@ export const useVideoData = (message, id) => {
   if (message) {
     params.src = message.video;
     params.id = id;
+    params.play = message.state === 'playing';
     return {
       params,
       isMessage: true,

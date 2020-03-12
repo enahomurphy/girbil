@@ -80,3 +80,46 @@ export const addMessage = (_, { conversationId, messageId }, { cache }) => {
 
   return message
 }
+
+export const updateState = (_, args, { cache }) => {
+  const { conversationId, messageId, threadId, state } = args;
+
+  const variables = { conversationId };
+
+  if (threadId) {
+    variables.messageId = threadId;
+  }
+
+  const data = cache.readQuery({
+    query: CONVERSATION_MESSAGES,
+    variables,
+  });
+
+  const messages = data.messages.map((message) => {
+    if (message.id === messageId) {
+      let newState = state;
+
+      if (
+        (state === 'toggle') && 
+        (message.state === 'done') || 
+        (message.state === 'pause')
+      ) {
+        newState = 'playing';
+      } else if (state === 'toggle' && message.state === 'playing') {
+        newState = 'pause';
+      }
+  
+      return { ...message, state: newState };
+    }
+
+    return { ...message, state: 'done' };
+  });
+
+
+  cache.writeQuery({
+    query: CONVERSATION_MESSAGES,
+    variables,
+    data: { messages },
+  });
+
+}

@@ -91,8 +91,12 @@ export const GET_MESSAGES = gql`
 `;
 
 export const GET_MESSAGE = gql`
-  query getMessage($conversationId: String!, $messageId: String) {
-    message(conversationId: $conversationId, messageId: $messageId) @client {
+  query message($conversationId: String!, $messageId: String!, $threadId: String) {
+    message(
+      conversationId: $conversationId,
+      messageId: $messageId,
+      threadId: $threadId,
+    ) @client {
       ...MessageParts
       sender {
         id

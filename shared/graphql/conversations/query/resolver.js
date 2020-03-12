@@ -6,11 +6,11 @@ import {
 } from './query';
 import { get } from '../../../lib';
 
-export const message = (_, { conversationId, messageId }, { cache }) => {
+export const message = (_, { conversationId, messageId, threadId }, { cache }) => {
   const variables = { conversationId };
   
-  if (messageId) {
-    variables.messageId = messageId;
+  if (threadId) {
+    variables.messageId = threadId;
   }
 
   const { messages } = cache.readQuery({
@@ -18,13 +18,7 @@ export const message = (_, { conversationId, messageId }, { cache }) => {
     variables
   });
 
-  return messages.find((item) => {
-    if (messageId) {
-      return (item.parentId === messageId) && (item.conversationId === conversationId);
-    }
-
-    return (item.conversationId === conversationId)
-  })
+  return messages.find((item) => item.id === messageId)
 }
 
 export const conversation = (_, { conversationId }, { cache }) => {

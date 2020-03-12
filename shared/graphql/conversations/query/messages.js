@@ -26,3 +26,24 @@ export const useMessages = (conversationId, threadId) => {
   ];
 }
 
+export const useMessageState = (conversationId, threadId) => {
+  const client = useApolloClient();
+  const [getLazyMessages, { loading, data }] = useLazyQuery(CONVERSATION_MESSAGES);
+
+  const loadMessages = useCallback(async () => {
+    return getLazyMessages({
+      variables: {
+        conversationId,
+        messageId: threadId,
+      },
+    });
+  }, [conversationId, threadId]);
+
+  return [
+    loadMessages,
+    { 
+      messages: get(data, 'messages', []),
+      loading,
+    }
+  ];
+}

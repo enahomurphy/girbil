@@ -1,5 +1,5 @@
-import React from 'react';
-import { useQuery } from '@apollo/client';
+import React, { useEffect } from 'react';
+import { useQuery, useLazyQuery } from '@apollo/client';
 import { Page, f7 } from 'framework7-react';
 import { useVideo } from '@/lib/hooks';
 import PropTypes from 'prop-types';
@@ -9,20 +9,39 @@ import {
   Video, Header, useVideoData, Controls,
 } from '@/components/Video';
 import { get } from '@shared/lib';
+import emitter from '@/lib/emitter';
 
 const Message = ({
-  isThread, messageId, threadId, conversationId,
+  isThread, messageId, conversationId,
 }) => {
-  const { data } = useQuery(
-    query.GET_MESSAGE, { variables: { conversationId, messageId: isThread && threadId } },
-  );
+  const [getMessage, { data }] = useLazyQuery(query.GET_MESSAGE);
   const { data: conversationMeta } = useQuery(
     query.CONVERSATION_META,
     { variables: { conversationId } },
   );
 
-  const { params } = useVideoData(get(data, 'message', {}), 'video');
-  const [video, state, controls] = useVideo({ url: params.src });
+  const message = get(data, 'message', {});
+  const { params } = useVideoData(message, 'video');
+
+  const [video, state, controls] = useVideo({
+    url: params.src,
+    play: params.play,
+    onPlay: () => emitter.emitEvent('play_message', { message, state: 'playing' }),
+    onPause: () => emitter.emitEvent('pause_message', { message, state: 'pause' }),
+  });
+
+  useEffect(() => {
+    emitter.onEventEmitted('read_message', (args) => {
+      getMessage({
+        variables: {
+          conversationId: args.conversationId,
+          messageId: args.messageId,
+          threadId: args.threadId,
+        },
+      });
+    });
+  }, [getMessage]);
+
   const goBack = () => {
     const link = isThread
       ? `/conversations/${conversationId}/${messageId}/thread/`
@@ -61,7 +80,6 @@ const Message = ({
 
 Message.propTypes = {
   isThread: PropTypes.oneOfType([() => undefined, PropTypes.object]).isRequired,
-  threadId: PropTypes.oneOfType([() => undefined, PropTypes.object]).isRequired,
   messageId: PropTypes.oneOfType([() => undefined, PropTypes.object]).isRequired,
   conversationId: PropTypes.string.isRequired,
 };

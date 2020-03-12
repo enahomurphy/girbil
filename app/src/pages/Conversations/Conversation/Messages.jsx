@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import { f7 } from 'framework7-react';
+import { useMutation } from '@apollo/client';
 import PropTypes from 'prop-types';
 
+import { query, mutation } from '@shared/graphql/conversations';
 import Gallery from '@/components/Gallery';
 import Emoji from '@/components/Emoji';
-import { query } from '@shared/graphql/conversations';
+import emitter from '@/lib/emitter';
 
 const getPullOverLinks = (conversationId, isThread, { id }) => {
   const options = [
@@ -38,20 +40,52 @@ const getPullOverLinks = (conversationId, isThread, { id }) => {
   return options;
 };
 
-
 const Messages = ({
   conversationId, threadId, isThread,
 }) => {
+  const [updateState] = useMutation(mutation.UPDATE_MESSAGE_STATE);
   const [loadMessage, { messages, loading }] = query.useMessages(conversationId, threadId);
 
   useEffect(() => {
     loadMessage();
   }, [loadMessage]);
 
-  const onClick = (id) => {
+  useEffect(() => {
+    const handler = ({ message, state }) => {
+      updateState({
+        variables: {
+          conversationId: message.conversationId,
+          messageId: message.id,
+          threadId,
+          state,
+        },
+      });
+    };
+
+    emitter.onEventEmitted('play_message', handler);
+    emitter.onEventEmitted('pause_message', handler);
+  }, [threadId, updateState]);
+
+  const onClick = async (id) => {
     const link = isThread
       ? `/conversations/${conversationId}/${threadId}/thread/${id}/`
       : `/conversations/${conversationId}/${id}`;
+
+    updateState({
+      variables: {
+        conversationId,
+        messageId: id,
+        threadId,
+        state: 'toggle',
+      },
+      update: () => {
+        emitter.emitEvent('read_message', {
+          conversationId,
+          messageId: id,
+          threadId,
+        });
+      },
+    });
 
     f7.views.main.router.navigate(
       link,
@@ -59,7 +93,7 @@ const Messages = ({
         animate: 'f7-dive',
         props: {
           messageId: id,
-          threadId: id,
+          threadId,
           isThread,
           conversationId,
         },

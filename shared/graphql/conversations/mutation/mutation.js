@@ -48,6 +48,22 @@ export const SAVE_MESSAGE = gql`
   }
 `;
 
+export const UPDATE_MESSAGE_STATE = gql`
+  mutation updateState(
+    $conversationId: String!
+    $messageId: String!
+    $threadId: String
+    $state: String!
+  ) {
+    updateState(
+      conversationId: $conversationId,
+      messageId: $messageId,
+      threadId: $threadId,
+      state: $state
+    ) @client
+  }
+`;
+
 export default {
   UPDATE_MESSAGE,
   ADD_MESSAGE,

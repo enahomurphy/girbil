@@ -32,9 +32,8 @@ const ImageItem = ({
     <SwiperSlide key={id}>
       <ImageItemInfo pullover={pullover} recording={slideProps.recording} />
       <StyledSlide {...slideProps}>
-        { slideProps.recording && <ImageRecordingItem thumbnail={renderThumbnail} /> }
-        { state === 'playing' && <ImageItemPlaying sender={sender} /> }
-        { !slideProps.recording && <div className="swiper-lazy-preloader" /> }
+        {<ImageItemPlaying state={state} thumbnail={renderThumbnail} sender={sender} />}
+        {slideProps.recording && <ImageRecordingItem thumbnail={renderThumbnail} />}
       </StyledSlide>
     </SwiperSlide>
   );

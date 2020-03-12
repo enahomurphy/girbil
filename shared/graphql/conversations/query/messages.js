@@ -1,19 +1,49 @@
 import { useEffect, useCallback } from 'react';
-import { useLazyQuery } from '@apollo/react-hooks';
+import { useLazyQuery, useApolloClient, useQuery } from '@apollo/client';
 
 import { CONVERSATION_MESSAGES } from './query';
 import { get } from '../../../lib';
 
-export const getConversationMessages = () => {
-  const [getLazyMessages, { data, loading }] = useLazyQuery(CONVERSATION_MESSAGES);
+export const useMessages = (conversationId, threadId) => {
+  const client = useApolloClient();
+  const [getLazyMessages, { loading, data }] = useLazyQuery(CONVERSATION_MESSAGES);
 
-  const getMessages = useCallback((conversationId) => {
+  const loadMessages = useCallback(async () => {
     return getLazyMessages({
       variables: {
-        conversationId
+        conversationId,
+        messageId: threadId,
       },
     });
-  }, []);
+  }, [conversationId, threadId]);
 
-  return [getMessages, { messages: get(data, 'messages', []), loading }];
+  return [
+    loadMessages,
+    { 
+      messages: get(data, 'messages', []),
+      loading,
+    }
+  ];
+}
+
+export const useMessageState = (conversationId, threadId) => {
+  const client = useApolloClient();
+  const [getLazyMessages, { loading, data }] = useLazyQuery(CONVERSATION_MESSAGES);
+
+  const loadMessages = useCallback(async () => {
+    return getLazyMessages({
+      variables: {
+        conversationId,
+        messageId: threadId,
+      },
+    });
+  }, [conversationId, threadId]);
+
+  return [
+    loadMessages,
+    { 
+      messages: get(data, 'messages', []),
+      loading,
+    }
+  ];
 }

@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useMutation, useLazyQuery } from '@apollo/react-hooks';
-import { useMachine } from '@xstate/react';
-import { useVideo } from 'react-use';
 import { f7 } from 'framework7-react';
+import { useVideo } from 'react-use';
+import { useMachine } from '@xstate/react';
+import { useMutation, useLazyQuery, useQuery } from '@apollo/client';
+import PropTypes from 'prop-types';
 
 import RecordMachine from '@/states/record';
-import {
-  Video as VideoComponent, useVideoData, Header,
-} from '@/components/Video';
-import { mutation } from '@shared/graphql/conversations';
+import { Video as VideoComponent, useVideoData, Header } from '@/components/Video';
+import { mutation, query } from '@shared/graphql/conversations';
 import { query as uploadQuery } from '@shared/graphql/upload';
 import { RecorderButton } from '@/components/Recorder';
 import { Video } from '@/lib/media';
@@ -17,18 +16,23 @@ import { get } from '@shared/lib';
 import { getParam } from '@/lib';
 import { NewMessageWrapper } from './style';
 
-const NewMessage = () => {
+const NewMessage = ({ isThread, conversationId }) => {
   const { params } = useVideoData(null, 'video');
-  const [video] = useVideo(params);
-  const [videoRecorder] = useState(new Video('video'));
+
+  // @TODO unifify video element;
+  const id = isThread ? 'thread-video' : 'video';
+  const [video] = useVideo({ ...params, id });
+  const [videoRecorder] = useState(new Video(id));
 
   const [saveMessage] = mutation.useSaveMessage();
   const [addMessage, { data }] = useMutation(mutation.ADD_MESSAGE);
-  const [updateMessage] = useMutation(mutation.UPDATE_MESSAGE);
+  const { data: conversationMeta } = useQuery(
+    query.CONVERSATION_META,
+    { variables: { conversationId } },
+  );
   const [{ matches }, send] = useMachine(RecordMachine, {
     context: {
       addMessage,
-      updateMessage,
       saveMessage,
     },
   });
@@ -40,13 +44,12 @@ const NewMessage = () => {
   });
 
   const startRecord = () => {
-    const conversationId = getParam('conversationId');
-
-    if (matches('record.idle')) {
+    const threadId = getParam('threadId');
+    if (matches('record.idle') && matches('processing.idle')) {
       videoRecorder.startRecord();
       send('START');
       addMessage({
-        variables: { conversationId },
+        variables: { conversationId, messageId: threadId },
         update: (_, { data: messageData }) => {
           send('GET_URLS', {
             message: messageData.addMessage,
@@ -64,7 +67,7 @@ const NewMessage = () => {
       videoRecorder.stopRecord();
       send('STOP');
       send('PROCESS', {
-        file, urls, messageId, conversationId,
+        file, urls, messageId, conversationId, parentId: threadId,
       });
     }
   };
@@ -76,25 +79,45 @@ const NewMessage = () => {
 
   useEffect(() => {
     videoRecorder.initVideo();
-
     return () => {
       videoRecorder.stop();
     };
-  }, [videoRecorder]);
+  }, [videoRecorder, isThread]);
 
   const goBack = () => {
     f7.view.current.router.back();
   };
 
+  const {
+    name = '',
+    isPrivate = false,
+  } = get(conversationMeta, 'conversationMeta', {});
+
   return (
     <Page overflow="hidden">
       <NewMessageWrapper>
-        <Header goBack={goBack} back />
+        <Header
+          name={name}
+          isPrivate={isPrivate}
+          goBack={goBack}
+          back
+          isThread={isThread}
+          onClick={() => {}}
+        />
         <RecorderButton onClick={startRecord} recording={matches('record.start')} />
         <VideoComponent video={video} />
       </NewMessageWrapper>
     </Page>
   );
+};
+
+NewMessage.defaultProps = {
+  isThread: false,
+};
+
+NewMessage.propTypes = {
+  isThread: PropTypes.oneOfType([() => undefined, PropTypes.object]),
+  conversationId: PropTypes.string.isRequired,
 };
 
 export default NewMessage;

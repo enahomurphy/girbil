@@ -1,17 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'timeago.js';
+import { Icon } from 'framework7-react';
 
 import { Title } from '@/components/Style';
-import { Pause } from '@/components/Icon';
 import { PlayingItem } from './style';
 
-const ImageRecordingItem = ({ sender }) => (
+const ImageRecordingItem = ({ sender, state }) => (['playing', 'pause'].includes(state) ? (
   <PlayingItem>
-    <Pause />
+    {state === 'pause' && (
+      <Icon
+        f7="play_fill"
+        color="#ffffff"
+        style={{ fontSize: '32px', color: '#ffffff' }}
+      />
+    )}
+    {state === 'playing' && (
+      <Icon
+        f7="pause_fill"
+        color="#ffffff"
+        style={{ fontSize: '32px', color: '#ffffff' }}
+      />
+    )}
     <Title
       size="14px"
-      margin="0 0 0 8px"
+      margin="0 0 0 0"
       width="fit-content"
       transform="capitalize"
     >
@@ -20,16 +33,17 @@ const ImageRecordingItem = ({ sender }) => (
     <Title
       weight="600"
       size="14px"
-      margin="0 0 0 8px"
+      margin="0 0 0 0"
       width="100px"
     >
       {format(sender.createdAt)}
     </Title>
   </PlayingItem>
-);
+) : null);
 
 ImageRecordingItem.propTypes = {
   sender: PropTypes.object.isRequired,
+  state: PropTypes.string.isRequired,
 };
 
 export default ImageRecordingItem;

@@ -1,5 +1,6 @@
 
 export default {
-  // messages: [],
+  messages: [],
   message: null,
+  conversationMeta: {},
 };

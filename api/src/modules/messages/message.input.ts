@@ -1,5 +1,5 @@
 import { Field, InputType } from 'type-graphql';
-import { IsUUID, IsUrl } from 'class-validator';
+import { IsUUID, IsUrl, ValidateIf } from 'class-validator';
 
 @InputType()
 export class AddMessageInput {
@@ -14,4 +14,9 @@ export class AddMessageInput {
   @Field()
   @IsUrl()
   thumbnail: string
+
+  @IsUUID()
+  @ValidateIf((e) => e.messageId)
+  @Field(() => String, { nullable: true })
+  parentId?: string
 }

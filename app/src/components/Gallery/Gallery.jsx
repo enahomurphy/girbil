@@ -12,14 +12,16 @@ const Gallery = ({ messages, onClick }) => {
     if (messages.length) {
       const slide = f7.swiper.get('.swiper-container');
       if (messages[messages.length - 1].state === 'recording') {
-        slide.update();
         slide.slideTo(messages.length);
       }
     }
   }, [messages]);
 
   const params = {
-    lazy: true,
+    lazy: {
+      loadPrevNext: true,
+      loadPrevNextAmount: 2,
+    },
     slidesPerView: 3,
     spaceBetween: 0,
     navigation: {
@@ -38,7 +40,7 @@ const Gallery = ({ messages, onClick }) => {
       <Swiper params={params}>
         {
           messages.map(({
-            id, thumbnail, state, sender,
+            id, thumbnail, state, sender, pullover,
           }) => (
             <ImageItem
               onClick={onClick}
@@ -46,6 +48,7 @@ const Gallery = ({ messages, onClick }) => {
               id={id}
               thumbnail={thumbnail}
               state={state}
+              pullover={pullover}
               sender={sender}
             />
           ))

@@ -41,7 +41,7 @@ export class CHecks1582381400011 implements MigrationInterface {
       
       ALTER TABLE "messages" ADD FOREIGN KEY ("conversation_id") REFERENCES "conversations" ("id");
       
-      ALTER TABLE "messages" ADD FOREIGN KEY ("parent_id") REFERENCES "users" ("id");
+      ALTER TABLE "messages" ADD FOREIGN KEY ("parent_id") REFERENCES "messages" ("id");
       
       CREATE INDEX ON "teams" ("organization_id");
       

@@ -25,6 +25,13 @@ export const BackIcon = styled(Button)`
   align-items: center;
   z-index: var(--gb-back-z-index);
 
+  &:hover,
+  .aurora.device-desktop .button:not(.active-state):not(.no-hover):hover {
+    background: var(--gb-accent);
+    background-color: var(--gb-accent);
+    border: 2px solid #ffffff;
+  }
+
   i {
     font-size: 18px;
     color: #ffffff;

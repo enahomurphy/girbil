@@ -11,16 +11,14 @@ const TabsWrapper = styled(Tabs)`
   height: calc(100vh - var(--gb-message-height));
 `;
 
-const Conversation = ({
-  conversationId, threadId, isThread,
-}) => (
+const Conversation = ({ conversationId, threadId }) => (
   <Page overflow="hidden">
     <TabsWrapper routable>
-      <Tab id="view" />
-      <Tab id="record" />
+      <Tab id="thread-view" />
+      <Tab id="thread-record" />
     </TabsWrapper>
     <Messages
-      isThread={Boolean(isThread)}
+      isThread
       threadId={threadId}
       conversationId={conversationId}
     />
@@ -28,12 +26,10 @@ const Conversation = ({
 );
 
 Conversation.defaultProps = {
-  isThread: false,
   threadId: undefined,
 };
 
 Conversation.propTypes = {
-  isThread: PropTypes.bool,
   conversationId: PropTypes.string.isRequired,
   threadId: PropTypes.oneOfType([undefined, PropTypes.object]),
 };

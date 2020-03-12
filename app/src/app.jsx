@@ -1,4 +1,4 @@
-import { ApolloProvider } from '@apollo/react-hooks';
+import { ApolloProvider } from '@apollo/client';
 import React, { useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Device } from 'framework7';

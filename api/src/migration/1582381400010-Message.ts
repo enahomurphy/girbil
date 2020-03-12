@@ -20,6 +20,9 @@ export class Message1582381400010 implements MigrationInterface {
         "created_at" timestamp DEFAULT Now()
       );
     `);
+
+    await queryRunner.query('CREATE INDEX ON "messages" ("conversation_id")');
+    await queryRunner.query('CREATE INDEX ON "messages" ("conversation_id", "parent_id") WHERE "parent_id" IS NOT NULL');
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {

@@ -1,13 +1,19 @@
-import ApolloClient, { InMemoryCache } from 'apollo-boost';
+import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 
 import { data, resolvers } from '.';
 import { storage } from '../lib'
 
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+  typePolicies: {
+    Message: {
+      keyFields: ['id'],
+    }
+  }
+});
 
 const defaultOptions = {
   watchQuery: {
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache',
     errorPolicy: 'all',
   },
   query: {
@@ -20,27 +26,22 @@ const defaultOptions = {
 };
 
 const client = new ApolloClient({
-  addTypename: true,
   uri: 'http://localhost:8081/graphql',
   cache,
   resolvers,
-  defaultOptions,
-  request: (operation) => {
-    operation.setContext({
-      headers: {
-        authorization: storage.token ? `Bearer ${storage.token}` : ''
-      }
-    })
-  }
+  
+  headers: {
+    authorization: storage.token ? `Bearer ${storage.token}` : ''
+  },
+  defaultOptions
 });
 
-client.defaultOptions = defaultOptions;
-
-cache.writeData({ data });
-
-client.onResetStore(() => {
-  cache.writeData({ data: {} });
-  return Promise.resolve();
-});
+client.writeQuery({
+  query: gql`{
+    messages
+    conversationMeta
+  }`,
+  data,
+})
 
 export default client;

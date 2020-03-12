@@ -28,8 +28,10 @@ class MessageResolver implements ResolverInterface<Message> {
   @ValidateArgs(MessagesArgs)
   @CanView('conversation')
   @Query(() => [Message])
-  async messages(@Args() { conversationId }: MessagesArgs): Promise<Message[]> {
-    return this.messageRepo.messages(conversationId);
+  async messages(
+    @Args() { conversationId, messageId }: MessagesArgs,
+  ): Promise<Message[]> {
+    return this.messageRepo.messages(conversationId, messageId);
   }
 
   @Authorized('user', 'admin', 'owner')
@@ -37,9 +39,11 @@ class MessageResolver implements ResolverInterface<Message> {
   @CanView('conversation')
   @Mutation(() => Message)
   async addMessage(
-    @Arg('input') { video, thumbnail, id }: AddMessageInput,
-      @Arg('conversationId') @IsUUID() conversationId: string,
-      @Ctx() { user }: ContextType,
+    @Arg('input') {
+      video, thumbnail, id, parentId,
+    }: AddMessageInput,
+    @Arg('conversationId') @IsUUID() conversationId: string,
+    @Ctx() { user }: ContextType,
   ): Promise<Message> {
     const message = plainToClass(Message, {
       id,
@@ -47,6 +51,7 @@ class MessageResolver implements ResolverInterface<Message> {
       senderId: user.id,
       video,
       thumbnail,
+      parentId,
     });
 
     const createdMessage = await this.messageRepo.save(message);

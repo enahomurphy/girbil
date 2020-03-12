@@ -59,10 +59,9 @@ Active.defaultProps = {
   height: '16px',
 };
 
-
 export const StyledTitle = styled(Title)`
   text-align: left;
-  text-overflow: ellipsis
+  text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   margin: 0 9px 0 2px;

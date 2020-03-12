@@ -13,8 +13,8 @@ export const UPDATE_MESSAGE = gql`
 `;
 
 export const ADD_MESSAGE = gql`
-  mutation addMessage($conversationId: String!) {
-    addMessage(conversationId: $conversationId) @client
+  mutation addMessage($conversationId: String!, $messageId: String) {
+    addMessage(conversationId: $conversationId, messageId: $messageId) @client
   }
 `;
 
@@ -30,12 +30,14 @@ export const SAVE_MESSAGE = gql`
     $id: String!
     $video: String!
     $thumbnail: String!
+    $parentId: String
   ) {
     addMessage(
       input: {
         id: $id,
         video: $video,
         thumbnail: $thumbnail
+        parentId: $parentId
       }
       conversationId: $conversationId
     ) {
@@ -45,6 +47,22 @@ export const SAVE_MESSAGE = gql`
       thumbnail
       state
     }
+  }
+`;
+
+export const UPDATE_MESSAGE_STATE = gql`
+  mutation updateState(
+    $conversationId: String!
+    $messageId: String!
+    $threadId: String
+    $state: String!
+  ) {
+    updateState(
+      conversationId: $conversationId,
+      messageId: $messageId,
+      threadId: $threadId,
+      state: $state
+    ) @client
   }
 `;
 

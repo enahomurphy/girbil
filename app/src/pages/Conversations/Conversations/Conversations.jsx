@@ -47,7 +47,7 @@ const Conversations = () => {
               unreadCount={44}
               isActive={false}
               isChannel
-              isPrivate
+              isPrivate={channel.isPrivate}
               user={{
                 id: channel.id,
                 name: channel.name,

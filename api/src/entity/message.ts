@@ -1,5 +1,5 @@
 import {
-  Entity, PrimaryColumn, Column, CreateDateColumn, OneToOne, JoinColumn,
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne, JoinColumn,
 } from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
 import { User } from '.';
@@ -8,7 +8,7 @@ import { User } from '.';
 @ObjectType()
 export class Message {
   @Field()
-  @PrimaryColumn('uuid')
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Field()
@@ -28,9 +28,10 @@ export class Message {
   @Column({
     name: 'parent_id',
     type: 'uuid',
+    nullable: true,
   })
-  @Field()
-  parent_id?: string;
+  @Field({ nullable: true })
+  parentId?: string;
 
   @Field()
   @Column()

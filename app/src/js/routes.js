@@ -1,5 +1,5 @@
 import {
-  Conversation, Conversations, Message, NewMessage,
+  Conversation, Conversations, Message, NewMessage, Thread,
 } from '@/pages/Conversations';
 import { Login, SignUp, ResetPasword } from '@/pages/Auth';
 import HomePage from '@/pages/Home';
@@ -46,9 +46,6 @@ const routes = [
     name: 'conversation',
     path: '/conversations/:conversationId',
     component: Conversation,
-    options: {
-      ignoreCache: true,
-    },
     tabs: [
       {
         path: '/',
@@ -60,7 +57,6 @@ const routes = [
         id: 'view',
         component: Message,
         options: {
-          ignoreCache: true,
           props: {
             isThread: false,
           },
@@ -74,18 +70,21 @@ const routes = [
     name: 'thread',
     path: '/conversations/:conversationId/:threadId/thread',
     id: 'view',
-    component: Conversation,
+    component: Thread,
     options: {
       animate: true,
       transition: 'f7-cover-v',
       props: {
+        reloadPrevious: true,
+        reloadCurrent: true,
+        ignoreCache: true,
         isThread: true,
       },
     },
     tabs: [
       {
         path: '/',
-        id: 'record',
+        id: 'thread-record',
         component: NewMessage,
         props: {
           ignoreCache: true,
@@ -94,7 +93,7 @@ const routes = [
       },
       {
         path: '/:messageId',
-        id: 'view',
+        id: 'thread-view',
         component: Message,
         options: {
           ignoreCache: true,

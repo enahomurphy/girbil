@@ -18,8 +18,11 @@ import { NewMessageWrapper } from './style';
 
 const NewMessage = ({ isThread, conversationId }) => {
   const { params } = useVideoData(null, 'video');
-  const [video] = useVideo(params);
-  const [videoRecorder] = useState(new Video('video'));
+
+  // @TODO unifify video element;
+  const id = isThread ? 'thread-video' : 'video';
+  const [video] = useVideo({ ...params, id });
+  const [videoRecorder] = useState(new Video(id));
 
   const [saveMessage] = mutation.useSaveMessage();
   const [addMessage, { data }] = useMutation(mutation.ADD_MESSAGE);
@@ -75,9 +78,7 @@ const NewMessage = ({ isThread, conversationId }) => {
   };
 
   useEffect(() => {
-    if (!isThread) {
-      videoRecorder.initVideo();
-    }
+    videoRecorder.initVideo();
     return () => {
       videoRecorder.stop();
     };

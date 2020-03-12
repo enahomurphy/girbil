@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import {
   Block as F7Block, Button as F7Button,
-  Page as f7Page, Icon as f7Icon, Link as f7Link,
+  Page as f7Page, Icon as f7Icon, Link as f7Link, Popover as f7Popover,
 } from 'framework7-react';
 
 export const Text = styled(F7Block)`
@@ -131,3 +131,31 @@ Active.defaultProps = {
   width: '16px',
   height: '16px',
 };
+
+export const Popover = styled(f7Popover)`
+  .item-content {
+    padding: 0;
+  }
+
+  .item-link.active-state {
+    background: none;
+  }
+
+
+  &.list .item-inner {
+    padding: 0px;
+
+    .item-title {
+      font-size: 12px;
+    }
+  }
+
+  & ul li {
+    padding: 5px 16px;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--gb-accent);
+    }
+  }
+`;

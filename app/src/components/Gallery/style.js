@@ -115,7 +115,6 @@ export const ImageItemOption = styled(List)`
     }
   }
 
-
   & ul li {
     padding: 5px 16px;
     cursor: pointer;

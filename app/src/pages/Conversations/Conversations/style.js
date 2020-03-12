@@ -24,6 +24,15 @@ export const Img = styled.img`
 export const StyledListItem = styled(ListItem)`
   list-style-type: none;
   margin-bottom: 16px;
+  width: 100%;
+
+  li {
+    width: 100%;
+  }
+
+  .item-content {
+    padding: 0px;    
+  }
 
   .item-link .item-inner {
     padding: 0 16px 0 0;

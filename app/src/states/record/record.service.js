@@ -19,7 +19,7 @@ export const uploadThumbnail = async (context, data) => {
 export const processing = async (context, data) => {
   const { saveMessage } = context;
   const {
-    file, urls, conversationId, messageId,
+    file, urls, conversationId, messageId, parentId,
   } = data;
   const uploadURL = get(urls, 'getUploadURL.postVideoURL', '');
   const videoURL = get(urls, 'getUploadURL.getVideoURL');
@@ -33,6 +33,7 @@ export const processing = async (context, data) => {
     conversationId,
     video: videoURL,
     thumbnail: thumbnailURL,
+    parentId,
   });
 
   await Thread.terminate(upload);

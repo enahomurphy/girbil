@@ -30,12 +30,14 @@ export const SAVE_MESSAGE = gql`
     $id: String!
     $video: String!
     $thumbnail: String!
+    $parentId: String
   ) {
     addMessage(
       input: {
         id: $id,
         video: $video,
         thumbnail: $thumbnail
+        parentId: $parentId
       }
       conversationId: $conversationId
     ) {

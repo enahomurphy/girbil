@@ -67,7 +67,7 @@ const NewMessage = ({ isThread, conversationId }) => {
       videoRecorder.stopRecord();
       send('STOP');
       send('PROCESS', {
-        file, urls, messageId, conversationId,
+        file, urls, messageId, conversationId, parentId: threadId,
       });
     }
   };

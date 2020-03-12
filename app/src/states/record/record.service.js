@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { get } from '@shared/lib';
+import { spawn, Thread, Worker } from 'threads';
 
 export const uploadThumbnail = async (context, data) => {
   const { thumbnail } = data;
@@ -10,12 +10,10 @@ export const uploadThumbnail = async (context, data) => {
     type: 'image/gif',
   });
 
-  await axios({
-    method: 'put',
-    url: uploadURL,
-    data: file,
-    headers: { 'content-type': file.type },
-  });
+  const upload = await spawn(new Worker('@/lib/workers/upload'));
+  await upload.put(uploadURL, file);
+
+  await Thread.terminate(upload);
 };
 
 export const processing = async (context, data) => {
@@ -27,19 +25,17 @@ export const processing = async (context, data) => {
   const videoURL = get(urls, 'getUploadURL.getVideoURL');
   const thumbnailURL = get(urls, 'getUploadURL.getThumbnailURL');
 
-  await axios({
-    method: 'put',
-    url: uploadURL,
-    data: file,
-    headers: { 'content-type': file.type },
-  });
+  const upload = await spawn(new Worker('@/lib/workers/upload'));
+  await upload.put(uploadURL, file);
 
-  return saveMessage({
+  await saveMessage({
     id: messageId,
     conversationId,
     video: videoURL,
     thumbnail: thumbnailURL,
   });
+
+  await Thread.terminate(upload);
 };
 
 export const getUploadUrls = async (_, { getUploadURLS, message, conversationId }) => (

@@ -7,7 +7,7 @@ const thumbnail = {
       on: {
         UPLOAD_URL: {
           target: 'url',
-          actions: assign((_, { urls }) => ({ urls }))
+          actions: assign((_, { urls }) => ({ urls })),
         },
       },
     },
@@ -30,7 +30,7 @@ const thumbnail = {
         on: {
           DONE: 'idle',
         },
-      }
+      },
     },
   },
 };
@@ -63,7 +63,7 @@ const processing = {
       on: {
         GET_URLS: {
           target: 'urls',
-          actions: assign((_, { message }) => ({ message }))
+          actions: assign((_, { message }) => ({ message })),
         },
         PROCESS: 'processing',
       },

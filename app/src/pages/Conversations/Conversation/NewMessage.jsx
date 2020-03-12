@@ -6,9 +6,7 @@ import { useMutation, useLazyQuery } from '@apollo/client';
 import PropTypes from 'prop-types';
 
 import RecordMachine from '@/states/record';
-import {
-  Video as VideoComponent, useVideoData, Header,
-} from '@/components/Video';
+import { Video as VideoComponent, useVideoData, Header } from '@/components/Video';
 import { mutation } from '@shared/graphql/conversations';
 import { query as uploadQuery } from '@shared/graphql/upload';
 import { RecorderButton } from '@/components/Recorder';
@@ -41,7 +39,7 @@ const NewMessage = ({ isThread }) => {
   const startRecord = () => {
     const conversationId = getParam('conversationId');
     const threadId = getParam('threadId');
-    if (matches('record.idle')) {
+    if (matches('record.idle') && matches('processing.idle')) {
       videoRecorder.startRecord();
       send('START');
       addMessage({

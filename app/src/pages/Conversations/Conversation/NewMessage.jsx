@@ -19,7 +19,7 @@ import { NewMessageWrapper } from './style';
 const NewMessage = ({ isThread, conversationId }) => {
   const { params } = useVideoData(null, 'video');
 
-  // @TODO unifify video element;
+  // @TODO unify video element;
   const id = isThread ? 'thread-video' : 'video';
   const [video] = useVideo({ ...params, id });
   const [videoRecorder] = useState(new Video(id));

@@ -7,22 +7,23 @@ import {
 export const Text = styled(F7Block)`
   text-align: ${(props) => props.align};
   font: normal ${(props) => props.size}/20px Source Sans Pro;
-  margin: 0px;
-  margin-bottom: ${(props) => props.marginBottom};
+  margin: ${(props) => props.margin};
   width: ${(props) => props.width};
   padding: ${(props) => props.padding};
   color: ${(props) => props.color};
   text-transform: ${(props) => (props.transform)};
+  line-height: ${(props) => props.line};
 `;
 
 Text.defaultProps = {
-  align: 'center',
-  width: '180px',
-  margin: '0 0  20px 0',
+  align: 'left',
+  width: 'initial',
+  margin: '0 0 20px 0',
   color: '#B5BBC1',
   size: '14px',
   padding: 0,
   transform: 'initial',
+  line: 'initial',
 };
 
 export const Title = styled(Text)`
@@ -31,29 +32,48 @@ export const Title = styled(Text)`
   margin: ${(props) => props.margin};
   color: ${(props) => props.color};
   text-transform: ${(props) => (props.transform)};
+  line-height: ${(props) => props.line};
 `;
 
 Title.defaultProps = {
-  margin: '0 0 10px  0',
+  margin: '0',
   color: '#ffffff',
   size: '18px',
   weight: 'bold',
   transform: 'initial',
+  line: 'initial',
 };
 
 export const Button = styled(F7Button)` 
   min-width: 250px;
   border-radius: 3px;
   margin: ${(props) => props.margin};
+  background: ${({ background, inverse }) => (inverse ? 'var(--gb-green)' : background)};
   width: ${(props) => props.width};
+  height: ${(props) => props.height};
   min-width: ${(props) => props.width};
-  border: ${(props) => (props.borderColor ? `1px solid ${props.borderColor}` : 'none')};
+  border: ${({ borderColor, inverse }) => (inverse ? 'none' : `1px solid ${borderColor}`)};
+  line-height: 0;
+  display: flex;
+
+  &.button {
+    color: ${(props) => props.color};
+    font-weight: ${(props) => props.weight};
+    font-size: ${(props) => props.size};
+    line-height: ${(props) => props.line};
+    font-family: Source Sans Pro;
+  }
 `;
 
 Button.defaultProps = {
   width: '250px',
+  height: 'initial',
   borderColor: '#ffffff',
-  margin: '32px 0',
+  background: 'initial',
+  color: '#ffffff',
+  margin: '0',
+  size: '14px',
+  weight: 'bold',
 };
 
 export const Block = styled(F7Block)`
@@ -67,13 +87,13 @@ export const Block = styled(F7Block)`
 `;
 
 Block.defaultProps = {
-  type: 'initial',
+  type: 'block',
   justify: 'initial',
   align: 'initial',
   padding: 0,
   direction: 'initial',
   width: 'initial',
-  margin: '32px 0',
+  margin: '0',
 };
 
 export const Page = styled(f7Page)`
@@ -157,5 +177,28 @@ export const Popover = styled(f7Popover)`
     &:hover {
       background: var(--gb-accent);
     }
+  }
+`;
+
+export const Search = styled.div`
+  input {
+    box-sizing: border-box;
+    height: 32px;
+    width: 100%;
+    border-radius: 40px;
+    border: none;
+    padding-left: 48px;
+
+    &::placeholder {
+      font: normal 14px/14px Source Sans Pro;
+    }
+  }
+
+  i {
+    position: absolute;
+    z-index: 22222;
+    color: var(--gb-black);
+    top: 9px;
+    left: 15px;
   }
 `;

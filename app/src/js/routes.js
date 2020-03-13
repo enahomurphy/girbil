@@ -83,7 +83,6 @@ const routes = [
   {
     name: 'thread',
     path: '/conversations/:conversationId/:threadId/thread',
-    id: 'view',
     component: Thread,
     options: {
       animate: true,
@@ -114,6 +113,16 @@ const routes = [
         },
       },
     ],
+  },
+  {
+    name: 'channels',
+    path: '/channels',
+    async(routeTo, routeFrom, resolve) {
+      const reactComponent = () => import('@/pages/Channel/Channel');
+      reactComponent().then((rc) => {
+        resolve({ component: rc.default });
+      });
+    },
   },
 ];
 

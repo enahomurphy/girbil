@@ -59,7 +59,7 @@ export class User {
     return plainToClass(User, {
       id: this.id,
       avatar: this.avatar,
-      name: this.avatar,
+      name: this.name,
       organization: this.organization,
       isVerified: this.isVerified,
       email: this.email,

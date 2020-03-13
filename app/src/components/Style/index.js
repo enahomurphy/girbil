@@ -1,3 +1,4 @@
+
 import styled from 'styled-components';
 import {
   Block as F7Block, Button as F7Button,
@@ -143,7 +144,7 @@ Image.defaultProps = {
 export const Active = styled.div`
   box-sizing: border-box;
   width: ${(props) => props.width};
-  height: ${(props) => props.height};
+  height: ${(props) => props.width};
   border-radius: 100px;
   background-color: ${(props) => (props.active ? 'var(--gb-green)' : 'transparent')};
   border: 2px solid ${(props) => (props.active ? 'var(--gb-green);' : '#999999')};
@@ -152,26 +153,37 @@ export const Active = styled.div`
 
 Active.defaultProps = {
   width: '16px',
-  height: '16px',
 };
 
 export const Popover = styled(f7Popover)`
+  width: ${({ width }) => width || 'initial'};
   .item-content {
     padding: 0;
+
+    .item-inner {
+      padding: 0px;
+    }
   }
 
   .item-link.active-state {
     background: none;
   }
 
+  & .list ul {
+    &::before {
+      display: none;
+    }
+  }
+
+  & .list li a .item-content .item-inner .item-title,
+  & .list .item-title {
+    font-size: 12px;
+    font-family: Source Sans Pro;
+    color: var(--gb-light-grey);
+  }
 
   & .list li a .item-content .item-inner {
     padding: 0px;
-
-    .item-title {
-      font-size: 12px;
-      color: var(--gb-light-grey);
-    }
 
     &::after {
       background: none;
@@ -183,7 +195,7 @@ export const Popover = styled(f7Popover)`
   }
 
   & ul li {
-    padding: 5px 16px;
+    padding: 0px 16px;
     cursor: pointer;
 
     &:hover {

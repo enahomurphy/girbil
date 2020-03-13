@@ -2,11 +2,11 @@
 import React from 'react';
 import { Page, List, ListItem } from 'framework7-react';
 
+import { storage } from '@shared/lib';
 import { query } from '@shared/graphql/conversations';
-import { Text } from '@/components/Style';
 import ConversationListItem from '@/components/List/ConversationListItem';
 import ConversationHeader from './ConversationHeader';
-import { StyledUser, Active } from './style';
+import UserInfo from './UserInfo';
 
 const Conversations = () => {
   const { conversations } = query.getUserConversations();
@@ -14,10 +14,7 @@ const Conversations = () => {
   return (
     <Page>
       <ConversationHeader />
-      <StyledUser type="flex" margin="16px 0 0 0" align="center">
-        <Active active />
-        <Text color="#EFEFEF" margin="0" align="left">Jeff Whitlock</Text>
-      </StyledUser>
+      <UserInfo user={storage.payload} />
       <List className="searchbar-not-found">
         <ListItem title="Nothing found" />
       </List>

@@ -1,5 +1,4 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 import { Page, List } from 'framework7-react';
 
 import Header from '@/components/Header';

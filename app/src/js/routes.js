@@ -133,6 +133,56 @@ const routes = [
             resolve({ component: rc.default });
           });
         },
+        options: {
+          props: {
+            title: 'Create a Channel',
+          },
+        },
+      },
+      {
+        name: 'channels-edit',
+        path: '/:channelId/edit',
+        async(routeTo, routeFrom, resolve) {
+          const reactComponent = () => import('@/pages/Channel/Create');
+          reactComponent().then((rc) => {
+            resolve({ component: rc.default });
+          });
+        },
+        options: {
+          props: {
+            title: 'Edit Channel',
+          },
+        },
+      },
+      {
+        name: 'channels-view',
+        path: '/:channelId',
+        async(routeTo, routeFrom, resolve) {
+          const reactComponent = () => import('@/pages/Channel/View');
+          reactComponent().then((rc) => {
+            resolve({ component: rc.default });
+          });
+        },
+        options: {
+          props: {
+            title: 'Edit Channel',
+          },
+        },
+      },
+      {
+        name: 'channels-add-people',
+        path: '/:channelId/add-people',
+        async(routeTo, routeFrom, resolve) {
+          const reactComponent = () => import('@/pages/Channel/AddPeople');
+          reactComponent().then((rc) => {
+            resolve({ component: rc.default });
+          });
+        },
+        options: {
+          props: {
+            title: 'Edit Channel',
+          },
+        },
       },
     ],
   },

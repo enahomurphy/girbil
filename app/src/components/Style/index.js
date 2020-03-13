@@ -1,4 +1,3 @@
-
 import styled from 'styled-components';
 import {
   Block as F7Block, Button as F7Button,
@@ -58,6 +57,10 @@ export const Button = styled(F7Button)`
   display: flex;
   border-radius: 6px;
 
+  justify-content: ${({ withIcon }) => (withIcon ? 'space-between' : 'center')};
+  align-items: center;
+  padding: 0 20px;
+
   &.button {
     color: ${(props) => props.color};
     font-weight: ${(props) => props.weight};
@@ -68,8 +71,8 @@ export const Button = styled(F7Button)`
 `;
 
 Button.defaultProps = {
-  width: '250px',
-  height: '20px',
+  width: '152px',
+  height: '40px',
   borderColor: '#ffffff',
   background: 'initial',
   color: '#ffffff',

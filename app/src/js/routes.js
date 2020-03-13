@@ -34,20 +34,6 @@ const routes = [
     },
   },
   {
-    path: '/users/:userId/profile',
-    name: 'profile',
-    async(routeTo, routeFrom, resolve) {
-      const reactComponent = () => import('@/pages/User/Profile');
-      reactComponent().then((rc) => {
-        resolve({ component: rc.default });
-      });
-    },
-    options: {
-      animate: true,
-      transition: 'f7-parallax',
-    },
-  },
-  {
     name: 'conversations',
     path: '/conversations',
     component: Conversations,
@@ -113,6 +99,20 @@ const routes = [
         },
       },
     ],
+  },
+  {
+    path: '/users/:userId/profile',
+    name: 'profile',
+    async(routeTo, routeFrom, resolve) {
+      const reactComponent = () => import('@/pages/User/Profile');
+      reactComponent().then((rc) => {
+        resolve({ component: rc.default });
+      });
+    },
+    options: {
+      animate: true,
+      transition: 'f7-parallax',
+    },
   },
   {
     name: 'channels',

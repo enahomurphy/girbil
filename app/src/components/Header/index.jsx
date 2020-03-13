@@ -4,15 +4,13 @@ import styled from 'styled-components';
 import {
   Navbar,
   NavLeft,
-  NavRight,
-  Link,
 } from 'framework7-react';
 
 import { Title } from '@/components/Style';
 import { Back } from '@/components/Icon';
 
 const StyledNavbar = styled(Navbar)`
-  height: 87px;
+  height: 80px;
   border-bottom: 1px solid #ffffff;
 `;
 
@@ -28,9 +26,6 @@ const Header = ({ title }) => (
         {title}
       </Title>
     </NavLeft>
-    <NavRight>
-      <Link icon="icon-bars" panelOpen="right" />
-    </NavRight>
   </StyledNavbar>
 );
 

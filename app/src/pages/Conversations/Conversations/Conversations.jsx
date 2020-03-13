@@ -4,8 +4,8 @@ import { Page, List, ListItem } from 'framework7-react';
 
 import { query } from '@shared/graphql/conversations';
 import { Text } from '@/components/Style';
+import ConversationListItem from '@/components/List/ConversationListItem';
 import ConversationHeader from './ConversationHeader';
-import ConversationListItem from './ConversationListItem';
 import { StyledUser, Active } from './style';
 
 const Conversations = () => {

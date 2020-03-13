@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -7,7 +6,7 @@ import { Lock } from '@/components/Icon';
 import {
   Img, StyledListItem, Active, StyledTitle,
 } from './style';
-import ListInfo from './ListInfo';
+import ListInfo from './ConversationListInfo';
 
 const ConversationListItem = ({
   unreadCount, user, id, isChannel, isPrivate, isActive,
@@ -28,22 +27,28 @@ const ConversationListItem = ({
           margin="0 0 5px 0"
         >
           { (isChannel && !isPrivate) && <Title margin="0" width="20px">#</Title> }
-          { (isChannel && isPrivate) && (
-          <span style={{ margin: '0 5px 1px 0' }}>
-            <Lock />
-          </span>
-          )}
-          <StyledTitle>{` ${user.name}`}</StyledTitle>
           {
-          !isChannel && <Active active={isActive} width="8px" height="8px" style={{ alignSelf: 'center' }} />
+            (isChannel && isPrivate) && (
+              <span style={{ margin: '0 5px 1px 0' }}>
+                <Lock />
+              </span>
+            )
+          }
+          <StyledTitle>{`${user.name}`}</StyledTitle>
+          {
+          !isChannel && (
+            <Active
+              active={isActive}
+              width="8px"
+              height="8px"
+              style={{ alignSelf: 'center' }}
+            />
+          )
         }
         </Block>
         <Text margin="0" align="left">
-          {
-            unreadCount
-              ? `${unreadCount} new ${unreadCount === 1 ? 'chat' : 'chats'}`
-              : user.lastActive
-          }
+          { Boolean(unreadCount) && `${unreadCount} new ${unreadCount === 1 ? 'chat' : 'chats'}`}
+          { Boolean(!unreadCount) && user.lastActive}
         </Text>
       </Block>
       <Img alt={user.name} slot="media" src={user.avatar} width="80" />
@@ -52,8 +57,12 @@ const ConversationListItem = ({
   </Block>
 );
 
+ConversationListItem.defaultProps = {
+  unreadCount: 0,
+};
+
 ConversationListItem.propTypes = {
-  unreadCount: PropTypes.number.isRequired,
+  unreadCount: PropTypes.number,
   isChannel: PropTypes.bool.isRequired,
   isPrivate: PropTypes.bool.isRequired,
   isActive: PropTypes.bool.isRequired,

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Page, Toggle } from 'framework7-react';
 
 import Header from '@/components/Header';
@@ -7,12 +8,12 @@ import {
 } from '@/components/Style';
 import { StyledButton, StyledAvatar } from './style';
 
-const Create = () => (
+const Create = ({ title }) => (
   <Page>
-    <Header title="Create a Channel" />
+    <Header title={title} />
     <Block padding="24px 24px">
       <Block>
-        <Text>
+        <Text margin="0 0 24px 0">
           Channels are spaces for open team communications.
           We recommend organizing them around a topic; e.g., design, marketing, development.
         </Text>
@@ -64,5 +65,10 @@ const Create = () => (
     </StyledButton>
   </Page>
 );
+
+
+Create.propTypes = {
+  title: PropTypes.string.isRequired,
+};
 
 export default Create;

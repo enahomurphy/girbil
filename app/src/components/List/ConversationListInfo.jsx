@@ -18,8 +18,9 @@ const ConversationListInfo = ({ unreadCount }) => (
     <span>
       <Popover className="popover-menu">
         <List>
-          <ListItem link="#" popoverClose title="View profile" />
-          <ListItem link="#" popoverClose title="Close Direct Message" />
+          <ListItem link="#" popoverClose title="Invite people to channel" />
+          <ListItem link="#" popoverClose title="View channel details" />
+          <ListItem link="#" popoverClose title="Edit channel settings" />
         </List>
       </Popover>
       <Link popoverOpen=".popover-menu" iconF7="ellipsis_vertical" color="white " />

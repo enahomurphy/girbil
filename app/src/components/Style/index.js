@@ -18,8 +18,8 @@ export const Text = styled(F7Block)`
 Text.defaultProps = {
   align: 'left',
   width: 'initial',
-  margin: '0 0 20px 0',
-  color: '#B5BBC1',
+  margin: '0',
+  color: 'var(--gb-light-grey)',
   size: '14px',
   padding: 0,
   transform: 'initial',
@@ -52,7 +52,7 @@ export const Button = styled(F7Button)`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
   min-width: ${(props) => props.width};
-  border: ${({ borderColor, inverse }) => (inverse ? 'none' : `1px solid ${borderColor}`)};
+  border: ${({ borderColor, inverse }) => (inverse ? 'none' : `2px solid ${borderColor}`)};
   line-height: 0;
   display: flex;
   border-radius: 6px;
@@ -132,6 +132,7 @@ export const Image = styled.div`
   background-image: url(${({ src }) => src});
   background-position: center;
   background-size: cover;
+  border-radius: ${({ radius }) => (radius || '2px')};
 `;
 
 Image.defaultProps = {
@@ -164,11 +165,20 @@ export const Popover = styled(f7Popover)`
   }
 
 
-  &.list .item-inner {
+  & .list li a .item-content .item-inner {
     padding: 0px;
 
     .item-title {
       font-size: 12px;
+      color: var(--gb-light-grey);
+    }
+
+    &::after {
+      background: none;
+    }
+
+    &::before {
+      display: none;
     }
   }
 

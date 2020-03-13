@@ -54,6 +54,13 @@ export const StyledListItem = styled(ListItem)`
   }
 `;
 
+export const StyledUserListItem = styled(StyledListItem)`
+  .item-link .item-inner {
+    margin-left: 0px;
+    justify-content: end;
+  }
+`;
+
 export const Active = styled.div`
   box-sizing: border-box;
   width: ${(props) => props.width};

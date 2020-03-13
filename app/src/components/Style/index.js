@@ -55,6 +55,7 @@ export const Button = styled(F7Button)`
   border: ${({ borderColor, inverse }) => (inverse ? 'none' : `1px solid ${borderColor}`)};
   line-height: 0;
   display: flex;
+  border-radius: 6px;
 
   &.button {
     color: ${(props) => props.color};
@@ -67,13 +68,14 @@ export const Button = styled(F7Button)`
 
 Button.defaultProps = {
   width: '250px',
-  height: 'initial',
+  height: '20px',
   borderColor: '#ffffff',
   background: 'initial',
   color: '#ffffff',
   margin: '0',
   size: '14px',
   weight: 'bold',
+  inverse: false,
 };
 
 export const Block = styled(F7Block)`
@@ -200,5 +202,32 @@ export const Search = styled.div`
     color: var(--gb-black);
     top: 9px;
     left: 15px;
+  }
+`;
+
+export const BorderedInput = styled(Block)`
+  margin-bottom: ${({ last }) => (last ? '0px' : '32px')};
+
+  & > div {
+    font: bold 14px/18px Source Sans Pro;
+    margin-bottom: 10px;
+    text-transform: capitalize;
+  }
+
+  input {
+    width: 100%;
+    height: 40px;
+    border: 1px solid #FFFFFF;
+    box-sizing: border-box;
+    border-radius: 6px;
+    background: transparent;
+    color: #EFEFEF;
+    font-size: 18px;
+    padding-left: 10px;
+
+    &::placeholder {
+      font: normal 18px/23px Source Sans Pro;
+      color: var(--gb-medium-grey);
+    }
   }
 `;

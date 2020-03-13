@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-
 import { Block } from '@/components/Style';
 
 export const Toolbar = styled(Block)`
@@ -33,4 +32,18 @@ export const Toolbar = styled(Block)`
   }
 `;
 
-export default {};
+export const StyledButton = styled(Block)`
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+`;
+
+export const StyledAvatar = styled(Block)`
+  width: 64px;
+  height: 80px;
+  border-radius: 6px;
+  background: var(--gb-accent);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

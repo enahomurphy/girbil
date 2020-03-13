@@ -13,6 +13,7 @@ import { Back } from '@/components/Icon';
 
 const StyledNavbar = styled(Navbar)`
   height: 87px;
+  border-bottom: 1px solid #ffffff;
 `;
 
 const Header = ({ title }) => (

@@ -123,6 +123,18 @@ const routes = [
         resolve({ component: rc.default });
       });
     },
+    routes: [
+      {
+        name: 'channels-create',
+        path: '/create',
+        async(routeTo, routeFrom, resolve) {
+          const reactComponent = () => import('@/pages/Channel/Create');
+          reactComponent().then((rc) => {
+            resolve({ component: rc.default });
+          });
+        },
+      },
+    ],
   },
 ];
 

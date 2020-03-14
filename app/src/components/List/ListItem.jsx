@@ -1,3 +1,4 @@
+
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -6,10 +7,10 @@ import { Lock } from '@/components/Icon';
 import {
   Img, StyledListItem, Active, StyledTitle,
 } from './style';
-import ListInfo from './ConversationListInfo';
+import ListInfo from './ListInfo';
 
-const ConversationListItem = ({
-  unreadCount, user, id, isChannel, isPrivate, isActive,
+const ListItem = ({
+  unreadCount, user, isChannel, isPrivate, isActive, subText, getLink,
 }) => (
   <Block
     margin="0"
@@ -18,7 +19,7 @@ const ConversationListItem = ({
     align="center"
     justify="space-between"
   >
-    <StyledListItem link={`/conversations/${id}/`}>
+    <StyledListItem link={getLink(user)}>
       <Block margin>
         <Block
           type="flex"
@@ -46,6 +47,13 @@ const ConversationListItem = ({
           )
         }
         </Block>
+        {
+          subText ? (
+            <Text margin="0" align="left">
+              { subText }
+            </Text>
+          ) : null
+        }
         <Text margin="0" align="left">
           { Boolean(unreadCount) && `${unreadCount} new ${unreadCount === 1 ? 'chat' : 'chats'}`}
           { Boolean(!unreadCount) && user.lastActive}
@@ -57,17 +65,19 @@ const ConversationListItem = ({
   </Block>
 );
 
-ConversationListItem.defaultProps = {
+ListItem.defaultProps = {
   unreadCount: 0,
+  subText: '',
 };
 
-ConversationListItem.propTypes = {
+ListItem.propTypes = {
   unreadCount: PropTypes.number,
+  subText: PropTypes.string,
   isChannel: PropTypes.bool.isRequired,
   isPrivate: PropTypes.bool.isRequired,
   isActive: PropTypes.bool.isRequired,
   user: PropTypes.object.isRequired,
-  id: PropTypes.string.isRequired,
+  getLink: PropTypes.func.isRequired,
 };
 
-export default ConversationListItem;
+export default ListItem;

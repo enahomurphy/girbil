@@ -2,7 +2,7 @@ import React from 'react';
 import { Icon, List } from 'framework7-react';
 import PropTypes from 'prop-types';
 
-import ConversationListItem from '@/components/List/ConversationListItem';
+import ListItem from '@/components/List/ListItem';
 import {
   Title, Text, Block, Search, Button,
 } from '@/components/Style';
@@ -35,7 +35,8 @@ const DirectMessage = ({ users }) => (
     <List style={{ margin: '32px 0 0 0' }}>
       {
         users.map((user) => (
-          <ConversationListItem
+          <ListItem
+            getLink={(item) => `/users/${item.id}/profile`}
             key={users.id}
             id={user.id}
             isChannel={false}

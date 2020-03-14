@@ -6,7 +6,7 @@ import {
 
 import { Block, Popover } from '@/components/Style';
 
-const ConversationListInfo = ({ unreadCount }) => (
+const ListInfo = ({ unreadCount }) => (
   <Block
     width="60px"
     type="flex"
@@ -28,8 +28,8 @@ const ConversationListInfo = ({ unreadCount }) => (
   </Block>
 );
 
-ConversationListInfo.propTypes = {
+ListInfo.propTypes = {
   unreadCount: PropTypes.number.isRequired,
 };
 
-export default ConversationListInfo;
+export default ListInfo;

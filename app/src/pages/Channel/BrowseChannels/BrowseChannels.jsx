@@ -3,12 +3,12 @@ import React from 'react';
 import { Icon, List } from 'framework7-react';
 import PropTypes from 'prop-types';
 
-import ConversationListItem from '@/components/List/ConversationListItem';
+import ListItem from '@/components/List/ListItem';
 import {
   Title, Text, Block, Search, Button,
 } from '@/components/Style';
 
-const BrowseChannels = ({ channels }) => (
+const BrowseChannels = ({ channels, handleSearchChange }) => (
   <Block>
     <Block margin="0 24px">
       <Block
@@ -23,7 +23,10 @@ const BrowseChannels = ({ channels }) => (
       <Block margin="0 0 32px 0">
         <Search>
           <Icon f7="search" />
-          <input placeholder="Type to filter list..." />
+          <input
+            onChange={(e) => handleSearchChange(e.target.value)}
+            placeholder="Type to filter list..."
+          />
         </Search>
       </Block>
       <Text
@@ -36,10 +39,11 @@ const BrowseChannels = ({ channels }) => (
     <List simple-list style={{ margin: '32px 0 0 0' }}>
       {
         channels.map((channel) => (
-          <ConversationListItem
-            key={true.id}
-            id={true.id}
+          <ListItem
+            getLink={(item) => `/conversations/${item.conversation.id}/`}
+            key={channel.id}
             isChannel
+            subText={`${channel.members} members`}
             isActive={false}
             isPrivate={false}
             user={channel}
@@ -52,6 +56,7 @@ const BrowseChannels = ({ channels }) => (
 
 BrowseChannels.propTypes = {
   channels: PropTypes.array.isRequired,
+  handleSearchChange: PropTypes.func.isRequired,
 };
 
 export default BrowseChannels;

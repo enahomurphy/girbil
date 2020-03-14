@@ -4,7 +4,7 @@ import { Page, List, ListItem } from 'framework7-react';
 
 import { storage } from '@shared/lib';
 import { query } from '@shared/graphql/conversations';
-import ConversationListItem from '@/components/List/ConversationListItem';
+import ConversationListItem from '@/components/List/ListItem';
 import ConversationHeader from './ConversationHeader';
 import UserInfo from './UserInfo';
 
@@ -24,8 +24,8 @@ const Conversations = () => {
             id, receiver, channel, receiverType,
           }) => (receiverType === 'user' ? (
             <ConversationListItem
+              getLink={() => `/conversations/${id}/`}
               key={id}
-              id={id}
               isChannel={false}
               isActive={false}
               isPrivate={false}
@@ -39,8 +39,8 @@ const Conversations = () => {
             />
           ) : (
             <ConversationListItem
+              getLink={() => `/conversations/${id}/`}
               key={id}
-              id={id}
               unreadCount={44}
               isActive={false}
               isChannel

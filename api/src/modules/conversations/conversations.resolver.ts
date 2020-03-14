@@ -4,8 +4,10 @@ import {
   Authorized,
   Ctx,
   ResolverInterface,
+  Arg,
 } from 'type-graphql';
 import { getCustomRepository } from 'typeorm';
+import { IsString } from 'class-validator';
 
 import { ConversationRepo } from '../../repo';
 import { Conversation, UserConversations, User } from '../../entity';
@@ -27,11 +29,13 @@ class ConversationResolver implements ResolverInterface<Conversation> {
   @Authorized('user', 'admin', 'owner')
   @Query(() => [User])
   async usersWithoutConversation(
-    @Ctx() { user: { id, organization } }: ContextType,
+    @Arg('q', { nullable: true }) @IsString() q: string,
+      @Ctx() { user: { id, organization } }: ContextType,
   ): Promise<Users[]> {
     return this.conversationRepo.getUsersWithoutConversation(
       organization.id,
       id,
+      q,
     );
   }
 }

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import { useQuery } from '@apollo/client';
+import { useQuery, useLazyQuery } from '@apollo/client';
 
-import { USER_CONVERSATIONS, MESSAGES } from './query';
+import { USER_CONVERSATIONS, MESSAGES, GET_USERS_WITHOUT_CONVERSATION } from './query';
 import { get } from '../../../lib';
 
 export const getUserConversations = () => {

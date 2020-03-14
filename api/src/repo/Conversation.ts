@@ -79,30 +79,38 @@ class ConversationRepository extends Repository<Conversation> {
     });
   }
 
-  async getUsersWithoutConversation(organizationId: string, userId: string): Promise<Users[]> {
-    const result = await this.userOrgRepo.createQueryBuilder('org_user')
+  async getUsersWithoutConversation(
+    organizationId: string, userId: string, q?: string,
+  ): Promise<Users[]> {
+    const query = this.userOrgRepo.createQueryBuilder('org_user')
       .setParameter('userId', userId)
       .setParameter('organizationId', organizationId)
       .setParameter('type', 'user')
+      .setParameter('query', `%${q}%`)
       .leftJoinAndSelect('org_user.user', 'user')
       .where('org_user.user_id != :userId')
-      .andWhere('org_user.organization_id = :organizationId')
-      .andWhere(`
-        (
-          SELECT COUNT(id)
-              FROM conversations as conversation 
-          WHERE 
-              conversation.receiver_id = :userId 
-          AND 
-              conversation.creator_id = org_user.user_id
-          OR 
-              conversation.creator_id = :userId
-          AND 
-              conversation.receiver_id = org_user.user_id
-          AND 
-              conversation.receiver_type = :type
-        ) = 0;
-      `)
+      .andWhere('org_user.organization_id = :organizationId');
+
+    if (q) {
+      query.andWhere('user.name ILIKE :query');
+    }
+
+    const result = await query.andWhere(`
+      (
+        SELECT COUNT(id)
+            FROM conversations as conversation 
+        WHERE 
+            conversation.receiver_id = :userId 
+        AND 
+            conversation.creator_id = org_user.user_id
+        OR 
+            conversation.creator_id = :userId
+        AND 
+            conversation.receiver_id = org_user.user_id
+        AND 
+            conversation.receiver_type = :type
+      ) = 0;
+    `)
       .getMany();
 
     return result.map(({ user }) => user);

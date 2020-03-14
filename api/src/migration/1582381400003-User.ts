@@ -17,6 +17,12 @@ export class User1582381400003 implements MigrationInterface {
         "last_active" timestamp DEFAULT Now()
       );
     `);
+
+    await queryRunner.query(
+      `
+        CREATE INDEX trgm__users_name_idx ON users USING gin (name gin_trgm_ops);
+      `,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {

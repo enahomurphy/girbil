@@ -108,9 +108,21 @@ export const GET_MESSAGE = gql`
   ${MESSAGE_FRAGMENT}
 `;
 
+
+export const GET_USERS_WITHOUT_CONVERSATION = gql`
+  query usersWithoutConversation($query: String) {
+    usersWithoutConversation(q: $query) {
+      id
+      name
+      avatar
+    }
+  }
+`;
+
 export default {
   MESSAGES,
   GET_MESSAGE,
   USER_CONVERSATIONS,
-  CONVERSATION_MESSAGES
+  CONVERSATION_MESSAGES,
+  GET_USERS_WITHOUT_CONVERSATION
 };

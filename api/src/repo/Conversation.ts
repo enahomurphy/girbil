@@ -115,6 +115,46 @@ class ConversationRepository extends Repository<Conversation> {
 
     return result.map(({ user }) => user);
   }
+
+  async userConversation(
+    organizationId: string, senderId: string, receiverId: string,
+  ): Promise<Conversation> {
+    return this.findOne({
+      where: [
+        {
+          receiverType: ConversationType.USER,
+          creatorId: senderId,
+          organizationId,
+          receiverId,
+        },
+        {
+          receiverType: ConversationType.USER,
+          creatorId: receiverId,
+          organizationId,
+          receiverId: senderId,
+        },
+      ],
+    });
+  }
+
+  async findUserConversationOrCreate(
+    organizationId: string, senderId: string, receiverId: string,
+  ): Promise<Conversation> {
+    let conversation = await this.userConversation(organizationId, senderId, receiverId);
+
+    if (!conversation) {
+      conversation = this.create({
+        creatorId: senderId,
+        receiverId,
+        organizationId,
+        receiverType: ConversationType.USER,
+      });
+
+      await this.save(conversation);
+    }
+
+    return conversation;
+  }
 }
 
 export default ConversationRepository;

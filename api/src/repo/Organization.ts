@@ -58,6 +58,15 @@ class OrganizationRepository extends Repository<Organization> {
       throw new Error(error.message);
     }
   }
+
+  async hasUser(userId: string, organizationId: string): Promise<Organization> {
+    return this.userOrgRepo.findOne({
+      where: {
+        userId,
+        organizationId,
+      },
+    });
+  }
 }
 
 export default OrganizationRepository;

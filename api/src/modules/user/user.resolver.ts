@@ -3,9 +3,12 @@ import {
   Resolver,
   Query,
   Authorized,
+  Arg,
 } from 'type-graphql';
 import { getCustomRepository } from 'typeorm';
+import { IsUUID } from 'class-validator';
 
+import { CanView } from '../../middleware/permissions';
 import { User } from '../../entity';
 import { UserRepo } from '../../repo';
 
@@ -13,11 +16,13 @@ import { UserRepo } from '../../repo';
 class UserResolver {
   private readonly userRepo = getCustomRepository(UserRepo);
 
-
-  @Authorized()
+  @Authorized('user', 'owner', 'admin')
+  @CanView('user')
   @Query(() => User, { nullable: true })
-  async user(): Promise<User> {
-    return Promise.resolve(this.userRepo.first());
+  async user(
+    @Arg('userId') @IsUUID() userId: string,
+  ): Promise<User> {
+    return (await this.userRepo.findOne(userId)).user;
   }
 }
 

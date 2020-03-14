@@ -61,7 +61,7 @@ export class User {
       avatar: this.avatar,
       name: this.name,
       organization: this.organization,
-      isVerified: this.isVerified,
+      isVerified: Boolean(this.isVerified === 'true'),
       email: this.email,
     });
   }

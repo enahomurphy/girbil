@@ -7,11 +7,12 @@ import {
   Arg,
 } from 'type-graphql';
 import { getCustomRepository } from 'typeorm';
-import { IsString } from 'class-validator';
+import { IsString, IsUUID } from 'class-validator';
 
 import { ConversationRepo } from '../../repo';
 import { Conversation, UserConversations, User } from '../../entity';
 import { ContextType } from '../../interfaces';
+import { CanView } from '../../middleware/permissions';
 
 @Resolver(Conversation)
 class ConversationResolver implements ResolverInterface<Conversation> {
@@ -36,6 +37,20 @@ class ConversationResolver implements ResolverInterface<Conversation> {
       organization.id,
       id,
       q,
+    );
+  }
+
+  @Authorized('user', 'admin', 'owner')
+  @CanView('user')
+  @Query(() => Conversation)
+  async findUserConversationOrCreate(
+    @Arg('userId') @IsUUID() userId: string,
+      @Ctx() { user }: ContextType,
+  ): Promise<Conversation> {
+    return this.conversationRepo.findUserConversationOrCreate(
+      user.organization.id,
+      user.id,
+      userId,
     );
   }
 }

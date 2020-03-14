@@ -19,12 +19,6 @@ export class CHecks1582381400011 implements MigrationInterface {
       
       ALTER TABLE "user_organizations" ADD FOREIGN KEY ("organization_id") REFERENCES "organizations" ("id");
       
-      ALTER TABLE "channels" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
-      
-      ALTER TABLE "channels" ADD FOREIGN KEY ("last_updated_by_id") REFERENCES "users" ("id");
-      
-      ALTER TABLE "channels" ADD FOREIGN KEY ("organization_id") REFERENCES "organizations" ("id");
-      
       ALTER TABLE "team_channels" ADD FOREIGN KEY ("channel_id") REFERENCES "channels" ("id");
       
       ALTER TABLE "team_channels" ADD FOREIGN KEY ("team_id") REFERENCES "teams" ("id");
@@ -46,8 +40,6 @@ export class CHecks1582381400011 implements MigrationInterface {
       CREATE INDEX ON "teams" ("organization_id");
       
       CREATE INDEX ON "teams" ("user_id");
-      
-      CREATE INDEX ON "channels" ("user_id", "organization_id");
       
       CREATE INDEX ON "conversations" ("creator_id", "receiver_id");
     `);

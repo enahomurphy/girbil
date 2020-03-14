@@ -1,10 +1,10 @@
 import {
   Entity, PrimaryGeneratedColumn, Column, CreateDateColumn,
-  OneToOne, UpdateDateColumn, ManyToMany, JoinTable,
+  OneToOne, UpdateDateColumn, ManyToMany, JoinTable, JoinColumn, ManyToOne,
 } from 'typeorm';
 import { Field, ObjectType, Int } from 'type-graphql';
 
-import { User } from '.';
+import { User, Conversation } from '.';
 
 @Entity('channels')
 @ObjectType()
@@ -85,19 +85,39 @@ export class Channel {
   @Field()
   updatedAt?: Date;
 
-  @OneToOne(() => User)
   @Field(() => User)
+  @OneToOne(() => User)
+  @JoinColumn({
+    name: 'user_id',
+    referencedColumnName: 'id',
+  })
   user?: User
 
   @Field(() => User)
   @OneToOne(() => User)
+  @JoinColumn({
+    name: 'last_updated_by_id',
+    referencedColumnName: 'id',
+  })
   lastUpdatedBy?: User;
 
-  @Field(() => Int)
-  @Column('int', { select: false })
-  members?: Int;
+  @Field(() => Conversation)
+  @ManyToOne(() => Conversation)
+  @JoinColumn({
+    name: 'id',
+    referencedColumnName: 'receiverId',
+  })
+  conversation?: Conversation;
 
-  @ManyToMany(() => User, (user) => user.channels)
+  @Field(() => Int)
+  @Column({
+    select: false,
+    insert: false,
+    readonly: true,
+  })
+  members?: number;
+
+  @ManyToMany(() => User)
   @JoinTable({
     name: 'channel_users',
     joinColumn: {

@@ -3,7 +3,7 @@ import { IsString } from 'class-validator';
 
 @ArgsType()
 export class ChannelArgs {
-  @Field()
+  @Field({ nullable: true })
   @IsString()
   text?: string
 }

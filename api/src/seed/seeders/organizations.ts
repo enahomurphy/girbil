@@ -8,7 +8,7 @@ import faker from 'faker';
 
 import {
   Team, User, Channel, Conversation, Message, Organization,
-  UserOrganization, RoleType, ConversationType,
+  UserOrganization, RoleType, ConversationType, ChannelUsers,
 } from '../../entity';
 import connectionCreator from '../helper/connectionCreator';
 
@@ -48,7 +48,6 @@ export default class CreateTeams implements Seeder {
 
       const conversationConnection = connectionCreator(userIds);
 
-
       await times(10, async (index) => {
         await factory(Conversation)(
           {
@@ -69,9 +68,16 @@ export default class CreateTeams implements Seeder {
         ).make();
 
         const max = faker.random.number({ min: 2, max: 8 });
-        channel.users = users.filter((u, i) => i > max);
-
         await em.save(channel);
+
+        await times(max, async (index) => {
+          await factory(ChannelUsers)(
+            {
+              userId: users[index].id,
+              channelId: channel.id,
+            },
+          ).seed();
+        });
 
         const conversation: Conversation = await factory(Conversation)(
           {

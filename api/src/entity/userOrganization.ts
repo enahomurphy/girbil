@@ -39,6 +39,14 @@ export class UserOrganization {
   })
   role?: RoleType;
 
+  @Field()
+  @OneToOne(() => User)
+  @JoinColumn({
+    name: 'user_id',
+    referencedColumnName: 'id',
+  })
+  user?: User;
+
   @Field(() => Organization)
   @OneToOne(() => Organization)
   @JoinColumn({

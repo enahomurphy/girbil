@@ -1,11 +1,13 @@
 
 import { EntityRepository, Repository, getRepository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
-import { Conversation, ConversationType, UserConversations } from '../entity';
+import {
+  Conversation, ConversationType, UserConversations, UserOrganization,
+} from '../entity';
 
 @EntityRepository(Conversation)
 class ConversationRepository extends Repository<Conversation> {
-  private readonly userOrgRepo = getRepository(Conversation)
+  private readonly userOrgRepo = getRepository(UserOrganization)
 
   async conversations(userId: string, organizationId: string): Promise<UserConversations[]> {
     const conversations = await this.manager.find(UserConversations, {
@@ -75,6 +77,35 @@ class ConversationRepository extends Repository<Conversation> {
         },
       ],
     });
+  }
+
+  async getUsersWithoutConversation(organizationId: string, userId: string): Promise<Users[]> {
+    const result = await this.userOrgRepo.createQueryBuilder('org_user')
+      .setParameter('userId', userId)
+      .setParameter('organizationId', organizationId)
+      .setParameter('type', 'user')
+      .leftJoinAndSelect('org_user.user', 'user')
+      .where('org_user.user_id != :userId')
+      .andWhere('org_user.organization_id = :organizationId')
+      .andWhere(`
+        (
+          SELECT COUNT(id)
+              FROM conversations as conversation 
+          WHERE 
+              conversation.receiver_id = :userId 
+          AND 
+              conversation.creator_id = org_user.user_id
+          OR 
+              conversation.creator_id = :userId
+          AND 
+              conversation.receiver_id = org_user.user_id
+          AND 
+              conversation.receiver_type = :type
+        ) = 0;
+      `)
+      .getMany();
+
+    return result.map(({ user }) => user);
   }
 }
 

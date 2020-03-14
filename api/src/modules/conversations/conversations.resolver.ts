@@ -8,7 +8,7 @@ import {
 import { getCustomRepository } from 'typeorm';
 
 import { ConversationRepo } from '../../repo';
-import { Conversation, UserConversations } from '../../entity';
+import { Conversation, UserConversations, User } from '../../entity';
 import { ContextType } from '../../interfaces';
 
 @Resolver(Conversation)
@@ -21,6 +21,17 @@ class ConversationResolver implements ResolverInterface<Conversation> {
     return this.conversationRepo.conversations(
       user.id,
       user.organization.id,
+    );
+  }
+
+  @Authorized('user', 'admin', 'owner')
+  @Query(() => [User])
+  async usersWithoutConversation(
+    @Ctx() { user: { id, organization } }: ContextType,
+  ): Promise<Users[]> {
+    return this.conversationRepo.getUsersWithoutConversation(
+      organization.id,
+      id,
     );
   }
 }

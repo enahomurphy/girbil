@@ -22,6 +22,7 @@ const BrowseChannel = () => {
       loading={loading}
       handleSearchChange={setValue}
       users={get(data, 'usersWithoutConversation', [])}
+      isSearching={Boolean(value)}
     />
   );
 };

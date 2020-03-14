@@ -2,7 +2,7 @@ import {
   Entity, PrimaryGeneratedColumn, Column, CreateDateColumn,
   OneToOne, UpdateDateColumn, ManyToMany, JoinTable,
 } from 'typeorm';
-import { Field, ObjectType } from 'type-graphql';
+import { Field, ObjectType, Int } from 'type-graphql';
 
 import { User } from '.';
 
@@ -51,6 +51,13 @@ export class Channel {
   avatar?: string;
 
   @Column({
+    nullable: true,
+    type: 'tsvector',
+    select: false,
+  })
+  tsv?: string;
+
+  @Column({
     name: 'last_updated_by_id',
     type: 'uuid',
   })
@@ -85,6 +92,10 @@ export class Channel {
   @Field(() => User)
   @OneToOne(() => User)
   lastUpdatedBy?: User;
+
+  @Field(() => Int)
+  @Column('int', { select: false })
+  members?: Int;
 
   @ManyToMany(() => User, (user) => user.channels)
   @JoinTable({

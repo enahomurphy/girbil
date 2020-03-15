@@ -31,7 +31,6 @@ const Profile = ({ userId, $f7router }) => {
       fetchPolicy: 'network-only',
     },
   );
-
   const [updateUser, { loading: updatingUser }] = useMutation(userMutation.UPDATE_USER);
 
   if (loading) {

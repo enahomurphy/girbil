@@ -14,6 +14,21 @@ export const SEARCH_CHANNELS = gql`
   }
 `
 
+export const CHANNEL = gql`
+ query channels($channelId: String!) {
+    channel(channelId: $channelId) {
+      id
+      avatar
+      name
+      about,
+      isPrivate
+      conversation {
+        id
+      }
+    }
+  }
+`
+
 export default {
   SEARCH_CHANNELS
 };

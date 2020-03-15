@@ -2,8 +2,8 @@ import { gql } from 'apollo-boost';
 
 export const CREATE_CHANNEL = gql`
   mutation createChannel(
-    $isPrivate: String
-    $name: String
+    $isPrivate: Boolean
+    $name: String!
     $about: String
     $avatar: String
   ) {
@@ -14,6 +14,33 @@ export const CREATE_CHANNEL = gql`
         about: $about,
         avatar: $avatar
       }
+    ) {
+      id
+      avatar
+      name 
+      conversation {
+        id
+      }
+    }
+  }
+`;
+
+export const UPDATE_CHANNEL = gql`
+  mutation updateChannel(
+    $isPrivate: Boolean
+    $name: String!
+    $about: String
+    $avatar: String
+    $channelId: String!
+  ) {
+    updateChannel(
+      input: {
+        isPrivate: $isPrivate,
+        name: $name,
+        about: $about,
+        avatar: $avatar
+      },
+      channelId: $channelId
     )
   }
 `;

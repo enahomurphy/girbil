@@ -1,5 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { Channel } from '../entity';
+import {
+  Channel, ChannelOwnerType, Conversation, ChannelUsers, ConversationType,
+} from '../entity';
 
 @EntityRepository(Channel)
 class ChannelRepository extends Repository<Channel> {
@@ -17,6 +19,40 @@ class ChannelRepository extends Repository<Channel> {
       .take(20)
       .skip(0)
       .getMany();
+  }
+
+  async createChannel(
+    organizationId, userId, isPrivate, name, about,
+  ): Promise<Channel> {
+    return this.manager.transaction(async (manager) => {
+      const channel = new Channel();
+      channel.name = name;
+      channel.about = about;
+      channel.userId = userId;
+      channel.isPrivate = isPrivate;
+      channel.ownerId = organizationId;
+      channel.organizationId = organizationId;
+      channel.lastUpdateById = userId;
+      channel.ownerType = ChannelOwnerType.ORGANIZATION;
+
+      await manager.save(channel);
+
+      const channelUser = new ChannelUsers();
+      channelUser.channelId = channel.id;
+      channelUser.userId = userId;
+
+      await manager.save(channelUser);
+
+      const conversation = new Conversation();
+      conversation.creatorId = userId;
+      conversation.receiverId = channel.id;
+      conversation.organizationId = organizationId;
+      conversation.receiverType = ConversationType.CHANNEL;
+
+      await manager.save(conversation);
+
+      return channel;
+    });
   }
 }
 

@@ -21,7 +21,7 @@ export class Channel1582381400006 implements MigrationInterface {
         "last_updated_by_id" uuid,
         "organization_id" uuid  NOT NULL,
         "owner_id" uuid NOT NULL,
-        "owner_type" channel_type DEFAULT 'team' NOT NULL,
+        "owner_type" channel_type DEFAULT 'organization' NOT NULL,
         "created_at" timestamp DEFAULT Now(),
         "updated_at" timestamp DEFAULT Now(),
         FOREIGN KEY ("user_id") REFERENCES "users" ("id"),

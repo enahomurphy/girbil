@@ -6,6 +6,12 @@ import { Field, ObjectType, Int } from 'type-graphql';
 
 import { User, Conversation } from '.';
 
+export enum ChannelOwnerType {
+  TEAM = 'team',
+  ORGANIZATION = 'organization',
+  SHARED = 'shared',
+}
+
 @Entity('channels')
 @ObjectType()
 export class Channel {
@@ -13,11 +19,11 @@ export class Channel {
   @PrimaryGeneratedColumn('uuid')
   readonly id: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column()
   name?: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({
     nullable: true,
   })
@@ -45,9 +51,19 @@ export class Channel {
   ownerId?: string;
 
   @Column({
-    nullable: true,
+    type: 'enum',
+    enum: ChannelOwnerType,
+    default: ChannelOwnerType.ORGANIZATION,
+    enumName: 'owner_type',
+    name: 'owner_type',
   })
   @Field()
+  ownerType: string
+
+  @Column({
+    nullable: true,
+  })
+  @Field({ nullable: true })
   avatar?: string;
 
   @Column({

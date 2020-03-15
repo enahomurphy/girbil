@@ -1,5 +1,5 @@
 import { Field, InputType } from 'type-graphql';
-import { IsEmail, MinLength } from 'class-validator';
+import { IsEmail, MinLength, IsString } from 'class-validator';
 
 @InputType()
 export class UserInput {
@@ -15,4 +15,14 @@ export class UserInput {
 
   @Field()
   name?: string
+}
+
+@InputType()
+export class UserUpdateInput {
+  @Field({ nullable: false })
+  @IsString()
+  name: string
+
+  @Field()
+  position?: string
 }

@@ -19,3 +19,13 @@ export const CanViewUser = createMethodDecorator(
     return next();
   },
 );
+
+export const CanEditUser = createMethodDecorator(
+  async ({ context, args }, next): NextFn => {
+    if (args.userId !== context.user.id) {
+      return notFoundError(context, 'User does not exit');
+    }
+
+    return next();
+  },
+);

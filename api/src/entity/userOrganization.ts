@@ -40,6 +40,12 @@ export class UserOrganization {
   role?: RoleType;
 
   @Field()
+  @Column({
+    nullable: true,
+  })
+  position?: string;
+
+  @Field()
   @OneToOne(() => User)
   @JoinColumn({
     name: 'user_id',

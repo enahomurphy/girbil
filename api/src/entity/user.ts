@@ -46,6 +46,7 @@ export class User {
   @OneToOne(() => Organization)
   organization?: Organization;
 
+
   @ManyToMany(() => Organization, (organization) => organization.users)
   organizations: Organization[];
 
@@ -54,6 +55,9 @@ export class User {
 
   @ManyToMany(() => Channel, (channel) => channel.users)
   channels?: Channel[];
+
+  @Field({ nullable: true })
+  organization?: Organization;
 
   get user(): User {
     return plainToClass(User, {

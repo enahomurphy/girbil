@@ -27,6 +27,7 @@ class OrganizationRepository extends Repository<Organization> {
       return plainToClass(Organization, {
         ...organization.organization,
         role: organization.role,
+        position: organization.position,
       });
     }
 

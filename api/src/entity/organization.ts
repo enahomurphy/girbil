@@ -36,6 +36,9 @@ export class Organization {
   @Field()
   role?: string
 
+  @Field()
+  position?: string
+
   @Field({ nullable: true })
   @CreateDateColumn({
     name: 'created_at',

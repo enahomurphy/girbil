@@ -43,7 +43,7 @@ class ConversationResolver implements ResolverInterface<Conversation> {
   @Authorized('user', 'admin', 'owner')
   @CanView('user')
   @Query(() => Conversation)
-  async findUserConversationOrCreate(
+  async getUserConversationOrCreate(
     @Arg('userId') @IsUUID() userId: string,
       @Ctx() { user }: ContextType,
   ): Promise<Conversation> {

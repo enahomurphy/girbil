@@ -10,16 +10,19 @@ import {
   FieldResolver,
   Root,
 } from 'type-graphql';
-import { getCustomRepository } from 'typeorm';
+import {
+  getCustomRepository, getRepository, In,
+} from 'typeorm';
 
 import { IsUUID } from 'class-validator';
+import { plainToClass } from 'class-transformer';
 import { ChannelRepo, ConversationRepo } from '../../repo';
 import { ContextType } from '../../interfaces';
 import { ChannelArgs } from './channel.args';
-import { ChannelInput } from './channel.input';
+import { ChannelInput, AddUsersToChannelInput } from './channel.input';
 import { pick } from '../../utils/utils';
 import {
-  Channel, ConversationType, Conversation,
+  Channel, ConversationType, Conversation, UserOrganization, ChannelUsers,
 } from '../../entity';
 import { ChannelMembers } from './channel.type';
 
@@ -28,6 +31,10 @@ class ChannelResolver implements ResolverInterface<Channel> {
   private readonly channelRepo = getCustomRepository(ChannelRepo);
 
   private readonly conversationRepo = getCustomRepository(ConversationRepo);
+
+  private readonly userOrgRepo = getRepository(UserOrganization);
+
+  private readonly channelUsersRepo = getRepository(ChannelUsers);
 
   @Authorized('user', 'admin', 'owner')
   @Query(() => [Channel])
@@ -115,6 +122,42 @@ class ChannelResolver implements ResolverInterface<Channel> {
     );
 
     return 'channel updated';
+  }
+
+  @Authorized('user', 'admin', 'owner')
+  @Mutation(() => String)
+  async addUsersToChannel(
+    @Arg('channelId') @IsUUID() channelId: string,
+      @Arg('input') { userIds }: AddUsersToChannelInput,
+      @Ctx() { user: { organization } }: ContextType,
+  ): Promise<string> {
+    const usersInOrg = await this.userOrgRepo.find({
+      where: {
+        userId: In(userIds),
+        organizationId: organization.id,
+      },
+    });
+
+    const usersAlreadyInChannel = await this.channelUsersRepo.find(
+      {
+        where: {
+          userId: In(usersInOrg.map(({ userId }) => userId)),
+          channelId,
+        },
+      },
+    );
+
+    const usersToRemove = new Set(usersAlreadyInChannel.map(({ userId }) => userId));
+
+    const usesToAddToChannel = usersInOrg.filter(({ userId }) => !usersToRemove.has(userId));
+
+    const formatUsersToSave = usesToAddToChannel.map(
+      ({ userId }) => (plainToClass(ChannelUsers, { userId, channelId })),
+    );
+
+    await this.channelUsersRepo.insert(formatUsersToSave);
+
+    return 'user added';
   }
 
   @FieldResolver()

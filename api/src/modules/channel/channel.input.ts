@@ -1,5 +1,7 @@
 import { Field, InputType } from 'type-graphql';
-import { IsString, IsUrl, IsBoolean } from 'class-validator';
+import {
+  IsString, IsUrl, IsBoolean, IsUUID,
+} from 'class-validator';
 
 @InputType()
 export class ChannelInput {
@@ -25,4 +27,11 @@ export class ChannelUpdateInput extends ChannelInput {
   @Field({ nullable: true })
   @IsString()
   name?: string
+}
+
+@InputType()
+export class AddUsersToChannelInput {
+  @IsUUID('4', { each: true })
+  @Field(() => [String])
+  userIds: string[]
 }

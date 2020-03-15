@@ -49,7 +49,21 @@ export const GET_CHANNEL_MEMBERS = gql`
   }
 `
 
+export const GET_USERS_NOT_IN_CHANNEL = gql`
+ query members($channelId: String!) {
+    usersNotInChannel(channelId: $channelId) {
+      members {
+        id
+        avatar
+        name
+      }
+      count
+    }
+  }
+`
+
 export default {
   SEARCH_CHANNELS,
-  GET_CHANNEL_MEMBERS
+  GET_CHANNEL_MEMBERS,
+  GET_USERS_NOT_IN_CHANNEL
 };

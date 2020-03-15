@@ -51,7 +51,7 @@ const Details = ({ channel }) => (
 
 
 Details.propTypes = {
-  channel: PropTypes.string.isRequired,
+  channel: PropTypes.object.isRequired,
 };
 
 export default Details;

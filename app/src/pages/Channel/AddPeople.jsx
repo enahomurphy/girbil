@@ -1,25 +1,52 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Page, List } from 'framework7-react';
+import { useQuery } from '@apollo/client';
+import PropTypes from 'prop-types';
 
 import Header from '@/components/Header';
 import UserListItem from '@/components/List/UserListItem';
+import { query } from '@shared/graphql/channels';
 import { Text, Button, Block } from '@/components/Style';
+import { get } from '@shared/lib';
 import { StyledButton } from './style';
 
-const AddPeople = () => {
-  const users = Array(2).fill(1).map((v, i) => ({
-    id: v + i,
-    name: 'Jae Park',
-    isActive: true,
-    lastActive: 'Active 17h ago',
-    avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/madebybrenton/128.jpg',
-  }));
+const AddPeople = ({ channelId }) => {
+  const updateData = (organizationMembers) => (
+    organizationMembers.map((user) => ({ ...user, selected: Boolean(user.selected) }))
+  );
+  const { data } = useQuery(query.GET_USERS_NOT_IN_CHANNEL, { variables: { channelId } });
+  const members = get(data, 'usersNotInChannel.members', []);
+  const [users, setUsers] = useState(updateData(members));
+
+  useEffect(() => {
+    setUsers(updateData(members));
+  }, [members]);
+
+  const hasSelected = useCallback(
+    () => Boolean(
+      users.length && users.every((user) => !user.selected),
+    ), [users],
+  );
+
+  const onUserSelected = (value) => {
+    const updateUserState = users.map((user) => {
+      if (user.id === value.id) {
+        return { ...user, selected: !user.selected };
+      }
+
+      return user;
+    });
+
+    setUsers(updateUserState);
+  };
 
   return (
     (
       <Page>
         <Header title="Add People" />
-        <Block padding="0 24px">
+        <Block padding="0 2
+        4px"
+        >
           <Text margin="24px 0 32px 0">
             Important: People added to channel
             will have access to entire chat history—even in private channels.
@@ -28,11 +55,13 @@ const AddPeople = () => {
             {
               users.map((user) => (
                 <UserListItem
+                  key={user.id}
                   checkbox
-                  checked
+                  checked={user.selected}
                   user={user}
                   link="#"
-                  isActive={user.isActive}
+                  onChange={onUserSelected}
+                  isActive={Boolean(user.isActive)}
                 />
               ))
             }
@@ -44,6 +73,7 @@ const AddPeople = () => {
             width="152px"
             height="40px"
             inverse
+            disabled={hasSelected()}
           >
             Add People
           </Button>
@@ -51,6 +81,11 @@ const AddPeople = () => {
       </Page>
     )
   );
+};
+
+
+AddPeople.propTypes = {
+  channelId: PropTypes.string.isRequired,
 };
 
 export default AddPeople;

@@ -6,7 +6,7 @@ import { Block, Image } from '@/components/Style';
 import { StyledUserListItem, Active, StyledTitle } from './style';
 
 const UserListItem = ({
-  user, link, isActive, checkbox, checked,
+  user, link, isActive, checkbox, checked, onChange,
 }) => (
   <Block
     margin="0"
@@ -31,13 +31,15 @@ const UserListItem = ({
         </Block>
       </Block>
     </StyledUserListItem>
-    {checkbox && <Checkbox checked={checked} />}
+    {checkbox && <Checkbox onChange={() => onChange(user)} checked={checked} />}
   </Block>
 );
+
 
 UserListItem.defaultProps = {
   checkbox: false,
   checked: false,
+  onChange: () => {},
 };
 
 UserListItem.propTypes = {
@@ -46,6 +48,7 @@ UserListItem.propTypes = {
   user: PropTypes.object.isRequired,
   checkbox: PropTypes.bool,
   checked: PropTypes.bool,
+  onChange: PropTypes.func,
 };
 
 export default UserListItem;

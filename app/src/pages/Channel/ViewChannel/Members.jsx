@@ -31,9 +31,10 @@ const View = ({ members, count, channel }) => (
       {
         members.map((user) => (
           <UserListItem
+            key={user.id}
             user={user}
             link="#"
-            isActive={user.isActive}
+            isActive={Boolean(user.isActive)}
           />
         ))
       }
@@ -52,7 +53,7 @@ const View = ({ members, count, channel }) => (
 
 View.propTypes = {
   members: PropTypes.array.isRequired,
-  count: PropTypes.array.isRequired,
+  count: PropTypes.number.isRequired,
   channel: PropTypes.object.isRequired,
 };
 

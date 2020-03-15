@@ -15,7 +15,7 @@ const View = ({ channelId }) => {
 
   const members = get(data, 'channelMembers.members', []);
   const count = get(data, 'channelMembers.count', 0);
-  const channel = get(data, 'channelMembers.channel', {});
+  const channel = get(data, 'channel', {});
   return (
     <Page>
       <Header title="Channel details" />
@@ -26,7 +26,6 @@ const View = ({ channelId }) => {
         </Text>
         <Details channel={channel} />
         <Members channel={channel} count={count} members={members} />
-        <div />
       </Block>
     </Page>
   );

@@ -175,7 +175,7 @@ const routes = [
         name: 'channels-add-people',
         path: '/:channelId/add-people',
         async(routeTo, routeFrom, resolve) {
-          const reactComponent = () => import('@/pages/Channel/AddPeople');
+          const reactComponent = () => import('@/pages/Channel/AddPeople/index');
           reactComponent().then((rc) => {
             resolve({ component: rc.default });
           });

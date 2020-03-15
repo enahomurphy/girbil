@@ -30,7 +30,7 @@ export const CHANNEL = gql`
 `
 
 export const GET_CHANNEL_MEMBERS = gql`
- query members($channelId: String!) {
+ query channelMembers($channelId: String!) {
     channel(channelId: $channelId) {
       id
       avatar
@@ -50,7 +50,7 @@ export const GET_CHANNEL_MEMBERS = gql`
 `
 
 export const GET_USERS_NOT_IN_CHANNEL = gql`
- query members($channelId: String!) {
+ query usersNotInChannel($channelId: String!) {
     usersNotInChannel(channelId: $channelId) {
       members {
         id

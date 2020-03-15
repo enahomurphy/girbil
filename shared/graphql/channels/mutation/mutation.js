@@ -44,3 +44,14 @@ export const UPDATE_CHANNEL = gql`
     )
   }
 `;
+
+export const ADD_USERS_TO_CHANNEL = gql`
+  mutation addUsersToChannel($channelId: String!, $userIds: [String!]!) {
+    addUsersToChannel(
+      input:{
+        userIds: $userIds
+      },
+      channelId: $channelId
+    )
+  }
+`

@@ -63,6 +63,19 @@ class ChannelResolver implements ResolverInterface<Channel> {
     return this.channelRepo.getMembers<ChannelMembers>(channelId);
   }
 
+
+  @Authorized('user', 'admin', 'owner')
+  @Query(() => ChannelMembers, { nullable: true })
+  async usersNotInChannel(
+    @Arg('channelId') @IsUUID() channelId: string,
+      @Ctx() { user: { organization } }: ContextType,
+  ): Promise<ChannelMembers> {
+    return this.channelRepo.getUsersNotInChannel<ChannelMembers>(
+      organization.id,
+      channelId,
+    );
+  }
+
   @Authorized('user', 'admin', 'owner')
   @Mutation(() => Channel)
   async createChannel(

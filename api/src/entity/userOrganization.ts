@@ -59,5 +59,5 @@ export class UserOrganization {
     name: 'organization_id',
     referencedColumnName: 'id',
   })
-  readonly organization?: User
+  readonly organization?: Organization
 }

@@ -65,6 +65,20 @@ class ChannelRepository extends Repository<Channel> {
       return channel;
     });
   }
+
+  async getMembers<T>(channelId: string): Promise<T> {
+    const result = await this.channelUsersRepo.createQueryBuilder('channel_users')
+      .setParameter('channelId', channelId)
+      .where('channel_users.channel_id = :channelId')
+      .leftJoinAndSelect('channel_users.user', 'user')
+      .limit(50)
+      .getManyAndCount();
+
+    return {
+      members: result[0].map(({ user }) => user),
+      count: result[1],
+    };
+  }
 }
 
 export default ChannelRepository;

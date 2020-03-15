@@ -14,11 +14,14 @@ import { getCustomRepository } from 'typeorm';
 
 import { IsUUID } from 'class-validator';
 import { ChannelRepo, ConversationRepo } from '../../repo';
-import { Channel, ConversationType, Conversation } from '../../entity';
 import { ContextType } from '../../interfaces';
 import { ChannelArgs } from './channel.args';
 import { ChannelInput } from './channel.input';
 import { pick } from '../../utils/utils';
+import {
+  Channel, ConversationType, Conversation,
+} from '../../entity';
+import { ChannelMembers } from './channel.type';
 
 @Resolver(Channel)
 class ChannelResolver implements ResolverInterface<Channel> {
@@ -50,6 +53,14 @@ class ChannelResolver implements ResolverInterface<Channel> {
         id: channelId,
       },
     });
+  }
+
+  @Authorized('user', 'admin', 'owner')
+  @Query(() => ChannelMembers, { nullable: true })
+  async channelMembers(
+    @Arg('channelId') @IsUUID() channelId: string,
+  ): Promise<ChannelMembers> {
+    return this.channelRepo.getMembers<ChannelMembers>(channelId);
   }
 
   @Authorized('user', 'admin', 'owner')

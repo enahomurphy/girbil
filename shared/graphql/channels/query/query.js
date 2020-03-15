@@ -15,7 +15,7 @@ export const SEARCH_CHANNELS = gql`
 `
 
 export const CHANNEL = gql`
- query channels($channelId: String!) {
+ query channel($channelId: String!) {
     channel(channelId: $channelId) {
       id
       avatar
@@ -29,6 +29,27 @@ export const CHANNEL = gql`
   }
 `
 
+export const GET_CHANNEL_MEMBERS = gql`
+ query members($channelId: String!) {
+    channel(channelId: $channelId) {
+      id
+      avatar
+      name
+      about,
+      isPrivate
+    }
+    channelMembers(channelId: $channelId) {
+      members {
+        id
+        avatar
+        name
+      }
+      count
+    }
+  }
+`
+
 export default {
-  SEARCH_CHANNELS
+  SEARCH_CHANNELS,
+  GET_CHANNEL_MEMBERS
 };

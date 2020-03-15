@@ -1,5 +1,9 @@
-import { Entity, PrimaryColumn } from 'typeorm';
+
+import {
+  Entity, PrimaryColumn, OneToOne, JoinColumn,
+} from 'typeorm';
 import { Field, ObjectType } from 'type-graphql';
+import { User } from '.';
 
 @Entity('channel_users')
 @ObjectType()
@@ -17,4 +21,11 @@ export class ChannelUsers {
     type: 'uuid',
   })
   channelId?: string;
+
+  @OneToOne(() => User)
+  @JoinColumn({
+    name: 'user_id',
+    referencedColumnName: 'id',
+  })
+  user?: string;
 }

@@ -165,7 +165,7 @@ const routes = [
         name: 'channels-view',
         path: '/:channelId',
         async(routeTo, routeFrom, resolve) {
-          const reactComponent = () => import('@/pages/Channel/View');
+          const reactComponent = () => import('@/pages/Channel/ViewChannel');
           reactComponent().then((rc) => {
             resolve({ component: rc.default });
           });

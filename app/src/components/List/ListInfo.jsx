@@ -6,7 +6,7 @@ import {
 
 import { Block, Popover } from '@/components/Style';
 
-const ListInfo = ({ unreadCount }) => (
+const ListInfo = ({ unreadCount, options, id }) => (
   <Block
     width="60px"
     type="flex"
@@ -16,20 +16,29 @@ const ListInfo = ({ unreadCount }) => (
   >
     {unreadCount && (<Badge color="red">{unreadCount}</Badge>)}
     <span>
-      <Popover className="popover-menu">
+      <Popover width="176px" className={`popover-menu${id}`}>
         <List>
-          <ListItem link="#" popoverClose title="Invite people to channel" />
-          <ListItem link="#" popoverClose title="View channel details" />
-          <ListItem link="#" popoverClose title="Edit channel settings" />
+          {
+            options.map(({ title, getLink, onClick }) => (
+              <ListItem
+                link={getLink ? getLink() : '#'}
+                onClick={onClick}
+                popoverClose
+                title={title}
+              />
+            ))
+          }
         </List>
       </Popover>
-      <Link popoverOpen=".popover-menu" iconF7="ellipsis_vertical" color="white " />
+      <Link popoverOpen={`.popover-menu${id}`} iconF7="ellipsis_vertical" color="white " />
     </span>
   </Block>
 );
 
 ListInfo.propTypes = {
   unreadCount: PropTypes.number.isRequired,
+  options: PropTypes.array.isRequired,
+  id: PropTypes.string.isRequired,
 };
 
 export default ListInfo;

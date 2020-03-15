@@ -7,6 +7,7 @@ import {
   FieldResolver,
   Root,
   Ctx,
+  Mutation,
 } from 'type-graphql';
 import { getCustomRepository, getRepository } from 'typeorm';
 import { IsUUID } from 'class-validator';
@@ -45,18 +46,36 @@ class UserResolver {
 
   @Authorized('user', 'owner', 'admin')
   @CanEdit('user')
-  @Query(() => String)
+  @Mutation(() => String)
   async updateUser(
     @Arg('input') { name, position }: UserUpdateInput,
       @Arg('userId') @IsUUID userId: string,
       @Ctx() { user: { organization } }: ContextType,
   ): Promise<string> {
-    await Promise.all([
-      this.userRepo.update({ id: userId }, { name }),
-      this.userOrgRepo.update({ userId, organizationId: organization.id }, {
-        position,
-      }),
-    ]);
+    const promises = [];
+    const user = {};
+
+    if (position) {
+      promises.push(
+        this.userOrgRepo.update({ userId, organizationId: organization.id }, {
+          position,
+        }),
+      );
+    }
+
+    if (name) {
+      user.name = name;
+    }
+
+    if (Object.keys(user).length) {
+      promises.push(
+        this.userRepo.update({ id: userId }, user),
+      );
+    }
+
+    if (promises.length) {
+      await Promise.all(promises);
+    }
     return 'user updated';
   }
 }

@@ -24,8 +24,21 @@ const Conversations = () => {
             id, receiver, channel, receiverType,
           }) => (receiverType === 'user' ? (
             <ConversationListItem
-              getLink={() => `/conversations/${id}/`}
+              options={[
+                {
+                  title: 'View Profile',
+                  getLink: () => `/users/${receiver.id}/profile`,
+                  clickable: false,
+                },
+                {
+                  title: 'Close Direct Message',
+                  clickable: false,
+                  onClick: () => {},
+                },
+              ]}
+              getLink={() => `/users/${receiver.id}/profile`}
               key={id}
+              id={id}
               isChannel={false}
               isActive={false}
               isPrivate={false}
@@ -39,11 +52,24 @@ const Conversations = () => {
             />
           ) : (
             <ConversationListItem
+              options={[
+                {
+                  title: 'View Channel',
+                  getLink: () => `/users/${channel.id}/profile`,
+                  clickable: false,
+                },
+                {
+                  title: 'Leave Channel',
+                  clickable: true,
+                  onClick: () => {},
+                },
+              ]}
               getLink={() => `/conversations/${id}/`}
               key={id}
               unreadCount={44}
               isActive={false}
               isChannel
+              id={id}
               isPrivate={channel.isPrivate}
               user={{
                 id: channel.id,

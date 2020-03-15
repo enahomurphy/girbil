@@ -85,7 +85,7 @@ const NewMessage = ({ isThread, conversationId }) => {
   }, [videoRecorder, isThread]);
 
   const goBack = () => {
-    f7.view.current.router.back();
+    f7.views.main.router.back();
   };
 
   const {

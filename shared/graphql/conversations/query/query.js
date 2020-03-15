@@ -119,6 +119,15 @@ export const GET_USERS_WITHOUT_CONVERSATION = gql`
   }
 `;
 
+export const GET_USER_CONVERSATION_OR_CREATE = gql`
+  query getUserConversationOrCreate($userId: String!) {
+    getUserConversationOrCreate(userId: $userId) {
+      ...ConversationParts
+    }
+  }
+  ${CONVERSATION_FRAGMENT}
+`;
+
 export default {
   MESSAGES,
   GET_MESSAGE,

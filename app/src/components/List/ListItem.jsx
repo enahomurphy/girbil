@@ -10,7 +10,7 @@ import {
 import ListInfo from './ListInfo';
 
 const ListItem = ({
-  unreadCount, user, isChannel, isPrivate, isActive, subText, getLink,
+  unreadCount, user, isChannel, isPrivate, isActive, subText, getLink, options, id,
 }) => (
   <Block
     margin="0"
@@ -61,23 +61,26 @@ const ListItem = ({
       </Block>
       <Img alt={user.name} slot="media" src={user.avatar} width="80" />
     </StyledListItem>
-    <ListInfo unreadCount={unreadCount} />
+    <ListInfo id={id} options={options} unreadCount={unreadCount} />
   </Block>
 );
 
 ListItem.defaultProps = {
   unreadCount: 0,
   subText: '',
+  options: [],
 };
 
 ListItem.propTypes = {
   unreadCount: PropTypes.number,
+  id: PropTypes.string.isRequired,
   subText: PropTypes.string,
   isChannel: PropTypes.bool.isRequired,
   isPrivate: PropTypes.bool.isRequired,
   isActive: PropTypes.bool.isRequired,
   user: PropTypes.object.isRequired,
   getLink: PropTypes.func.isRequired,
+  options: PropTypes.array,
 };
 
 export default ListItem;

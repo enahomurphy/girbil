@@ -19,10 +19,10 @@ export class UserInput {
 
 @InputType()
 export class UserUpdateInput {
-  @Field({ nullable: false })
+  @Field({ nullable: true })
   @IsString()
-  name: string
+  name?: string
 
-  @Field()
+  @Field({ nullable: true })
   position?: string
 }

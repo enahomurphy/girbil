@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import {
   Navbar,
   NavLeft,
+  Link,
+  f7,
 } from 'framework7-react';
 
 import { Title } from '@/components/Style';
@@ -17,7 +19,9 @@ const StyledNavbar = styled(Navbar)`
 const Header = ({ title }) => (
   <StyledNavbar>
     <NavLeft>
-      <Back />
+      <Link onClick={() => f7.view.main.router.back()}>
+        <Back />
+      </Link>
       <Title
         margin="0 0 0 16px"
         size="24px"

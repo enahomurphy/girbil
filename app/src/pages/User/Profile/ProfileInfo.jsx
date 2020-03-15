@@ -5,7 +5,9 @@ import {
 } from '@/components/Style';
 import { BlankLink } from '@/components/Icon';
 
-const ProfileInfo = ({ isUser, onEditProfile }) => (
+const ProfileInfo = ({
+  isUser, onEditProfile, handleMessage, name, position,
+}) => (
   <>
     <Block
       justify={isUser ? 'space-between' : 'flex-start'}
@@ -22,7 +24,7 @@ const ProfileInfo = ({ isUser, onEditProfile }) => (
             </Button>
           </>
         ) : (
-          <Button>Message</Button>
+          <Button onClick={handleMessage}>Message</Button>
         )
       }
     </Block>
@@ -43,8 +45,9 @@ const ProfileInfo = ({ isUser, onEditProfile }) => (
           width="initial"
           margin="0 14px 0 0"
           align="left"
+          transform="capitalize"
         >
-          Jeff  Whitlock
+          {name}
         </Title>
         <Active active />
       </Block>
@@ -59,8 +62,9 @@ const ProfileInfo = ({ isUser, onEditProfile }) => (
       <Title
         margin="8px 14px 0 0"
         align="left"
+        transform="capitalize"
       >
-        Head of Marketing
+        {position}
       </Title>
     </Block>
   </>
@@ -68,7 +72,10 @@ const ProfileInfo = ({ isUser, onEditProfile }) => (
 
 ProfileInfo.propTypes = {
   isUser: PropTypes.bool.isRequired,
+  position: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
   onEditProfile: PropTypes.func.isRequired,
+  handleMessage: PropTypes.func.isRequired,
 };
 
 export default ProfileInfo;

@@ -36,7 +36,7 @@ const Conversations = () => {
                   onClick: () => {},
                 },
               ]}
-              getLink={() => `/users/${receiver.id}/profile`}
+              getLink={() => `/conversations/${id}/`}
               key={id}
               id={id}
               isChannel={false}

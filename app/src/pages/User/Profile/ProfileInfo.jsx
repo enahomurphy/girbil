@@ -52,21 +52,25 @@ const ProfileInfo = ({
         <Active active />
       </Block>
     </Block>
-    <Block
-      margin="0 0 0 24px"
-      type="flex"
-      justify="center"
-      direction="column"
-    >
-      <Text align="left">Role</Text>
-      <Title
-        margin="8px 14px 0 0"
-        align="left"
-        transform="capitalize"
-      >
-        {position}
-      </Title>
-    </Block>
+    {
+        Boolean(position) && (
+        <Block
+          margin="0 0 0 24px"
+          type="flex"
+          justify="center"
+          direction="column"
+        >
+          <Text align="left">Role</Text>
+          <Title
+            margin="8px 14px 0 0"
+            align="left"
+            transform="capitalize"
+          >
+            {position}
+          </Title>
+        </Block>
+        )
+      }
   </>
 );
 

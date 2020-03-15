@@ -54,6 +54,7 @@ export class Conversation {
   @Field()
   receiverType: string
 
+  @Field(() => User, { nullable: true })
   @OneToOne(() => User)
   @JoinColumn({
     name: 'creator_id',
@@ -69,7 +70,13 @@ export class Conversation {
   })
   receiver?: User
 
+
   @Field(() => Channel, { nullable: true })
+  @OneToOne(() => Channel)
+  @JoinColumn({
+    name: 'receiver_id',
+    referencedColumnName: 'id',
+  })
   channel?: Channel
 
   @Field({ nullable: true })

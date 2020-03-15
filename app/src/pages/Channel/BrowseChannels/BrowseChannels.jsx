@@ -8,7 +8,7 @@ import {
   Title, Text, Block, Search, Button,
 } from '@/components/Style';
 
-const BrowseChannels = ({ channels, handleSearchChange }) => (
+const BrowseChannels = ({ channels, handleSearchChange, onCreateChannel }) => (
   <Block>
     <Block margin="0 24px">
       <Block
@@ -18,7 +18,13 @@ const BrowseChannels = ({ channels, handleSearchChange }) => (
         justify="space-between"
       >
         <Title size="21px">Browse channels</Title>
-        <Button inverse width="126px">Create Channel</Button>
+        <Button
+          onClick={onCreateChannel}
+          inverse
+          width="126px"
+        >
+          Create Channel
+        </Button>
       </Block>
       <Block margin="0 0 32px 0">
         <Search>
@@ -40,6 +46,7 @@ const BrowseChannels = ({ channels, handleSearchChange }) => (
       {
         channels.map((channel) => (
           <ListItem
+            id={channel.id}
             getLink={(item) => `/conversations/${item.conversation.id}/`}
             key={channel.id}
             isChannel
@@ -57,6 +64,7 @@ const BrowseChannels = ({ channels, handleSearchChange }) => (
 BrowseChannels.propTypes = {
   channels: PropTypes.array.isRequired,
   handleSearchChange: PropTypes.func.isRequired,
+  onCreateChannel: PropTypes.func.isRequired,
 };
 
 export default BrowseChannels;

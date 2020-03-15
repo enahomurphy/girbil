@@ -34,7 +34,7 @@ export const USER_CONVERSATIONS = gql`
 
 export const CONVERSATION = gql`
   query conversation($conversationId: String!) {
-    conversation(conversationId: $conversationId) @client {
+    conversation(conversationId: $conversationId) {
       ...ConversationParts
       channel {
         ...ChannelParts

@@ -30,7 +30,7 @@ export class User {
   })
   password?: string;
 
-  @Field({ nullable: true })
+  @Field(() => Boolean, { nullable: true })
   @Column({
     name: 'is_verified',
     type: 'boolean',
@@ -44,6 +44,7 @@ export class User {
   avatar?: string;
 
   @OneToOne(() => Organization)
+  @Field(() => Organization, { nullable: true })
   organization?: Organization;
 
 
@@ -56,16 +57,13 @@ export class User {
   @ManyToMany(() => Channel, (channel) => channel.users)
   channels?: Channel[];
 
-  @Field({ nullable: true })
-  organization?: Organization;
-
   get user(): User {
     return plainToClass(User, {
       id: this.id,
       avatar: this.avatar,
       name: this.name,
       organization: this.organization,
-      isVerified: Boolean(this.isVerified === 'true'),
+      isVerified: this.isVerified,
       email: this.email,
     });
   }

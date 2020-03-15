@@ -35,14 +35,13 @@ class UserResolver {
     return (await this.userRepo.findOne(userId)).user;
   }
 
-  @FieldResolver()
+  @FieldResolver({ nullable: true })
   async organization(
     @Root() user: User,
       @Ctx() { user: { organization } },
   ): Promise<Organization> {
     return this.orgRepo.findUserOrganization(user.id, organization.id);
   }
-
 
   @Authorized('user', 'owner', 'admin')
   @CanEdit('user')

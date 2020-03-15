@@ -36,7 +36,7 @@ export class Organization {
   @Field()
   role?: string
 
-  @Field()
+  @Field({ nullable: true })
   position?: string
 
   @Field({ nullable: true })

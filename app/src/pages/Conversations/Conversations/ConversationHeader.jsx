@@ -27,7 +27,7 @@ const ConversationHeader = () => (
         <Link searchbarEnable=".searchbar-demo">
           <Search />
         </Link>
-        <Link searchbarEnable=".searchbar-demo">
+        <Link href="/channels" searchbarEnable=".searchb  ar-demo">
           <Add />
         </Link>
         <Link searchbarEnable=".searchbar-demo">

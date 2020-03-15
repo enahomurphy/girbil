@@ -15,6 +15,7 @@ const ThreadHeader = ({ isPrivate, name }) => (
       margin="0 0 5px 0"
       size="24px"
       weight="700"
+      align="center"
     >
       Thread
     </Title>

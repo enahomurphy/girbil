@@ -11,12 +11,18 @@ import { mutation, query } from '@shared/graphql/conversations';
 import { query as uploadQuery } from '@shared/graphql/upload';
 import { RecorderButton } from '@/components/Recorder';
 import { Video } from '@/lib/media';
+import { useConversationMeta } from '@/lib/hooks';
 import { Page } from '@/components/Style';
 import { get } from '@shared/lib';
 import { getParam } from '@/lib';
 import { NewMessageWrapper } from './style';
 
 const NewMessage = ({ isThread, conversationId }) => {
+  const { data: conversationData } = useQuery(
+    query.CONVERSATION,
+    { variables: { conversationId }, fetchPolicy: 'network-only' },
+  );
+  const conversationMeta = useConversationMeta(get(conversationData, 'conversation', {}));
   const { params } = useVideoData(null, 'video');
 
   // @TODO unify video element;
@@ -26,10 +32,6 @@ const NewMessage = ({ isThread, conversationId }) => {
 
   const [saveMessage] = mutation.useSaveMessage();
   const [addMessage, { data }] = useMutation(mutation.ADD_MESSAGE);
-  const { data: conversationMeta } = useQuery(
-    query.CONVERSATION_META,
-    { variables: { conversationId } },
-  );
   const [{ matches }, send] = useMachine(RecordMachine, {
     context: {
       addMessage,
@@ -42,6 +44,7 @@ const NewMessage = ({ isThread, conversationId }) => {
       send('UPLOAD_URL', { urls: getUploadURL });
     },
   });
+
 
   const startRecord = () => {
     const threadId = getParam('threadId');
@@ -91,7 +94,7 @@ const NewMessage = ({ isThread, conversationId }) => {
   const {
     name = '',
     isPrivate = false,
-  } = get(conversationMeta, 'conversationMeta', {});
+  } = conversationMeta;
 
   return (
     <Page overflow="hidden">

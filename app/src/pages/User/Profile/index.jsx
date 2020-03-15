@@ -22,7 +22,7 @@ const ProfileOrg = styled(Title)`
 
 const Profile = ({ userId, $f7router }) => {
   const [edit, setEdit] = useState(false);
-  const { data, loading, refetch } = useQuery(userQuery.USER, { variables: { userId } });
+  const { data, refetch } = useQuery(userQuery.USER, { variables: { userId } });
   const [getConversation] = useLazyQuery(
     conversationQuery.GET_USER_CONVERSATION_OR_CREATE, {
       onCompleted: ({ getUserConversationOrCreate: { id } }) => {
@@ -33,12 +33,11 @@ const Profile = ({ userId, $f7router }) => {
   );
   const [updateUser, { loading: updatingUser }] = useMutation(userMutation.UPDATE_USER);
 
-  if (loading) {
-    return null;
-  }
-
   const user = get(data, 'user', {
-    organization: {},
+    organization: {
+      name: '',
+      position: '',
+    },
   });
 
   const isUser = storage.payload.id === user.id;
@@ -67,8 +66,8 @@ const Profile = ({ userId, $f7router }) => {
           <ProfileInfo
             onEditProfile={() => setEdit(true)}
             isUser={isUser}
-            name={user.name}
-            position={user.organization.position}
+            name={user.name || ''}
+            position={user.organization.position || ''}
             handleMessage={handleMessage}
           />
         ) : (
@@ -77,7 +76,7 @@ const Profile = ({ userId, $f7router }) => {
             onCancelProfile={() => setEdit(false)}
             onSaveProfile={onSaveProfile}
             loading={updatingUser}
-            name={user.name}
+            name={user.name || ''}
             position={user.organization.position}
           />
         )

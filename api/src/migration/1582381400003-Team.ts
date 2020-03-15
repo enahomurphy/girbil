@@ -4,7 +4,7 @@
 /* eslint-disable class-methods-use-this */
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Teams1582381400002 implements MigrationInterface {
+export class Teams1582381400003 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS "teams" (
@@ -14,8 +14,14 @@ export class Teams1582381400002 implements MigrationInterface {
         "avatar" varchar,
         "user_id" uuid,
         "organization_id" uuid,
-        "created_at" timestamp DEFAULT Now()
+        "created_at" timestamp DEFAULT Now(),
+        FOREIGN KEY ("organization_id") REFERENCES "organizations" ("id"),
+        FOREIGN KEY ("user_id") REFERENCES "users" ("id")
       );
+    `);
+
+    await queryRunner.query(`
+      CREATE INDEX ON "teams" ("user_id", "organization_id");        
     `);
   }
 

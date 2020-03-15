@@ -5,6 +5,7 @@ import { useDebounce } from 'react-use';
 import { query } from '@shared/graphql/channels';
 
 import { get } from '@shared/lib';
+import { f7 } from 'framework7-react';
 import BrowseChannels from './BrowseChannels';
 
 const BrowseChannel = () => {
@@ -18,11 +19,16 @@ const BrowseChannel = () => {
   500,
   [value]);
 
+  const handleCreateChannel = () => {
+    f7.views.main.router.navigate('/channels/create');
+  };
+
   return (
     <BrowseChannels
       loading={loading}
       handleSearchChange={setValue}
       channels={get(data, 'channels', [])}
+      onCreateChannel={handleCreateChannel}
     />
   );
 };

@@ -18,8 +18,14 @@ export class UserOrganization1582381400005 implements MigrationInterface {
         "joined_date" timestamp,
         "role" role_type DEFAULT 'user',
         "position" varchar(255),
-        PRIMARY KEY ("user_id", "organization_id")
+        PRIMARY KEY ("user_id", "organization_id"),
+        FOREIGN KEY ("user_id") REFERENCES "users" ("id"),
+        FOREIGN KEY ("organization_id") REFERENCES "organizations" ("id")
       );
+    `);
+
+    await queryRunner.query(`
+      CREATE INDEX ON "user_organizations" ("user_id", "organization_id");
     `);
   }
 

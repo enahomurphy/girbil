@@ -28,6 +28,22 @@ class ConversationResolver implements ResolverInterface<Conversation> {
   }
 
   @Authorized('user', 'admin', 'owner')
+  @Query(() => Conversation, { nullable: true })
+  async conversation(
+    @Arg('conversationId') @IsUUID() conversationId: string,
+      @Ctx() { user: { organization } }: ContextType,
+
+  ): Promise<UserConversations> {
+    return this.conversationRepo.findOne({
+      where: {
+        id: conversationId,
+        organizationId: organization.id,
+      },
+      relations: ['receiver', 'channel', 'creator'],
+    });
+  }
+
+  @Authorized('user', 'admin', 'owner')
   @Query(() => [User])
   async usersWithoutConversation(
     @Arg('q', { nullable: true }) @IsString() q: string,

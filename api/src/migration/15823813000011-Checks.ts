@@ -23,9 +23,7 @@ export class CHecks1582381400011 implements MigrationInterface {
       
       ALTER TABLE "team_channels" ADD FOREIGN KEY ("team_id") REFERENCES "teams" ("id");
 
-      ALTER TABLE "channel_users" ADD FOREIGN KEY ("channel_id") REFERENCES "channels" ("id");
 
-      ALTER TABLE "channel_users" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
       
       ALTER TABLE "conversations" ADD FOREIGN KEY ("creator_id") REFERENCES "users" ("id");
             

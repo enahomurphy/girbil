@@ -31,7 +31,7 @@ export class Channel1582381400006 implements MigrationInterface {
     `);
 
     await queryRunner.query(`
-     CREATE INDEX ON "channels" ("user_id", "organization_id");
+     CREATE INDEX channel_org_idx ON "channels" ("user_id", "organization_id");
     `);
   }
 

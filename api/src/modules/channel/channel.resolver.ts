@@ -7,18 +7,24 @@ import {
   Args,
   Arg,
   Mutation,
+  FieldResolver,
+  Root,
 } from 'type-graphql';
 import { getCustomRepository } from 'typeorm';
 
-import { ChannelRepo } from '../../repo';
-import { Channel } from '../../entity';
+import { IsUUID } from 'class-validator';
+import { ChannelRepo, ConversationRepo } from '../../repo';
+import { Channel, ConversationType, Conversation } from '../../entity';
 import { ContextType } from '../../interfaces';
 import { ChannelArgs } from './channel.args';
 import { ChannelInput } from './channel.input';
+import { pick } from '../../utils/utils';
 
 @Resolver(Channel)
 class ChannelResolver implements ResolverInterface<Channel> {
   private readonly channelRepo = getCustomRepository(ChannelRepo);
+
+  private readonly conversationRepo = getCustomRepository(ConversationRepo);
 
   @Authorized('user', 'admin', 'owner')
   @Query(() => [Channel])
@@ -30,6 +36,20 @@ class ChannelResolver implements ResolverInterface<Channel> {
       organization.id,
       text,
     );
+  }
+
+  @Authorized('user', 'admin', 'owner')
+  @Query(() => Channel, { nullable: true })
+  async channel(
+    @Arg('channelId') @IsUUID() channelId: string,
+      @Ctx() { user: { organization } }: ContextType,
+  ): Promise<Channel> {
+    return this.channelRepo.findOne({
+      where: {
+        organizationId: organization.id,
+        id: channelId,
+      },
+    });
   }
 
   @Authorized('user', 'admin', 'owner')
@@ -45,6 +65,59 @@ class ChannelResolver implements ResolverInterface<Channel> {
       name,
       about,
     );
+  }
+
+  // @TODO add canEdit
+  // only members of a channel can update a channel
+  @Authorized('user', 'admin', 'owner')
+  @Mutation(() => String)
+  async updateChannel(
+    @Arg('input') input: ChannelInput,
+      @Arg('channelId') @IsUUID() channelId: string,
+      @Ctx() { user: { id, organization } }: ContextType,
+  ): Promise<string> {
+    const update = pick(input, ['name', 'about', 'isPrivate']);
+    if (update.isPrivate) {
+      const channel = await this.channelRepo.findOne({ id: channelId });
+
+      if (channel.userId !== id) {
+        delete update.isPrivate;
+      }
+    }
+
+    await this.channelRepo.update(
+      { organizationId: organization.id, id: channelId },
+      update,
+    );
+
+    return 'channel updated';
+  }
+
+  @FieldResolver()
+  async conversation(
+    @Root() channel: Channel,
+      @Ctx() { user: { organization } },
+  ): Promise<Conversation> {
+    if (channel.conversation) {
+      return channel.conversation;
+    }
+
+    return this.conversationRepo.findOne({
+      organizationId: organization.id,
+      receiverId: channel.id,
+      receiverType: ConversationType.CHANNEL,
+    });
+  }
+
+  @FieldResolver()
+  async members(
+    @Root() channel: Channel,
+  ): Promise<number> {
+    if (channel.members) {
+      return channel.members;
+    }
+
+    return this.channelRepo.membersCount(channel.id);
   }
 }
 

@@ -7,7 +7,7 @@ export class ChannelInput {
   @IsString()
   name?: string
 
-  @Field()
+  @Field({ nullable: true })
   @IsString()
   about?: string
 
@@ -18,4 +18,11 @@ export class ChannelInput {
   @Field({ nullable: true })
   @IsUrl()
   avatar?: string;
+}
+
+@InputType()
+export class ChannelUpdateInput extends ChannelInput {
+  @Field({ nullable: true })
+  @IsString()
+  name?: string
 }

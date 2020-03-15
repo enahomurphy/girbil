@@ -1,10 +1,12 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, Repository, getRepository } from 'typeorm';
 import {
   Channel, ChannelOwnerType, Conversation, ChannelUsers, ConversationType,
 } from '../entity';
 
 @EntityRepository(Channel)
 class ChannelRepository extends Repository<Channel> {
+  private readonly channelUsersRepo = getRepository(ChannelUsers)
+
   async search(organizationId: string, text: string): Promise<Channel[]> {
     const query = this.createQueryBuilder('channel')
       .leftJoinAndSelect('channel.conversation', 'conversation')
@@ -19,6 +21,14 @@ class ChannelRepository extends Repository<Channel> {
       .take(20)
       .skip(0)
       .getMany();
+  }
+
+  async membersCount(organizationId: string, channelId: string): Promise<Channel[]> {
+    return this.channelUsersRepo.count({
+      where: {
+        channelId,
+      },
+    });
   }
 
   async createChannel(
@@ -51,6 +61,7 @@ class ChannelRepository extends Repository<Channel> {
 
       await manager.save(conversation);
 
+      channel.conversation = conversation;
       return channel;
     });
   }

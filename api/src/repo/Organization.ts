@@ -60,13 +60,37 @@ class OrganizationRepository extends Repository<Organization> {
     }
   }
 
-  async hasUser(userId: string, organizationId: string): Promise<Organization> {
+  async hasUser(userId: string, organizationId: string): Promise<UserOrganization> {
     return this.userOrgRepo.findOne({
       where: {
         userId,
         organizationId,
       },
     });
+  }
+
+  async orgUsers(organizationId: string): Promise<UserOrganization> {
+    const users = await this.userOrgRepo.find({
+      where: {
+        organizationId,
+      },
+      relations: ['user'],
+    });
+
+    return users.map(({ user, ...org }) => ({
+      ...org,
+      user: user.user,
+    }));
+  }
+
+  async changeRole(
+    organizationId: string, userId: string, role: RoleType,
+  ): Promise<UserOrganization> {
+    return this.userOrgRepo.update({ userId, organizationId }, { role });
+  }
+
+  async deleteUser(organizationId: string, userId: string): Promise<void> {
+    return this.userOrgRepo.delete({ userId, organizationId });
   }
 }
 

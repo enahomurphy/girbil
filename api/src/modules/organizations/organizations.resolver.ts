@@ -8,15 +8,25 @@ import {
   ResolverInterface,
   FieldResolver,
   Root,
+  registerEnumType,
 } from 'type-graphql';
 import { getCustomRepository, getRepository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { Organization, User, UserOrganization } from '../../entity';
+import { IsUUID } from 'class-validator';
+import {
+  Organization, User, UserOrganization, RoleType,
+} from '../../entity';
 import { ContextType } from '../../interfaces';
 import { OrganizationRepo } from '../../repo';
 import { CreateOrganizationType } from './organization.type';
 import { sign } from '../../utils/jwt';
+
+
+registerEnumType(RoleType, {
+  name: 'RoleType',
+});
+
 
 @Resolver(Organization)
 class OrganizationResolver implements ResolverInterface<Organization> {
@@ -54,6 +64,28 @@ class OrganizationResolver implements ResolverInterface<Organization> {
     const tokenPayload = sign(plainToClass(User, { ...user, organization: newOrg }));
 
     return CreateOrganizationType.create(tokenPayload, newOrg);
+  }
+
+
+  @Authorized()
+  @Query(() => [UserOrganization])
+  async organizationUsers(@Ctx() { user }: ContextType): Promise<UserOrganization[]> {
+    return this.orgRepo.orgUsers(user.organization.id);
+  }
+
+  @Authorized('admin', 'owner')
+  @Mutation(() => String)
+  async changUserRole(
+    @Arg('role', () => RoleType) role: RoleType,
+      @Arg('userId') @IsUUID() userId: string,
+      @Ctx() { user: { organization } }: ContextType,
+  ): Promise<string> {
+    await this.changUserRole(
+      organization.id,
+      userId,
+      role,
+    );
+    return 'User role updates';
   }
 
   @Authorized()

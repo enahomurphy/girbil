@@ -39,7 +39,7 @@ export class UserOrganization {
   })
   role?: RoleType;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({
     nullable: true,
   })

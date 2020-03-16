@@ -8,9 +8,12 @@ import {
 } from 'type-graphql';
 import { getCustomRepository } from 'typeorm';
 import { IsString, IsUUID } from 'class-validator';
+import { plainToClass } from 'class-transformer';
 
 import { ConversationRepo } from '../../repo';
-import { Conversation, UserConversations, User } from '../../entity';
+import {
+  Conversation, UserConversations, User, ConversationType,
+} from '../../entity';
 import { ContextType } from '../../interfaces';
 import { CanView } from '../../middleware/permissions';
 
@@ -31,16 +34,26 @@ class ConversationResolver implements ResolverInterface<Conversation> {
   @Query(() => Conversation, { nullable: true })
   async conversation(
     @Arg('conversationId') @IsUUID() conversationId: string,
-      @Ctx() { user: { organization } }: ContextType,
-
+      @Ctx() { user: { id, organization } }: ContextType,
   ): Promise<UserConversations> {
-    return this.conversationRepo.findOne({
+    const conversation = await this.conversationRepo.findOne({
       where: {
         id: conversationId,
         organizationId: organization.id,
       },
       relations: ['receiver', 'channel', 'creator'],
     });
+
+    if (conversation.receiverType !== ConversationType.CHANNEL) {
+      if (conversation.receiver.id === id) {
+        return plainToClass(Conversation, {
+          ...conversation,
+          receiver: conversation.creator,
+        });
+      }
+    }
+
+    return conversation;
   }
 
   @Authorized('user', 'admin', 'owner')

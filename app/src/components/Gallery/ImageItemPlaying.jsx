@@ -6,7 +6,7 @@ import { Icon } from 'framework7-react';
 import { Title } from '@/components/Style';
 import { PlayingItem } from './style';
 
-const ImageRecordingItem = ({ sender, state }) => (['playing', 'pause'].includes(state) ? (
+const ImageRecordingItem = ({ createdAt, sender, state }) => (['playing', 'pause'].includes(state) ? (
   <PlayingItem>
     {state === 'pause' && (
       <Icon
@@ -27,6 +27,7 @@ const ImageRecordingItem = ({ sender, state }) => (['playing', 'pause'].includes
       margin="0 0 0 0"
       width="fit-content"
       transform="capitalize"
+      align="center"
     >
       {sender.name}
     </Title>
@@ -35,8 +36,9 @@ const ImageRecordingItem = ({ sender, state }) => (['playing', 'pause'].includes
       size="14px"
       margin="0 0 0 0"
       width="100px"
+      align="center"
     >
-      {format(sender.createdAt)}
+      {format(createdAt)}
     </Title>
   </PlayingItem>
 ) : null);
@@ -44,6 +46,7 @@ const ImageRecordingItem = ({ sender, state }) => (['playing', 'pause'].includes
 ImageRecordingItem.propTypes = {
   sender: PropTypes.object.isRequired,
   state: PropTypes.string.isRequired,
+  createdAt: PropTypes.oneOfType([Date, PropTypes.number]).isRequired,
 };
 
 export default ImageRecordingItem;

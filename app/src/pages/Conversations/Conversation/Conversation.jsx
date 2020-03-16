@@ -17,6 +17,7 @@ const Conversation = ({
   <Page overflow="hidden">
     <TabsWrapper routable>
       <Tab id="view" />
+
       <Tab id="record" />
     </TabsWrapper>
     <Messages

@@ -54,7 +54,7 @@ const Controls = ({
       <Emoji vertical reaction onClick={() => {}} />
     </BottomControls>
     {
-      duration && duration !== Infinity && (
+      Boolean(duration && duration !== Infinity) && (
         <Buffer
           duration={duration}
           played={played}

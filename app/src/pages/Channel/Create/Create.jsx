@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Toggle } from 'framework7-react';
 
@@ -16,6 +16,12 @@ const Create = ({
     isPrivate,
     avatar,
   });
+
+  useEffect(() => {
+    setForm({
+      name, about, isPrivate, avatar,
+    });
+  }, [name, about, isPrivate, avatar]);
 
   return (
     <>
@@ -58,7 +64,6 @@ const Create = ({
             </StyledAvatar>
           </Block>
         </Block>
-
         {
           (!isEdit || isOwner) && (
             <Block margin="32px 0 0 0">

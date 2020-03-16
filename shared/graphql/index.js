@@ -11,19 +11,17 @@ export const resolvers = merge(
 export const data = [
   conversations,
   auth,
-  organizations
-].reduce((acc, { default: initial }) => {
-  return { ...acc, ...initial }
-}, {});
+  organizations,
+].reduce((acc, { default: initial }) => ({ ...acc, ...initial }), {});
 
 export const typeDefs = [
-  conversations.types
-]
+  conversations.types,
+];
 
 export {
   conversations,
   auth,
-  organizations
+  organizations,
 };
 
 export default {

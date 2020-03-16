@@ -9,7 +9,7 @@ import ImageItemPlaying from './ImageItemPlaying';
 import { StyledSlide } from './style';
 
 const ImageItem = ({
-  onClick, id, thumbnail, state, sender, pullover,
+  onClick, id, thumbnail, state, sender, pullover, createdAt,
 }) => {
   let renderThumbnail = thumbnail;
 
@@ -32,7 +32,12 @@ const ImageItem = ({
     <SwiperSlide key={id}>
       <ImageItemInfo pullover={pullover} recording={slideProps.recording} />
       <StyledSlide {...slideProps}>
-        {<ImageItemPlaying state={state} thumbnail={renderThumbnail} sender={sender} />}
+        {<ImageItemPlaying
+          createdAt={createdAt}
+          state={state}
+          thumbnail={renderThumbnail}
+          sender={sender}
+        />}
         {slideProps.recording && <ImageRecordingItem thumbnail={renderThumbnail} />}
       </StyledSlide>
     </SwiperSlide>
@@ -46,6 +51,7 @@ ImageItem.propTypes = {
   state: PropTypes.string.isRequired,
   sender: PropTypes.object.isRequired,
   pullover: PropTypes.array.isRequired,
+  createdAt: PropTypes.oneOfType([Date, PropTypes.number]).isRequired,
 };
 
 export default React.memo(ImageItem);

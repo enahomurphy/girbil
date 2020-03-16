@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import { gql } from '@apollo/client';
 
 export const MESSAGE_FRAGMENT = gql`
   fragment MessageParts on Message {
@@ -8,6 +8,7 @@ export const MESSAGE_FRAGMENT = gql`
     state
     conversationId
     parentId
+    createdAt
   }
 `;
 

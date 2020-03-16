@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import { gql } from '@apollo/client';
 
 export const UPLOAD_URLS = gql`
   query uploadURL($id: String!, $conversationId: String!) {
@@ -13,4 +13,4 @@ export const UPLOAD_URLS = gql`
 
 export default {
   UPLOAD_URLS,
-}
+};

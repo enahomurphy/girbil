@@ -1,4 +1,5 @@
-import { CometChat } from "@cometchat-pro/chat";
+/* eslint-disable class-methods-use-this */
+import { CometChat } from '@cometchat-pro/chat';
 
 class Chat {
   constructor(UID) {
@@ -11,7 +12,10 @@ class Chat {
     const appID = process.env.COMET_CHAT_APP_ID;
     const region = process.env.COMET_CHAT_REGION;
 
-    const appSetting = new CometChat.AppSettingsBuilder().subscribePresenceForAllUsers().setRegion(region).build();
+    const appSetting = new CometChat.AppSettingsBuilder()
+      .subscribePresenceForAllUsers()
+      .setRegion(region)
+      .build();
     try {
       await CometChat.init(appID, appSetting);
       const apiKey = process.env.COMET_CHAT_API_KEY;
@@ -19,6 +23,7 @@ class Chat {
       return user;
     } catch (error) {
       // handle error
+      return error;
     }
   }
 
@@ -31,7 +36,7 @@ class Chat {
       receiverID,
       data,
       messageType,
-      receiverType
+      receiverType,
     );
 
     try {
@@ -39,6 +44,7 @@ class Chat {
       return message;
     } catch (error) {
       // handle error
+      return error;
     }
   }
 
@@ -46,16 +52,14 @@ class Chat {
     CometChat.addMessageListener(
       listenerID,
       new CometChat.MessageListener({
-        onMediaMessageReceived: mediaMessage => {
+        onMediaMessageReceived: () => {
           // Handle media message
-        }
-      })
+        },
+      }),
     );
   }
 
   async receiveMissedMessages() {
-    let latestId;
-
     try {
       const latestId = await CometChat.getLastDeliveredMessageId();
 
@@ -67,6 +71,7 @@ class Chat {
       return messages;
     } catch (error) {
       // handle error
+      return error;
     }
   }
 
@@ -76,11 +81,12 @@ class Chat {
       return messages;
     } catch (error) {
       // handle error
+      return error;
     }
   }
 
   async getDirectMessageHistory() {
-    var messagesRequest = new CometChat.MessagesRequestBuilder()
+    const messagesRequest = new CometChat.MessagesRequestBuilder()
       .setUnread(true)
       .setLimit(this.messageLimit)
       .setUID(this.UID)
@@ -89,7 +95,7 @@ class Chat {
   }
 
   async getGroupMessageHistory(GUID) {
-    var messagesRequest = new CometChat.MessagesRequestBuilder()
+    const messagesRequest = new CometChat.MessagesRequestBuilder()
       .setUnread(true)
       .setLimit(this.messageLimit)
       .setGUID(GUID)
@@ -98,9 +104,9 @@ class Chat {
   }
 
   getUnreadMessageCount(type) {
-    return type === 'user' ?
-      CometChat.getUnreadMessageCountForUser(this.UID) :
-      CometChat.getUnreadMessageCountForGroup(this.UID);
+    return type === 'user'
+      ? CometChat.getUnreadMessageCountForUser(this.UID)
+      : CometChat.getUnreadMessageCountForGroup(this.UID);
   }
 
   getAllUnreadMessageCount() {
@@ -108,7 +114,7 @@ class Chat {
   }
 
   async getConversations() {
-    var conversationsRequest = new CometChat.ConversationsRequestBuilder()
+    const conversationsRequest = new CometChat.ConversationsRequestBuilder()
       .setLimit(this.conversationLimit)
       .build();
 
@@ -117,6 +123,7 @@ class Chat {
       return conversationList;
     } catch (error) {
       // handle errors
+      return error;
     }
   }
 
@@ -124,15 +131,15 @@ class Chat {
     CometChat.addUserListener(
       listenerID,
       new CometChat.UserListener({
-        onUserOnline: onlineUser => {
+        onUserOnline: () => {
           /* when someuser/friend comes online, user will be received here */
           // handle onlineUser
         },
-        onUserOffline: offlineUser => {
+        onUserOffline: () => {
           /* when someuser/friend went offline, user will be received here */
           // handle offlineUser
-        }
-      })
+        },
+      }),
     );
   }
 }

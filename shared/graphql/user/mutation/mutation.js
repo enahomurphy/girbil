@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import { gql } from '@apollo/client';
 
 export const UPDATE_USER = gql`
   mutation updateUser(
@@ -15,3 +15,5 @@ export const UPDATE_USER = gql`
     )
   }
 `;
+
+export default {};

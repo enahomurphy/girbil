@@ -7,5 +7,5 @@ export { query, mutation };
 export default {
   default: initialState,
   query,
-  mutation
+  mutation,
 };

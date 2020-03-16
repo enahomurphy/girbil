@@ -32,7 +32,7 @@ const CreateChannel = ({ $f7router, title, channelId }) => {
     about = '',
     isPrivate = false,
     avatar = null,
-    ownerId,
+    userId,
   } = get(data, 'channel', {});
 
   useEffect(() => {
@@ -66,7 +66,7 @@ const CreateChannel = ({ $f7router, title, channelId }) => {
             about={about}
             createChannel={handleCreateOrUpdate}
             isEdit={Boolean(channelId)}
-            isOwner={ownerId === storage.payload.id}
+            isOwner={userId === storage.payload.id}
           />
         )
       }

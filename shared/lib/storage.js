@@ -12,6 +12,7 @@ class TokenStorage {
       return null;
     }
   }
+
   get token() {
     return localStorage.getItem(this.key);
   }

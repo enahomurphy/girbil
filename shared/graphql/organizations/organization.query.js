@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import { gql } from '@apollo/client';
 
 export const ORGANIZATION_FRAGMENT = gql`
   fragment OrganizationParts on Organization {
@@ -29,5 +29,5 @@ export const GET_ORGANIZATION_BY_DOMAIN = gql`
 
 export default {
   ORGANIZATIONS,
-  GET_ORGANIZATION_BY_DOMAIN
+  GET_ORGANIZATION_BY_DOMAIN,
 };

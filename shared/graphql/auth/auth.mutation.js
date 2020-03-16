@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import { gql } from '@apollo/client';
 
 export const SOCIAL_LOGIN = gql`
   mutation social($accessToken: String!, $type: String! ) {
@@ -28,9 +28,9 @@ export const INVITE = gql`
       emails: $emails
     })
   }
-`
+`;
 
 export default {
   SOCIAL_LOGIN,
-  INVITE
-}
+  INVITE,
+};

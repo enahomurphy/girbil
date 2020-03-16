@@ -1,5 +1,7 @@
-import { gql } from 'apollo-boost';
-import { MESSAGE_FRAGMENT, CHANNEL_FRAGMENT, USER_FRAGMENT, CONVERSATION_FRAGMENT } from './fragments'
+import { gql } from '@apollo/client';
+import {
+  MESSAGE_FRAGMENT, CHANNEL_FRAGMENT, USER_FRAGMENT, CONVERSATION_FRAGMENT,
+} from './fragments';
 
 export const MESSAGES = gql`
   query messages @client {
@@ -134,5 +136,5 @@ export default {
   GET_MESSAGE,
   USER_CONVERSATIONS,
   CONVERSATION_MESSAGES,
-  GET_USERS_WITHOUT_CONVERSATION
+  GET_USERS_WITHOUT_CONVERSATION,
 };

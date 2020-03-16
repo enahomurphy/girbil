@@ -51,7 +51,7 @@ class MessageResolver implements ResolverInterface<Message> {
       senderId: user.id,
       video,
       thumbnail,
-      parentId,
+      parentId: parentId || null,
     });
 
     const createdMessage = await this.messageRepo.save(message);

@@ -13,6 +13,7 @@ const useVideo = ({
   play = true,
   onPlay = () => {},
   onPause = () => {},
+  onEnd = () => {},
 }) => {
   const ref = useRef();
   const [videoURL, setVideoURL] = useState(url);
@@ -25,6 +26,7 @@ const useVideo = ({
   const [pip, setPip] = useState(false);
   const [light, setLight] = useState(false);
   const [controls] = useState(false);
+  const [resolution, setVideoResolution] = useState({ width, height });
 
   const handleProgress = (state) => {
     setPlayed(state.playedSeconds);
@@ -49,8 +51,7 @@ const useVideo = ({
   const props = {
     ref,
     className: 'react-player',
-    width: width || window.screen.availWidth,
-    height: height || window.screen.availHeight,
+    ...resolution,
     url: videoURL,
     pip,
     playing,
@@ -67,12 +68,10 @@ const useVideo = ({
     onEnablePIP: () => setPip(true),
     onDisablePIP: () => setPip(false),
     onPause: () => {
-      setPlaying(false);
-      onPause(false);
+      onPause();
     },
     onEnded: () => {
-      setPlaying(loop);
-      onPause(false);
+      onEnd();
     },
     onProgress: handleProgress,
   };
@@ -83,6 +82,11 @@ const useVideo = ({
     setVideoURL(url);
     setPlaying(play);
   }, [url, play]);
+
+  useEffect(() => {
+    setVideoResolution({ width, height });
+  }, [width, height]);
+
 
   const state = {
     playing: Boolean(playing),

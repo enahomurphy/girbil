@@ -2,11 +2,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Title, Text, Block } from '@/components/Style';
-import { Lock } from '@/components/Icon';
 import {
-  Img, StyledListItem, Active, StyledTitle,
-} from './style';
+  Title, Text, Block, ShortTitle,
+} from '@/components/Style';
+import { Lock } from '@/components/Icon';
+import { Img, StyledListItem, Active } from './style';
 import ListInfo from './ListInfo';
 
 const ListItem = ({
@@ -27,7 +27,7 @@ const ListItem = ({
           weight="600"
           margin="0 0 5px 0"
         >
-          { (isChannel && !isPrivate) && <Title margin="0" width="20px">#</Title> }
+          { (isChannel && !isPrivate) && <Title margin="0">#</Title> }
           {
             (isChannel && isPrivate) && (
               <span style={{ margin: '0 5px 1px 0' }}>
@@ -35,7 +35,11 @@ const ListItem = ({
               </span>
             )
           }
-          <StyledTitle>{`${user.name}`}</StyledTitle>
+          <ShortTitle
+            margin="0 9px 0 2px"
+          >
+            {`${user.name}`}
+          </ShortTitle>
           {
           !isChannel && (
             <Active

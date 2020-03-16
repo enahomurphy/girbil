@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import { gql } from '@apollo/client';
 
 export const SEARCH_CHANNELS = gql`
  query channels($text: String) {
@@ -12,7 +12,7 @@ export const SEARCH_CHANNELS = gql`
       }
     }
   }
-`
+`;
 
 export const CHANNEL = gql`
  query channel($channelId: String!) {
@@ -22,13 +22,13 @@ export const CHANNEL = gql`
       name
       about,
       isPrivate
-      ownerId
+      userId
       conversation {
         id
       }
     }
   }
-`
+`;
 
 export const GET_CHANNEL_MEMBERS = gql`
  query channelMembers($channelId: String!) {
@@ -48,7 +48,7 @@ export const GET_CHANNEL_MEMBERS = gql`
       count
     }
   }
-`
+`;
 
 export const GET_USERS_NOT_IN_CHANNEL = gql`
  query usersNotInChannel($channelId: String!) {
@@ -61,10 +61,10 @@ export const GET_USERS_NOT_IN_CHANNEL = gql`
       count
     }
   }
-`
+`;
 
 export default {
   SEARCH_CHANNELS,
   GET_CHANNEL_MEMBERS,
-  GET_USERS_NOT_IN_CHANNEL
+  GET_USERS_NOT_IN_CHANNEL,
 };

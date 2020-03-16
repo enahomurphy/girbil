@@ -6,12 +6,14 @@ export const mergeUniqueArrays = (...args) => {
 
   const mergedArrays = concatArrays.reduce(
     (acc, item) => {
-      acc.set(item.id, item)
+      acc.set(item.id, item);
 
       return acc;
     },
-    new Map()
+    new Map(),
   ).values();
 
   return Array.from(mergedArrays);
-}
+};
+
+export default {};

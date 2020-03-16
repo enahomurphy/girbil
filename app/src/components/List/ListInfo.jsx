@@ -21,6 +21,7 @@ const ListInfo = ({ unreadCount, options, id }) => (
           {
             options.map(({ title, getLink, onClick }) => (
               <ListItem
+                key={title}
                 link={getLink ? getLink() : '#'}
                 onClick={onClick}
                 popoverClose

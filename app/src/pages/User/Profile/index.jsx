@@ -77,7 +77,7 @@ const Profile = ({ userId, $f7router }) => {
             onSaveProfile={onSaveProfile}
             loading={updatingUser}
             name={user.name || ''}
-            position={user.organization.position}
+            position={user.organization.position || ''}
           />
         )
       }

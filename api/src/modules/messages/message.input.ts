@@ -16,7 +16,7 @@ export class AddMessageInput {
   thumbnail: string
 
   @IsUUID()
-  @ValidateIf((e) => e.messageId)
+  @ValidateIf((e) => e.parentId)
   @Field(() => String, { nullable: true })
   parentId?: string
 }

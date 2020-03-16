@@ -4,7 +4,7 @@ import {
   Icon, ListItem, List, Link,
 } from 'framework7-react';
 import {
-  Title, Text, Popover, Block,
+  Title, Text, Popover, Block, ShortTitle,
 } from '@/components/Style';
 import { Back, Lock } from '@/components/Icon';
 import { BackIcon, StyledHeader } from './style';
@@ -41,21 +41,29 @@ const MessageHeader = ({
 }) => (
   <Block>
     <Link popoverOpen=".message-header-popover-menu">
-      <Title
-        margin="0 0 7px 0"
+      <ShortTitle
+        margin="0"
         width="100%"
         size="24px"
         transform="lowercase"
         align="center"
       >
-        {isPrivate && (
-        <span style={{ marginRight: '5px' }}>
-          <Lock width="12px" height="16px" />
-        </span>
-        ) }
-        {name}
-        <Icon f7="chevron_right" style={{ fontSize: '16px', marginLeft: '10px' }} />
-      </Title>
+        {
+          isPrivate && (
+            <span style={{ marginRight: '5px' }}>
+              <Lock width="12px" height="16px" />
+            </span>
+          )
+        }
+        {
+          name && (
+            <>
+              {name}
+            </>
+          )
+        }
+      </ShortTitle>
+      <Icon f7="chevron_right" style={{ color: '#ffffff', fontSize: '16px' }} />
     </Link>
     {
       isChannel && <Text align="center" color="var(--gb-medium-grey)">{`${members} members`}</Text>

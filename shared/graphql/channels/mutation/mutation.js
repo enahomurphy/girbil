@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import { gql } from '@apollo/client';
 
 export const CREATE_CHANNEL = gql`
   mutation createChannel(
@@ -54,4 +54,4 @@ export const ADD_USERS_TO_CHANNEL = gql`
       channelId: $channelId
     )
   }
-`
+`;

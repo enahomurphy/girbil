@@ -20,8 +20,10 @@ const Message = ({
   const [video, state, controls] = useVideo({
     url: params.src,
     play: params.play,
+    width: params.width,
+    height: params.height,
     onPlay: () => emitter.emitEvent('play_message', { message, state: 'playing' }),
-    onPause: () => emitter.emitEvent('pause_message', { message, state: 'pause' }),
+    onEnd: () => emitter.emitEvent('pause_message', { message, state: 'pause' }),
   });
 
   const { data: conversationData } = useQuery(
@@ -76,7 +78,7 @@ const Message = ({
         pause={controls.pause}
         seek={controls.seek}
         playing={state.playing}
-        duration={state.duration}
+        duration={state.duration || 0}
         played={state.played}
         playBack={controls.playbackRate}
       />

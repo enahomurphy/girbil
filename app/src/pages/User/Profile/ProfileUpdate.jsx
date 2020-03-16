@@ -63,7 +63,7 @@ ProfileInfo.propTypes = {
   onSaveProfile: PropTypes.func.isRequired,
   position: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  loading: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 export default ProfileInfo;

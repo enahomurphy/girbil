@@ -44,6 +44,15 @@ Title.defaultProps = {
   line: 'initial',
 };
 
+export const ShortTitle = styled(Title)`
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: initial;
+  max-width: 140px;
+`;
+
+
 export const Button = styled(F7Button)` 
   min-width: 250px;
   border-radius: 3px;

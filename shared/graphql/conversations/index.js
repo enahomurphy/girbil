@@ -13,5 +13,5 @@ export default {
   resolver,
   query,
   mutation,
-  types
+  types,
 };

@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { MESSAGES, CONVERSATION_MESSAGES } from '../query'
-import { UPDATE_MESSAGE } from './mutation'
+import { MESSAGES, CONVERSATION_MESSAGES } from '../query';
+import { UPDATE_MESSAGE } from './mutation';
 import { storage } from '../../../lib';
 
 
@@ -16,28 +16,28 @@ export const updateMessage = (_, args, { cache }) => {
     const updatedMessage = {
       ...message,
       url: args.input.url,
-      state: 'done'
-    }
+      state: 'done',
+    };
     cache.writeQuery({
       UPDATE_MESSAGE,
       data: { message: updatedMessage },
     });
   }
-}
+};
 
 export const readMessage = (_, { id, conversationId }, { cache }) => {
   const data = cache.readQuery({
     query: CONVERSATION_MESSAGES,
-    variables: { conversationId }
+    variables: { conversationId },
   });
-  
+
   const message = data.messages.find((m) => id === m.id);
 
   cache.writeQuery({
     UPDATE_MESSAGE,
-    data: { message: message },
+    data: { message },
   });
-}
+};
 
 export const addMessage = (_, { conversationId, messageId }, { cache }) => {
   const variables = { conversationId };
@@ -59,18 +59,18 @@ export const addMessage = (_, { conversationId, messageId }, { cache }) => {
     conversationId,
     parentId: messageId || null,
     state: 'recording',
+    createdAt: new Date(),
     __typename: 'Message',
     sender: {
       id,
       name,
       avatar,
       createdAt: new Date(),
-      __typename: 'User'
+      __typename: 'User',
     },
-  }
+  };
 
   const messages = [...data.messages, message];
-  const key = `messages({"conversationId":"${conversationId}"})`;
 
   cache.writeQuery({
     query: CONVERSATION_MESSAGES,
@@ -78,11 +78,13 @@ export const addMessage = (_, { conversationId, messageId }, { cache }) => {
     data: { messages },
   });
 
-  return message
-}
+  return message;
+};
 
 export const updateState = (_, args, { cache }) => {
-  const { conversationId, messageId, threadId, state } = args;
+  const {
+    conversationId, messageId, threadId, state,
+  } = args;
 
   const variables = { conversationId };
 
@@ -100,15 +102,14 @@ export const updateState = (_, args, { cache }) => {
       let newState = state;
 
       if (
-        (state === 'toggle') && 
-        (message.state === 'done') || 
-        (message.state === 'pause')
+        ((state === 'toggle') && (message.state === 'done'))
+        || (message.state === 'pause')
       ) {
         newState = 'playing';
       } else if (state === 'toggle' && message.state === 'playing') {
         newState = 'pause';
       }
-  
+
       return { ...message, state: newState };
     }
 
@@ -121,5 +122,4 @@ export const updateState = (_, args, { cache }) => {
     variables,
     data: { messages },
   });
-
-}
+};

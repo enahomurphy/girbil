@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import { gql } from '@apollo/client';
 
 export const USER = gql`
  query user($userId: String!) {
@@ -17,5 +17,5 @@ export const USER = gql`
 `;
 
 export default {
-  USER
+  USER,
 };

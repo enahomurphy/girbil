@@ -9,7 +9,7 @@ import ConversationHeader from './ConversationHeader';
 import UserInfo from './UserInfo';
 
 const Conversations = () => {
-  const { conversations } = query.getUserConversations();
+  const { conversations } = query.useGetUserConversations();
 
   return (
     <Page>

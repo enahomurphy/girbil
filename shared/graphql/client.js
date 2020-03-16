@@ -1,4 +1,6 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { from, ApolloClient, HttpLink, InMemoryCache, gql } from '@apollo/client';
+import { onError } from "@apollo/link-error";
+import { setContext } from '@apollo/link-context'
 
 import { data, resolvers } from '.';
 import { storage } from '../lib'
@@ -25,14 +27,44 @@ const defaultOptions = {
   },
 };
 
+
+const errrorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors)
+    graphQLErrors.map(({ message, locations, path }) =>
+      console.log(
+        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+      ),
+    );
+
+  if (networkError) {
+    console.log(`[Network error]: ${networkError.statusCode}`);
+    if (networkError.statusCode === 401)  {
+      storage.clear()
+      window.location.href = '/'
+    }
+  }
+});
+
+const authLink = setContext((_, { headers }) => {
+  return {
+    headers: {
+      ...headers,
+      authorization: storage.token ? `Bearer ${storage.token}` : ''
+    }
+  }
+});
+
+const httpLink = new HttpLink({ uri: 'http://localhost:8081/graphql' })
+
+const link = from([
+  errrorLink,
+  authLink.concat(httpLink)
+]);
+
 const client = new ApolloClient({
-  uri: 'http://localhost:8081/graphql',
+  link,
   cache,
   resolvers,
-  
-  headers: {
-    authorization: storage.token ? `Bearer ${storage.token}` : ''
-  },
   defaultOptions
 });
 

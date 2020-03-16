@@ -47,8 +47,7 @@ class AuthResolver implements ResolverInterface<AuthType> {
       password,
     );
 
-    delete insertedUser.password;
-    return AuthType.createAuth(sign(user));
+    return AuthType.createAuth(sign(insertedUser.user), insertedUser.user);
   }
 
   @Mutation(() => AuthType)
@@ -59,8 +58,7 @@ class AuthResolver implements ResolverInterface<AuthType> {
       throw new Error('Invalid email or password');
     }
 
-    delete user.password;
-    return AuthType.createAuth(sign(user));
+    return AuthType.createAuth(sign(user.user), user.user);
   }
 
   @Mutation(() => AuthType)
@@ -123,7 +121,7 @@ class AuthResolver implements ResolverInterface<AuthType> {
     return 'sent';
   }
 
-  @FieldResolver()
+  @FieldResolver({ nullable: true })
   async organizations(@Root() auth: AuthType): Promise<Organization[]> {
     return this.orgRepo.findUserOrganizations(auth.user.id);
   }

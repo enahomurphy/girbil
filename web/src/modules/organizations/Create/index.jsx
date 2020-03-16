@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLazyQuery, useMutation } from '@apollo/react-hooks';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { useHistory } from 'react-router-dom';
 import { useDebounce } from 'react-use';
 import { useToasts } from 'react-toast-notifications';

@@ -7,12 +7,11 @@ export const LayoutContainer = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 40px;
-  /* align-items: center; */
 `;
 
 export const MainContainer = styled.main`
   box-sizing: border-box;
-  padding: ${props => (props.loading === 'true' ? '0' : '56px 48px 20px 48px')};
+  padding: ${props => (props.loading === 'true' ? '0' : props.padding)};
   width: 456px;
   background: var(--gb-dark-grey);
   min-height: ${props => props.height};
@@ -34,7 +33,27 @@ export const MainContainer = styled.main`
   &::-webkit-scrollbar-thumb {
     border-radius: 100px;
   }
+
+
+  .layout-button {
+    border-radius: 2px;
+    background-color: var(--gb-green);
+    font-size: 14px;
+  }
+
+
+  .layout-back-icon {
+    position: absolute;
+    left: 20px;
+    top: 64px;
+    cursor: pointer;
+  }
 `;
+
+
+MainContainer.defaultProps = {
+  padding: '56px 48px 20px 48px',
+};
 
 export const LoadingOverlay = styled.div`
   position: absolute;

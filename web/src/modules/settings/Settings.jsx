@@ -3,7 +3,7 @@ import React from 'react';
 import SettingsNav from './SettingsNav';
 import Routes from './Routes';
 
-const Settings = ({ ...props }) => (
+const Settings = () => (
   <>
     <SettingsNav />
     <Routes />

@@ -5,6 +5,7 @@ export const Title = styled.h1`
   margin: ${props => props.margin};
   width: ${props => props.width};
   text-transform: ${props => props.transform};
+  font-weight: ${props => props.weight};
 `;
 
 Title.defaultProps = {
@@ -12,6 +13,7 @@ Title.defaultProps = {
   margin: '0',
   width: 'initial',
   transform: 'initial',
+  weight: 'bold',
 };
 
 export const Text = styled.p`
@@ -22,6 +24,8 @@ export const Text = styled.p`
   position: ${props => props.position};
   cursor: ${props => (props.cursor ? 'pointer' : 'initial')};
   font-weight: ${props => props.weight};
+  text-transform: ${props => props.transform};
+  width: ${props => props.width};
 `;
 
 Text.defaultProps = {
@@ -29,6 +33,9 @@ Text.defaultProps = {
   size: '14px',
   position: 'initial',
   weight: 'initial',
+  transform: 'initial',
+  width: 'initial',
+
 };
 
 export const Input = styled.input`
@@ -77,13 +84,18 @@ export const Form = styled.div`
 export const Button = styled.button`
   margin: ${props => props.margin};
   width: ${props => props.width};
+  height: ${props => props.height};
+  text-align: ${props => props.align};
   font-weight: ${props => props.weight};
 `;
 
 Button.defaultProps = {
   weight: 'bold',
   width: '100',
-  marign: '0',
+  height: '40px',
+  margin: '0',
+  padding: '0',
+  align: 'center',
 };
 
 export const InputWithError = styled.div`
@@ -109,4 +121,18 @@ export const Image = styled.div`
 Image.defaultProps = {
   width: '32px',
   height: '40px',
+};
+
+export const Active = styled.div`
+  box-sizing: border-box;
+  width: ${props => props.width};
+  height: ${props => props.width};
+  border-radius: 100px;
+  background-color: ${props => (props.active ? 'var(--gb-green)' : 'transparent')};
+  border: 2px solid ${props => (props.active ? 'var(--gb-green);' : '#999999')};
+  margin-right: 10px;
+`;
+
+Active.defaultProps = {
+  width: '16px',
 };

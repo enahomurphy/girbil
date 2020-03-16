@@ -45,6 +45,18 @@ button.green {
   background-color: var(--gb-green);
 }
 
+button.inverse {
+  background-color: transparent;
+  font-weight: normal;
+  color: var(--gb-web-text);
+  font-size: 14px;
+}
+
+button.red {
+  background-color: var(--gb-red);
+}
+
+
 button.transparent {
   background-color: transparent;
   color: var(--gb-web-text);

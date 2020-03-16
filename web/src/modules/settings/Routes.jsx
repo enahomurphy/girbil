@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 
 import OrgSetting from './pages/Organization';
+import OrgDomain from './pages/Organization/EditURL';
 import AccountManagement from './pages/Management';
 import Permission from './pages/Permissions';
 import Billing from './pages/Billing';
@@ -18,7 +19,7 @@ const SettingsRoute = () => {
         <Route
           exact
           path={match.url}
-          component={AccountManagement}
+          component={OrgSetting}
         />
         <Route
           path={`${match.url}/management`}
@@ -27,6 +28,10 @@ const SettingsRoute = () => {
         <Route
           path={`${match.url}/setting`}
           component={OrgSetting}
+        />
+        <Route
+          path={`${match.url}/domain`}
+          component={OrgDomain}
         />
         <Route
           path={`${match.url}/users/permissions`}

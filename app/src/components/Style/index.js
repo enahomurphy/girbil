@@ -159,6 +159,7 @@ Active.defaultProps = {
 };
 
 export const Popover = styled(f7Popover)`
+  box-sizing: border-box;
   width: ${({ width }) => width || 'initial'};
   .item-content {
     padding: 0;
@@ -206,6 +207,10 @@ export const Popover = styled(f7Popover)`
     }
   }
 `;
+
+Popover.defaultProps = {
+  width: '179px',
+};
 
 export const Search = styled.div`
   input {

@@ -94,6 +94,9 @@ const NewMessage = ({ isThread, conversationId }) => {
   const {
     name = '',
     isPrivate = false,
+    members = 0,
+    isChannel,
+    typeId,
   } = conversationMeta;
 
   return (
@@ -106,6 +109,9 @@ const NewMessage = ({ isThread, conversationId }) => {
           back
           isThread={isThread}
           onClick={() => {}}
+          members={members}
+          isChannel={isChannel}
+          typeId={typeId}
         />
         <RecorderButton onClick={startRecord} recording={matches('record.start')} />
         <VideoComponent video={video} />

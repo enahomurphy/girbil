@@ -36,7 +36,9 @@ ThreadHeader.propTypes = {
   isPrivate: PropTypes.bool.isRequired,
 };
 
-const MessageHeader = ({ isPrivate, name }) => (
+const MessageHeader = ({
+  isPrivate, name, members, isChannel,
+}) => (
   <Block>
     <Link popoverOpen=".message-header-popover-menu">
       <Title
@@ -55,25 +57,37 @@ const MessageHeader = ({ isPrivate, name }) => (
         <Icon f7="chevron_right" style={{ fontSize: '16px', marginLeft: '10px' }} />
       </Title>
     </Link>
-    <Text align="center" color="var(--gb-medium-grey)">3 members</Text>
+    {
+      isChannel && <Text align="center" color="var(--gb-medium-grey)">{`${members} members`}</Text>
+    }
   </Block>
 );
 
 MessageHeader.propTypes = {
   isPrivate: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
+  members: PropTypes.number.isRequired,
+  isChannel: PropTypes.bool.isRequired,
 };
 
 const Header = ({
-  back, goBack, onClick, isThread, isPrivate, name,
+  back, goBack, onClick, isThread, isPrivate, name, members, isChannel, typeId,
 }) => (
   <StyledHeader>
     <Popover className="message-header-popover-menu">
-      <List>
-        <ListItem link="/organization/invite" popoverClose title="Invite people to channel" />
-        <ListItem link="/channels/:channelId" popoverClose title="View channel details" />
-        <ListItem link="/channels/:channelId/edit" popoverClose title="Edit channel settings" />
-      </List>
+      {
+        isChannel ? (
+          <List>
+            <ListItem link={`/channels/${typeId}/add-people`} popoverClose title="Add users to channel" />
+            <ListItem link={`/channels/${typeId}`} popoverClose title="View channel details" />
+            <ListItem link={`/channels/${typeId}/edit`} popoverClose title="Edit channel settings" />
+          </List>
+        ) : (
+          <List>
+            <ListItem link={`/users/${typeId}/profile`} popoverClose title="View user profile" />
+          </List>
+        )
+       }
     </Popover>
     <BackIcon back={back} onClick={goBack}>
       { back ? <Back /> : <Icon f7="multiply" /> }
@@ -82,7 +96,14 @@ const Header = ({
       {
         isThread
           ? (<ThreadHeader isPrivate={isPrivate} name={name} />)
-          : (<MessageHeader isPrivate={isPrivate} name={name} />)
+          : (
+            <MessageHeader
+              isChannel={isChannel}
+              members={members}
+              isPrivate={isPrivate}
+              name={name}
+            />
+          )
       }
     </Block>
   </StyledHeader>
@@ -100,6 +121,9 @@ Header.propTypes = {
   goBack: PropTypes.func.isRequired,
   isPrivate: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
+  members: PropTypes.number.isRequired,
+  isChannel: PropTypes.bool.isRequired,
+  typeId: PropTypes.string.isRequired,
 };
 
 export default Header;

@@ -184,7 +184,7 @@ class ChannelResolver implements ResolverInterface<Channel> {
       return channel.members;
     }
 
-    return this.channelRepo.membersCount(channel.id);
+    return this.channelRepo.membersCount(channel.organizationId, channel.id);
   }
 }
 

@@ -11,10 +11,11 @@ const conversationMeta = (conversation) => {
   const data = {
     id,
     name: get(receiver || channel, 'name'),
-    typeId: get(receiver || channel, 'id'),
+    typeId: get(receiver || channel, 'id', ''),
     isPrivate: get(receiver || channel, 'isPrivate', false),
     avatar: get(receiver || channel, 'avatar', false),
     isChannel: receiverType === 'channel',
+    members: get(receiver || channel, 'members', 0),
   };
 
   return data;

@@ -22,6 +22,7 @@ export const CHANNEL = gql`
       name
       about,
       isPrivate
+      ownerId
       conversation {
         id
       }

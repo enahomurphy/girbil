@@ -33,7 +33,7 @@ const View = ({ members, count, channel }) => (
           <UserListItem
             key={user.id}
             user={user}
-            link="#"
+            link={`/users/${user.id}/profile`}
             isActive={Boolean(user.isActive)}
           />
         ))

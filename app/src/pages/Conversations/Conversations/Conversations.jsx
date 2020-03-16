@@ -55,7 +55,7 @@ const Conversations = () => {
               options={[
                 {
                   title: 'View Channel',
-                  getLink: () => `/users/${channel.id}/profile`,
+                  getLink: () => `/channels/${channel.id}`,
                   clickable: false,
                 },
                 {

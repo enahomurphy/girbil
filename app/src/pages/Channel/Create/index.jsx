@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { mutation, query } from '@shared/graphql/channels';
 import Header from '@/components/Header';
-import { get } from '@shared/lib';
+import { get, storage } from '@shared/lib';
 import Create from './Create';
 
 const CreateChannel = ({ $f7router, title, channelId }) => {
@@ -32,6 +32,7 @@ const CreateChannel = ({ $f7router, title, channelId }) => {
     about = '',
     isPrivate = false,
     avatar = null,
+    ownerId,
   } = get(data, 'channel', {});
 
   useEffect(() => {
@@ -42,9 +43,6 @@ const CreateChannel = ({ $f7router, title, channelId }) => {
     }
   }, [getChannel, channelId]);
 
-  if (loading) {
-    return null;
-  }
 
   const handleCreateOrUpdate = (formData) => {
     if (channelId) {
@@ -59,13 +57,19 @@ const CreateChannel = ({ $f7router, title, channelId }) => {
   return (
     <Page>
       <Header title={title} />
-      <Create
-        name={name}
-        isPrivate={isPrivate}
-        avatar={avatar}
-        about={about}
-        createChannel={handleCreateOrUpdate}
-      />
+      {
+        !loading && (
+          <Create
+            name={name}
+            isPrivate={isPrivate}
+            avatar={avatar}
+            about={about}
+            createChannel={handleCreateOrUpdate}
+            isEdit={Boolean(channelId)}
+            isOwner={ownerId === storage.payload.id}
+          />
+        )
+      }
     </Page>
   );
 };

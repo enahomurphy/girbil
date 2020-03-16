@@ -8,7 +8,7 @@ import {
 import { StyledButton, StyledAvatar } from '../style';
 
 const Create = ({
-  createChannel, name, about, isPrivate, avatar,
+  createChannel, name, about, isPrivate, avatar, isOwner, isEdit,
 }) => {
   const [form, setForm] = useState({
     name,
@@ -58,21 +58,26 @@ const Create = ({
             </StyledAvatar>
           </Block>
         </Block>
-        <Block margin="32px 0 0 0">
-          <Title margin="0 0 10px 0">
-            Make private
-          </Title>
-          <Block type="flex" align="center" justify="space-between">
-            <Text margin="0" width="70%">
-              When a channel is set to private,
-              it can only be viewed or joined by invitation.
-            </Text>
-            <Toggle
-              checked={form.isPrivate}
-              onChange={() => setForm({ ...form, isPrivate: !form.isPrivate })}
-            />
-          </Block>
-        </Block>
+
+        {
+          (!isEdit || isOwner) && (
+            <Block margin="32px 0 0 0">
+              <Title margin="0 0 10px 0">
+                Make private
+              </Title>
+              <Block type="flex" align="center" justify="space-between">
+                <Text margin="0" width="70%">
+                  When a channel is set to private,
+                  it can only be viewed or joined by invitation.
+                </Text>
+                <Toggle
+                  checked={form.isPrivate}
+                  onChange={() => setForm({ ...form, isPrivate: !form.isPrivate })}
+                />
+              </Block>
+            </Block>
+          )
+        }
       </Block>
       <StyledButton>
         <Button
@@ -83,7 +88,7 @@ const Create = ({
           onClick={() => createChannel(form)}
           disabled={Boolean(!form.name)}
         >
-          Create
+          {isEdit ? 'Update' : 'Create'}
         </Button>
       </StyledButton>
     </>
@@ -100,6 +105,8 @@ Create.propTypes = {
   name: PropTypes.string.isRequired,
   about: PropTypes.string.isRequired,
   isPrivate: PropTypes.bool.isRequired,
+  isEdit: PropTypes.bool.isRequired,
+  isOwner: PropTypes.bool.isRequired,
   avatar: PropTypes.oneOfType([PropTypes.string, () => undefined]),
 };
 

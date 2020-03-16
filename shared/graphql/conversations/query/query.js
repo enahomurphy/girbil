@@ -38,6 +38,7 @@ export const CONVERSATION = gql`
       ...ConversationParts
       channel {
         ...ChannelParts
+        members
       }
       receiver {
         ...UserParts

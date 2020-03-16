@@ -6,9 +6,10 @@ import Loader from '@shared/components/icons/Loader';
 import { MainContainer, LayoutContainer, LoadingOverlay } from './style';
 
 const Layout = ({
-  children, height, title, loading,
+  children, height, title, loading, nav,
 }) => (
   <LayoutContainer>
+    {nav}
     <MainContainer loading={loading.toString()} height={height}>
       {
         loading && (
@@ -28,6 +29,7 @@ const Layout = ({
 Layout.defaultProps = {
   height: '650px',
   loading: false,
+  nav: null,
 };
 
 Layout.propTypes = {
@@ -35,6 +37,7 @@ Layout.propTypes = {
   height: PropTypes.string,
   title: PropTypes.string.isRequired,
   loading: PropTypes.bool,
+  nav: PropTypes.element,
 };
 
 export default Layout;

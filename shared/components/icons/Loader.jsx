@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-export const Loader = () => (
+const Loader = () => (
   <svg
     width="100"
     height="100"

@@ -4,12 +4,14 @@ export const Title = styled.h1`
   font-size: ${props => props.size};
   margin: ${props => props.margin};
   width: ${props => props.width};
+  text-transform: ${props => props.transform};
 `;
 
 Title.defaultProps = {
   size: '24px',
   margin: '0',
   width: 'initial',
+  transform: 'initial',
 };
 
 export const Text = styled.p`
@@ -94,3 +96,17 @@ export const InputWithError = styled.div`
     color: var(--gb-red);
   }
 `;
+
+export const Image = styled.div`
+  width: ${({ width }) => width};
+  height: ${({ height }) => height};
+  background-image: url(${({ src }) => src});
+  background-position: center;
+  background-size: cover;
+  border-radius: ${({ radius }) => (radius || '2px')};
+`;
+
+Image.defaultProps = {
+  width: '32px',
+  height: '40px',
+};

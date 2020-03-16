@@ -16,6 +16,7 @@ import Download from './modules/Download';
 import NotFound from './modules/NotFound';
 import Organizations, { Create } from './modules/organizations';
 import Invite from './modules/invite';
+import Settings from './modules/settings';
 
 import { Authenticated } from './components/protected';
 
@@ -36,6 +37,7 @@ const App = () => (
           <Authenticated exact path="/organizations" component={Organizations} />
           <Authenticated exact path="/organizations/create" component={Create} />
           <Authenticated exact path="/organizations/invite" component={Invite} />
+          <Authenticated path="/organizations/settings" component={Settings} />
           <Route exact path="*" component={NotFound} />
           <Route path="/user/invite">
             <div>Invite user</div>

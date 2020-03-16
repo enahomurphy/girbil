@@ -6,7 +6,8 @@ export const LayoutContainer = styled.div`
   background: var(--gb-web-background);
   display: flex;
   justify-content: center;
-  align-items: center;
+  padding-top: 40px;
+  /* align-items: center; */
 `;
 
 export const MainContainer = styled.main`

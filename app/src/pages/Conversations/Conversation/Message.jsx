@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import { Page, f7 } from 'framework7-react';
-import { useVideo } from '@/lib/hooks';
+import { useVideo, useConversationMeta } from '@/lib/hooks';
 import PropTypes from 'prop-types';
 
 import { query } from '@shared/graphql/conversations';
@@ -15,20 +15,21 @@ const Message = ({
   isThread, messageId, conversationId,
 }) => {
   const [getMessage, { data }] = useLazyQuery(query.GET_MESSAGE);
-  const { data: conversationMeta } = useQuery(
-    query.CONVERSATION_META,
-    { variables: { conversationId } },
-  );
-
   const message = get(data, 'message', {});
   const { params } = useVideoData(message, 'video');
-
   const [video, state, controls] = useVideo({
     url: params.src,
     play: params.play,
     onPlay: () => emitter.emitEvent('play_message', { message, state: 'playing' }),
     onPause: () => emitter.emitEvent('pause_message', { message, state: 'pause' }),
   });
+
+  const { data: conversationData } = useQuery(
+    query.CONVERSATION,
+    { variables: { conversationId }, fetchPolicy: 'cache-and-network' },
+  );
+
+  const conversationMeta = useConversationMeta(get(conversationData, 'conversation', {}));
 
   useEffect(() => {
     emitter.onEventEmitted('read_message', (args) => {
@@ -49,10 +50,13 @@ const Message = ({
     f7.view.current.router.navigate(link);
   };
 
+
   const {
     name = '',
     isPrivate = false,
-  } = get(conversationMeta, 'conversationMeta', {});
+    isChannel,
+    typeId,
+  } = conversationMeta;
 
   return (
     <Page>
@@ -63,6 +67,9 @@ const Message = ({
         back={false}
         isThread={isThread}
         onClick={() => {}}
+        isChannel={isChannel}
+        typeId={typeId}
+        members={0}
       />
       <Controls
         play={controls.play}

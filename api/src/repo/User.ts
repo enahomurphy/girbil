@@ -60,6 +60,10 @@ class UserRepository extends Repository<User> {
 
     return UserRepository.select(user);
   }
+
+  async user(userId: string): Promise<User> {
+    return this.findOne(userId);
+  }
 }
 
 export default UserRepository;

@@ -4,7 +4,7 @@
 /* eslint-disable class-methods-use-this */
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class User1582381400003 implements MigrationInterface {
+export class User1582381400002 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS "users" (
@@ -17,6 +17,12 @@ export class User1582381400003 implements MigrationInterface {
         "last_active" timestamp DEFAULT Now()
       );
     `);
+
+    await queryRunner.query(
+      `
+        CREATE INDEX trgm__users_name_idx ON users USING gin (name gin_trgm_ops);
+      `,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {

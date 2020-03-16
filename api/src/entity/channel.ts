@@ -1,10 +1,16 @@
 import {
   Entity, PrimaryGeneratedColumn, Column, CreateDateColumn,
-  OneToOne, UpdateDateColumn, ManyToMany, JoinTable,
+  OneToOne, UpdateDateColumn, ManyToMany, JoinTable, JoinColumn, ManyToOne,
 } from 'typeorm';
-import { Field, ObjectType } from 'type-graphql';
+import { Field, ObjectType, Int } from 'type-graphql';
 
-import { User } from '.';
+import { User, Conversation } from '.';
+
+export enum ChannelOwnerType {
+  TEAM = 'team',
+  ORGANIZATION = 'organization',
+  SHARED = 'shared',
+}
 
 @Entity('channels')
 @ObjectType()
@@ -13,11 +19,11 @@ export class Channel {
   @PrimaryGeneratedColumn('uuid')
   readonly id: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column()
   name?: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({
     nullable: true,
   })
@@ -45,10 +51,27 @@ export class Channel {
   ownerId?: string;
 
   @Column({
-    nullable: true,
+    type: 'enum',
+    enum: ChannelOwnerType,
+    default: ChannelOwnerType.ORGANIZATION,
+    enumName: 'owner_type',
+    name: 'owner_type',
   })
   @Field()
+  ownerType: string
+
+  @Column({
+    nullable: true,
+  })
+  @Field({ nullable: true })
   avatar?: string;
+
+  @Column({
+    nullable: true,
+    type: 'tsvector',
+    select: false,
+  })
+  tsv?: string;
 
   @Column({
     name: 'last_updated_by_id',
@@ -78,15 +101,39 @@ export class Channel {
   @Field()
   updatedAt?: Date;
 
-  @OneToOne(() => User)
   @Field(() => User)
+  @OneToOne(() => User)
+  @JoinColumn({
+    name: 'user_id',
+    referencedColumnName: 'id',
+  })
   user?: User
 
   @Field(() => User)
   @OneToOne(() => User)
+  @JoinColumn({
+    name: 'last_updated_by_id',
+    referencedColumnName: 'id',
+  })
   lastUpdatedBy?: User;
 
-  @ManyToMany(() => User, (user) => user.channels)
+  @Field(() => Conversation)
+  @ManyToOne(() => Conversation)
+  @JoinColumn({
+    name: 'id',
+    referencedColumnName: 'receiverId',
+  })
+  conversation?: Conversation;
+
+  @Field(() => Int)
+  @Column({
+    select: false,
+    insert: false,
+    readonly: true,
+  })
+  members?: number;
+
+  @ManyToMany(() => User)
   @JoinTable({
     name: 'channel_users',
     joinColumn: {

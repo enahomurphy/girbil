@@ -25,7 +25,6 @@ export const Text = styled.p`
 Text.defaultProps = {
   margin: '0',
   size: '14px',
-  align: 'left',
   position: 'initial',
   weight: 'initial',
 };

@@ -34,10 +34,11 @@ export const USER_CONVERSATIONS = gql`
 
 export const CONVERSATION = gql`
   query conversation($conversationId: String!) {
-    conversation(conversationId: $conversationId) @client {
+    conversation(conversationId: $conversationId) {
       ...ConversationParts
       channel {
         ...ChannelParts
+        members
       }
       receiver {
         ...UserParts
@@ -108,9 +109,30 @@ export const GET_MESSAGE = gql`
   ${MESSAGE_FRAGMENT}
 `;
 
+
+export const GET_USERS_WITHOUT_CONVERSATION = gql`
+  query usersWithoutConversation($query: String) {
+    usersWithoutConversation(q: $query) {
+      id
+      name
+      avatar
+    }
+  }
+`;
+
+export const GET_USER_CONVERSATION_OR_CREATE = gql`
+  query getUserConversationOrCreate($userId: String!) {
+    getUserConversationOrCreate(userId: $userId) {
+      ...ConversationParts
+    }
+  }
+  ${CONVERSATION_FRAGMENT}
+`;
+
 export default {
   MESSAGES,
   GET_MESSAGE,
   USER_CONVERSATIONS,
-  CONVERSATION_MESSAGES
+  CONVERSATION_MESSAGES,
+  GET_USERS_WITHOUT_CONVERSATION
 };

@@ -46,4 +46,9 @@
   --gb-record-z-index: 2;
 
   --gb-gallery-height: 120px;
+
+  --f7-toggle-active-color: var(--gb-green);
+  --f7-toggle-height: 24px;
+  --f7-toggle-width: 40px;
+  --f7-toggle-inactive-color: #ffffff;
 }

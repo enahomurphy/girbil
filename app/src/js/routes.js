@@ -69,7 +69,6 @@ const routes = [
   {
     name: 'thread',
     path: '/conversations/:conversationId/:threadId/thread',
-    id: 'view',
     component: Thread,
     options: {
       animate: true,
@@ -97,6 +96,91 @@ const routes = [
         component: Message,
         options: {
           ignoreCache: true,
+        },
+      },
+    ],
+  },
+  {
+    path: '/users',
+    name: 'profile',
+    routes: [
+      {
+        name: 'user-profile',
+        path: '/:userId/profile',
+        async(routeTo, routeFrom, resolve) {
+          const reactComponent = () => import('@/pages/User/Profile');
+          reactComponent().then((rc) => {
+            resolve({ component: rc.default });
+          });
+        },
+        options: {
+          props: {
+            title: 'Create a Channel',
+          },
+        },
+      },
+    ],
+  },
+  {
+    name: 'channels',
+    path: '/channels',
+    async(routeTo, routeFrom, resolve) {
+      const reactComponent = () => import('@/pages/Channel/Channel');
+      reactComponent().then((rc) => {
+        resolve({ component: rc.default });
+      });
+    },
+    routes: [
+      {
+        name: 'channels-create',
+        path: '/create',
+        async(routeTo, routeFrom, resolve) {
+          const reactComponent = () => import('@/pages/Channel/Create');
+          reactComponent().then((rc) => {
+            resolve({ component: rc.default });
+          });
+        },
+        options: {
+          props: {
+            title: 'Create a Channel',
+          },
+        },
+      },
+      {
+        name: 'channels-edit',
+        path: '/:channelId/edit',
+        async(routeTo, routeFrom, resolve) {
+          const reactComponent = () => import('@/pages/Channel/Create');
+          reactComponent().then((rc) => {
+            resolve({ component: rc.default });
+          });
+        },
+        options: {
+          props: {
+            title: 'Edit Channel',
+          },
+        },
+      },
+      {
+        name: 'channels-view',
+        path: '/:channelId',
+        async(routeTo, routeFrom, resolve) {
+          const reactComponent = () => import('@/pages/Channel/ViewChannel');
+          reactComponent().then((rc) => {
+            resolve({ component: rc.default });
+          });
+        },
+      },
+      {
+        name: 'channels-add-people',
+        path: '/:channelId/add-people',
+        async(routeTo, routeFrom, resolve) {
+          const reactComponent = () => import('@/pages/Channel/AddPeople/index');
+          reactComponent().then((rc) => {
+            resolve({ component: rc.default });
+          });
+        },
+        options: {
         },
       },
     ],

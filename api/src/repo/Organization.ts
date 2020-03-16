@@ -27,6 +27,7 @@ class OrganizationRepository extends Repository<Organization> {
       return plainToClass(Organization, {
         ...organization.organization,
         role: organization.role,
+        position: organization.position,
       });
     }
 
@@ -57,6 +58,15 @@ class OrganizationRepository extends Repository<Organization> {
 
       throw new Error(error.message);
     }
+  }
+
+  async hasUser(userId: string, organizationId: string): Promise<Organization> {
+    return this.userOrgRepo.findOne({
+      where: {
+        userId,
+        organizationId,
+      },
+    });
   }
 }
 

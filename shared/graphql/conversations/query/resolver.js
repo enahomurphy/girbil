@@ -1,8 +1,8 @@
 import {
   GET_MESSAGES,
-  CONVERSATION,
   USER_CONVERSATIONS,
-  CONVERSATION_MESSAGES
+  CONVERSATION_MESSAGES,
+  CONVERSATION
 } from './query';
 import { get } from '../../../lib';
 
@@ -33,17 +33,17 @@ export const conversation = (_, { conversationId }, { cache }) => {
 }
 
 export const conversationMeta = (_, { conversationId }, { cache }) => {
-  const { conversations } = cache.readQuery({
-    query: USER_CONVERSATIONS,
+  console.log(conversationId);
+  const { conversation } = cache.readQuery({
+    query: CONVERSATION,
     variables: { conversationId }
   });
-
   const {
     id,
     receiverType,
     receiver,
     channel,
-  } = conversations.find(({ id }) => id === conversationId);
+  } = conversation;
 
   const data = {
     id,

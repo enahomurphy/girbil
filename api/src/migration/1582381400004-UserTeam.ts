@@ -10,8 +10,14 @@ export class UsersTeam1582381400004 implements MigrationInterface {
       CREATE TABLE IF NOT EXISTS "user_teams" (
         "user_id" uuid NOT NULL,
         "team_id" uuid NOT NULL,
-        PRIMARY KEY ("user_id", "team_id")
+        PRIMARY KEY ("user_id", "team_id"),
+        FOREIGN KEY ("user_id") REFERENCES "users" ("id"),
+        FOREIGN KEY ("team_id") REFERENCES "teams" ("id")
       );
+    `);
+
+    await queryRunner.query(`
+      CREATE INDEX ON "user_teams" ("user_id", "team_id");
     `);
   }
 

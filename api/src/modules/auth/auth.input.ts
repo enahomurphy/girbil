@@ -1,7 +1,5 @@
 import { Field, InputType } from 'type-graphql';
-import {
-  IsEmail, ValidateNested, IsArray, IsUUID,
-} from 'class-validator';
+import { IsEmail } from 'class-validator';
 
 @InputType()
 export class LoginInput {

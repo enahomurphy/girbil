@@ -17,12 +17,15 @@ export class Message1582381400010 implements MigrationInterface {
         "read" jsonb[],
         "reaction" jsonb[],
         "parent_id" uuid,
-        "created_at" timestamp DEFAULT Now()
+        "created_at" timestamp DEFAULT Now(),
+        FOREIGN KEY ("sender_id") REFERENCES "users" ("id"),
+        FOREIGN KEY ("conversation_id") REFERENCES "conversations" ("id"),
+        FOREIGN KEY ("parent_id") REFERENCES "messages" ("id")
       );
     `);
 
     await queryRunner.query('CREATE INDEX ON "messages" ("conversation_id")');
-    await queryRunner.query('CREATE INDEX ON "messages" ("conversation_id", "parent_id") WHERE "parent_id" IS NOT NULL');
+    await queryRunner.query('CREATE INDEX ON "messages" ("conversation_id", "parent_id")');
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {

@@ -1,7 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from 'framework7-react';
-import { Title, Text } from '@/components/Style';
+import {
+  Icon, ListItem, List, Link,
+} from 'framework7-react';
+import {
+  Title, Text, Popover, Block,
+} from '@/components/Style';
 import { Back, Lock } from '@/components/Icon';
 import { BackIcon, StyledHeader } from './style';
 
@@ -11,6 +15,7 @@ const ThreadHeader = ({ isPrivate, name }) => (
       margin="0 0 5px 0"
       size="24px"
       weight="700"
+      align="center"
     >
       Thread
     </Title>
@@ -31,47 +36,76 @@ ThreadHeader.propTypes = {
   isPrivate: PropTypes.bool.isRequired,
 };
 
-const MessageHeader = ({ isPrivate, name }) => (
-  <>
-    <Title
-      margin="0 0 7px 0"
-      width="100%"
-      size="24px"
-      transform="lowercase"
-    >
-      {isPrivate && (
+const MessageHeader = ({
+  isPrivate, name, members, isChannel,
+}) => (
+  <Block>
+    <Link popoverOpen=".message-header-popover-menu">
+      <Title
+        margin="0 0 7px 0"
+        width="100%"
+        size="24px"
+        transform="lowercase"
+        align="center"
+      >
+        {isPrivate && (
         <span style={{ marginRight: '5px' }}>
           <Lock width="12px" height="16px" />
         </span>
-      ) }
-      {name}
-      <Icon f7="chevron_right" style={{ fontSize: '16px', marginLeft: '10px' }} />
-    </Title>
-    <Text color="var(--gb-medium-grey)">3 members</Text>
-  </>
+        ) }
+        {name}
+        <Icon f7="chevron_right" style={{ fontSize: '16px', marginLeft: '10px' }} />
+      </Title>
+    </Link>
+    {
+      isChannel && <Text align="center" color="var(--gb-medium-grey)">{`${members} members`}</Text>
+    }
+  </Block>
 );
 
 MessageHeader.propTypes = {
   isPrivate: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
+  members: PropTypes.number.isRequired,
+  isChannel: PropTypes.bool.isRequired,
 };
 
 const Header = ({
-  back, goBack, onClick, isThread, isPrivate, name,
+  back, goBack, onClick, isThread, isPrivate, name, members, isChannel, typeId,
 }) => (
   <StyledHeader>
-    <BackIcon back={back} onClick={goBack}>
+    <Popover className="message-header-popover-menu">
       {
-        back ? <Back /> : <Icon f7="multiply" />
-      }
+        isChannel ? (
+          <List>
+            <ListItem link={`/channels/${typeId}/add-people`} popoverClose title="Add users to channel" />
+            <ListItem link={`/channels/${typeId}`} popoverClose title="View channel details" />
+            <ListItem link={`/channels/${typeId}/edit`} popoverClose title="Edit channel settings" />
+          </List>
+        ) : (
+          <List>
+            <ListItem link={`/users/${typeId}/profile`} popoverClose title="View user profile" />
+          </List>
+        )
+       }
+    </Popover>
+    <BackIcon back={back} onClick={goBack}>
+      { back ? <Back /> : <Icon f7="multiply" /> }
     </BackIcon>
-    <div role="presentation" onClick={onClick}>
-      { isThread ? (
-        <ThreadHeader isPrivate={isPrivate} name={name} />
-      ) : (
-        <MessageHeader isPrivate={isPrivate} name={name} />
-      )}
-    </div>
+    <Block role="presentation" onClick={onClick}>
+      {
+        isThread
+          ? (<ThreadHeader isPrivate={isPrivate} name={name} />)
+          : (
+            <MessageHeader
+              isChannel={isChannel}
+              members={members}
+              isPrivate={isPrivate}
+              name={name}
+            />
+          )
+      }
+    </Block>
   </StyledHeader>
 );
 
@@ -87,6 +121,9 @@ Header.propTypes = {
   goBack: PropTypes.func.isRequired,
   isPrivate: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
+  members: PropTypes.number.isRequired,
+  isChannel: PropTypes.bool.isRequired,
+  typeId: PropTypes.string.isRequired,
 };
 
 export default Header;

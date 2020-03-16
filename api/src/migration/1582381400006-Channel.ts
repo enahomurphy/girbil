@@ -19,12 +19,19 @@ export class Channel1582381400006 implements MigrationInterface {
         "user_id" uuid,
         "avatar" varchar,
         "last_updated_by_id" uuid,
-        "organization_id" uuid,
+        "organization_id" uuid  NOT NULL,
         "owner_id" uuid NOT NULL,
-        "owner_type" channel_type DEFAULT 'team' NOT NULL,
+        "owner_type" channel_type DEFAULT 'organization' NOT NULL,
         "created_at" timestamp DEFAULT Now(),
-        "updated_at" timestamp DEFAULT Now()
+        "updated_at" timestamp DEFAULT Now(),
+        FOREIGN KEY ("user_id") REFERENCES "users" ("id"),
+        FOREIGN KEY ("last_updated_by_id") REFERENCES "users" ("id"),
+        FOREIGN KEY ("organization_id") REFERENCES "organizations" ("id")
       );
+    `);
+
+    await queryRunner.query(`
+     CREATE INDEX channel_org_idx ON "channels" ("user_id", "organization_id");
     `);
   }
 

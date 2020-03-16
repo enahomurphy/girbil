@@ -11,9 +11,15 @@ export class ChannelUser1582381400008 implements MigrationInterface {
         "user_id" uuid,
         "channel_id" uuid,
         "accepted" boolean DEFAULT false,
-        PRIMARY KEY ("user_id", "channel_id")
+        PRIMARY KEY ("user_id", "channel_id"),
+        FOREIGN KEY ("channel_id") REFERENCES "channels" ("id"),
+        FOREIGN KEY ("user_id") REFERENCES "users" ("id")
       );
     `);
+
+    await queryRunner.query(
+      'CREATE INDEX ON "channel_users" ("channel_id")',
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {

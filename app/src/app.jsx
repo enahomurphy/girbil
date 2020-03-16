@@ -41,6 +41,8 @@ const MainApp = () => {
   return (
     <ApolloProvider client={client}>
       <App params={f7params} themeDark>
+        {/* <View main url="/users/4cd8a5b3-bce4-49ab-a0c7-cb17874a1914/profile" /> */}
+        {/* <View channel url="/channels/d1f9a291-cf2e-4bff-8606-724e8ab7d5c1" /> */}
         <View main url="/conversations" />
       </App>
     </ApolloProvider>

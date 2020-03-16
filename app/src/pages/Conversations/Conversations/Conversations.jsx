@@ -2,11 +2,11 @@
 import React from 'react';
 import { Page, List, ListItem } from 'framework7-react';
 
+import { storage } from '@shared/lib';
 import { query } from '@shared/graphql/conversations';
-import { Text } from '@/components/Style';
+import ConversationListItem from '@/components/List/ListItem';
 import ConversationHeader from './ConversationHeader';
-import ConversationListItem from './ConversationListItem';
-import { StyledUser, Active } from './style';
+import UserInfo from './UserInfo';
 
 const Conversations = () => {
   const { conversations } = query.getUserConversations();
@@ -14,10 +14,7 @@ const Conversations = () => {
   return (
     <Page>
       <ConversationHeader />
-      <StyledUser type="flex" margin="16px 0 0 0" align="center">
-        <Active active />
-        <Text color="#EFEFEF" margin="0" align="left">Jeff Whitlock</Text>
-      </StyledUser>
+      <UserInfo user={storage.payload} />
       <List className="searchbar-not-found">
         <ListItem title="Nothing found" />
       </List>
@@ -27,6 +24,19 @@ const Conversations = () => {
             id, receiver, channel, receiverType,
           }) => (receiverType === 'user' ? (
             <ConversationListItem
+              options={[
+                {
+                  title: 'View Profile',
+                  getLink: () => `/users/${receiver.id}/profile`,
+                  clickable: false,
+                },
+                {
+                  title: 'Close Direct Message',
+                  clickable: false,
+                  onClick: () => {},
+                },
+              ]}
+              getLink={() => `/conversations/${id}/`}
               key={id}
               id={id}
               isChannel={false}
@@ -42,11 +52,24 @@ const Conversations = () => {
             />
           ) : (
             <ConversationListItem
+              options={[
+                {
+                  title: 'View Channel',
+                  getLink: () => `/channels/${channel.id}`,
+                  clickable: false,
+                },
+                {
+                  title: 'Leave Channel',
+                  clickable: true,
+                  onClick: () => {},
+                },
+              ]}
+              getLink={() => `/conversations/${id}/`}
               key={id}
-              id={id}
               unreadCount={44}
               isActive={false}
               isChannel
+              id={id}
               isPrivate={channel.isPrivate}
               user={{
                 id: channel.id,

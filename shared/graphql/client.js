@@ -40,8 +40,8 @@ const errrorLink = onError(({ graphQLErrors, networkError }) => {
   if (networkError) {
     console.error(`[Network error]: ${networkError.statusCode}`);
     if (networkError.statusCode === 401) {
-      storage.clear();
-      window.location.href = '/';
+      // storage.clear();
+      // window.location.href = '/';
     }
   }
 });

@@ -1,40 +1,45 @@
-import React, { Fragment } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { Fragment, useState, useEffect } from 'react';
+import { useQuery } from '@apollo/client';
+
 import Layout from '@/components/layout';
-import { Text, Title, Flex } from '@/components/styles';
+import { query } from '@shared/graphql/organizations';
+import { get } from '@shared/lib';
+import { useOrg } from '../../hooks';
 import PageButton from '../../PageButton';
 import EditName from './EditName';
+import EditDomain from './EditDomain';
 
 const OrgSetting = () => {
-  const { push } = useHistory();
+  const org = useOrg();
+  const { data } = useQuery(query.GET_ORGANIZATION, {
+    variables: { organizationId: org.id },
+  });
+  const [details, setName] = useState({ name: '', domain: '' });
+  const [editDomain, setEditDomain] = useState(false);
+  const { domain, name } = get(data, 'organization', { domain: '', name: '' });
+
+  useEffect(() => {
+    setName({ name, domain });
+  }, [name, domain]);
 
   return (
-    <Layout title="Organization settings">
+    <Layout title={editDomain ? 'Edit organization URL' : 'Organization settings'}>
       <Fragment>
-        <EditName />
-        <Flex justify="space-between" align="flex-end">
-          <div>
-            <Text
-              margin="0 0 8px 0"
-              color="var(--gb-web-grey-medium)"
-              weight="bold"
-              transform="uppercase"
-            >
-              weave.unbird.com
-            </Text>
-            <Title>Weave</Title>
-          </div>
-          <Text
-            weight="600"
-            color="var(--gb-web-blue)"
-            transform="uppercase"
-            cursor="pointer"
-            onClick={() => push('/organizations/settings/domain')}
-          >
-            Edit
-          </Text>
-        </Flex>
-
+        {
+          !editDomain && (
+            <EditName
+              name={details.name}
+              handleNameChange={value => setName({ ...details, name: value })}
+            />
+          )
+        }
+        <EditDomain
+          name={details.name}
+          domain={details.domain}
+          handleDomainChange={value => setName({ ...details, domain: value })}
+          onEditClicked={setEditDomain}
+          editDomain={editDomain}
+        />
         <PageButton
           action={() => {}}
           actionText="Update"

@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 import {
   Text, Title, Flex, Input, InputWithError,
 } from '@/components/styles';
 
-const EditName = () => {
-  const [editName, setEditName] = useState(true);
-  const handleChange = () => {};
+const EditName = ({ name, handleNameChange }) => {
+  const [editName, setEditName] = useState(false);
 
   return (
     <Flex
-      margin="27px 0 0 0"
+      margin="27px 0 24px 0"
       justify="space-between"
-      direction="column"
+      direction={editName ? 'column' : 'initial'}
       align={editName ? 'flex-start' : 'flex-end'}
     >
       <div>
@@ -24,7 +24,7 @@ const EditName = () => {
         >
           name
         </Text>
-        {!editName && (<Title>Weave</Title>)}
+        {!editName && (<Title>{name}</Title>)}
       </div>
       {
         !editName && (
@@ -39,7 +39,6 @@ const EditName = () => {
           </Text>
         )
       }
-
       {
         editName && (
           <div>
@@ -48,9 +47,9 @@ const EditName = () => {
                 className="bordered"
                 align="left"
                 transform="capitalize"
-                placeholder="email"
-                value="email"
-                onChange={handleChange()}
+                placeholder="Organization name"
+                value={name}
+                onChange={({ target }) => handleNameChange(target.value)}
               />
             </InputWithError>
           </div>
@@ -60,5 +59,10 @@ const EditName = () => {
   );
 };
 
+
+EditName.propTypes = {
+  handleNameChange: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+};
 
 export default EditName;

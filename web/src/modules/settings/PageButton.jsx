@@ -43,11 +43,13 @@ const PageButton = ({
 
 PageButton.defaultProps = {
   danger: false,
+  close: () => {},
+  closeText: '',
 };
 
 PageButton.propTypes = {
-  close: PropTypes.func.isRequired,
-  closeText: PropTypes.string.isRequired,
+  close: PropTypes.func,
+  closeText: PropTypes.string,
   action: PropTypes.func.isRequired,
   actionText: PropTypes.string.isRequired,
   danger: PropTypes.bool,

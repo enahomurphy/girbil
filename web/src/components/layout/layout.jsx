@@ -67,7 +67,7 @@ Layout.propTypes = {
   title: PropTypes.string.isRequired,
   loading: PropTypes.bool,
   nav: PropTypes.element,
-  padding: PropTypes.element,
+  padding: PropTypes.string,
   buttonText: PropTypes.string,
   buttonAction: PropTypes.func,
   backAction: PropTypes.oneOf([PropTypes.func, null]),

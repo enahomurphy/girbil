@@ -18,7 +18,7 @@ const Second = ({
       Create organization URL
     </Title>
     <Text margin="0 0 24px 0">
-      We’ll use this URL to customize invitations to join your organiztion.
+      We’ll use this URL to customize invitations to join your organization.
       We also have other exciting plans in the works for it.
     </Text>
     <InputWrapper>

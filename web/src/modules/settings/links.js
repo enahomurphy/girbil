@@ -6,7 +6,7 @@ export default [
       {
         id: 1,
         name: 'account management',
-        link: '/organizations/settings/management',
+        link: '/settings/management',
       },
     ],
   },
@@ -17,17 +17,17 @@ export default [
       {
         id: 1,
         name: 'settings',
-        link: '/organizations/settings/setting',
+        link: '/settings/organization',
       },
       {
         id: 2,
         name: 'users & permissions',
-        link: '/organizations/settings/users/permissions',
+        link: '/settings/users/permissions',
       },
       {
         id: 3,
         name: 'plan & billing',
-        link: '/organizations/settings/billing',
+        link: '/settings/billing',
       },
     ],
   },

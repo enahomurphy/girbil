@@ -1,20 +1,20 @@
 import { NextFn, createMethodDecorator } from 'type-graphql';
-import { getCustomRepository } from 'typeorm';
-
-import { OrganizationRepo } from '../../repo';
 import { unAuthError } from './Errorhandler';
 
 export const CanViewOrganization = createMethodDecorator(
   async ({ context }, next): NextFn => {
-    const orgRepo = getCustomRepository(OrganizationRepo);
+    if (!context.user.organization) {
+      return unAuthError(context, 'Organization does not exit');
+    }
 
-    const org = await orgRepo.hasUser(
-      context.user.organization.id,
-      context.user.id,
-    );
+    return next();
+  },
+);
 
-    if (!org) {
-      return unAuthError(context, 'Conversation does not exit');
+export const CanEditOrganization = createMethodDecorator(
+  async ({ context }, next): NextFn => {
+    if (!context.user.organization) {
+      return unAuthError(context, 'Organization does not exit');
     }
 
     return next();

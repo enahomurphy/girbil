@@ -9,22 +9,29 @@ class ConversationRepository extends Repository<Conversation> {
   private readonly userOrgRepo = getRepository(UserOrganization)
 
   async conversations(userId: string, organizationId: string): Promise<UserConversations[]> {
-    const conversations = await this.manager.find(UserConversations, {
-      where: [
-        {
-          userId,
-          organizationId,
-        },
-        {
-          creatorId: userId,
-        },
-        {
-          receiverId: userId,
-          organizationId,
-        },
-      ],
-      relations: ['receiver', 'channel', 'creator'],
-    });
+    const query = this.createQueryBuilder('conversation')
+      .setParameter('userId', userId)
+      .setParameter('organizationId', organizationId)
+      .leftJoinAndSelect('conversation.creator', 'creator')
+      .leftJoinAndSelect('conversation.receiver', 'receiver')
+      .leftJoinAndSelect('conversation.channel', 'channel')
+      .where("conversation.receiver_type = 'channel'");
+
+    query.andWhere(`
+      (
+        SELECT COUNT(channel_users.user_id)
+        FROM channel_users
+        WHERE user_id = :userId
+        AND channel_id = conversation.receiver_id
+        LIMIT 1
+      ) = 1
+    `);
+
+    const conversations = await query.orWhere('conversation.creator_id = :userId')
+      .orWhere('conversation.receiver_id = :userId')
+      .andWhere("conversation.receiver_type = 'user'")
+      .andWhere('conversation.organizationId = :organizationId')
+      .getMany();
 
     return conversations.map((conversation) => {
       if (conversation.receiverType !== ConversationType.CHANNEL) {

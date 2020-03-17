@@ -1,7 +1,6 @@
-
 import Express from 'express';
 import { getCustomRepository } from 'typeorm';
-import { UserRepo } from '../repo';
+import { UserRepo, OrganizationRepo } from '../repo';
 import { decode } from '../utils/jwt';
 
 const Authenticated = async (
@@ -10,15 +9,32 @@ const Authenticated = async (
   next: Express.NextFunc,
 ): Promise<void> => {
   const userRepo = getCustomRepository(UserRepo);
+  const orgRepo = getCustomRepository(OrganizationRepo);
+
   const tokenWithBearer = req.headers.authorization || '';
   const token = tokenWithBearer.split(' ')[1];
   const user = decode(token);
 
   if (user) {
-    const foundUser = await userRepo.findOne({ id: user.id });
+    const { organization, id } = user;
+    const foundUser = await userRepo.findOne({ id });
+
     if (foundUser) {
       req.user = foundUser.user;
-      req.user.organization = user.organization;
+
+      if (organization) {
+        const orgAccount = await orgRepo.hasUser(
+          organization.id,
+          user.id,
+        );
+
+        if (orgAccount) {
+          organization.role = orgAccount.role;
+          req.user.organization = organization;
+        } else {
+          req.user.organization = null;
+        }
+      }
     }
   }
 

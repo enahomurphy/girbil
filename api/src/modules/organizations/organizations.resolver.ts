@@ -77,7 +77,7 @@ class OrganizationResolver implements ResolverInterface<Organization> {
   }
 
 
-  @Authorized()
+  @Authorized('admin', 'owner')
   @Query(() => [UserOrganization])
   async organizationUsers(@Ctx() { user }: ContextType): Promise<UserOrganization[]> {
     return this.orgRepo.orgUsers(user.organization.id);
@@ -90,12 +90,31 @@ class OrganizationResolver implements ResolverInterface<Organization> {
       @Arg('userId') @IsUUID() userId: string,
       @Ctx() { user: { organization } }: ContextType,
   ): Promise<string> {
-    await this.changUserRole(
+    const orgUser = await this.orgRepo.hasUser(
+      organization.id,
+      userId,
+    );
+
+    if (!orgUser) {
+      throw new Error('User done not exist');
+    }
+
+
+    if (orgUser.role === RoleType.OWNER) {
+      throw new Error('Cannot update, user is an owner');
+    }
+
+    if (organization.role !== RoleType.OWNER && role === RoleType.OWNER) {
+      throw new Error('Only owner can make another user an owner');
+    }
+
+    await this.orgRepo.changeRole(
       organization.id,
       userId,
       role,
     );
-    return 'User role updates';
+
+    return 'User role updated';
   }
 
   @Authorized()

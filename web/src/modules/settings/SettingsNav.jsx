@@ -26,7 +26,7 @@ const SettingsNav = () => {
             width="100%"
             size="14px"
           >
-            John doe
+            {storage.payload.name}
           </Title>
         </Flex>
       </UserInfo>

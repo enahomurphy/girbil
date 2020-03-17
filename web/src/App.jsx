@@ -9,7 +9,7 @@ import { ApolloProvider } from '@apollo/client';
 import { ToastProvider } from 'react-toast-notifications';
 
 import client from '@shared/graphql/client';
-import Header from './components/header';
+import Header from './modules/header';
 import Home from './modules/home/Home';
 import Share from './modules/share';
 import Download from './modules/Download';

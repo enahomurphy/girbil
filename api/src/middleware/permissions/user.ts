@@ -5,11 +5,11 @@ import { OrganizationRepo } from '../../repo';
 import { notFoundError } from './Errorhandler';
 
 export const CanViewUser = createMethodDecorator(
-  async ({ context, args }, next): NextFn => {
+  async ({ context }, next): NextFn => {
     const orgRepo = getCustomRepository(OrganizationRepo);
     const user = await orgRepo.hasUser(
-      args.userId,
       context.user.organization.id,
+      context.user.id,
     );
 
     if (!user) {

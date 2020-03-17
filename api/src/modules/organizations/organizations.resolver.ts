@@ -21,12 +21,12 @@ import { ContextType } from '../../interfaces';
 import { OrganizationRepo } from '../../repo';
 import { CreateOrganizationType } from './organization.type';
 import { sign } from '../../utils/jwt';
+import { CanView } from '../../middleware/permissions';
 
 
 registerEnumType(RoleType, {
   name: 'RoleType',
 });
-
 
 @Resolver(Organization)
 class OrganizationResolver implements ResolverInterface<Organization> {
@@ -36,6 +36,14 @@ class OrganizationResolver implements ResolverInterface<Organization> {
   @Query(() => [Organization])
   async organizations(@Ctx() { user }: ContextType): Promise<Organization[]> {
     return this.orgRepo.findUserOrganizations(user.id);
+  }
+
+  @Authorized('owner', 'admin', 'user')
+  @CanView('organization')
+  @Query(() => Organization, { nullable: true })
+  async organization(@Arg('organizationId') @IsUUID() organizationId: string): Promise<Organization> {
+    const organization = await this.orgRepo.findOne({ where: { id: organizationId } });
+    return organization || null;
   }
 
   @Authorized()
@@ -127,3 +135,26 @@ export class CreateOrganizationTypeResolver implements ResolverInterface<CreateO
 }
 
 export default OrganizationResolver;
+
+// @Authorized('admin', 'owner')
+// @Mutation(() => String)
+// async deleteUser(
+//   @Arg('userId') @IsUUID() userId: string,
+//     @Ctx() { user: { id, organization } }: ContextType,
+// ): Promise<string> {
+//   const user = await this.orgRepo.hasUser(userId, organization.id);
+
+//   if (!user) {
+//     throw new Error('User does not exist');
+//   }
+
+//   if (user.userId === userId || user.role === RoleType.OWNER) {
+//     throw new Error('User cannot be removed');
+//   }
+
+//   //
+
+//   await this.orgRepo.deleteUser(organization.id, userId);
+
+//   return 'user has been removed for organization';
+// }

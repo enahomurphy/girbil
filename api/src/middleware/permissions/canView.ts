@@ -1,6 +1,7 @@
 import { ErrorHandler } from './Errorhandler';
 import { CanViewConversation } from './conversations';
 import { CanViewUser } from './user';
+import { CanViewOrganization } from './organization';
 
 export const CanView = (type: string): void => {
   switch (type) {
@@ -8,6 +9,8 @@ export const CanView = (type: string): void => {
       return CanViewConversation;
     case 'user':
       return CanViewUser;
+    case 'organization':
+      return CanViewOrganization;
     default:
       return ErrorHandler;
   }

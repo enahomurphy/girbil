@@ -18,3 +18,8 @@ export const notFoundError = (context, message?: string): void => {
   context.res.status(403);
   throw new NotFoundError(message);
 };
+
+export const unAuthError = (context, message?: string): void => {
+  context.res.status(403);
+  throw new NotFoundError(message || 'You are not allowed to access this resource');
+};

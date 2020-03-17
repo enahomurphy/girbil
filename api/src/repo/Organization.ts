@@ -60,7 +60,7 @@ class OrganizationRepository extends Repository<Organization> {
     }
   }
 
-  async hasUser(userId: string, organizationId: string): Promise<UserOrganization> {
+  async hasUser(organizationId: string, userId: string): Promise<UserOrganization> {
     return this.userOrgRepo.findOne({
       where: {
         userId,

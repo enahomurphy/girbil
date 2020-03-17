@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import { Flex, Text } from '@/components/styles';
-import PageButton from '../../PageButton';
 
 const StyledInput = styled.input`
   width: initial;
@@ -12,22 +11,25 @@ const StyledInput = styled.input`
 const roles = [
   {
     id: 1,
-    value: '',
+    value: 'owner',
     text: 'Organization Owner',
+    selected: false,
   },
   {
-    id: 1,
-    value: '',
+    id: 2,
+    value: 'admin',
     text: 'Organization Admin',
+    selected: false,
   },
   {
-    id: 1,
-    value: '',
+    id: 3,
+    value: 'user',
     text: 'Full Member',
+    selected: false,
   },
 ];
 
-const ChangeRole = ({ close }) => (
+const ChangeRole = ({ role, handleChange }) => (
   <div>
     <Text margin="16px 0 48px 0" size="14px">
       Choose what account type Alexis Jones will have in the Weave organization .
@@ -35,22 +37,24 @@ const ChangeRole = ({ close }) => (
     {
       roles.map(({ value, id, text }) => (
         <Flex key={id}>
-          <StyledInput width="initial" type="radio" name="role" value={value} />
+          <StyledInput
+            checked={role === value}
+            onChange={() => handleChange(value)}
+            width="initial"
+            type="radio"
+            name="role"
+            value={value}
+          />
           <Text margin="0 0 0  16px" color="#ffffff" weight="700" size="18px">{text}</Text>
         </Flex>
       ))
     }
-    <PageButton
-      close={close}
-      closeText="CANCEL"
-      action={() => {}}
-      actionText="Update"
-    />
   </div>
 );
 
 ChangeRole.propTypes = {
-  close: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  role: PropTypes.string.isRequired,
 };
 
 export default ChangeRole;

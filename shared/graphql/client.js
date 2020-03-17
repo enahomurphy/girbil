@@ -30,8 +30,7 @@ const defaultOptions = {
 };
 
 
-const errrorLink = onError(({ graphQLErrors, networkError, ...props }) => {
-  console.log()
+const errrorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
     graphQLErrors.map(({ message, locations, path }) => console.error(
       `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,

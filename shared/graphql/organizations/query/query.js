@@ -36,8 +36,25 @@ export const GET_ORGANIZATION = gql`
   ${ORGANIZATION_FRAGMENT}
 `;
 
+export const GET_ORGANIZATION_USERS = gql`
+  query organizationUsers  {
+    organizationUsers {
+      position
+      role
+      organizationId,
+      user {
+        id
+        avatar
+        name
+        email
+      }
+    }
+  }
+`;
+
 export default {
   ORGANIZATIONS,
   GET_ORGANIZATION_BY_DOMAIN,
   GET_ORGANIZATION,
+  GET_ORGANIZATION_USERS,
 };

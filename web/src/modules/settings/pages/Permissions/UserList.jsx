@@ -1,72 +1,32 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 
 import {
   Image, Text, Title, Active, Flex,
 } from '@/components/styles';
+import { storage } from '@shared/lib';
 import More from '@/components/icons/More';
 import { useClickAway } from 'react-use';
+import { useRoles } from '../../hooks';
+import { Options } from './style';
 
-
-const Options = styled(Flex)`
-  padding-bottom: 8px;
-  width: 176px;
-  position: absolute;
-  left: -180px;
-  top: 3px;
-  flex-direction: column;
-  align-items: flex-start;
-  border-radius: 5px;
-  background: #333333;
-  padding: 0px;
-  box-shadow: 0px 2px 20px var(--gb-dark-grey);
-  cursor: pointer;
-
-  .option {
-    width: 100%;
-    padding: 8px;
-    border-radius: 5px;
-
-    &:hover {
-      background: var(--gb-accent);
-    }
-
-    p {
-      font: normal 12px/14px Source Sans Pro;
-      text-transform: capitalize;
-      cursor: pointer;
-      &:hover {
-        color: #ffffff;
-      }
-    }
-  }
-
-  .danger {
-    p {
-      color: var(--gb-red);
-    }
-
-    &:hover {
-      p {
-        color: #ffffff;
-      }
-
-      background: var(--gb-red);
-    }
-  }
-`;
 
 const UserList = ({
-  avatar, email, name, onChangeAccount, onDeleteAccount,
+  avatar, email, name, role, onChangeAccount, onDeleteAccount,
 }) => {
   const [show, setShow] = useState(false);
   const ref = useRef();
+  const roles = useRoles();
 
   useClickAway(ref, () => setShow(false));
 
+  const canChangeRole = (
+    roles[role] !== roles.owner
+    && storage.payload.id !== 'id'
+  );
+
   return (
-    <Flex justify="space-between" align="center">
+    <Flex margin="0 0 18px 0" justify="space-between" align="center">
       <Flex>
         <Image src={avatar} width="32px" height="40px" />
         <Flex
@@ -89,7 +49,7 @@ const UserList = ({
         </Flex>
       </Flex>
       <Flex align="center" justify="space-between">
-        <Text margin="0 15px 0 0 ">Organization Admin</Text>
+        <Text margin="0 15px 0 0 ">{`Organization ${role}`}</Text>
         <span
           role="presentation"
           onClick={() => setShow(!show)}
@@ -97,25 +57,31 @@ const UserList = ({
             position: 'relative', cursor: 'pointer', display: 'flex',
           }}
         >
-          <More />
           {
-            show && (
-              <Options ref={ref}>
-                <div
-                  role="presentation"
-                  onClick={onChangeAccount}
-                  className="option"
-                >
-                  <Text>Change account type</Text>
-                </div>
-                <div
-                  role="presentation"
-                  onClick={onDeleteAccount}
-                  className="option danger"
-                >
-                  <Text>Remove member</Text>
-                </div>
-              </Options>
+            canChangeRole && (
+              <Fragment>
+                <More />
+                {
+                  show && (
+                    <Options ref={ref}>
+                      <div
+                        role="presentation"
+                        onClick={onChangeAccount}
+                        className="option"
+                      >
+                        <Text>Change account type</Text>
+                      </div>
+                      <div
+                        role="presentation"
+                        onClick={onDeleteAccount}
+                        className="option danger"
+                      >
+                        <Text>Remove member</Text>
+                      </div>
+                    </Options>
+                  )
+                }
+              </Fragment>
             )
           }
         </span>
@@ -128,6 +94,7 @@ UserList.propTypes = {
   avatar: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
+  role: PropTypes.string.isRequired,
   onChangeAccount: PropTypes.func.isRequired,
   onDeleteAccount: PropTypes.func.isRequired,
 };

@@ -38,7 +38,7 @@ const App = () => (
           <Authenticated exact path="/organizations/create" component={Create} />
           <Authenticated exact path="/organizations/invite" component={Invite} />
           <Route path="/settings" component={Settings} />
-          <Route exact path="*" component={NotFound} />
+          <Route path="*" component={NotFound} />
           <Route path="/user/invite">
             <div>Invite user</div>
           </Route>

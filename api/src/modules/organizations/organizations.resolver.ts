@@ -187,26 +187,3 @@ export class CreateOrganizationTypeResolver implements ResolverInterface<CreateO
 }
 
 export default OrganizationResolver;
-
-// @Authorized('admin', 'owner')
-// @Mutation(() => String)
-// async deleteUser(
-//   @Arg('userId') @IsUUID() userId: string,
-//     @Ctx() { user: { id, organization } }: ContextType,
-// ): Promise<string> {
-//   const user = await this.orgRepo.hasUser(userId, organization.id);
-
-//   if (!user) {
-//     throw new Error('User does not exist');
-//   }
-
-//   if (user.userId === userId || user.role === RoleType.OWNER) {
-//     throw new Error('User cannot be removed');
-//   }
-
-//   //
-
-//   await this.orgRepo.deleteUser(organization.id, userId);
-
-//   return 'user has been removed for organization';
-// }

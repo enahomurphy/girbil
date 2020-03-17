@@ -33,7 +33,7 @@ const Layout = ({
             </div>
             )
           }
-          <Title width="312px">{title}</Title>
+          <Title width="100%">{title}</Title>
           {Boolean(buttonText) && (
           <Button
             className="green layout-button"

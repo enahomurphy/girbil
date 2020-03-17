@@ -27,7 +27,14 @@ const Settings = () => {
     storage.setToken(token);
   } else if (!storage.token && !get(storage.payload, 'organization.id', null)) {
     storage.clear();
-    return <Redirect path="/" />;
+    return <Redirect to="/" />;
+  }
+
+  if (
+    storage.payload
+    && ['user', 'admin'].includes(get(storage.payload, 'organization.role'))
+  ) {
+    return <Redirect to="/not-found" />;
   }
 
   if (loading) {

@@ -15,7 +15,7 @@ export class UserOrganization1582381400005 implements MigrationInterface {
         "user_id" uuid,
         "organization_id" uuid,
         "accepted" boolean DEFAULT false,
-        "joined_date" timestamp,
+        "joined_date" timestamp DEFAULT Now(),
         "role" role_type DEFAULT 'user',
         "position" varchar(255),
         PRIMARY KEY ("user_id", "organization_id"),

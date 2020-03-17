@@ -23,7 +23,20 @@ export const UPDATE_ORGANIZATION = gql`
   }
 `;
 
+export const UPDATE_USER_ROLE = gql`
+  mutation changeRole(
+    $userId: String!
+    $role: RoleType!
+  ) {
+    changUserRole(
+      userId: $userId, 
+      role: $role
+    )
+  }
+`;
+
 export default {
   ADD_ORGANIZATION,
   UPDATE_ORGANIZATION,
+  UPDATE_USER_ROLE,
 };

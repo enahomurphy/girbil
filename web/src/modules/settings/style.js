@@ -40,7 +40,8 @@ export const NavLinks = styled.div`
     display: flex;
     align-items: center;
     border-radius: 4px;
-
+  
+    &.active,
     &:hover {
       background: #C9C9C9;
       color: #222222;

@@ -10,10 +10,10 @@ import {
   Root,
   registerEnumType,
 } from 'type-graphql';
-import { getCustomRepository, getRepository } from 'typeorm';
+import { getCustomRepository, getRepository, Not } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { IsUUID } from 'class-validator';
+import { IsUUID, IsString } from 'class-validator';
 import {
   Organization, User, UserOrganization, RoleType,
 } from '../../entity';
@@ -41,9 +41,11 @@ class OrganizationResolver implements ResolverInterface<Organization> {
   @Authorized('owner', 'admin', 'user')
   @CanView('organization')
   @Query(() => Organization, { nullable: true })
-  async organization(@Arg('organizationId') @IsUUID() organizationId: string): Promise<Organization> {
-    const organization = await this.orgRepo.findOne({ where: { id: organizationId } });
-    return organization || null;
+  async organization(
+    @Arg('organizationId', { nullable: true }) @IsUUID() organizationId: string,
+      @Ctx() { user: { organization } }: ContextType,
+  ): Promise<Organization> {
+    return this.orgRepo.findOne({ where: { id: organizationId || organization.id } });
   }
 
   @Authorized()
@@ -106,6 +108,37 @@ class OrganizationResolver implements ResolverInterface<Organization> {
     const organization = await this.orgRepo.createOrganization(name.toLowerCase(), domain, user);
 
     return CreateOrganizationType.create(organization);
+  }
+
+  @Authorized()
+  @Mutation(() => Organization)
+  async updateOrganization(
+    @Arg('domain', { nullable: true }) @IsString() domain: string,
+      @Arg('name', { nullable: true }) @IsString() name: string,
+      @Ctx(){ user: { organization } }: ContextType,
+  ): Promise<Organization> {
+    const organizationUpdate = {};
+
+    if (domain) {
+      const org = await this.orgRepo.findOne({ where: { domain, id: Not(organization.id) } });
+
+      if (org) {
+        throw new Error('Domain name not available');
+      }
+
+      organizationUpdate.domain = domain.toLowerCase();
+    }
+
+    if (name) {
+      organizationUpdate.name = name.toLowerCase();
+    }
+
+    await this.orgRepo.update(({ id: organization.id }), organizationUpdate);
+
+    return plainToClass(Organization, {
+      ...organization,
+      ...organizationUpdate,
+    });
   }
 }
 

@@ -12,7 +12,7 @@ export const CanViewOrganization = createMethodDecorator(
       context.user.organization.id,
       context.user.id,
     );
-    console.log(org);
+
     if (!org) {
       return unAuthError(context, 'Conversation does not exit');
     }

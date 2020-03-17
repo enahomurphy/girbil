@@ -70,7 +70,7 @@ Layout.propTypes = {
   padding: PropTypes.string,
   buttonText: PropTypes.string,
   buttonAction: PropTypes.func,
-  backAction: PropTypes.oneOf([PropTypes.func, null]),
+  backAction: PropTypes.oneOfType([PropTypes.func, () => null]),
 };
 
 export default Layout;

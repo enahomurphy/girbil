@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { ORGANIZATION_FRAGMENT } from './organization.query';
+import { ORGANIZATION_FRAGMENT } from '../query';
 
 export const ADD_ORGANIZATION = gql`
   mutation addOrganization($domain: String!, $name: String!) {
@@ -20,9 +20,10 @@ export const UPDATE_ORGANIZATION = gql`
       name
       domain
     }
-  } 
+  }
 `;
 
 export default {
   ADD_ORGANIZATION,
+  UPDATE_ORGANIZATION,
 };

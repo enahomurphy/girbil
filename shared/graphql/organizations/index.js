@@ -1,6 +1,6 @@
 import initialState from './organization.default';
 import * as query from './query';
-import mutation from './organization.mutation';
+import * as mutation from './mutation';
 
 export { query, mutation };
 

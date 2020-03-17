@@ -13,7 +13,7 @@ const PageButtonWrapper = styled.div`
 `;
 
 const PageButton = ({
-  close, action, actionText, closeText, danger,
+  close, action, actionText, closeText, danger, disabled,
 }) => (
   <PageButtonWrapper>
     { Boolean(closeText) && (
@@ -33,6 +33,7 @@ const PageButton = ({
         onClick={action}
         width="152px"
         type="button"
+        disabled={disabled}
         className={danger ? 'red' : 'green'}
       >
         {actionText}
@@ -45,6 +46,7 @@ PageButton.defaultProps = {
   danger: false,
   close: () => {},
   closeText: '',
+  disabled: false,
 };
 
 PageButton.propTypes = {
@@ -53,6 +55,7 @@ PageButton.propTypes = {
   action: PropTypes.func.isRequired,
   actionText: PropTypes.string.isRequired,
   danger: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 export default PageButton;

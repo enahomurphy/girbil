@@ -30,7 +30,8 @@ const defaultOptions = {
 };
 
 
-const errrorLink = onError(({ graphQLErrors, networkError }) => {
+const errrorLink = onError(({ graphQLErrors, networkError, ...props }) => {
+  console.log()
   if (graphQLErrors) {
     graphQLErrors.map(({ message, locations, path }) => console.error(
       `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
@@ -40,8 +41,8 @@ const errrorLink = onError(({ graphQLErrors, networkError }) => {
   if (networkError) {
     console.error(`[Network error]: ${networkError.statusCode}`);
     if (networkError.statusCode === 401) {
-      // storage.clear();
-      // window.location.href = '/';
+      storage.clear();
+      window.location.href = '/';
     }
   }
 });

@@ -27,8 +27,9 @@ export const DividerContainer = styled.div`
 
 export const Footer = styled.div`
   position: absolute;
-  bottom: 0px;
-  bottom: 24px;
+  bottom: ${props => props.bottom || '24px'};
+  width: 100%;
+  left: 0px;
 `;
 
 export const GoogleButton = styled.button`

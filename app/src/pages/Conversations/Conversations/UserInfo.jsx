@@ -17,6 +17,12 @@ const UserInfo = ({ user }) => {
     );
   };
 
+  const onShareClick = () => {
+    window.open(
+      `http://localhost:1234/invite?token=${storage.token}`,
+    );
+  };
+
   return (
     <>
       <Link popoverOpen=".user-popover">
@@ -54,7 +60,11 @@ const UserInfo = ({ user }) => {
             >
               <BlankLink />
             </ListItem>
-            <ListItem popoverClose title="Invite people">
+            <ListItem
+              onClick={onShareClick}
+              popoverClose
+              title="Invite people"
+            >
               <BlankLink />
             </ListItem>
           </List>

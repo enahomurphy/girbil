@@ -42,7 +42,7 @@ const Create = () => {
       const { data: newOrg } = await addOrg({ variables: org });
       const token = get(newOrg, 'addOrganization.token', null);
       storage.setToken(token);
-      push('/organizations/invite');
+      push('/invite');
     } catch (_) {
       addToast('Unable to create organization, try again or contact admin@girbil.com', {
         appearance: 'error',

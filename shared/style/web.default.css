@@ -113,3 +113,7 @@ input::placeholder {
 .success {
   color: var(--gb-green);
 }
+
+a {
+  text-decoration: none;
+}

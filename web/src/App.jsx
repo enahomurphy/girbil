@@ -16,9 +16,10 @@ import Download from './modules/Download';
 import NotFound from './modules/NotFound';
 import Organizations, { Create } from './modules/organizations';
 import Invite from './modules/invite';
+import CompleteInvite from './modules/CompleteInvite';
 import Settings from './modules/settings';
 
-import { Authenticated } from './components/protected';
+import { Authenticated, OrgRoute } from './components/protected';
 
 const App = () => (
   <ApolloProvider client={client}>
@@ -31,17 +32,15 @@ const App = () => (
         <Header />
         <Switch>
           <Route exact path="/" render={() => <Redirect to="/signup" />} />
-          <Authenticated exact path="/signup" component={Home} />
-          <Route exact path="/share" component={Share} />
           <Route exact path="/download" component={Download} />
+          <Route exact path="/invite/accept" component={CompleteInvite} />
+          <Authenticated exact path="/signup" component={Home} />
           <Authenticated exact path="/organizations" component={Organizations} />
           <Authenticated exact path="/organizations/create" component={Create} />
-          <Authenticated exact path="/organizations/invite" component={Invite} />
-          <Route path="/settings" component={Settings} />
+          <OrgRoute exact path="/invite" component={Invite} />
+          <OrgRoute exact path="/share" component={Share} />
+          <OrgRoute path="/settings" component={Settings} />
           <Route path="*" component={NotFound} />
-          <Route path="/user/invite">
-            <div>Invite user</div>
-          </Route>
         </Switch>
       </Router>
     </ToastProvider>

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -7,19 +8,21 @@ import { query } from '@shared/graphql/organizations';
 import { HeaderContainer, Logo } from './style';
 
 const Header = () => {
-  const [getOrg, { data }] = useLazyQuery(query.GET_ORGANIZATION, { fectchPolicy: 'cache' });
+  const [getOrg, { data }] = useLazyQuery(query.GET_ORGANIZATION, { fetchPolicy: 'cache' });
 
-  const loc = useLocation();
+  const { pathname } = useLocation();
 
   useEffect(() => {
-    getOrg({
-      variables: {
-        organizationId: get(storage, 'payload.organization.id', ''),
-      },
-    });
+    if (pathname.includes('/settings')) {
+      getOrg({
+        variables: {
+          organizationId: get(storage, 'payload.organization.id', ''),
+        },
+      });
+    }
   }, [getOrg]);
 
-  const isSettings = loc.pathname.includes('/settings');
+  const isSettings = pathname.includes('/settings');
   const title = isSettings
     ? get(data, 'organization.name', null)
     : 'Girbil';

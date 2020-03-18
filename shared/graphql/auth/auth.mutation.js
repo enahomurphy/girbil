@@ -1,10 +1,17 @@
 import { gql } from '@apollo/client';
 
 export const SOCIAL_LOGIN = gql`
-  mutation social($accessToken: String!, $type: String! ) {
+  mutation social(
+    $accessToken: String!,
+    $type: String!,
+    $inviteId: String,
+    $emailToken: String
+  ) {
     social(input: {
       accessToken: $accessToken
       type: $type
+      inviteId: $inviteId
+      emailToken: $emailToken
     }) {
       token
       user {

@@ -1,6 +1,7 @@
 /* eslint-disable react/forbid-prop-types */
 import React, { useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import LinkIcon from '@/components/icons/Link';
 import Layout from '@/components/layout';
@@ -71,14 +72,16 @@ const Invite = ({
         </Flex>
         <Flex cursor margin="80px 0 48px 0">
           <LinkIcon />
-          <Text
-            cursor
-            margin="0 0 0 8px"
-            color="#fffff"
-            onClick={() => {}}
-          >
-            Share invite link
-          </Text>
+          <Link to="/share">
+            <Text
+              cursor
+              margin="0 0 0 8px"
+              color="#fffff"
+              onClick={() => {}}
+            >
+              Share invite link
+            </Text>
+          </Link>
         </Flex>
         <button
           onClick={handleSendInvites(emails)}

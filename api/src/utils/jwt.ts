@@ -1,5 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import CryptoJS from 'crypto-js';
+import Hashids from 'hashids/cjs';
 
 import { User } from '../entity';
 import { keys } from '../config';
@@ -30,15 +31,10 @@ export const decode = (token?: string): User => {
   }
 };
 
-export const inviteToken = (payload: string): string => CryptoJS.AES.encrypt(payload, keys.authSecret);
+export const inviteToken = (payload: string): string => (
+  CryptoJS.AES.encrypt(payload, keys.authSecret).toString()
+);
 
-export const decodeInviteToken = (token: string): string => {
-  try {
-    if (token) {
-      return CryptoJS.AES.decrypt(token, keys.authSecret);
-    }
-    return null;
-  } catch (err) {
-    return null;
-  }
-};
+export const decodeInviteToken = (token: string): string => (
+  CryptoJS.AES.decrypt(token, keys.authSecret).toString(CryptoJS.enc.Utf8)
+);

@@ -25,6 +25,7 @@ interface Keys {
   email: Email;
   environment: string;
   url: string;
+  baseUrl: string;
 }
 
 const keys: Keys = {
@@ -37,13 +38,14 @@ const keys: Keys = {
     secret: process.env.AWS_ACCESS_SECRET,
     s3: {
       bucket: process.env.AWS_ACCESS_BUCKET,
-      region: process.env.AWS_ACCESS_REGION
-    }
+      region: process.env.AWS_ACCESS_REGION,
+    },
   },
   email: {
     sparkpost: process.env.SPARK_POST,
   },
   environment: process.env.NODE_ENV,
+  baseUrl: process.env.NODE_ENV !== 'production' ? 'localhost:1234' : 'girbil.com',
   url: process.env.NODE_ENV !== 'production' ? 'http://localhost:1234' : 'https://girbil.com',
 };
 

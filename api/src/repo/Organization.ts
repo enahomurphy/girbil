@@ -92,6 +92,10 @@ class OrganizationRepository extends Repository<Organization> {
   async deleteUser(organizationId: string, userId: string): Promise<void> {
     return this.userOrgRepo.delete({ userId, organizationId });
   }
+
+  async findById(organizationId: string): Promise<Organization> {
+    return this.findOne({ where: { id: organizationId } });
+  }
 }
 
 export default OrganizationRepository;

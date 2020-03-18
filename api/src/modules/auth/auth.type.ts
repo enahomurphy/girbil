@@ -18,3 +18,18 @@ export class AuthType {
     return plainToClass(AuthType, { token, user, organizations });
   }
 }
+
+@ObjectType()
+export class InviteOrganization {
+  @Field()
+  id: string;
+
+  @Field({ nullable: true })
+  domain?: string
+
+  @Field()
+  name?: string
+
+  @Field()
+  avatar?: string
+}

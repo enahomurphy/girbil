@@ -9,3 +9,5 @@ export { UserOrganization, RoleType } from './userOrganization';
 export { Invite } from './invites';
 export { UserConversations } from './userConversations';
 export { ChannelUsers } from './channelUser';
+
+export * from './share';

@@ -18,7 +18,6 @@ const Authenticated = async (
   if (user) {
     const { organization, id } = user;
     const foundUser = await userRepo.findOne({ id });
-
     if (foundUser) {
       req.user = foundUser.user;
 

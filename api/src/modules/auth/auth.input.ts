@@ -15,6 +15,12 @@ export class SocialInput {
   @Field()
   accessToken: string
 
+  @Field({ nullable: true })
+  inviteId?: string
+
+  @Field({ nullable: true })
+  emailToken?: string
+
   @Field()
   type: string
 }

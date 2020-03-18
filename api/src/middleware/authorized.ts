@@ -3,7 +3,6 @@ import ContextType from 'src/interfaces';
 
 const authChecker: AuthChecker<ContextType> = ({ context }, roles) => {
   const { user, res } = context;
-
   if (!user) {
     res.status(401);
     return false;

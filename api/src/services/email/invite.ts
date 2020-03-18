@@ -17,7 +17,7 @@ const invite = (token: string, orgName: string): string => `
             <p style="font-style: normal;font-weight: normal;font-size: 14px;line-height: 22px;color: #C9C9C9;">Create your account on Girbil to start collaborating with your co-workers.</p>
             <p style="font-style: normal;font-weight: normal;font-size: 14px;line-height: 22px;color: #C9C9C9;">Girbil is the first asynchronous video collaboration tool built for remote work teams. Enjoy! 🐭</p>
           </div>
-          <a href=${keys.url}/invites/accept?token=${token}>
+          <a href=${keys.url}/invite/accept?emailToken=${token}>
             <button style="margin-bottom: 200px;width: 153px;height: 41px;color: #ffffff;font-family: Source Sans Pro;font-size: 16px;font-weight: bold;line-height: 14px;border: none;background: #33AB77;border-radius: 6px;">Accept Invitation</button>
           </a>
         </div>

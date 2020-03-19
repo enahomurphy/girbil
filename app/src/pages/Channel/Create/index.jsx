@@ -39,6 +39,7 @@ const CreateChannel = ({ $f7router, title, channelId }) => {
     if (channelId) {
       getChannel({
         variables: { channelId },
+        refetchQueries: ['conversations'],
       });
     }
   }, [getChannel, channelId]);

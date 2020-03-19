@@ -30,7 +30,7 @@ const ConversationHeader = () => (
         <Link href="/channels" searchbarEnable=".searchb  ar-demo">
           <Add />
         </Link>
-        <Link searchbarEnable=".searchbar-demo">
+        <Link href="/preferences" searchbarEnable=".searchbar-demo">
           <Settings />
         </Link>
       </NavRight>

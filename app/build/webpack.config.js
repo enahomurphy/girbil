@@ -2,6 +2,7 @@
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
@@ -164,6 +165,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new Dotenv(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(env),
       'process.env.TARGET': JSON.stringify(target),

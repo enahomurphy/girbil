@@ -25,13 +25,16 @@ class ConversationRepository extends Repository<Conversation> {
         AND channel_id = conversation.receiver_id
         LIMIT 1
       ) = 1
+      
+      OR conversation.receiver_type = 'user'
+      AND (
+        conversation.creator_id = :userId
+        OR conversation.receiver_id = :userId
+      )
+      AND "conversation"."organization_id" = :organizationId
     `);
 
-    const conversations = await query.orWhere('conversation.creator_id = :userId')
-      .orWhere('conversation.receiver_id = :userId')
-      .andWhere("conversation.receiver_type = 'user'")
-      .andWhere('conversation.organizationId = :organizationId')
-      .getMany();
+    const conversations = await query.getMany();
 
     return conversations.map((conversation) => {
       if (conversation.receiverType !== ConversationType.CHANNEL) {

@@ -3227,10 +3227,29 @@ dot-prop@^5.2.0:
   dependencies:
     is-obj "^2.0.0"
 
+dotenv-defaults@^1.0.2:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/dotenv-defaults/-/dotenv-defaults-1.1.1.tgz#032c024f4b5906d9990eb06d722dc74cc60ec1bd"
+  integrity sha512-6fPRo9o/3MxKvmRZBD3oNFdxODdhJtIy1zcJeUSCs6HCy4tarUpd+G67UTU9tF6OWXeSPqsm4fPAB+2eY9Rt9Q==
+  dependencies:
+    dotenv "^6.2.0"
+
 dotenv-expand@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-5.1.0.tgz#3fbaf020bfd794884072ea26b1e9791d45a629f0"
   integrity sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==
+
+dotenv-webpack@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/dotenv-webpack/-/dotenv-webpack-1.7.0.tgz#4384d8c57ee6f405c296278c14a9f9167856d3a1"
+  integrity sha512-wwNtOBW/6gLQSkb8p43y0Wts970A3xtNiG/mpwj9MLUhtPCQG6i+/DSXXoNN7fbPCU/vQ7JjwGmgOeGZSSZnsw==
+  dependencies:
+    dotenv-defaults "^1.0.2"
+
+dotenv@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-6.2.0.tgz#941c0410535d942c8becf28d3f357dbd9d476064"
+  integrity sha512-HygQCKUBSFl8wKQZBSemMywRWcEDNidvNbjGVyZu3nbZ8qq9ubiPoGLMdRDpfSrpkkm9BXYFkpKxxFX38o/76w==
 
 dotenv@^8.2.0:
   version "8.2.0"
@@ -7976,6 +7995,11 @@ readdirp@^2.2.1:
     graceful-fs "^4.1.11"
     micromatch "^3.1.10"
     readable-stream "^2.0.2"
+
+recordrtc@^5.5.9:
+  version "5.5.9"
+  resolved "https://registry.yarnpkg.com/recordrtc/-/recordrtc-5.5.9.tgz#cda4b4c965a499cfa9d5b23e27f2043fb3d28399"
+  integrity sha512-6T1tn80nRfsXrAoYWINwz+hBKk+pB5Im4I0BS52Og1ruQvrEdV3IUcm+AKwLMHNyBAhJ2DaVa+9pukTRxMF/uA==
 
 redent@^1.0.0:
   version "1.0.0"

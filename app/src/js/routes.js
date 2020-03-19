@@ -10,7 +10,7 @@ const routes = [
     component: HomePage,
   },
   {
-    path: '/prefrences',
+    path: '/preferences',
     async(routeTo, routeFrom, resolve) {
       const reactComponent = () => import('@/pages/Preferences');
       reactComponent().then((rc) => {

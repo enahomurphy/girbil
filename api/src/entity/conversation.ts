@@ -1,7 +1,8 @@
+
 import {
   Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn, JoinColumn,
 } from 'typeorm';
-import { Field, ObjectType } from 'type-graphql';
+import { Field, ObjectType, Int } from 'type-graphql';
 
 import { User } from './user';
 import { Channel } from './channel';
@@ -70,6 +71,13 @@ export class Conversation {
   })
   receiver?: User
 
+  @Field(() => Int)
+  @Column({
+    select: false,
+    insert: false,
+    readonly: true,
+  })
+  unread?: number;
 
   @Field(() => Channel, { nullable: true })
   @OneToOne(() => Channel)

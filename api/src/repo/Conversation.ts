@@ -15,6 +15,13 @@ class ConversationRepository extends Repository<Conversation> {
       .leftJoinAndSelect('conversation.creator', 'creator')
       .leftJoinAndSelect('conversation.receiver', 'receiver')
       .leftJoinAndSelect('conversation.channel', 'channel')
+      .addSelect(`
+        (
+          SELECT COUNT(id) FROM messages 
+            WHERE NOT (:userId = ANY(coalesce(read, array[]::uuid[])))
+            AND conversation_id = "conversation"."id"
+        )
+      `, 'conversation_unread')
       .where("conversation.receiver_type = 'channel'");
 
     query.andWhere(`

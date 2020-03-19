@@ -14,7 +14,7 @@ export class Message1582381400010 implements MigrationInterface {
         "video" varchar,
         "thumbnail" varchar,
         "note" text,
-        "read" jsonb[],
+        "read" uuid[],
         "reaction" jsonb[],
         "parent_id" uuid,
         "created_at" timestamp DEFAULT Now(),
@@ -24,8 +24,9 @@ export class Message1582381400010 implements MigrationInterface {
       );
     `);
 
-    await queryRunner.query('CREATE INDEX ON "messages" ("conversation_id")');
     await queryRunner.query('CREATE INDEX ON "messages" ("conversation_id", "parent_id")');
+    await queryRunner.query('CREATE INDEX ON "messages" ("conversation_id")');
+    await queryRunner.query('CREATE INDEX ON "messages" ("parent_id")');
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {

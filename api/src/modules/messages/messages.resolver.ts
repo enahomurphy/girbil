@@ -59,6 +59,30 @@ class MessageResolver implements ResolverInterface<Message> {
 
     return createdMessage;
   }
+
+  @Authorized('user', 'admin', 'owner')
+  @ValidateArgs(MessagesArgs)
+  @CanView('conversation')
+  @Mutation(() => Message)
+  async markAsRead(
+    @Arg('messageId') @IsUUID() messageId: String,
+    @Arg('conversationId') @IsUUID() conversationId: string,
+    @Ctx() { user }: ContextType,
+  ): Promise<Message> {
+    const message = await this.messageRepo.findOne({ id: messageId });
+    const { read = [ ]} = message;
+    read.push(user.id)
+    await this.messageRepo.update(
+      {
+        id: messageId,
+        conversationId,
+      },
+      {
+        read: Array.from(new Set(read))
+      }
+    )
+    return message;
+  }
 }
 
 export default MessageResolver;

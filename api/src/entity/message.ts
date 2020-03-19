@@ -1,7 +1,7 @@
 import {
   Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne, JoinColumn,
 } from 'typeorm';
-import { Field, ObjectType } from 'type-graphql';
+import { Field, ObjectType, Int } from 'type-graphql';
 import { User } from '.';
 
 @Entity('messages')
@@ -54,11 +54,22 @@ export class Message {
   @Field()
   readonly state: string = 'done';
 
+  @Column({ type: 'uuid', array: true })
+  read: string[];
+
   @CreateDateColumn({
     name: 'created_at',
   })
   @Field()
   createdAt?: Date;
+
+  @Field(() => Int, { nullable: true })
+  @Column({
+    select: false,
+    insert: false,
+    readonly: true,
+  })
+  replyCount?: number;
 
   @Field(() => User)
   @OneToOne(() => User, { eager: true })

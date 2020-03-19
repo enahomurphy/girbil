@@ -50,7 +50,7 @@ jobs:
       - aws-cli/setup
       - run:
           command: |
-            cd api && scripts/deploy.sh
+            cd api && sudo scripts/deploy.sh
 
 workflows:
   deploy_staging_web:
@@ -58,7 +58,7 @@ workflows:
       - deploy-staging-web:
           filters:
             branches:
-              only: master
+              only: staging
 
   deploy_staging_api:
     jobs:

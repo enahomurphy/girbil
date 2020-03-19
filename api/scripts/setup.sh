@@ -32,3 +32,21 @@ sudo apt update && sudo apt install yarn
 
 # pm2 setup
 yarn add global pm2
+
+
+# codeploy 
+sudo apt-get install ruby
+
+sudo apt-get install wget
+
+# download and install codeploy agent
+curl -O https://aws-codedeploy-us-west-2.s3.amazonaws.com/latest/install
+
+chmod +x ./install
+
+sudo ./install auto
+
+# start agent service
+sudo service codedeploy-agent start
+
+sudo service codedeploy-agent status

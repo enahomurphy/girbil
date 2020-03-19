@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 import { VideoWrapper } from './style';
 
 export const useVideoData = (message, id) => {
-  const { height, width } = window.screen;
-  const params = { height: height - 136, width };
+  const params = { height: 676, width: 376 };
 
   if (message) {
     params.src = message.video;

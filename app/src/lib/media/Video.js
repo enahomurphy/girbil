@@ -23,7 +23,10 @@ class Video extends Recorder {
 
   useMedia() {
     navigator.getUserMedia(
-      this.constraints,
+      {
+        video: true,
+        audio: true,
+      },
       this.videoStart,
       this.videoError,
     );
@@ -49,19 +52,6 @@ class Video extends Recorder {
 
   get video() {
     return document.getElementById(this.videoId);
-  }
-
-  get constraints() {
-    const constraints = {
-      audio: true,
-      video: {
-        width: { min: 100, ideal: this.width, max: this.width },
-        height: { min: 120, ideal: this.height, max: this.height },
-        framerate: 30,
-      },
-    };
-
-    return constraints;
   }
 }
 

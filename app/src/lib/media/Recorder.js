@@ -1,15 +1,11 @@
-import GIF from 'gif.js.optimized';
-
+/* eslint-disable no-undef */
 class Recorder {
-  constructor(thumbnailWidth = 300, thumbnailHieght = 300) {
-    this.thumbnailWidth = thumbnailWidth;
-    this.thumbnailHieght = thumbnailHieght;
-    this.chunks = [];
-    this.thumbnailChunk = [];
+  constructor() {
+    this.duration = 30000;
 
-    this.onMediaData = this.onMediaData.bind(this);
     this.onMediaError = this.onMediaError.bind(this);
     this.onMediaStop = this.onMediaStop.bind(this);
+    this.thumbnail = this.thumbnail.bind(this);
     this.media = new MediaRecorder(new MediaStream());
 
     this.onRecordStop = () => {};
@@ -19,118 +15,102 @@ class Recorder {
   }
 
   initRecorder(stream) {
-    this.media = new MediaRecorder(stream, Recorder.options);
+    this.media = new RecordRTC(stream, {
+      type: 'video',
+    });
 
-    this.media.ondataavailable = this.onMediaData;
-    this.media.onerror = this.onMediaError;
-    this.media.onstop = this.onMediaStop;
-  }
-
-  onMediaData(event) {
-    this.chunks.push(event.data);
+    this.gif = new RecordRTC(stream, {
+      type: 'gif',
+    });
   }
 
   onMediaError(error) {
     this.onRecordError(error);
   }
 
-  onMediaStop() {
-    this.onRecordStop(this.url);
+  onMediaStop(blobURL) {
+    this.onRecordStop(blobURL);
   }
 
   stopRecord() {
-    if (this.media.state !== 'inactive') {
-      this.media.stop();
-      this.reset();
-    }
+    this.media.stopRecording(() => {
+      clearTimeout(this.timeout);
+      this.onMediaStop(this.media.getBlob());
+    });
+  }
+
+  async stopRecordAndGetFile(name) {
+    return new Promise((resolve) => {
+      this.media.stopRecording(() => {
+        clearTimeout(this.timeout);
+        this.onMediaStop(this.media.getBlob());
+        resolve(this.file(name));
+      });
+    });
   }
 
   pauseRecord() {
     this.media.pause();
   }
 
-  resumeRecord() {
-    this.media.resume();
+  startRecord() {
+    this.media.startRecording();
+    this.onRecordStart();
+
+    this.timeout = setTimeout(() => {
+      this.stopRecord();
+    }, this.duration);
   }
 
-  startRecord() {
-    if (this.media.state !== 'recording') {
-      this.media.start(20);
-      this.onRecordStart(this.media);
-    }
+  async thumbnail() {
+    this.gif.startRecording();
+    const sleep = (m) => new Promise((r) => setTimeout(r, m));
+    await sleep(2000);
+
+    return new Promise((resolve) => {
+      this.gif.stopRecording(() => {
+        const blob = this.gif.getBlob();
+        resolve(blob);
+      });
+    });
   }
 
   reset() {
-    this.chunks = [];
-    this.thumbnailChunk = [];
+    this.media.destroy();
+    this.gif.destroy();
   }
 
   file(name) {
-    const blob = new Blob(this.chunks, { type: 'video/webm' });
-    return new File([blob], name, {
+    return new File([this.media.getBlob()], name, {
       lastModified: (new Date()).getTime(),
       type: 'video/webm',
     });
   }
 
-  // @TODO move worker into porject
-  async thumbnail(name) {
-    const video = document.createElement('video');
-    video.srcObject = this.stream;
-    video.preload = 'metadata';
-    video.muted = true;
-    video.playsInline = true;
-    video.height = this.height;
-    video.width = this.width;
-    video.style.objectFit = 'contain';
-    video.play();
-
-    let time = 0;
-
-    const gif = new GIF({
-      workers: 4,
-      workerScript: '/static/workers/gif.js',
-    });
-
-    return new Promise((resolve) => {
-      gif.on('finished', (blob) => {
-        gif.freeWorkers.forEach((w) => w.terminate());
-        resolve(blob);
-      });
-
-      const timeUpdated = () => {
-        time += 1;
-        gif.addFrame(video, {
-          quality: 1, repeat: 'forever', copy: true, delay: 200,
-        });
-
-        if (time > 5) {
-          gif.render();
-          video.pause();
-          video.removeEventListener('timeupdate', timeUpdated);
-        }
-      };
-
-      video.addEventListener('timeupdate', timeUpdated);
-    });
-  }
-
   get url() {
-    const blob = new Blob(this.chunks, { type: 'video/webm' });
-    return window.URL.createObjectURL(blob);
+    return this.media.toURL(this.media.blob);
   }
 
-  static get options() {
-    let options = {};
-    if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) {
-      options = { mimeType: 'video/webm;codecs=vp9' };
-    } else if (MediaRecorder.isTypeSupported('video/webm;codecs=h264')) {
-      options = { mimeType: 'video/webm;codecs=h264' };
-    } else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8')) {
-      options = { mimeType: 'video/webm;codecs=vp8' };
-    }
+  static async getMediaDevices() {
+    const deviceInfos = await navigator.mediaDevices.enumerateDevices();
 
-    return options;
+    const result = {
+      microphone: [],
+      speaker: [],
+      video: [],
+    };
+
+    deviceInfos.forEach((deviceInfo) => {
+      if (deviceInfo.kind === 'audioinput') {
+        result.microphone.push(deviceInfo);
+      } else if (deviceInfo.kind === 'audiooutput') {
+        result.speaker.push(deviceInfo);
+      } else if (deviceInfo.kind === 'videoinput') {
+        result.video.push(deviceInfo);
+      }
+    });
+
+    return result;
   }
 }
 

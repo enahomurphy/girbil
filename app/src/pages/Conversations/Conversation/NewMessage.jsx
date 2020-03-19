@@ -25,9 +25,8 @@ const NewMessage = ({ isThread, conversationId }) => {
   const conversationMeta = useConversationMeta(get(conversationData, 'conversation', {}));
   const { params } = useVideoData(null, 'video');
 
-  // @TODO unify video element;
   const id = isThread ? 'thread-video' : 'video';
-  const [video] = useVideo({ ...params, id });
+  const [video] = useVideo({ ...params, id, muted: true });
   const [videoRecorder] = useState(new Video(id));
 
   const [saveMessage] = mutation.useSaveMessage();
@@ -45,8 +44,7 @@ const NewMessage = ({ isThread, conversationId }) => {
     },
   });
 
-
-  const startRecord = () => {
+  const startRecord = async () => {
     const threadId = getParam('threadId');
     if (matches('record.idle') && matches('processing.idle')) {
       videoRecorder.startRecord();
@@ -65,9 +63,7 @@ const NewMessage = ({ isThread, conversationId }) => {
 
     if (matches('record.start')) {
       const messageId = get(data, 'addMessage.id');
-
-      const file = videoRecorder.file(messageId);
-      videoRecorder.stopRecord();
+      const file = await videoRecorder.stopRecordAndGetFile(messageId);
       send('STOP');
       send('PROCESS', {
         file, urls, messageId, conversationId, parentId: threadId,
@@ -76,8 +72,12 @@ const NewMessage = ({ isThread, conversationId }) => {
   };
 
   videoRecorder.onRecordStart = async () => {
-    const thumbnail = await videoRecorder.thumbnail('');
+    const thumbnail = await videoRecorder.thumbnail();
     send('UPLOAD_THUMBNAIL', { thumbnail, urls });
+  };
+
+  videoRecorder.onRecordStop = () => {
+    startRecord();
   };
 
   useEffect(() => {

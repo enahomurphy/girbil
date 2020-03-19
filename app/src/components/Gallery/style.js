@@ -10,13 +10,15 @@ export const StyledSlide = styled.div`
   display: flex;
   justify-content: space-between;
   cursor: pointer;
+  background-position: center;
+  background-size: cover;
 
   .wiper-lazy-preloader {
     min-height: var(--gb-message-height);
     max-height: var(--gb-message-height);
   }
 
-  .swiper-slide {
+  .swiper-wrapper {
     background-position: center;
     background-size: cover;
   }

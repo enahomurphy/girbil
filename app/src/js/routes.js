@@ -10,6 +10,15 @@ const routes = [
     component: HomePage,
   },
   {
+    path: '/prefrences',
+    async(routeTo, routeFrom, resolve) {
+      const reactComponent = () => import('@/pages/Preferences');
+      reactComponent().then((rc) => {
+        resolve({ component: rc.default });
+      });
+    },
+  },
+  {
     path: '/login/',
     component: Login,
     options: {

@@ -11,6 +11,7 @@ const useVideo = ({
   height,
   url,
   play = true,
+  id = '',
   onPlay = () => {},
   onPause = () => {},
   onEnd = () => {},
@@ -49,6 +50,7 @@ const useVideo = ({
   };
 
   const props = {
+    id,
     ref,
     className: 'react-player',
     ...resolution,

@@ -1,0 +1,40 @@
+version: 2.1 # We must use 2.1 to make use of orbs.
+
+orbs: # specify all orbs you want to use.
+  aws-code-deploy: circleci/aws-code-deploy@0.0.9
+
+jobs:
+  # DEVELOPMENT FRONTEND
+  deploy-staging-web:
+    working_directory: ~/giribil-web
+    docker:
+      - image: circleci/node:10.13.0 
+    steps:
+      - checkout
+      - run:
+          name: Setup Environment Variables
+          command: |
+            echo "export GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> web/.env
+            echo "export API_URL=$API_URL" >> web/.env
+            echo "export GIRBIL_WEB_STAGING_S3_CLIENT=$GIRBIL_WEB_STAGING_S3_CLIENT" >> $BASH_ENV
+            echo "export GIRBIL_WEB_STAGING_CLOUNDFRONT_ID=$GIRBIL_WEB_STAGING_CLOUNDFRONT_ID" >> $BASH_ENV
+      - restore_cache:
+          key: dependency-cache-{{ checksum "web/package.json" }}
+      - save_cache:
+          key: dependency-cache-{{ checksum "web/package.json" }}
+          paths:
+            - ./web/node_modules
+      - run:
+          name: deploy client app
+          command: |
+            sudo apt-get install awscli
+            aws configure set preview.cloudfront true
+            sh scripts/deploy-web.sh
+
+workflows:
+  deploy_staging_web:
+    jobs:
+      - deploy-staging-web:
+          filters:
+            branches:
+              only: master

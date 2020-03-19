@@ -9,7 +9,7 @@ import ImageItemPlaying from './ImageItemPlaying';
 import { StyledSlide } from './style';
 
 const ImageItem = ({
-  onClick, id, thumbnail, state, sender, pullover, createdAt,
+  onClick, id, thumbnail, state, sender, pullover, createdAt, replyCount, onReplyClicked,
 }) => {
   let renderThumbnail = thumbnail;
 
@@ -30,18 +30,28 @@ const ImageItem = ({
 
   return (
     <SwiperSlide key={id}>
-      <ImageItemInfo pullover={pullover} recording={slideProps.recording} />
+      <ImageItemInfo
+        replyCount={replyCount}
+        pullover={pullover}
+        recording={slideProps.recording}
+      />
       <StyledSlide {...slideProps}>
         {<ImageItemPlaying
           createdAt={createdAt}
           state={state}
           thumbnail={renderThumbnail}
           sender={sender}
+          replyCount={replyCount}
+          onReplyClicked={onReplyClicked}
         />}
         {slideProps.recording && <ImageRecordingItem thumbnail={renderThumbnail} />}
       </StyledSlide>
     </SwiperSlide>
   );
+};
+
+ImageItem.defaultProps = {
+  replyCount: 0,
 };
 
 ImageItem.propTypes = {
@@ -51,6 +61,8 @@ ImageItem.propTypes = {
   state: PropTypes.string.isRequired,
   sender: PropTypes.object.isRequired,
   pullover: PropTypes.array.isRequired,
+  replyCount: PropTypes.number,
+  onReplyClicked: PropTypes.func.isRequired,
   createdAt: PropTypes.oneOfType([Date, PropTypes.number]).isRequired,
 };
 

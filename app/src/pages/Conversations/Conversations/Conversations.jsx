@@ -21,7 +21,7 @@ const Conversations = () => {
       <List style={{ margin: '32px 0 0 0' }}>
         {
           conversations.map(({
-            id, receiver, channel, receiverType,
+            id, receiver, channel, receiverType, unread,
           }) => (receiverType === 'user' ? (
             <ConversationListItem
               options={[
@@ -42,7 +42,7 @@ const Conversations = () => {
               isChannel={false}
               isActive={false}
               isPrivate={false}
-              unreadCount={0}
+              unreadCount={unread}
               user={{
                 id: receiver.id,
                 name: receiver.name,
@@ -66,7 +66,7 @@ const Conversations = () => {
               ]}
               getLink={() => `/conversations/${id}/`}
               key={id}
-              unreadCount={44}
+              unreadCount={unread}
               isActive={false}
               isChannel
               id={id}

@@ -8,7 +8,7 @@ import Gallery from '@/components/Gallery';
 import Emoji from '@/components/Emoji';
 import emitter from '@/lib/emitter';
 
-const getPullOverLinks = (conversationId, isThread, { id }) => {
+const getPullOverLinks = (conversationId, { id }) => {
   const options = [
     {
       type: 'emoji',
@@ -20,22 +20,18 @@ const getPullOverLinks = (conversationId, isThread, { id }) => {
         />
       ),
     },
-  ];
-
-  if (!isThread) {
-    options.push({
+    {
       type: 'thread',
-      link: `/conversations/${conversationId}/${id}/thread/`,
+      link: `/conversations/${conversationId}/thread/${id}/`,
       title: 'Start a thread',
       onClick: () => {},
-    });
-  }
-
-  options.push({
-    type: 'unwatched',
-    title: 'Mark as unwatched',
-    onClick: () => {},
-  });
+    },
+    {
+      type: 'unwatched',
+      title: 'Mark as unwatched',
+      onClick: () => {},
+    },
+  ];
 
   return options;
 };
@@ -68,7 +64,7 @@ const Messages = ({
 
   const onClick = async (id) => {
     const link = isThread
-      ? `/conversations/${conversationId}/${threadId}/thread/${id}/`
+      ? `/conversations/${conversationId}/thread/${threadId}/message/${id}`
       : `/conversations/${conversationId}/${id}`;
 
     updateState({
@@ -107,7 +103,7 @@ const Messages = ({
 
   const updatedMessages = messages.map((message) => ({
     ...message,
-    pullover: getPullOverLinks(conversationId, isThread, message),
+    pullover: getPullOverLinks(conversationId, message),
     link: '#',
   }));
 

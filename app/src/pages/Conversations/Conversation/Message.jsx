@@ -28,13 +28,18 @@ const Message = ({
 
   const { data: conversationData } = useQuery(
     query.CONVERSATION,
-    { variables: { conversationId }, fetchPolicy: 'cache-and-network' },
+    { variables: { conversationId } },
   );
 
   const conversationMeta = useConversationMeta(get(conversationData, 'conversation', {}));
 
   useEffect(() => {
     emitter.onEventEmitted('read_message', (args) => {
+
+      if (args.read) {
+        // send request to mark as read
+      }
+
       getMessage({
         variables: {
           conversationId: args.conversationId,
@@ -47,9 +52,10 @@ const Message = ({
 
   const goBack = () => {
     const link = isThread
-      ? `/conversations/${conversationId}/${messageId}/thread/`
+      ? `/conversations/${conversationId}/thread/${messageId}/`
       : `/conversations/${conversationId}/`;
-    f7.view.current.router.navigate(link);
+  
+    f7.view.current.router.back(link);
   };
 
 

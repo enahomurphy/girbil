@@ -2,11 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Popover, ListItem } from 'framework7-react';
 
-// import Emoji from '@/components/Emoji';
 import { Icon, Link } from '@/components/Style';
 import { RecordingInfo, RecordingInfoContainer, ImageItemOption } from './style';
 
-const ImageItemInfo = ({ recording, pullover }) => !recording && (
+const ImageItemInfo = ({ recording, pullover, replyCount }) => !recording && (
   <RecordingInfoContainer>
     <RecordingInfo />
     <div>
@@ -16,11 +15,15 @@ const ImageItemInfo = ({ recording, pullover }) => !recording && (
       <Popover className="popover-menu">
         <ImageItemOption>
           {
-            pullover.map(({ Component, type, ...props }) => (
-              <ListItem popoverClose key={type} {...props}>
-                { Component && <Component /> }
-              </ListItem>
-            ))
+            pullover.reduce((acc, { Component, type, ...props }) => {
+              if (type === 'thread' && replyCount) return acc;
+              acc.push(
+                <ListItem popoverClose key={type} {...props}>
+                  { Component && <Component /> }
+                </ListItem>,
+              );
+              return acc;
+            }, [])
           }
         </ImageItemOption>
       </Popover>
@@ -31,6 +34,7 @@ const ImageItemInfo = ({ recording, pullover }) => !recording && (
 ImageItemInfo.propTypes = {
   recording: PropTypes.bool.isRequired,
   pullover: PropTypes.array.isRequired,
+  replyCount: PropTypes.number.isRequired,
 };
 
 export default ImageItemInfo;

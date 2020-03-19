@@ -21,6 +21,7 @@ export const USER_CONVERSATIONS = gql`
   query conversations {
     conversations {
       ...ConversationParts
+      unread
       channel {
         ...ChannelParts
       }
@@ -69,6 +70,7 @@ export const CONVERSATION_MESSAGES = gql`
   query userMessages($conversationId: String!, $messageId: String) {
     messages(conversationId: $conversationId, messageId: $messageId)  {
       ...MessageParts
+      replyCount
       sender {
         id
         name
@@ -83,6 +85,7 @@ export const GET_MESSAGES = gql`
   query getMessages($conversationId: String!, $messageId: String) {
     messages(conversationId: $conversationId, messageId: $messageId) @client {
       ...MessageParts
+      replyCount
       sender {
         id
         name

@@ -1,12 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'timeago.js';
-import { Icon } from 'framework7-react';
+import { Icon, Link } from 'framework7-react';
 
 import { Title } from '@/components/Style';
-import { PlayingItem } from './style';
+import { PlayingItem, RepliesInfo } from './style';
+import { Chevron } from '../Icon';
 
-const ImageRecordingItem = ({ createdAt, sender, state }) => (['playing', 'pause'].includes(state) ? (
+const ImageRecordingItem = ({
+  createdAt, sender, state, replyCount, onReplyClicked,
+}) => (['playing', 'pause'].includes(state) ? (
   <PlayingItem>
     {state === 'pause' && (
       <Icon
@@ -40,12 +43,32 @@ const ImageRecordingItem = ({ createdAt, sender, state }) => (['playing', 'pause
     >
       {format(createdAt)}
     </Title>
+    {
+      Boolean(replyCount) && (
+        <Link onClick={
+          (e) => {
+            onReplyClicked();
+            e.stopPropagation();
+          }
+        }
+        >
+          <RepliesInfo>
+            <Title>{`${replyCount} ${replyCount === 1 ? 'reply' : 'replies'}`}</Title>
+            <span>
+              <Chevron />
+            </span>
+          </RepliesInfo>
+        </Link>
+      )
+    }
   </PlayingItem>
 ) : null);
 
 ImageRecordingItem.propTypes = {
+  onReplyClicked: PropTypes.func.isRequired,
   sender: PropTypes.object.isRequired,
   state: PropTypes.string.isRequired,
+  replyCount: PropTypes.number.isRequired,
   createdAt: PropTypes.oneOfType([Date, PropTypes.number]).isRequired,
 };
 

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { List } from 'framework7-react';
+import { Block } from '@/components/Style';
 
 export const StyledSlide = styled.div`
   min-height: var(--gb-message-height);
@@ -164,7 +165,33 @@ export const PlayingItem = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+  margin-top: 10px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
+
+export const RepliesInfo = styled(Block)`
+  display: flex;
+  justify-content: center;
+  border-radius: 9px;
+  background: var(--gb-red);
+  width: 70px;
+  margin-top: 8px;
+
+  div {
+    margin-right: 5px;
+    font-size: 8px;
+    display: flex;
+    align-items: center;
+  }
+
+  span {
+    transform: rotate(-90deg);
+
+    svg {
+      height: 8px;
+      width: 8px;
+    }
+  }
 `;

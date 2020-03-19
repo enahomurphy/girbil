@@ -57,6 +57,7 @@ export const addMessage = (_, { conversationId, messageId }, { cache }) => {
     video: '',
     thumbnail: '',
     conversationId,
+    replyCount: 0,
     parentId: messageId || null,
     state: 'recording',
     createdAt: new Date(),

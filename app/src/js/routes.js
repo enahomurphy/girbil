@@ -77,7 +77,7 @@ const routes = [
   },
   {
     name: 'thread',
-    path: '/conversations/:conversationId/:threadId/thread',
+    path: '/conversations/:conversationId/thread/:threadId',
     component: Thread,
     options: {
       animate: true,
@@ -100,7 +100,7 @@ const routes = [
         },
       },
       {
-        path: '/:messageId',
+        path: '/message/:messageId',
         id: 'thread-view',
         component: Message,
         options: {

@@ -17,6 +17,10 @@ const Gallery = ({ messages, onClick }) => {
     }
   }, [messages]);
 
+  const onReplyClicked = (id, conversationId) => () => {
+    f7.views.main.router.navigate(`/conversations/${conversationId}/thread/${id}/`);
+  };
+
   const params = {
     lazy: {
       loadPrevNext: true,
@@ -40,10 +44,11 @@ const Gallery = ({ messages, onClick }) => {
       <Swiper params={params}>
         {
           messages.map(({
-            id, thumbnail, state, sender, pullover, createdAt,
+            id, conversationId, thumbnail, state, sender, pullover, createdAt, replyCount,
           }) => (
             <ImageItem
               onClick={onClick}
+              onReplyClicked={onReplyClicked(id, conversationId)}
               key={id}
               id={id}
               thumbnail={thumbnail}
@@ -51,6 +56,7 @@ const Gallery = ({ messages, onClick }) => {
               pullover={pullover}
               sender={sender}
               createdAt={createdAt}
+              replyCount={replyCount}
             />
           ))
         }

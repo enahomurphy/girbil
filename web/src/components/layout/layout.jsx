@@ -1,10 +1,9 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Title } from '@/components/styles';
-import Loader from '@shared/components/icons/Loader';
 
+import Loader from '@shared/components/icons/Loader';
 import Back from '@/components/icons/Back';
-import { Flex, Button } from '@/components/Styles';
+import { Title, Flex, Button } from '@/components/styles';
 import { MainContainer, LayoutContainer, LoadingOverlay } from './style';
 
 const Layout = ({

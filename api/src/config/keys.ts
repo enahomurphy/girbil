@@ -1,3 +1,8 @@
+const url = () => {
+  if (process.env.NODE_ENV !== 'production') return 'https://girbil.com';
+  if (process.env.NODE_ENV !== 'staging') return 'https://girbil.com';
+  return 'http://localhost:1234';
+}
 
 interface S3 {
   region: string;
@@ -25,7 +30,6 @@ interface Keys {
   email: Email;
   environment: string;
   url: string;
-  baseUrl: string;
 }
 
 const keys: Keys = {
@@ -45,8 +49,7 @@ const keys: Keys = {
     sparkpost: process.env.SPARK_POST,
   },
   environment: process.env.NODE_ENV,
-  baseUrl: process.env.NODE_ENV !== 'production' ? 'localhost:1234' : 'girbil.com',
-  url: process.env.NODE_ENV !== 'production' ? 'http://localhost:1234' : 'https://girbil.com',
+  url: url(),
 };
 
 export default keys;

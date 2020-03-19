@@ -1,10 +1,10 @@
-version: 2.1 # We must use 2.1 to make use of orbs.
+version: 2.1
 
-orbs: # specify all orbs you want to use.
-  aws-code-deploy: circleci/aws-code-deploy@0.0.9
+orbs:
+  aws-cli: circleci/aws-cli@0.1.22
 
 jobs:
-  # DEVELOPMENT FRONTEND
+  # STAGING FRONTEND
   deploy-staging-web:
     working_directory: ~/giribil-web
     docker:
@@ -43,10 +43,26 @@ jobs:
             aws configure set preview.cloudfront true
             sh scripts/deploy-web.sh
 
+  deploy-staging-api:
+    executor: aws-cli/default
+    steps:
+      - checkout
+      - aws-cli/setup
+      - run:
+          command: |
+            cd api && scripts/deploy.sh
+
 workflows:
   deploy_staging_web:
     jobs:
       - deploy-staging-web:
+          filters:
+            branches:
+              only: master
+
+  deploy_staging_api:
+    jobs:
+      - deploy-staging-api:
           filters:
             branches:
               only: master

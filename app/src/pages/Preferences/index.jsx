@@ -10,7 +10,7 @@ import Select from './Select';
 
 const Preferences = () => {
   const [devices, setDevices] = useState({});
-  const [device, setDevice] = useLocalStorage('gb-device');
+  const [device, setDevice] = useLocalStorage('gb-device', {});
 
   useEffect(() => {
     Video.getMediaDevices().then((deviceInfo) => {

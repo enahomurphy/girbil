@@ -7,17 +7,30 @@ import {
   App,
   View,
   f7ready,
+  f7,
 } from 'framework7-react';
 
-import client from '@shared/graphql/client';
+import ApolloClient from '@shared/graphql/client';
 import cordovaApp from './js/cordova-app';
 import routes from './js/routes';
 
 import '@/css/theme.css';
 
+const client = ApolloClient({
+  errorHandler: ({ networkError }) => {
+    if (networkError) {
+      console.error(`[Network error]: ${networkError.statusCode}`);
+      if (networkError.statusCode === 401) {
+        f7.view.main.router.navigate('/');
+        window.location.href = '/';
+      }
+    }
+  },
+});
+
 const MainApp = () => {
   const f7params = {
-    id: 'io.framework7.girbil',
+    id: 'io.app.girbil',
     name: 'girbil',
     theme: 'aurora',
     routes,
@@ -32,9 +45,9 @@ const MainApp = () => {
   };
 
   useEffect(() => {
-    f7ready((f7) => {
+    f7ready((readyF7) => {
       if (Device.cordova) {
-        cordovaApp.init(f7);
+        cordovaApp.init(readyF7);
       }
     });
   }, []);

@@ -1,9 +1,9 @@
 import React from 'react';
 import {
-  Navbar, Searchbar, Link, NavRight,
+  Navbar, Link, NavRight, List, ListItem,
 } from 'framework7-react';
 
-import { Title, Block } from '@/components/Style';
+import { Title, Block, Popover } from '@/components/Style';
 import {
   Add, Settings, Chevron, Search,
 } from '@/components/Icon';
@@ -24,23 +24,23 @@ const ConversationHeader = () => (
         justifyContent: 'space-between',
       }}
       >
-        <Link searchbarEnable=".searchbar-demo">
+        <Link>
           <Search />
         </Link>
-        <Link href="/channels" searchbarEnable=".searchb  ar-demo">
+        <Link href="/channels">
           <Add />
         </Link>
-        <Link href="/preferences" searchbarEnable=".searchbar-demo">
+        <Link popoverOpen=".popover-settings">
           <Settings />
         </Link>
+        <Popover margin="0 30px 0 0" className="popover-settings">
+          <List>
+            <ListItem href="/preferences" title="System preference" />
+            <ListItem href="/logout" title="Sign out of Girbil" />
+            <ListItem onClick={() => console.info('logout')} title="Quit Girbil" />
+          </List>
+        </Popover>
       </NavRight>
-      <Searchbar
-        className="searchbar-demo"
-        expandable
-        searchContainer=".search-list"
-        searchIn=".item-title"
-        disableButton
-      />
     </Navbar>
   </NavbarWrapper>
 );

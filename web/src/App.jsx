@@ -8,7 +8,7 @@ import {
 import { ApolloProvider } from '@apollo/client';
 import { ToastProvider } from 'react-toast-notifications';
 
-import client from '@shared/graphql/client';
+import ApolloClient from '@shared/graphql/client';
 import Header from './modules/header';
 import Home from './modules/home/Home';
 import Share from './modules/share';
@@ -20,6 +20,16 @@ import CompleteInvite from './modules/CompleteInvite';
 import Settings from './modules/settings';
 
 import { Authenticated, OrgRoute } from './components/protected';
+
+const client = ApolloClient({
+  errorHandler: ({ networkError }) => {
+    if (networkError) {
+      if (networkError.statusCode === 401) {
+        window.location.href = '/';
+      }
+    }
+  },
+});
 
 const App = () => (
   <ApolloProvider client={client}>
@@ -40,7 +50,10 @@ const App = () => (
           <OrgRoute exact path="/invite" component={Invite} />
           <OrgRoute exact path="/share" component={Share} />
           <OrgRoute path="/settings" component={Settings} />
-          <Route path="*" component={NotFound} />
+          <Route
+            path="*"
+            component={NotFound}
+          />
         </Switch>
       </Router>
     </ToastProvider>

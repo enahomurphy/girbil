@@ -1,13 +1,16 @@
 import {
   Conversation, Conversations, Message, NewMessage, Thread,
 } from '@/pages/Conversations';
-import { Login, SignUp, ResetPasword } from '@/pages/Auth';
-import HomePage from '@/pages/Home';
 
 const routes = [
   {
     path: '/',
-    component: HomePage,
+    async(routeTo, routeFrom, resolve) {
+      const reactComponent = () => import('@/pages/Auth/Logout');
+      reactComponent().then((rc) => {
+        resolve({ component: rc.default });
+      });
+    },
   },
   {
     path: '/preferences',
@@ -16,30 +19,6 @@ const routes = [
       reactComponent().then((rc) => {
         resolve({ component: rc.default });
       });
-    },
-  },
-  {
-    path: '/login/',
-    component: Login,
-    options: {
-      animate: true,
-      transition: 'f7-parallax',
-    },
-  },
-  {
-    path: '/signup/',
-    component: SignUp,
-    options: {
-      animate: true,
-      transition: 'f7-parallax',
-    },
-  },
-  {
-    path: '/reset-password/',
-    component: ResetPasword,
-    options: {
-      animate: true,
-      transition: 'f7-parallax',
     },
   },
   {

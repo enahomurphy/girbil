@@ -52,7 +52,6 @@ export const ShortTitle = styled(Title)`
   max-width: 140px;
 `;
 
-
 export const Button = styled(F7Button)` 
   min-width: 250px;
   border-radius: 3px;
@@ -169,7 +168,9 @@ Active.defaultProps = {
 
 export const Popover = styled(f7Popover)`
   box-sizing: border-box;
-  width: ${({ width }) => width || 'initial'};
+  width: ${({ width }) => width};
+  right: ${({ right }) => right};
+  
   .item-content {
     padding: 0;
 
@@ -219,6 +220,7 @@ export const Popover = styled(f7Popover)`
 
 Popover.defaultProps = {
   width: '179px',
+  right: 'initial',
 };
 
 export const Search = styled.div`

@@ -7,71 +7,76 @@ import { setContext } from '@apollo/link-context';
 import { data, resolvers } from '.';
 import { storage } from '../lib';
 
-const cache = new InMemoryCache({
-  typePolicies: {
-    Message: {
-      keyFields: ['id'],
+export default ({
+  errorHandler = () => {},
+}) => {
+  const cache = new InMemoryCache({
+    typePolicies: {
+      Message: {
+        keyFields: ['id'],
+      },
     },
-  },
-});
+  });
 
-const defaultOptions = {
-  watchQuery: {
-    fetchPolicy: 'cache',
-    errorPolicy: 'all',
-  },
-  query: {
-    fetchPolicy: 'cache-and-network',
-    errorPolicy: 'all',
-  },
-  mutate: {
-    errorPolicy: 'all',
-  },
-};
+  const defaultOptions = {
+    watchQuery: {
+      fetchPolicy: 'cache',
+      errorPolicy: 'all',
+    },
+    query: {
+      fetchPolicy: 'cache-and-network',
+      errorPolicy: 'all',
+    },
+    mutate: {
+      errorPolicy: 'all',
+    },
+  };
 
-const errrorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors) {
-    graphQLErrors.map(({ message, locations, path }) => console.error(
-      `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-    ));
-  }
-
-  if (networkError) {
-    console.error(`[Network error]: ${networkError.statusCode}`);
-    if (networkError.statusCode === 401) {
-      storage.clear();
-      window.location.href = '/';
+  const errrorLink = onError(({ graphQLErrors, networkError, ...props }) => {
+    if (graphQLErrors) {
+      graphQLErrors.map(({ message, locations, path }) => console.error(
+        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+      ));
     }
-  }
-});
 
-const authLink = setContext((_, { headers }) => ({
-  headers: {
-    ...headers,
-    authorization: storage.token ? `Bearer ${storage.token}` : '',
-  },
-}));
+    if (networkError) {
+      console.error(`[Network error]: ${networkError.statusCode}`);
+      // if (networkError.statusCode === 401) {
+      //   storage.clear();
+      //   window.location.href = '/';
+      // }
+    }
+    errorHandler({ graphQLErrors, networkError, ...props });
+  });
 
-const httpLink = new HttpLink({ uri: `${process.env.API_URL}/graphql` });
+  const authLink = setContext((_, { headers }) => ({
+    headers: {
+      ...headers,
+      authorization: storage.token ? `Bearer ${storage.token}` : '',
+    },
+  }));
 
-const link = from([
-  errrorLink,
-  authLink.concat(httpLink),
-]);
+  const httpLink = new HttpLink({ uri: `${process.env.API_URL}/graphql` });
 
-const client = new ApolloClient({
-  link,
-  cache,
-  resolvers,
-  defaultOptions,
-});
+  const link = from([
+    errrorLink,
+    authLink.concat(httpLink),
+  ]);
 
-client.writeQuery({
-  query: gql`{
-    messages
-    conversationMeta
-  }`,
-  data,
-});
+  const client = new ApolloClient({
+    link,
+    cache,
+    resolvers,
+    defaultOptions,
+  });
 
-export default client;
+  client.writeQuery({
+    query: gql`{
+      messages
+      conversationMeta
+    }`,
+    data,
+  });
+
+  return client;
+};

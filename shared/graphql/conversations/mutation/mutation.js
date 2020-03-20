@@ -77,10 +77,19 @@ export const MARK_MESSAGE_AS_READ = gql`
   }
 `;
 
+export const CLOSE_CONVERSATION = gql`
+  mutation closeConversation($conversationId: String!)  {
+    closeConversation(
+      conversationId: $conversationId
+    )
+  }
+`;
+
 export default {
   UPDATE_MESSAGE,
   ADD_MESSAGE,
   READ_MESSAGE,
   SAVE_MESSAGE,
   MARK_MESSAGE_AS_READ,
+  CLOSE_CONVERSATION,
 };

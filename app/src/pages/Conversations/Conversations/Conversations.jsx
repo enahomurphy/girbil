@@ -4,7 +4,7 @@ import { Page, List, ListItem } from 'framework7-react';
 import { useMutation } from '@apollo/client';
 
 import { storage } from '@shared/lib';
-import { query } from '@shared/graphql/conversations';
+import { query, mutation } from '@shared/graphql/conversations';
 import { mutation as channelMutations } from '@shared/graphql/channels';
 import ConversationListItem from '@/components/List/ListItem';
 import ConversationHeader from '../../../components/Header/ConversationHeader';
@@ -12,6 +12,7 @@ import UserInfo from './UserInfo';
 
 const Conversations = () => {
   const { conversations } = query.useGetUserConversations();
+  const [closeConversation] = useMutation(mutation.CLOSE_CONVERSATION);
   const [leaveChannel] = useMutation(channelMutations.LEAVE_CHANNEL);
 
   const handelLeaveChannel = (channelId) => () => {
@@ -26,6 +27,23 @@ const Conversations = () => {
 
           return true;
         });
+
+        store.writeQuery({
+          query: query.USER_CONVERSATIONS,
+          data: { conversations: newConverse },
+        });
+      },
+    });
+  };
+
+  const handelCloseConversations = (conversationId) => () => {
+    closeConversation({
+      variables: { conversationId },
+      update: (store) => {
+        const data = store.readQuery({
+          query: query.USER_CONVERSATIONS,
+        });
+        const newConverse = data.conversations.filter(({ id }) => id !== conversationId);
 
         store.writeQuery({
           query: query.USER_CONVERSATIONS,
@@ -57,7 +75,7 @@ const Conversations = () => {
                 {
                   title: 'Close Direct Message',
                   clickable: false,
-                  onClick: () => {},
+                  onClick: handelCloseConversations(id),
                 },
               ]}
               getLink={() => `/conversations/${id}/`}

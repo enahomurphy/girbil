@@ -15,10 +15,12 @@ const ListInfo = ({ unreadCount, options, id }) => (
     padding="0"
   >
     {unreadCount && (<Badge color="red">{unreadCount}</Badge>)}
-    <span>
-      <Popover width="176px" className={`popover-menu${id}`}>
-        <List>
-          {
+    {
+      Boolean(options && options.length) && (
+        <span>
+          <Popover width="176px" className={`popover-menu${id}`}>
+            <List>
+              {
             options.map(({ title, getLink, onClick }) => (
               <ListItem
                 key={title}
@@ -29,10 +31,12 @@ const ListInfo = ({ unreadCount, options, id }) => (
               />
             ))
           }
-        </List>
-      </Popover>
-      <Link popoverOpen={`.popover-menu${id}`} iconF7="ellipsis_vertical" color="white " />
-    </span>
+            </List>
+          </Popover>
+          <Link popoverOpen={`.popover-menu${id}`} iconF7="ellipsis_vertical" color="white " />
+        </span>
+      )
+    }
   </Block>
 );
 

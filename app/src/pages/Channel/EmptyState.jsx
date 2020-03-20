@@ -19,7 +19,7 @@ const EmptyState = () => (
       type="flex"
       justify="center"
     >
-      <img src={require('../../static/images/empty.jpg')} alt="empty" />
+      <img src="/assets/images/empty.jpg" alt="empty" />
     </Block>
     <Title
       align="center"

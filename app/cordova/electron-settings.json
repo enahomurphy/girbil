@@ -3,20 +3,11 @@
     "width": 376,
     "height": 812,
     "resizable": true,
-    "alwaysOnTop": true,
+    "alwaysOnTop": false,
     "fullscreenable": false,
     "frame": false,
     "webPreferences": {
       "nodeIntegration": false
-    },
-    "electron": {
-      "mac": {
-        "package": [
-          "tar.gz",
-          "zip",
-          "pkg"
-        ]
-      }
     }
   }
 }

@@ -2,6 +2,7 @@ import { ApolloProvider } from '@apollo/client';
 import React, { useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Device } from 'framework7';
+
 import {
   App,
   View,

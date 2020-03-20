@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import {
-  Navbar,
   NavLeft,
   Link,
   f7,
@@ -10,11 +8,8 @@ import {
 
 import { Title } from '@/components/Style';
 import { Back } from '@/components/Icon';
+import { StyledNavbar } from './style';
 
-const StyledNavbar = styled(Navbar)`
-  height: 80px;
-  border-bottom: 1px solid #ffffff;
-`;
 
 const Header = ({ title }) => (
   <StyledNavbar>

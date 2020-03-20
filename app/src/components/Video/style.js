@@ -58,6 +58,7 @@ export const StyledHeader = styled.div`
   align-items: center;
   flex-direction: column;
   cursor: pointer;
+  -webkit-app-region: drag;
 
   h1 {
     font: bold 24px/30px PT sans;

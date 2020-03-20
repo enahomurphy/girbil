@@ -3,14 +3,6 @@ import { ListItem } from 'framework7-react';
 import { Title, Block } from '@/components/Style';
 import styled from 'styled-components';
 
-export const NavbarWrapper = styled.div`
-  margin-top: 24px;
-
-  .navbar-bg::after {
-    border: none;
-  }
-`;
-
 export const StyledUser = styled(Block)`
   padding: 0 16px;
 `;

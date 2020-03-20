@@ -56,7 +56,6 @@ export const ADD_USERS_TO_CHANNEL = gql`
   }
 `;
 
-
 export const LEAVE_CHANNEL = gql`
   mutation leaveChannel($channelId: String!) {
     leaveChannel(

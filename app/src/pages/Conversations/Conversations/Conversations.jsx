@@ -7,7 +7,7 @@ import { storage } from '@shared/lib';
 import { query } from '@shared/graphql/conversations';
 import { mutation as channelMutations } from '@shared/graphql/channels';
 import ConversationListItem from '@/components/List/ListItem';
-import ConversationHeader from './ConversationHeader';
+import ConversationHeader from '../../../components/Header/ConversationHeader';
 import UserInfo from './UserInfo';
 
 const Conversations = () => {

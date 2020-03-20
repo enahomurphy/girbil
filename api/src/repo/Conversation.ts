@@ -33,11 +33,15 @@ class ConversationRepository extends Repository<Conversation> {
         LIMIT 1
       ) = 1
       
-      OR conversation.receiver_type = 'user'
-      AND (
-        conversation.creator_id = :userId
-        OR conversation.receiver_id = :userId
+      OR (
+        conversation.receiver_type = 'user'
+        AND (
+          conversation.creator_id = :userId
+          OR conversation.receiver_id = :userId
+        )
+        AND conversation.open = 'true'::boolean
       )
+      
       AND "conversation"."organization_id" = :organizationId
     `);
 
@@ -70,29 +74,32 @@ class ConversationRepository extends Repository<Conversation> {
   }
 
   async hasUser(id: string, userId: string, organizationId: string): Promise<Conversation> {
-    return this.manager.findOne(UserConversations, {
-      cache: true,
-      where: [
-        {
-          id,
-          organizationId,
-          userId,
-          receiverType: ConversationType.CHANNEL,
-        },
-        {
-          id,
-          organizationId,
-          creatorId: userId,
-          receiverType: ConversationType.USER,
-        },
-        {
-          id,
-          organizationId,
-          receiverId: userId,
-          receiverType: ConversationType.USER,
-        },
-      ],
-    });
+    return this.createQueryBuilder('conversation')
+      .setParameter('id', id)
+      .setParameter('userId', userId)
+      .setParameter('organizationId', organizationId)
+      .where('conversation.id = :conversationId')
+      .where('conversation.organization_id = :organizationId')
+      .andWhere(
+        `
+        (
+          (
+              SELECT COUNT(channel_id) > 0 as channel
+              FROM channel_users
+              WHERE channel_id = conversation.receiver_id
+              AND conversation.receiver_type = 'channel'
+              AND user_id = :userId
+              LIMIT 1
+          )
+  
+          OR (
+              creator_id = :userId
+              OR receiver_id = :userId
+          )
+        )
+        `,
+      )
+      .getOne();
   }
 
   async getUsersWithoutConversation(
@@ -113,10 +120,10 @@ class ConversationRepository extends Repository<Conversation> {
 
     const result = await query.andWhere(`
       (
-        SELECT COUNT(id)
+        SELECT COUNT(id) = 0 as has_conversation
             FROM conversations as conversation 
         WHERE 
-            conversation.receiver_id = :userId 
+            conversation.receiver_id = :userId
         AND 
             conversation.creator_id = org_user.user_id
         OR 
@@ -125,7 +132,7 @@ class ConversationRepository extends Repository<Conversation> {
             conversation.receiver_id = org_user.user_id
         AND 
             conversation.receiver_type = :type
-      ) = 0;
+      );
     `)
       .getMany();
 

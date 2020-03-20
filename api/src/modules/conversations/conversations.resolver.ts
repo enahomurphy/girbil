@@ -5,6 +5,7 @@ import {
   Ctx,
   ResolverInterface,
   Arg,
+  Mutation,
 } from 'type-graphql';
 import { getCustomRepository } from 'typeorm';
 import { IsString, IsUUID } from 'class-validator';
@@ -76,11 +77,28 @@ class ConversationResolver implements ResolverInterface<Conversation> {
     @Arg('userId') @IsUUID() userId: string,
       @Ctx() { user }: ContextType,
   ): Promise<Conversation> {
-    return this.conversationRepo.findUserConversationOrCreate(
+    const conversation = await this.conversationRepo.findUserConversationOrCreate(
       user.organization.id,
       user.id,
       userId,
     );
+
+    if (!conversation.open) {
+      conversation.open = true;
+      this.conversationRepo.manager.save(conversation);
+    }
+
+    return conversation;
+  }
+
+  @Authorized('user', 'admin', 'owner')
+  @CanView('conversation')
+  @Mutation(() => String, { nullable: true })
+  async closeConversation(
+    @Arg('conversationId') @IsUUID() conversationId: string,
+  ): Promise<string> {
+    await this.conversationRepo.update({ id: conversationId }, { open: false });
+    return 'conversation closed';
   }
 }
 

@@ -38,6 +38,9 @@ export class Conversation {
   })
   organizationId?: string;
 
+  @Column('boolean')
+  open?: boolean;
+
   @Field()
   @CreateDateColumn({
     name: 'created_at',

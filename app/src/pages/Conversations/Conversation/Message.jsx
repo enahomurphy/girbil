@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { useQuery, useLazyQuery } from '@apollo/client';
+import { useQuery, useLazyQuery, useMutation } from '@apollo/client';
 import { Page, f7 } from 'framework7-react';
 import { useVideo, useConversationMeta } from '@/lib/hooks';
 import PropTypes from 'prop-types';
 
-import { query } from '@shared/graphql/conversations';
+import { query, mutation } from '@shared/graphql/conversations';
 import {
   Video, Header, useVideoData, Controls,
 } from '@/components/Video';
@@ -30,14 +30,35 @@ const Message = ({
     query.CONVERSATION,
     { variables: { conversationId } },
   );
+  const [markAsRead] = useMutation(mutation.MARK_MESSAGE_AS_READ);
 
   const conversationMeta = useConversationMeta(get(conversationData, 'conversation', {}));
 
   useEffect(() => {
     emitter.onEventEmitted('read_message', (args) => {
+      const variables = {
+        conversationId: args.conversationId,
+        messageId: args.messageId,
+        threadId: args.threadId,
+      };
 
-      if (args.read) {
-        // send request to mark as read
+      if (!args.hasRead) {
+        markAsRead({
+          variables,
+          update: (store) => {
+            const storeMessage = store.readQuery({
+              query: query.GET_MESSAGE,
+              variables,
+            });
+
+            store.writeQuery({
+              query: query.GET_MESSAGE,
+              variables,
+              data: { message: { ...storeMessage.message, hasRead: true } },
+            });
+          },
+          refetchQueries: ['conversations'],
+        });
       }
 
       getMessage({
@@ -48,16 +69,14 @@ const Message = ({
         },
       });
     });
-  }, [getMessage]);
+  }, [getMessage, markAsRead]);
 
   const goBack = () => {
     const link = isThread
       ? `/conversations/${conversationId}/thread/${messageId}/`
       : `/conversations/${conversationId}/`;
-  
     f7.view.current.router.back(link);
   };
-
 
   const {
     name = '',

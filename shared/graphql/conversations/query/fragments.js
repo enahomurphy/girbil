@@ -5,6 +5,8 @@ export const MESSAGE_FRAGMENT = gql`
     id
     video
     thumbnail
+    replyCount
+    hasRead
     state
     conversationId
     parentId

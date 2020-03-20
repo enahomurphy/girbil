@@ -30,8 +30,9 @@ class MessageResolver implements ResolverInterface<Message> {
   @Query(() => [Message])
   async messages(
     @Args() { conversationId, messageId }: MessagesArgs,
+    @Ctx() { user }: ContextType,
   ): Promise<Message[]> {
-    return this.messageRepo.messages(conversationId, messageId);
+    return this.messageRepo.messages(conversationId, user.id, messageId);
   }
 
   @Authorized('user', 'admin', 'owner')
@@ -52,6 +53,7 @@ class MessageResolver implements ResolverInterface<Message> {
       video,
       thumbnail,
       parentId: parentId || null,
+      read: [user.id]
     });
 
     const createdMessage = await this.messageRepo.save(message);
@@ -63,14 +65,24 @@ class MessageResolver implements ResolverInterface<Message> {
   @Authorized('user', 'admin', 'owner')
   @ValidateArgs(MessagesArgs)
   @CanView('conversation')
-  @Mutation(() => Message)
+  @Mutation(() => Message, { nullable: true })
   async markAsRead(
     @Arg('messageId') @IsUUID() messageId: String,
     @Arg('conversationId') @IsUUID() conversationId: string,
     @Ctx() { user }: ContextType,
   ): Promise<Message> {
     const message = await this.messageRepo.findOne({ id: messageId });
-    const { read = [ ]} = message;
+
+    if (!message)  {
+      throw new Error('Message does not exist');
+    }
+    
+
+    let { read } = message;
+    if (!read) {
+      read = []
+    }
+
     read.push(user.id)
     await this.messageRepo.update(
       {

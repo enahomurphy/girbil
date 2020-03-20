@@ -60,6 +60,7 @@ export const addMessage = (_, { conversationId, messageId }, { cache }) => {
     replyCount: 0,
     parentId: messageId || null,
     state: 'recording',
+    hasRead: true,
     createdAt: new Date(),
     __typename: 'Message',
     sender: {

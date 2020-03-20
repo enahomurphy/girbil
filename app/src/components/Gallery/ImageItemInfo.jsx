@@ -5,9 +5,11 @@ import { Popover, ListItem } from 'framework7-react';
 import { Icon, Link } from '@/components/Style';
 import { RecordingInfo, RecordingInfoContainer, ImageItemOption } from './style';
 
-const ImageItemInfo = ({ recording, pullover, replyCount }) => !recording && (
-  <RecordingInfoContainer>
-    <RecordingInfo />
+const ImageItemInfo = ({
+  recording, pullover, replyCount, hasRead,
+}) => !recording && (
+  <RecordingInfoContainer hasRead={hasRead}>
+    {!hasRead && <RecordingInfo /> }
     <div>
       <Link popoverOpen=".popover-menu">
         <Icon f7="ellipsis_vertical" color="#ffffff" />
@@ -35,6 +37,7 @@ ImageItemInfo.propTypes = {
   recording: PropTypes.bool.isRequired,
   pullover: PropTypes.array.isRequired,
   replyCount: PropTypes.number.isRequired,
+  hasRead: PropTypes.bool.isRequired,
 };
 
 export default ImageItemInfo;

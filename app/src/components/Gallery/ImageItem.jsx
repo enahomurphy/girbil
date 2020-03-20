@@ -9,7 +9,8 @@ import ImageItemPlaying from './ImageItemPlaying';
 import { StyledSlide } from './style';
 
 const ImageItem = ({
-  onClick, id, thumbnail, state, sender, pullover, createdAt, replyCount, onReplyClicked,
+  onClick, id, thumbnail, state, sender,
+  pullover, createdAt, replyCount, onReplyClicked, hasRead,
 }) => {
   let renderThumbnail = thumbnail;
 
@@ -32,6 +33,7 @@ const ImageItem = ({
     <SwiperSlide key={id}>
       <ImageItemInfo
         replyCount={replyCount}
+        hasRead={hasRead}
         pullover={pullover}
         recording={slideProps.recording}
       />
@@ -52,6 +54,7 @@ const ImageItem = ({
 
 ImageItem.defaultProps = {
   replyCount: 0,
+  hasRead: false,
 };
 
 ImageItem.propTypes = {
@@ -62,6 +65,7 @@ ImageItem.propTypes = {
   sender: PropTypes.object.isRequired,
   pullover: PropTypes.array.isRequired,
   replyCount: PropTypes.number,
+  hasRead: PropTypes.bool,
   onReplyClicked: PropTypes.func.isRequired,
   createdAt: PropTypes.oneOfType([Date, PropTypes.number]).isRequired,
 };

@@ -66,9 +66,21 @@ export const UPDATE_MESSAGE_STATE = gql`
   }
 `;
 
+export const MARK_MESSAGE_AS_READ = gql`
+  mutation markAsRead($messageId: String!, $conversationId: String!)  {
+    markAsRead(
+      messageId: $messageId,
+      conversationId: $conversationId
+    ) {
+      id
+    }
+  }
+`;
+
 export default {
   UPDATE_MESSAGE,
   ADD_MESSAGE,
   READ_MESSAGE,
   SAVE_MESSAGE,
+  MARK_MESSAGE_AS_READ,
 };

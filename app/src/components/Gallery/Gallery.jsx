@@ -44,7 +44,8 @@ const Gallery = ({ messages, onClick }) => {
       <Swiper params={params}>
         {
           messages.map(({
-            id, conversationId, thumbnail, state, sender, pullover, createdAt, replyCount,
+            id, conversationId, thumbnail,
+            state, sender, pullover, createdAt, replyCount, hasRead,
           }) => (
             <ImageItem
               onClick={onClick}
@@ -57,6 +58,7 @@ const Gallery = ({ messages, onClick }) => {
               sender={sender}
               createdAt={createdAt}
               replyCount={replyCount}
+              hasRead={hasRead}
             />
           ))
         }

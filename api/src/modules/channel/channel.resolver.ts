@@ -70,7 +70,6 @@ class ChannelResolver implements ResolverInterface<Channel> {
     return this.channelRepo.getMembers<ChannelMembers>(channelId);
   }
 
-
   @Authorized('user', 'admin', 'owner')
   @Query(() => ChannelMembers, { nullable: true })
   async usersNotInChannel(
@@ -158,6 +157,17 @@ class ChannelResolver implements ResolverInterface<Channel> {
     await this.channelUsersRepo.insert(formatUsersToSave);
 
     return 'user added';
+  }
+
+  @Authorized('user', 'admin', 'owner')
+  @Mutation(() => String)
+  async leaveChannel(
+    @Arg('channelId') @IsUUID() channelId: string,
+      @Ctx() { user: { id } }: ContextType,
+  ): Promise<string> {
+    await this.channelUsersRepo.delete({ userId: id, channelId });
+
+    return 'User removed';
   }
 
   @FieldResolver()

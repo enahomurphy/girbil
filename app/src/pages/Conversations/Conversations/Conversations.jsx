@@ -1,15 +1,39 @@
 
 import React from 'react';
 import { Page, List, ListItem } from 'framework7-react';
+import { useMutation } from '@apollo/client';
 
 import { storage } from '@shared/lib';
 import { query } from '@shared/graphql/conversations';
+import { mutation as channelMutations } from '@shared/graphql/channels';
 import ConversationListItem from '@/components/List/ListItem';
 import ConversationHeader from './ConversationHeader';
 import UserInfo from './UserInfo';
 
 const Conversations = () => {
   const { conversations } = query.useGetUserConversations();
+  const [leaveChannel] = useMutation(channelMutations.LEAVE_CHANNEL);
+
+  const handelLeaveChannel = (channelId) => () => {
+    leaveChannel({
+      variables: { channelId },
+      update: (store) => {
+        const data = store.readQuery({
+          query: query.USER_CONVERSATIONS,
+        });
+        const newConverse = data.conversations.filter(({ channel }) => {
+          if (channel && channel.id === channelId) return false;
+
+          return true;
+        });
+
+        store.writeQuery({
+          query: query.USER_CONVERSATIONS,
+          data: { conversations: newConverse },
+        });
+      },
+    });
+  };
 
   return (
     <Page>
@@ -61,7 +85,7 @@ const Conversations = () => {
                 {
                   title: 'Leave Channel',
                   clickable: true,
-                  onClick: () => {},
+                  onClick: handelLeaveChannel(channel.id),
                 },
               ]}
               getLink={() => `/conversations/${id}/`}

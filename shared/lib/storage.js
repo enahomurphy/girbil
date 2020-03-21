@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import decode from 'jwt-decode';
 
 class TokenStorage {
@@ -25,6 +26,14 @@ class TokenStorage {
   setToken(token) {
     localStorage.setItem(this.key, token);
     return this;
+  }
+
+  getItem(key) {
+    try {
+      return JSON.parse(localStorage.getItem(key));
+    } catch (e) {
+      return localStorage.getItem(key);
+    }
   }
 
   clear() {

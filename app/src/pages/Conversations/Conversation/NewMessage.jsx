@@ -23,14 +23,16 @@ const NewMessage = ({ isThread, conversationId }) => {
     { variables: { conversationId }, fetchPolicy: 'network-only' },
   );
   const conversationMeta = useConversationMeta(get(conversationData, 'conversation', {}));
-  const { params } = useVideoData(null, 'video');
 
+  const { params } = useVideoData(null, 'video');
   const id = isThread ? 'thread-video' : 'video';
   const [video] = useVideo({ ...params, id, muted: true });
   const [videoRecorder] = useState(new Video(id));
 
   const [saveMessage] = mutation.useSaveMessage();
   const [addMessage, { data }] = useMutation(mutation.ADD_MESSAGE);
+  const [updateState] = mutation.useMessageState();
+
   const [{ matches }, send] = useMachine(RecordMachine, {
     context: {
       addMessage,
@@ -43,6 +45,24 @@ const NewMessage = ({ isThread, conversationId }) => {
       send('UPLOAD_URL', { urls: getUploadURL });
     },
   });
+
+  const stopRecord = async () => {
+    const messageId = get(data, 'addMessage.id');
+    const threadId = getParam('threadId');
+
+    updateState({
+      conversationId,
+      messageId,
+      threadId,
+      state: 'ok',
+    });
+
+    const file = await videoRecorder.stopRecordAndGetFile(messageId);
+    send('STOP');
+    send('PROCESS', {
+      file, urls, messageId, conversationId, parentId: threadId,
+    });
+  };
 
   const startRecord = async () => {
     const threadId = getParam('threadId');
@@ -62,12 +82,7 @@ const NewMessage = ({ isThread, conversationId }) => {
     }
 
     if (matches('record.start')) {
-      const messageId = get(data, 'addMessage.id');
-      const file = await videoRecorder.stopRecordAndGetFile(messageId);
-      send('STOP');
-      send('PROCESS', {
-        file, urls, messageId, conversationId, parentId: threadId,
-      });
+      stopRecord();
     }
   };
 
@@ -76,8 +91,8 @@ const NewMessage = ({ isThread, conversationId }) => {
     send('UPLOAD_THUMBNAIL', { thumbnail, urls });
   };
 
-  videoRecorder.onRecordStop = () => {
-    startRecord();
+  videoRecorder.onDurationEnd = () => {
+    stopRecord();
   };
 
   useEffect(() => {
@@ -88,7 +103,9 @@ const NewMessage = ({ isThread, conversationId }) => {
   }, [videoRecorder, isThread]);
 
   const goBack = () => {
-    f7.views.main.router.back();
+    if (matches('record.idle')) {
+      f7.views.main.router.back();
+    }
   };
 
   const {

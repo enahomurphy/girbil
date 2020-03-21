@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { useQuery, useLazyQuery, useMutation } from '@apollo/client';
+import { useQuery, useLazyQuery } from '@apollo/client';
 import { Page, f7 } from 'framework7-react';
-import { useVideo, useConversationMeta } from '@/lib/hooks';
 import PropTypes from 'prop-types';
 
+import { useVideo, useConversationMeta } from '@/lib/hooks';
 import { query, mutation } from '@shared/graphql/conversations';
 import {
   Video, Header, useVideoData, Controls,
@@ -30,12 +30,13 @@ const Message = ({
     query.CONVERSATION,
     { variables: { conversationId } },
   );
-  const [markAsRead] = useMutation(mutation.MARK_MESSAGE_AS_READ);
+  const [markAsRead] = mutation.useMarkMessage('read');
+  const [updateState] = mutation.useMessageState();
 
   const conversationMeta = useConversationMeta(get(conversationData, 'conversation', {}));
 
   useEffect(() => {
-    emitter.onEventEmitted('read_message', (args) => {
+    const handleReadMessage = (args) => {
       const variables = {
         conversationId: args.conversationId,
         messageId: args.messageId,
@@ -43,22 +44,7 @@ const Message = ({
       };
 
       if (!args.hasRead) {
-        markAsRead({
-          variables,
-          update: (store) => {
-            const storeMessage = store.readQuery({
-              query: query.GET_MESSAGE,
-              variables,
-            });
-
-            store.writeQuery({
-              query: query.GET_MESSAGE,
-              variables,
-              data: { message: { ...storeMessage.message, hasRead: true } },
-            });
-          },
-          refetchQueries: ['conversations'],
-        });
+        markAsRead(variables);
       }
 
       getMessage({
@@ -68,14 +54,25 @@ const Message = ({
           threadId: args.threadId,
         },
       });
-    });
+    };
+
+    emitter.onEventEmitted('read_message', handleReadMessage);
+    return () => emitter.removeListener('read_message', handleReadMessage);
   }, [getMessage, markAsRead]);
 
   const goBack = () => {
+    updateState({
+      conversationId,
+      messageId: message.id,
+      threadId: isThread && messageId,
+      state: 'done',
+    });
+
     const link = isThread
       ? `/conversations/${conversationId}/thread/${messageId}/`
       : `/conversations/${conversationId}/`;
-    f7.view.current.router.back(link);
+
+    f7.view.current.router.navigate(link);
   };
 
   const {

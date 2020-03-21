@@ -41,10 +41,6 @@ export default ({
 
     if (networkError) {
       console.error(`[Network error]: ${networkError.statusCode}`);
-      // if (networkError.statusCode === 401) {
-      //   storage.clear();
-      //   window.location.href = '/';
-      // }
     }
     errorHandler({ graphQLErrors, networkError, ...props });
   });

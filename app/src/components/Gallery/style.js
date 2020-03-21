@@ -77,7 +77,7 @@ export const SliderNavWrapper = styled.div`
 
 export const RecordingInfoContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: ${({ hasRead }) => (hasRead ? 'flex-end' : 'space-between')};
   max-width: var(--gb-message-width);
   width: 100%;
   height: 20px;

@@ -77,10 +77,29 @@ export const MARK_MESSAGE_AS_READ = gql`
   }
 `;
 
+export const MARK_MESSAGE_AS_UNREAD = gql`
+  mutation markAsUnRead ($messageId: String!, $conversationId: String!)  {
+    markAsUnRead(
+      messageId: $messageId,
+      conversationId: $conversationId
+    ) {
+      id
+    }
+  }
+`;
+
 export const CLOSE_CONVERSATION = gql`
   mutation closeConversation($conversationId: String!)  {
     closeConversation(
       conversationId: $conversationId
+    )
+  }
+`;
+
+export const DELETE_MESSAGE = gql`
+  mutation deleteMessage($messageId: String!)  {
+    deleteMessage(
+      messageId: $messageId
     )
   }
 `;

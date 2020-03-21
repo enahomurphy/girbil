@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { f7 } from 'framework7-react';
-import { useMutation } from '@apollo/client';
 import PropTypes from 'prop-types';
 
 import { query, mutation } from '@shared/graphql/conversations';
@@ -8,7 +7,13 @@ import Gallery from '@/components/Gallery';
 import Emoji from '@/components/Emoji';
 import emitter from '@/lib/emitter';
 
-const getPullOverLinks = (conversationId, { id }) => {
+import EmptyState from './EmptyMessage';
+
+const getPullOverLinks = ({
+  conversationId,
+  message: { id, hasRead },
+  markMessage,
+}) => {
   const options = [
     {
       type: 'emoji',
@@ -27,8 +32,13 @@ const getPullOverLinks = (conversationId, { id }) => {
       onClick: () => {},
     },
     {
-      type: 'unwatched',
-      title: 'Mark as unwatched',
+      type: 'watch',
+      title: `Mark as ${hasRead ? 'unwatched' : 'watched'}`,
+      onClick: markMessage,
+    },
+    {
+      type: 'delete video',
+      title: 'delete video',
       onClick: () => {},
     },
   ];
@@ -39,8 +49,10 @@ const getPullOverLinks = (conversationId, { id }) => {
 const Messages = ({
   conversationId, threadId, isThread,
 }) => {
-  const [updateState] = useMutation(mutation.UPDATE_MESSAGE_STATE);
   const [loadMessage, { messages, loading }] = query.useMessages(conversationId, threadId);
+  const [updateState] = mutation.useMessageState();
+  const [markAsUnRead] = mutation.useMarkMessage('unread');
+  const [markAsRead] = mutation.useMarkMessage('read');
 
   useEffect(() => {
     loadMessage();
@@ -49,12 +61,10 @@ const Messages = ({
   useEffect(() => {
     const handler = ({ message, state }) => {
       updateState({
-        variables: {
-          conversationId: message.conversationId,
-          messageId: message.id,
-          threadId,
-          state,
-        },
+        conversationId: message.conversationId,
+        messageId: message.id,
+        threadId,
+        state,
       });
     };
 
@@ -62,26 +72,28 @@ const Messages = ({
     emitter.onEventEmitted('pause_message', handler);
   }, [threadId, updateState]);
 
+
   const onClick = async (id) => {
     const link = isThread
       ? `/conversations/${conversationId}/thread/${threadId}/message/${id}`
       : `/conversations/${conversationId}/${id}`;
 
-    updateState({
-      variables: {
+    const onUpdate = () => {
+      emitter.emitEvent('read_message', {
+        conversationId,
+        messageId: id,
+        threadId,
+      });
+    };
+    updateState(
+      {
         conversationId,
         messageId: id,
         threadId,
         state: 'toggle',
       },
-      update: () => {
-        emitter.emitEvent('read_message', {
-          conversationId,
-          messageId: id,
-          threadId,
-        });
-      },
-    });
+      onUpdate,
+    );
 
     f7.views.main.router.navigate(
       link,
@@ -103,12 +115,29 @@ const Messages = ({
 
   const updatedMessages = messages.map((message) => ({
     ...message,
-    pullover: getPullOverLinks(conversationId, message),
+    pullover: getPullOverLinks({
+      conversationId,
+      message,
+      markMessage: () => (message.hasRead ? markAsUnRead : markAsRead)({
+        conversationId,
+        messageId: message.id,
+        threadId,
+      }),
+    }),
     link: '#',
   }));
 
   return (
-    <Gallery messages={updatedMessages} onClick={onClick} />
+    <>
+      {
+        messages.length ? (
+          <Gallery messages={updatedMessages} onClick={onClick} />
+        ) : (
+          <EmptyState isThread={isThread} />
+        )
+      }
+      {}
+    </>
   );
 };
 

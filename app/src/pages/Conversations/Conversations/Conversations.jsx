@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Page, List, ListItem } from 'framework7-react';
-import { useMutation } from '@apollo/client';
 
 import { storage } from '@shared/lib';
 import { query, mutation } from '@shared/graphql/conversations';
@@ -12,46 +11,8 @@ import UserInfo from './UserInfo';
 
 const Conversations = () => {
   const { conversations } = query.useGetUserConversations();
-  const [closeConversation] = useMutation(mutation.CLOSE_CONVERSATION);
-  const [leaveChannel] = useMutation(channelMutations.LEAVE_CHANNEL);
-
-  const handelLeaveChannel = (channelId) => () => {
-    leaveChannel({
-      variables: { channelId },
-      update: (store) => {
-        const data = store.readQuery({
-          query: query.USER_CONVERSATIONS,
-        });
-        const newConverse = data.conversations.filter(({ channel }) => {
-          if (channel && channel.id === channelId) return false;
-
-          return true;
-        });
-
-        store.writeQuery({
-          query: query.USER_CONVERSATIONS,
-          data: { conversations: newConverse },
-        });
-      },
-    });
-  };
-
-  const handelCloseConversations = (conversationId) => () => {
-    closeConversation({
-      variables: { conversationId },
-      update: (store) => {
-        const data = store.readQuery({
-          query: query.USER_CONVERSATIONS,
-        });
-        const newConverse = data.conversations.filter(({ id }) => id !== conversationId);
-
-        store.writeQuery({
-          query: query.USER_CONVERSATIONS,
-          data: { conversations: newConverse },
-        });
-      },
-    });
-  };
+  const [closeConversation] = mutation.useCloseConversation();
+  const [leaveChannel] = channelMutations.useLeaveChannel();
 
   return (
     <Page>
@@ -75,7 +36,7 @@ const Conversations = () => {
                 {
                   title: 'Close Direct Message',
                   clickable: false,
-                  onClick: handelCloseConversations(id),
+                  onClick: closeConversation(id),
                 },
               ]}
               getLink={() => `/conversations/${id}/`}
@@ -103,7 +64,7 @@ const Conversations = () => {
                 {
                   title: 'Leave Channel',
                   clickable: true,
-                  onClick: handelLeaveChannel(channel.id),
+                  onClick: leaveChannel(channel.id),
                 },
               ]}
               getLink={() => `/conversations/${id}/`}

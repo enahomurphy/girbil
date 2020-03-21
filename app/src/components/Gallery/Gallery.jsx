@@ -12,6 +12,7 @@ const Gallery = ({ messages, onClick }) => {
     if (messages.length) {
       const slide = f7.swiper.get('.swiper-container');
       if (messages[messages.length - 1].state === 'recording') {
+        slide.update();
         slide.slideTo(messages.length);
       }
     }

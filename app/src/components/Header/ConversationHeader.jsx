@@ -35,9 +35,9 @@ const ConversationHeader = () => (
         </Link>
         <Popover margin="0 30px 0 0" className="popover-settings">
           <List>
-            <ListItem href="/preferences" title="System preference" />
-            <ListItem href="/logout" title="Sign out of Girbil" />
-            <ListItem onClick={() => console.info('logout')} title="Quit Girbil" />
+            <ListItem popoverClose href="/preferences" title="System preference" />
+            <ListItem popoverClose href="/logout" title="Sign out of Girbil" />
+            <ListItem popoverClose onClick={() => console.info('logout')} title="Quit Girbil" />
           </List>
         </Popover>
       </NavRight>

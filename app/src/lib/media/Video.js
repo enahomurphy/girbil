@@ -1,3 +1,5 @@
+import { storage, get } from '@shared/lib';
+
 import Recorder from './Recorder';
 
 class Video extends Recorder {
@@ -23,10 +25,7 @@ class Video extends Recorder {
 
   useMedia() {
     navigator.getUserMedia(
-      {
-        video: true,
-        audio: true,
-      },
+      Video.constraints,
       this.videoStart,
       this.videoError,
     );
@@ -48,10 +47,22 @@ class Video extends Recorder {
     this.stream.getTracks().forEach((track) => {
       track.stop();
     });
+    this.reset();
   }
 
   get video() {
     return document.getElementById(this.videoId);
+  }
+
+  static get constraints() {
+    const device = storage.getItem('gb-device');
+    const audioSource = get(device, 'microphone.deviceId', undefined);
+    const videoSource = get(device, 'video.deviceId', undefined);
+
+    return {
+      audio: { deviceId: audioSource },
+      video: { deviceId: videoSource },
+    };
   }
 }
 

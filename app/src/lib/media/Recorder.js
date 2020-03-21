@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 class Recorder {
   constructor() {
-    this.duration = 30000;
+    this.duration = 5000;
 
     this.onMediaError = this.onMediaError.bind(this);
     this.onMediaStop = this.onMediaStop.bind(this);
@@ -9,6 +9,7 @@ class Recorder {
     this.media = new MediaRecorder(new MediaStream());
 
     this.onRecordStop = () => {};
+    this.onDurationEnd = () => {};
     this.onRecordStart = () => {};
     this.onRecordError = () => {};
     this.onRecordThumbnail = () => {};
@@ -33,17 +34,12 @@ class Recorder {
   }
 
   stopRecord() {
-    this.media.stopRecording(() => {
-      clearTimeout(this.timeout);
-      this.onMediaStop(this.media.getBlob());
-    });
+    this.onRecordStop(this.media.getBlob());
   }
 
   async stopRecordAndGetFile(name) {
     return new Promise((resolve) => {
       this.media.stopRecording(() => {
-        clearTimeout(this.timeout);
-        this.onMediaStop(this.media.getBlob());
         resolve(this.file(name));
       });
     });
@@ -58,7 +54,8 @@ class Recorder {
     this.onRecordStart();
 
     this.timeout = setTimeout(() => {
-      this.stopRecord();
+      this.onDurationEnd();
+      clearTimeout(this.timeout);
     }, this.duration);
   }
 

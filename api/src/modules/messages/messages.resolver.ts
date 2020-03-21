@@ -14,7 +14,7 @@ import { IsUUID } from 'class-validator';
 
 import { MessageRepo } from '../../repo';
 import { Message } from '../../entity';
-import { CanView } from '../../middleware/permissions';
+import { CanView, CanEdit } from '../../middleware/permissions';
 import { MessagesArgs } from './message.args';
 import { ValidateArgs } from '../../middleware/decorators';
 import { AddMessageInput } from './message.input';
@@ -77,7 +77,6 @@ class MessageResolver implements ResolverInterface<Message> {
       throw new Error('Message does not exist');
     }
 
-
     let { read } = message;
     if (!read) {
       read = [];
@@ -94,6 +93,57 @@ class MessageResolver implements ResolverInterface<Message> {
       },
     );
     return message;
+  }
+
+  @Authorized('user', 'admin', 'owner')
+  @ValidateArgs(MessagesArgs)
+  @CanView('conversation')
+  @Mutation(() => Message, { nullable: true })
+  async markAsUnRead(
+    @Arg('messageId') @IsUUID() messageId: string,
+      @Arg('conversationId') @IsUUID() conversationId: string,
+      @Ctx() { user }: ContextType,
+  ): Promise<Message> {
+    const message = await this.messageRepo.findOne({ id: messageId });
+
+    if (!message) {
+      throw new Error('Message does not exist');
+    }
+
+    let { read } = message;
+
+    if (!read) {
+      read = [];
+    }
+
+    if (!message.read.length) {
+      return message;
+    }
+
+    read = read.filter((id) => id !== user.id);
+    await this.messageRepo.update(
+      {
+        id: messageId,
+        conversationId,
+      },
+      {
+        read: Array.from(new Set(read)),
+      },
+    );
+
+    return message;
+  }
+
+  @Authorized('user', 'admin', 'owner')
+  @ValidateArgs(MessagesArgs)
+  @CanEdit('message')
+  @Mutation(() => Message, { nullable: true })
+  async deleteMessage(
+    @Arg('messageId') @IsUUID() messageId: string,
+  ): Promise<Message> {
+    await this.messageRepo.delete({ id: messageId });
+
+    return 'Message deleted';
   }
 }
 

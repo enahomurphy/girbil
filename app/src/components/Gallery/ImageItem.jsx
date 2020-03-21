@@ -32,8 +32,8 @@ const ImageItem = ({
   return (
     <SwiperSlide key={id}>
       <ImageItemInfo
-        replyCount={replyCount}
         hasRead={hasRead}
+        replyCount={replyCount}
         pullover={pullover}
         recording={slideProps.recording}
       />
@@ -46,7 +46,11 @@ const ImageItem = ({
           replyCount={replyCount}
           onReplyClicked={onReplyClicked}
         />}
-        {slideProps.recording && <ImageRecordingItem thumbnail={renderThumbnail} />}
+        {slideProps.recording && (
+          <ImageRecordingItem
+            thumbnail={renderThumbnail}
+          />
+        )}
       </StyledSlide>
     </SwiperSlide>
   );

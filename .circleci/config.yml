@@ -45,6 +45,8 @@ jobs:
             sh scripts/deploy-web.sh
 
   deploy-staging-api:
+    docker:
+      - image: circleci/node:12.16.1 
     executor: aws-cli/default
     parameters:
       deploy-application:
@@ -56,10 +58,23 @@ jobs:
     steps:
       - checkout
       - aws-cli/setup
+      - restore_cache:
+          key: dependency-cache-{{ checksum "api/package.json" }}
+      - run:
+          name: Install Packages
+          command: cd api/ && yarn install
+      - save_cache:
+          key: dependency-cache-{{ checksum "api/package.json" }}
+          paths:
+            - ./api/node_modules
       - run:
           name: deploy api app
           command: |
-            cd api && sh scripts/build.sh
+            cd api
+            sudo npm install -g typescript
+            sudo tsc
+            sudo cp ormconfig.prod.js ormconfig.js
+            sudo rm -rf node_modules
             sudo rm -rf src
       - run:
           name: deploy api app

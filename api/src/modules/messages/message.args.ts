@@ -23,3 +23,11 @@ export class MessagesArgs {
   @Field(() => String, { nullable: true })
   messageId?: string
 }
+
+
+@ArgsType()
+export class MessageIDArgs {
+  @Field()
+  @IsUUID()
+  messageId?: string
+}

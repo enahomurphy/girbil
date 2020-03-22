@@ -34,10 +34,10 @@ export function createSignedURL(name: string, type: string): Promise<UploadURL> 
         return reject(err);
       }
 
-      return resolve(plainToClass(UploadURL, {
+      return {
         postURL: signedURL,
         getURL: signedURL.split('?')[0],
-      }));
+      };
     });
   });
 }
@@ -63,7 +63,7 @@ export async function getMessageUploadURL(id: string, path: string): Promise<Upl
   });
 }
 
-export const upload = async (fileName, stream): void => {
+export const upload = async (fileName, stream): Promise<any> => {
   const options = {
     signatureVersion: 'v4',
     endpoint: `${keys.aws.s3.bucket}.s3-accelerate.amazonaws.com`,

@@ -1,10 +1,12 @@
 import { getCustomRepository } from 'typeorm';
-import { NextFn, createMethodDecorator } from 'type-graphql';
-import { notFoundError } from './Errorhandler';
-import { MessageRepo } from '../../repo';
+import { createMethodDecorator } from 'type-graphql';
 
-export const CanEditMessage = createMethodDecorator(
-  async ({ context, args }, next): NextFn => {
+import { notFoundError } from './errorhandler';
+import { MessageRepo } from '../../repo';
+import { ContextType } from '../../interfaces';
+
+export const CanEditMessage = createMethodDecorator<ContextType>(
+  async ({ context, args }, next) => {
     const messageRepo = getCustomRepository(MessageRepo);
     const message = await messageRepo.findOne({
       senderId: context.user.id,

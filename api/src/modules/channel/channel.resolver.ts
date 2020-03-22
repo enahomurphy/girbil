@@ -14,11 +14,10 @@ import {
   getCustomRepository, getRepository, In,
 } from 'typeorm';
 
-import { IsUUID } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 import { ChannelRepo, ConversationRepo } from '../../repo';
 import { ContextType } from '../../interfaces';
-import { ChannelArgs } from './channel.args';
+import { ChannelArgs, ChannelIDArgs } from './channel.args';
 import { ChannelInput, AddUsersToChannelInput } from './channel.input';
 import { pick } from '../../utils/utils';
 import {
@@ -51,7 +50,7 @@ class ChannelResolver implements ResolverInterface<Channel> {
   @Authorized('user', 'admin', 'owner')
   @Query(() => Channel, { nullable: true })
   async channel(
-    @Arg('channelId') @IsUUID() channelId: string,
+    @Args() { channelId }: ChannelIDArgs,
       @Ctx() { user: { organization } }: ContextType,
   ): Promise<Channel> {
     return this.channelRepo.findOne({
@@ -65,18 +64,18 @@ class ChannelResolver implements ResolverInterface<Channel> {
   @Authorized('user', 'admin', 'owner')
   @Query(() => ChannelMembers, { nullable: true })
   async channelMembers(
-    @Arg('channelId') @IsUUID() channelId: string,
+    @Args() { channelId }: ChannelIDArgs,
   ): Promise<ChannelMembers> {
-    return this.channelRepo.getMembers<ChannelMembers>(channelId);
+    return this.channelRepo.getMembers(channelId);
   }
 
   @Authorized('user', 'admin', 'owner')
   @Query(() => ChannelMembers, { nullable: true })
   async usersNotInChannel(
-    @Arg('channelId') @IsUUID() channelId: string,
+    @Args() { channelId }: ChannelIDArgs,
       @Ctx() { user: { organization } }: ContextType,
   ): Promise<ChannelMembers> {
-    return this.channelRepo.getUsersNotInChannel<ChannelMembers>(
+    return this.channelRepo.getUsersNotInChannel(
       organization.id,
       channelId,
     );
@@ -103,7 +102,7 @@ class ChannelResolver implements ResolverInterface<Channel> {
   @Mutation(() => String)
   async updateChannel(
     @Arg('input') input: ChannelInput,
-      @Arg('channelId') @IsUUID() channelId: string,
+      @Args() { channelId }: ChannelIDArgs,
       @Ctx() { user: { id, organization } }: ContextType,
   ): Promise<string> {
     const update = pick(input, ['name', 'about', 'isPrivate']);
@@ -126,7 +125,7 @@ class ChannelResolver implements ResolverInterface<Channel> {
   @Authorized('user', 'admin', 'owner')
   @Mutation(() => String)
   async addUsersToChannel(
-    @Arg('channelId') @IsUUID() channelId: string,
+    @Args() { channelId }: ChannelIDArgs,
       @Arg('input') { userIds }: AddUsersToChannelInput,
       @Ctx() { user: { organization } }: ContextType,
   ): Promise<string> {
@@ -162,7 +161,7 @@ class ChannelResolver implements ResolverInterface<Channel> {
   @Authorized('user', 'admin', 'owner')
   @Mutation(() => String)
   async leaveChannel(
-    @Arg('channelId') @IsUUID() channelId: string,
+    @Args() { channelId }: ChannelIDArgs,
       @Ctx() { user: { id } }: ContextType,
   ): Promise<string> {
     await this.channelUsersRepo.delete({ userId: id, channelId });

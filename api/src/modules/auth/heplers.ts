@@ -4,7 +4,7 @@ import short from 'short-uuid';
 import { OrganizationRepo } from '../../repo';
 import { decodeInviteToken } from '../../utils/jwt';
 import {
-  Share, UserOrganization, RoleType, Invite,
+  Share, UserOrganization, RoleType, Invite, Organization,
 } from '../../entity';
 
 const shareRepo = getRepository(Share);

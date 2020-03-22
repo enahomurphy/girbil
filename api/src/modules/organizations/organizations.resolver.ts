@@ -9,11 +9,11 @@ import {
   FieldResolver,
   Root,
   registerEnumType,
+  Args,
 } from 'type-graphql';
 import { getCustomRepository, getRepository, Not } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { IsUUID, IsString } from 'class-validator';
 import {
   Organization, User, UserOrganization, RoleType,
 } from '../../entity';
@@ -22,6 +22,7 @@ import { OrganizationRepo } from '../../repo';
 import { CreateOrganizationType } from './organization.type';
 import { sign } from '../../utils/jwt';
 import { CanView } from '../../middleware/permissions';
+import { UserIDArgs } from '../user/user.args';
 
 
 registerEnumType(RoleType, {
@@ -29,7 +30,7 @@ registerEnumType(RoleType, {
 });
 
 @Resolver(Organization)
-class OrganizationResolver implements ResolverInterface<Organization> {
+class OrganizationResolver {
   private readonly orgRepo = getCustomRepository(OrganizationRepo);
 
   @Authorized()
@@ -42,7 +43,7 @@ class OrganizationResolver implements ResolverInterface<Organization> {
   @CanView('organization')
   @Query(() => Organization, { nullable: true })
   async organization(
-    @Arg('organizationId', { nullable: true }) @IsUUID() organizationId: string,
+    @Arg('organizationId', { nullable: true }) organizationId: string,
       @Ctx() { user: { organization } }: ContextType,
   ): Promise<Organization> {
     return this.orgRepo.findOne({ where: { id: organizationId || organization.id } });
@@ -55,28 +56,6 @@ class OrganizationResolver implements ResolverInterface<Organization> {
     return organization || null;
   }
 
-  @Authorized()
-  @Query(() => Organization, { nullable: true })
-  async createOrganizationDomain(
-    @Arg('domain') domain: string, @Ctx(){ user }: ContextType,
-  ): Promise<CreateOrganizationType> {
-    const organization = await this.orgRepo.findOne({ where: { domain } });
-
-    if (!organization) {
-      throw new Error('Organization does not exist');
-    }
-
-    if (organization.domain) {
-      throw new Error("Domain already exist and can't be changed");
-    }
-
-    const newOrg = await this.orgRepo.update({ domain });
-    const tokenPayload = sign(plainToClass(User, { ...user, organization: newOrg }));
-
-    return CreateOrganizationType.create(tokenPayload, newOrg);
-  }
-
-
   @Authorized('admin', 'owner')
   @Query(() => [UserOrganization])
   async organizationUsers(@Ctx() { user }: ContextType): Promise<UserOrganization[]> {
@@ -87,7 +66,7 @@ class OrganizationResolver implements ResolverInterface<Organization> {
   @Mutation(() => String)
   async changUserRole(
     @Arg('role', () => RoleType) role: RoleType,
-      @Arg('userId') @IsUUID() userId: string,
+      @Args() { userId }: UserIDArgs,
       @Ctx() { user: { organization } }: ContextType,
   ): Promise<string> {
     const orgUser = await this.orgRepo.hasUser(
@@ -132,11 +111,11 @@ class OrganizationResolver implements ResolverInterface<Organization> {
   @Authorized()
   @Mutation(() => Organization)
   async updateOrganization(
-    @Arg('domain', { nullable: true }) @IsString() domain: string,
-      @Arg('name', { nullable: true }) @IsString() name: string,
+    @Arg('domain', { nullable: true }) domain: string,
+      @Arg('name', { nullable: true }) name: string,
       @Ctx(){ user: { organization } }: ContextType,
   ): Promise<Organization> {
-    const organizationUpdate = {};
+    const organizationUpdate = this.orgRepo.create();
 
     if (domain) {
       const org = await this.orgRepo.findOne({ where: { domain, id: Not(organization.id) } });
@@ -166,7 +145,7 @@ export class CreateOrganizationTypeResolver implements ResolverInterface<CreateO
   private readonly userOrgRepo = getRepository(UserOrganization);
 
   @FieldResolver()
-  async token(@Root() org: CreateOrganizationType, @Ctx(){ user }: ContextType): string {
+  async token(@Root() org: CreateOrganizationType, @Ctx() { user }: ContextType): Promise<string> {
     const userOrg = await this.userOrgRepo.findOne({
       where: {
         userId: user.id,

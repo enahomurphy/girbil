@@ -1,11 +1,12 @@
-import { NextFn, createMethodDecorator } from 'type-graphql';
+import { createMethodDecorator } from 'type-graphql';
 import { getCustomRepository } from 'typeorm';
 
 import { OrganizationRepo } from '../../repo';
-import { notFoundError } from './Errorhandler';
+import { ContextType } from '../../interfaces';
+import { notFoundError } from './errorhandler';
 
-export const CanViewUser = createMethodDecorator(
-  async ({ context }, next): NextFn => {
+export const CanViewUser = createMethodDecorator<ContextType>(
+  async ({ context }, next) => {
     const orgRepo = getCustomRepository(OrganizationRepo);
     const user = await orgRepo.hasUser(
       context.user.organization.id,
@@ -20,8 +21,8 @@ export const CanViewUser = createMethodDecorator(
   },
 );
 
-export const CanEditUser = createMethodDecorator(
-  async ({ context, args }, next): NextFn => {
+export const CanEditUser = createMethodDecorator<ContextType>(
+  async ({ context, args }, next) => {
     if (args.userId !== context.user.id) {
       return notFoundError(context, 'User does not exit');
     }

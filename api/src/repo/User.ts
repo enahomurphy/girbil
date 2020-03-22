@@ -49,8 +49,8 @@ class UserRepository extends Repository<User> {
   }
 
   static select(user: User): User {
-    const userToUpdate: User = { ...user };
-    userToUpdate.isVerified = Boolean(user.isVerified === 'true');
+    const userToUpdate = { ...user };
+    userToUpdate.isVerified = user.isVerified;
     delete userToUpdate.password;
     return plainToClass(User, userToUpdate);
   }

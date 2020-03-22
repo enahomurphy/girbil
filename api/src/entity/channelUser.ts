@@ -27,5 +27,5 @@ export class ChannelUsers {
     name: 'user_id',
     referencedColumnName: 'id',
   })
-  user?: string;
+  user?: User;
 }

@@ -1,12 +1,12 @@
-import Express from 'express';
 import { getCustomRepository } from 'typeorm';
 import { UserRepo, OrganizationRepo } from '../repo';
 import { decode } from '../utils/jwt';
+import { Request, Response } from '../interfaces';
 
 const Authenticated = async (
-  req: Express.Request,
-  res: Express.Request,
-  next: Express.NextFunc,
+  req: Request,
+  res: Response,
+  next: () => {},
 ): Promise<void> => {
   const userRepo = getCustomRepository(UserRepo);
   const orgRepo = getCustomRepository(OrganizationRepo);

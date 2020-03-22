@@ -23,7 +23,7 @@ class UploadResolver {
   async getUploadURL(
     @Args() { id, conversationId }: UploadURLArgs,
       @Ctx() { user: { organization } }: ContextType,
-  ): Promise<string> {
+  ): Promise<UploadType> {
     const path = `${organization.id}/${conversationId}`;
     return this.aws.getMessageUploadURL(id, path);
   }

@@ -8,15 +8,16 @@ import {
   Root,
   Ctx,
   Mutation,
+  Args,
 } from 'type-graphql';
 import { getCustomRepository, getRepository } from 'typeorm';
-import { IsUUID } from 'class-validator';
 
 import { ContextType } from '../../interfaces';
 import { CanView, CanEdit } from '../../middleware/permissions';
-import { User, UserOrganization } from '../../entity';
+import { User, UserOrganization, Organization } from '../../entity';
 import { UserRepo, OrganizationRepo } from '../../repo';
 import { UserUpdateInput } from './user.input';
+import { UserIDArgs } from './user.args';
 
 @Resolver(User)
 class UserResolver {
@@ -30,7 +31,7 @@ class UserResolver {
   @CanView('user')
   @Query(() => User, { nullable: true })
   async user(
-    @Arg('userId') @IsUUID() userId: string,
+    @Args() { userId }: UserIDArgs,
   ): Promise<User> {
     return (await this.userRepo.findOne(userId)).user;
   }
@@ -48,11 +49,11 @@ class UserResolver {
   @Mutation(() => String)
   async updateUser(
     @Arg('input') { name, position }: UserUpdateInput,
-      @Arg('userId') @IsUUID userId: string,
+      @Args() { userId }: UserIDArgs,
       @Ctx() { user: { organization } }: ContextType,
   ): Promise<string> {
     const promises = [];
-    const user = {};
+    const user = this.userRepo.create();
 
     if (position) {
       promises.push(

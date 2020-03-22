@@ -1,11 +1,12 @@
-import { NextFn, createMethodDecorator } from 'type-graphql';
+import { createMethodDecorator } from 'type-graphql';
 import { getCustomRepository } from 'typeorm';
 
+import { ContextType } from '../../interfaces';
 import { ConversationRepo } from '../../repo';
-import { notFoundError } from './Errorhandler';
+import { notFoundError } from './errorhandler';
 
-export const CanViewConversation = createMethodDecorator(
-  async ({ context, args }, next): NextFn => {
+export const CanViewConversation = createMethodDecorator<ContextType>(
+  async ({ context, args }, next) => {
     const conversationRepo = getCustomRepository(ConversationRepo);
     const conversation = await conversationRepo.hasUser(
       args.conversationId,

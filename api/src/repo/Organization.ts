@@ -69,7 +69,7 @@ class OrganizationRepository extends Repository<Organization> {
     });
   }
 
-  async orgUsers(organizationId: string): Promise<UserOrganization> {
+  async orgUsers(organizationId: string): Promise<UserOrganization[]> {
     const users = await this.userOrgRepo.find({
       where: {
         organizationId,
@@ -77,7 +77,7 @@ class OrganizationRepository extends Repository<Organization> {
       relations: ['user'],
     });
 
-    return users.map(({ user, ...org }) => ({
+    return users.map(({ user, ...org }) => plainToClass(UserOrganization, {
       ...org,
       user: user.user,
     }));
@@ -86,11 +86,16 @@ class OrganizationRepository extends Repository<Organization> {
   async changeRole(
     organizationId: string, userId: string, role: RoleType,
   ): Promise<UserOrganization> {
-    return this.userOrgRepo.update({ userId, organizationId }, { role });
+    await this.userOrgRepo.update({ userId, organizationId }, { role });
+    return plainToClass(UserOrganization, {
+      userId,
+      organizationId,
+      role,
+    });
   }
 
   async deleteUser(organizationId: string, userId: string): Promise<void> {
-    return this.userOrgRepo.delete({ userId, organizationId });
+    await this.userOrgRepo.delete({ userId, organizationId });
   }
 
   async findById(organizationId: string): Promise<Organization> {

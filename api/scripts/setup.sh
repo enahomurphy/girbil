@@ -1,12 +1,17 @@
-curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 
 sudo apt-get install -y nodejs nginx build-essential g++ node-gyp
+
+# update default nginx to include this lines
+
+# include /etc/nginx/conf.d/*.conf;
+# include /etc/nginx/sites-enabled/*;
 
 # mginx config
 sudo echo `
 server {
   listen 80;
-  server_name your_domain.com;
+  server_name staging.girbil.com;
   location / {
     proxy_pass http://localhost:8081;
     proxy_http_version 1.1;
@@ -16,10 +21,11 @@ server {
     proxy_cache_bypass $http_upgrade;
    }
 }
-` >> /etc/nginx/conf.d/giribil.conf
+` >> /etc/nginx/conf.d/girbil.conf
 
 # To verify nginx configuration
 sudo nginx -t
+
 # Restart nginx
 sudo service nginx restart
 
@@ -31,7 +37,7 @@ echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/source
 sudo apt update && sudo apt install yarn
 
 # pm2 setup
-yarn add global pm2
+wget -qO- https://getpm2.com/install.sh | bash
 
 
 # codeploy 
@@ -50,3 +56,18 @@ sudo ./install auto
 sudo service codedeploy-agent start
 
 sudo service codedeploy-agent status
+
+# installation folder
+mkdir /home/ubuntu/girbil
+
+sudo chown -R ubuntu:ubuntu /home/ubuntu/girbil
+
+
+
+## Debug code deploy
+# [1]http://docs.aws.amazon.com/codedeploy/latest/userguide/how-to-create-iam-instance-profile.html
+# [2] http://docs.aws.amazon.com/codedeploy/latest/userguide/troubleshooting-general.html
+# [3] http://docs.aws.amazon.com/codedeploy/latest/userguide/troubleshooting.html
+
+## Code deply logs
+# tail -f /var/log/aws/codedeploy-agent/codedeploy-agent.log

@@ -11,7 +11,7 @@ export class ChannelMembers {
   @Field(() => Int, { nullable: true })
   count: number
 
-  static create(members: User[], count: number): AuthType {
+  static create(members: User[], count: number): ChannelMembers {
     return plainToClass(ChannelMembers, { members, count });
   }
 }

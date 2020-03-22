@@ -9,10 +9,10 @@ import {
   Ctx,
   Authorized,
   Query,
+  Args,
 } from 'type-graphql';
 import { getCustomRepository, getRepository } from 'typeorm';
 import short from 'short-uuid';
-import { IsString } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 
 import { UserRepo, OrganizationRepo } from '../../repo';
@@ -22,10 +22,12 @@ import {
 import { isValidPassword } from '../../utils/password';
 import { getGoogleUser } from '../../services/google';
 import { sign, inviteToken } from '../../utils/jwt';
-import { LoginInput, SocialInput, InviteInput } from './auth.input';
+import {
+  LoginInput, SocialInput, InviteInput, InviteArgs,
+} from './auth.input';
 import { UserInput } from '../user/user.input';
 import { AuthType, InviteOrganization } from './auth.type';
-import { InviteEmails, ContextType } from '../../interfaces';
+import { ContextType } from '../../interfaces';
 import { sendInvites } from '../../services/email';
 import { keys } from '../../config';
 import { handleEmailInvite, handleInvite, tokenForOrgId } from './heplers';
@@ -88,7 +90,7 @@ class AuthResolver implements ResolverInterface<AuthType> {
     );
 
     if (!org) {
-      res.status('403');
+      res.status(403);
       throw new Error('You do not belong to this organization');
     }
 
@@ -165,7 +167,7 @@ class AuthResolver implements ResolverInterface<AuthType> {
     }
 
     if (invites.length) {
-      const createdInvites: InviteEmails = await this.inviteRepo.insert(invites);
+      const createdInvites = await this.inviteRepo.insert(invites);
       const inviteEmails = createdInvites.generatedMaps.map((invite, index) => ({
         email: invites[index].email,
         token: encodeURIComponent(inviteToken(`${invite.id}+${organization.id}`)),
@@ -201,8 +203,8 @@ class AuthResolver implements ResolverInterface<AuthType> {
 
   @Query(() => InviteOrganization)
   async inviteUrlOrganization(
-    @Arg('inviteId', { nullable: true }) @IsString inviteId: string,
-      @Arg('emailToken', { nullable: true }) @IsString emailToken: string,
+    @Arg('inviteId', { nullable: true }) inviteId: string,
+      @Arg('emailToken', { nullable: true }) emailToken: string,
   ): Promise<InviteOrganization> {
     let organizationId: string;
 

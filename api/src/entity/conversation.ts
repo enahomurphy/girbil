@@ -56,7 +56,7 @@ export class Conversation {
     name: 'receiver_type',
   })
   @Field()
-  receiverType: string
+  receiverType: ConversationType
 
   @Field(() => User, { nullable: true })
   @OneToOne(() => User)

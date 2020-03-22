@@ -1,8 +1,8 @@
-const url = () => {
-  if (process.env.NODE_ENV !== 'production') return 'https://girbil.com';
-  if (process.env.NODE_ENV !== 'staging') return 'https://girbil.com';
+const url = (): string => {
+  if (process.env.NODE_ENV === 'production') return 'https://girbil.com';
+  if (process.env.NODE_ENV === 'staging') return 'https://staging.girbil.com';
   return 'http://localhost:1234';
-}
+};
 
 interface S3 {
   region: string;
@@ -12,13 +12,11 @@ interface S3 {
 interface AWS {
   key: string;
   secret: string;
-  s3Bucket: string;
   s3: S3;
 }
 
 interface Email {
   sparkpost: string;
-  secret: string;
 }
 
 interface Keys {

@@ -3,28 +3,29 @@ import {
   Query,
   Authorized,
   Ctx,
-  ResolverInterface,
   Arg,
   Mutation,
+  Args,
 } from 'type-graphql';
 import { getCustomRepository } from 'typeorm';
-import { IsString, IsUUID } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 
 import { ConversationRepo } from '../../repo';
 import {
-  Conversation, UserConversations, User, ConversationType,
+  Conversation, User, ConversationType,
 } from '../../entity';
 import { ContextType } from '../../interfaces';
 import { CanView } from '../../middleware/permissions';
+import { ConversationIDArgs } from './conversation.args';
+import { UserIDArgs } from '../user/user.args';
 
 @Resolver(Conversation)
-class ConversationResolver implements ResolverInterface<Conversation> {
+class ConversationResolver {
   private readonly conversationRepo = getCustomRepository(ConversationRepo);
 
   @Authorized('user', 'admin', 'owner')
   @Query(() => [Conversation])
-  async conversations(@Ctx() { user }: ContextType): Promise<UserConversations[]> {
+  async conversations(@Ctx() { user }: ContextType): Promise<Conversation[]> {
     return this.conversationRepo.conversations(
       user.id,
       user.organization.id,
@@ -34,9 +35,9 @@ class ConversationResolver implements ResolverInterface<Conversation> {
   @Authorized('user', 'admin', 'owner')
   @Query(() => Conversation, { nullable: true })
   async conversation(
-    @Arg('conversationId') @IsUUID() conversationId: string,
+    @Args() { conversationId }: ConversationIDArgs,
       @Ctx() { user: { id, organization } }: ContextType,
-  ): Promise<UserConversations> {
+  ): Promise<Conversation> {
     const conversation = await this.conversationRepo.findOne({
       where: {
         id: conversationId,
@@ -60,9 +61,9 @@ class ConversationResolver implements ResolverInterface<Conversation> {
   @Authorized('user', 'admin', 'owner')
   @Query(() => [User])
   async usersWithoutConversation(
-    @Arg('q', { nullable: true }) @IsString() q: string,
+    @Arg('q', { nullable: true }) q: string,
       @Ctx() { user: { id, organization } }: ContextType,
-  ): Promise<Users[]> {
+  ): Promise<User[]> {
     return this.conversationRepo.getUsersWithoutConversation(
       organization.id,
       id,
@@ -74,7 +75,7 @@ class ConversationResolver implements ResolverInterface<Conversation> {
   @CanView('user')
   @Query(() => Conversation)
   async getUserConversationOrCreate(
-    @Arg('userId') @IsUUID() userId: string,
+    @Args() { userId }: UserIDArgs,
       @Ctx() { user }: ContextType,
   ): Promise<Conversation> {
     const conversation = await this.conversationRepo.findUserConversationOrCreate(
@@ -95,7 +96,7 @@ class ConversationResolver implements ResolverInterface<Conversation> {
   @CanView('conversation')
   @Mutation(() => String, { nullable: true })
   async closeConversation(
-    @Arg('conversationId') @IsUUID() conversationId: string,
+    @Args() { conversationId }: ConversationIDArgs,
   ): Promise<string> {
     await this.conversationRepo.update({ id: conversationId }, { open: false });
     return 'conversation closed';

@@ -1,9 +1,10 @@
-import { ErrorHandler } from './Errorhandler';
+
+import { ErrorHandler } from './errorhandler';
 import { CanViewConversation } from './conversations';
 import { CanViewUser } from './user';
 import { CanViewOrganization } from './organization';
 
-export const CanView = (type: string): void => {
+export const CanView = (type: string): MethodDecorator => {
   switch (type) {
     case 'conversation':
       return CanViewConversation;

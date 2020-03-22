@@ -6,6 +6,7 @@
      "sourceMap": true,
      "outDir": "./dist",
      "moduleResolution": "node",
+     "types": ["reflect-metadata"],
      "declaration": false,
      "composite": false,
      "removeComments": true,

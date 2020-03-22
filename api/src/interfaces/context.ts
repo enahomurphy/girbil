@@ -7,6 +7,13 @@ export interface ContextType {
   res: Express.Response;
 }
 
+export type Response = Express.Response
+
+export interface Request extends Express.Request {
+  user: User;
+}
+
 export interface ContextArgs {
-  req: Express.Request;
+  req: Request;
+  res: Response;
 }

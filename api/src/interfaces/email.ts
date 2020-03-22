@@ -1,4 +1,4 @@
-import { Organization } from '../entity';
+import { Organization } from 'src/entity';
 
 export interface InviteEmails {
   email: string;

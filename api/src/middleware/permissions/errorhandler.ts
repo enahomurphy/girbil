@@ -1,6 +1,5 @@
-import {
-  MiddlewareFn, createMethodDecorator,
-} from 'type-graphql';
+import { createMethodDecorator } from 'type-graphql';
+import { ContextType } from '../../interfaces';
 
 export class NotFoundError extends Error {
   constructor(message = "The resource you're trying to access does not exist") {
@@ -8,11 +7,10 @@ export class NotFoundError extends Error {
   }
 }
 
-export const ErrorHandler: MiddlewareFn = createMethodDecorator(async ({ context }) => {
+export const ErrorHandler = createMethodDecorator<ContextType>(async ({ context }) => {
   context.res.status(404);
   throw new NotFoundError();
 });
-
 
 export const notFoundError = (context, message?: string): void => {
   context.res.status(403);

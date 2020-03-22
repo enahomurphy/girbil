@@ -16,5 +16,5 @@ export const sendInvites = async (invites: InviteEmails[]): Promise<void> => {
       recipients: [{ address: email }],
     }));
 
-  return Promise.all(messages);
+  await Promise.all(messages);
 };

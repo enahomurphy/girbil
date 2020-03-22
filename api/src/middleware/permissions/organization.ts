@@ -1,8 +1,10 @@
-import { NextFn, createMethodDecorator } from 'type-graphql';
-import { unAuthError } from './Errorhandler';
+import { createMethodDecorator } from 'type-graphql';
 
-export const CanViewOrganization = createMethodDecorator(
-  async ({ context }, next): NextFn => {
+import { unAuthError } from './errorhandler';
+import { ContextType } from '../../interfaces';
+
+export const CanViewOrganization = createMethodDecorator<ContextType>(
+  async ({ context }, next) => {
     if (!context.user.organization) {
       return unAuthError(context, 'Organization does not exit');
     }
@@ -11,8 +13,8 @@ export const CanViewOrganization = createMethodDecorator(
   },
 );
 
-export const CanEditOrganization = createMethodDecorator(
-  async ({ context }, next): NextFn => {
+export const CanEditOrganization = createMethodDecorator<ContextType>(
+  async ({ context }, next) => {
     if (!context.user.organization) {
       return unAuthError(context, 'Organization does not exit');
     }

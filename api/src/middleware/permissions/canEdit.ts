@@ -1,10 +1,10 @@
-
-import { ErrorHandler } from './Errorhandler';
+import { ErrorHandler } from './errorhandler';
 import { CanEditUser } from './user';
+
 import { CanEditOrganization } from './organization';
 import { CanEditMessage } from './message';
 
-export const CanEdit = (type: string): void => {
+export const CanEdit = (type: string): MethodDecorator => {
   switch (type) {
     case 'user':
       return CanEditUser;

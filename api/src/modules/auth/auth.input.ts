@@ -31,3 +31,12 @@ export class InviteInput {
   @Field(() => [String])
   emails: string[]
 }
+
+@InputType()
+export class InviteArgs {
+  @Field({ nullable: true })
+  inviteId: string
+
+  @Field({ nullable: true })
+  emailToken: string
+}

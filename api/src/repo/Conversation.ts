@@ -1,14 +1,14 @@
 import { EntityRepository, Repository, getRepository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import {
-  Conversation, ConversationType, UserConversations, UserOrganization,
+  Conversation, ConversationType, UserOrganization, User,
 } from '../entity';
 
 @EntityRepository(Conversation)
 class ConversationRepository extends Repository<Conversation> {
   private readonly userOrgRepo = getRepository(UserOrganization)
 
-  async conversations(userId: string, organizationId: string): Promise<UserConversations[]> {
+  async conversations(userId: string, organizationId: string): Promise<Conversation[]> {
     const query = this.createQueryBuilder('conversation')
       .setParameter('userId', userId)
       .setParameter('organizationId', organizationId)
@@ -62,7 +62,7 @@ class ConversationRepository extends Repository<Conversation> {
   }
 
   async conversation(id: string, organizationId: string): Promise<Conversation> {
-    return this.manager.find(UserConversations, {
+    return this.findOne({
       cache: true,
       where: [
         {
@@ -104,7 +104,7 @@ class ConversationRepository extends Repository<Conversation> {
 
   async getUsersWithoutConversation(
     organizationId: string, userId: string, q?: string,
-  ): Promise<Users[]> {
+  ): Promise<User[]> {
     const query = this.userOrgRepo.createQueryBuilder('org_user')
       .setParameter('userId', userId)
       .setParameter('organizationId', organizationId)

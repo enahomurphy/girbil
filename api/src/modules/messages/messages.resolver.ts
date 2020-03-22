@@ -2,7 +2,6 @@ import {
   Resolver,
   Query,
   Authorized,
-  ResolverInterface,
   Args,
   Arg,
   Ctx,
@@ -10,18 +9,18 @@ import {
 } from 'type-graphql';
 import { getCustomRepository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
-import { IsUUID } from 'class-validator';
 
 import { MessageRepo } from '../../repo';
 import { Message } from '../../entity';
 import { CanView, CanEdit } from '../../middleware/permissions';
-import { MessagesArgs } from './message.args';
+import { MessagesArgs, MessageIDArgs } from './message.args';
 import { ValidateArgs } from '../../middleware/decorators';
 import { AddMessageInput } from './message.input';
 import { ContextType } from '../../interfaces';
+import { ConversationIDArgs } from '../conversations/conversation.args';
 
 @Resolver(Message)
-class MessageResolver implements ResolverInterface<Message> {
+class MessageResolver {
   private readonly messageRepo = getCustomRepository(MessageRepo);
 
   @Authorized('user', 'admin', 'owner')
@@ -36,14 +35,13 @@ class MessageResolver implements ResolverInterface<Message> {
   }
 
   @Authorized('user', 'admin', 'owner')
-  @ValidateArgs(MessagesArgs)
   @CanView('conversation')
   @Mutation(() => Message)
   async addMessage(
     @Arg('input') {
       video, thumbnail, id, parentId,
     }: AddMessageInput,
-    @Arg('conversationId') @IsUUID() conversationId: string,
+    @Args() { conversationId }: ConversationIDArgs,
     @Ctx() { user }: ContextType,
   ): Promise<Message> {
     const message = plainToClass(Message, {
@@ -63,12 +61,11 @@ class MessageResolver implements ResolverInterface<Message> {
   }
 
   @Authorized('user', 'admin', 'owner')
-  @ValidateArgs(MessagesArgs)
   @CanView('conversation')
   @Mutation(() => Message, { nullable: true })
   async markAsRead(
-    @Arg('messageId') @IsUUID() messageId: string,
-      @Arg('conversationId') @IsUUID() conversationId: string,
+    @Args() { messageId }: MessageIDArgs,
+      @Args() { conversationId }: ConversationIDArgs,
       @Ctx() { user }: ContextType,
   ): Promise<Message> {
     const message = await this.messageRepo.findOne({ id: messageId });
@@ -100,8 +97,7 @@ class MessageResolver implements ResolverInterface<Message> {
   @CanView('conversation')
   @Mutation(() => Message, { nullable: true })
   async markAsUnRead(
-    @Arg('messageId') @IsUUID() messageId: string,
-      @Arg('conversationId') @IsUUID() conversationId: string,
+    @Args() { conversationId, messageId }: MessagesArgs,
       @Ctx() { user }: ContextType,
   ): Promise<Message> {
     const message = await this.messageRepo.findOne({ id: messageId });
@@ -135,12 +131,11 @@ class MessageResolver implements ResolverInterface<Message> {
   }
 
   @Authorized('user', 'admin', 'owner')
-  @ValidateArgs(MessagesArgs)
   @CanEdit('message')
-  @Mutation(() => Message, { nullable: true })
+  @Mutation(() => String)
   async deleteMessage(
-    @Arg('messageId') @IsUUID() messageId: string,
-  ): Promise<Message> {
+    @Args() { messageId }: MessageIDArgs,
+  ): Promise<string> {
     await this.messageRepo.delete({ id: messageId });
 
     return 'Message deleted';

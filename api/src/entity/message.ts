@@ -51,8 +51,8 @@ export class Message {
   })
   note?: string;
 
-  @Field()
-  readonly state: string = 'done';
+  @Field(() => String)
+  state = 'done';
 
   @Column({ type: 'uuid', array: true })
   read: string[];

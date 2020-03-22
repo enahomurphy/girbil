@@ -2,6 +2,7 @@ import { EntityRepository, Repository, getRepository } from 'typeorm';
 import {
   Channel, ChannelOwnerType, Conversation, ChannelUsers, ConversationType, UserOrganization,
 } from '../entity';
+import { ChannelMembers } from '../interfaces/channel';
 
 @EntityRepository(Channel)
 class ChannelRepository extends Repository<Channel> {
@@ -25,7 +26,7 @@ class ChannelRepository extends Repository<Channel> {
       .getMany();
   }
 
-  async membersCount(organizationId: string, channelId: string): Promise<Channel[]> {
+  async membersCount(organizationId: string, channelId: string): Promise<number> {
     return this.channelUsersRepo.count({
       where: {
         channelId,
@@ -68,7 +69,7 @@ class ChannelRepository extends Repository<Channel> {
     });
   }
 
-  async getMembers<T>(channelId: string): Promise<T> {
+  async getMembers(channelId: string): Promise<ChannelMembers> {
     const result = await this.channelUsersRepo.createQueryBuilder('channel_users')
       .setParameter('channelId', channelId)
       .leftJoinAndSelect('channel_users.user', 'user')
@@ -82,7 +83,7 @@ class ChannelRepository extends Repository<Channel> {
     };
   }
 
-  async getUsersNotInChannel<T>(organizationId: string, channelId: string): Promise<T> {
+  async getUsersNotInChannel(organizationId: string, channelId: string): Promise<ChannelMembers> {
     const result = await this.userOrgRepo.createQueryBuilder('user_org')
       .setParameter('channelId', channelId)
       .setParameter('organizationId', organizationId)

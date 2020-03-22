@@ -46,21 +46,23 @@ jobs:
 
   deploy-staging-api:
     executor: aws-cli/default
-    environment:
-      - DEPLOY_APPLICATION: 'girbil'
-      - DEPLOY_BUCKET: 'girbil-server'
-      - DEPLOY_BUCKET_KEY: 'girbil-staging'
+    parameters:
+      deploy-application:
+        type: string
+      deploy-bucket:
+        type: string
+      deploy-bucket-key:
+        type: string
     steps:
       - checkout
       - aws-cli/setup
       - run:
           name: deploy api app
           command: |
-            echo 'export DEPLOY_APPLICATION=girbil' >> $BASH_ENV
-            echo 'export DEPLOY_BUCKET=girbil-server' >> $BASH_ENV
-            echo 'export DEPLOY_BUCKET_KEY=girbil-staging' >> $BASH_ENV
-            cd api
-            sudo sh scripts/push-bundle.sh
+            aws deploy push \
+              --application-name << parameters.deploy-application >> \
+              --source ./api \
+              --s3-location s3://<< parameters.deploy-bucket >>/<< parameters.deploy-bucket-key >>.zip
       - aws-code-deploy/deploy-bundle:
           application-name: girbil
           bundle-bucket: girbil-server
@@ -78,6 +80,9 @@ workflows:
   deploy_staging_api:
     jobs:
       - deploy-staging-api:
+          deploy-application: girbil
+          deploy-bucket: girbil-server
+          deploy-bucket-key: girbil-staging
           filters:
             branches:
               only: master

@@ -3,11 +3,9 @@ module.exports = {
   apps: [
     {
       name: 'Girbil Api',
-      script: './server.ts',
-      interpreter: 'node_modules/.bin/ts-node',
+      script: './dist/server.js',
       ignore_watch: ['node_modules'],
-      instances: 2,
-      // exec_mode: 'cluster',
+      exec_mode: 'cluster',
       watch: true,
       env: {
         PORT: 8081,

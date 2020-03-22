@@ -8,3 +8,5 @@ logs/
 yarn-*
 .env
 .envrc
+ormconfig*
+dist/

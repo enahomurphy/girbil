@@ -1,4 +1,4 @@
-import { User } from 'src/entity';
+import { User } from '../entity';
 import Express from 'express';
 
 export interface ContextType {

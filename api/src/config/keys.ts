@@ -1,3 +1,7 @@
+import { config } from 'dotenv';
+
+config();
+
 const url = (): string => {
   if (process.env.NODE_ENV === 'production') return 'https://girbil.com';
   if (process.env.NODE_ENV === 'staging') return 'https://staging.girbil.com';

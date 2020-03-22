@@ -1,5 +1,5 @@
 import { AuthChecker } from 'type-graphql';
-import { ContextType } from 'src/interfaces';
+import { ContextType } from '../interfaces';
 
 const authChecker: AuthChecker<ContextType> = ({ context }, roles) => {
   const { user, res } = context;

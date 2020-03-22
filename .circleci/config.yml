@@ -59,6 +59,11 @@ jobs:
       - run:
           name: deploy api app
           command: |
+            cd api && sh scripts/build.sh
+            sudo rm -rf src
+      - run:
+          name: deploy api app
+          command: |
             aws deploy push \
               --application-name << parameters.deploy-application >> \
               --source ./api \

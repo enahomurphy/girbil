@@ -1,6 +1,7 @@
 version: 2.1
 
 orbs:
+  aws-code-deploy: circleci/aws-code-deploy@1.0.0
   aws-cli: circleci/aws-cli@0.1.22
 
 jobs:
@@ -45,12 +46,26 @@ jobs:
 
   deploy-staging-api:
     executor: aws-cli/default
+    environment:
+      - DEPLOY_APPLICATION: 'girbil'
+      - DEPLOY_BUCKET: 'girbil-server'
+      - DEPLOY_BUCKET_KEY: 'girbil-staging'
     steps:
       - checkout
       - aws-cli/setup
       - run:
+          name: deploy api app
           command: |
-            cd api && sh scripts/deploy.sh
+            echo 'export DEPLOY_APPLICATION=girbil' >> $BASH_ENV
+            echo 'export DEPLOY_BUCKET=girbil-server' >> $BASH_ENV
+            echo 'export DEPLOY_BUCKET_KEY=girbil-staging' >> $BASH_ENV
+            cd api
+            sudo sh scripts/push-bundle.sh
+      - aws-code-deploy/deploy-bundle:
+          application-name: girbil
+          bundle-bucket: girbil-server
+          bundle-key: girbil-staging
+          deployment-group: girbil-staging
 
 workflows:
   deploy_staging_web:

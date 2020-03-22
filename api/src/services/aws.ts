@@ -63,4 +63,31 @@ export async function getMessageUploadURL(id: string, path: string): Promise<Upl
   });
 }
 
+export const upload = async (fileName, stream): void => {
+  const options = {
+    signatureVersion: 'v4',
+    endpoint: `${keys.aws.s3.bucket}.s3-accelerate.amazonaws.com`,
+    useAccelerateEndpoint: true,
+  };
+
+  const s3Instance = new aws.S3(options);
+
+  const params = {
+    Bucket: keys.aws.s3.bucket,
+    ContentType: 'video/webm',
+    Key: `test/${fileName}.webm`,
+    Body: stream,
+    ACL: 'public-read',
+  };
+
+
+  return new Promise((resolve, rejects) => s3Instance.upload(params, (error, data) => {
+    if (error) {
+      return rejects(error);
+    }
+
+    return resolve(data);
+  }));
+};
+
 export default { createSignedURL, getMessageUploadURL };

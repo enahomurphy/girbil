@@ -2,6 +2,7 @@ import { ApolloProvider } from '@apollo/client';
 import React, { useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Device } from 'framework7';
+import IO from 'socket.io-client';
 
 import {
   App,
@@ -50,6 +51,11 @@ const MainApp = () => {
       }
     });
   }, []);
+
+  useEffect(() => {
+    IO(process.env.API_URL, { forceNew: false });
+  },
+  []);
 
   return (
     <ApolloProvider client={client}>

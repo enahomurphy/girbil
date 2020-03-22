@@ -1,7 +1,9 @@
+import Axios from 'axios';
+
 /* eslint-disable no-undef */
 class Recorder {
   constructor() {
-    this.duration = 5000;
+    this.duration = 30000;
 
     this.onMediaError = this.onMediaError.bind(this);
     this.onMediaStop = this.onMediaStop.bind(this);
@@ -18,11 +20,10 @@ class Recorder {
   initRecorder(stream) {
     this.media = new RecordRTC(stream, {
       type: 'video',
+      timeSlice: 3000,
     });
 
-    this.gif = new RecordRTC(stream, {
-      type: 'gif',
-    });
+    this.gif = new RecordRTC(stream, { type: 'gif' });
   }
 
   onMediaError(error) {
@@ -51,6 +52,7 @@ class Recorder {
 
   startRecord() {
     this.media.startRecording();
+
     this.onRecordStart();
 
     this.timeout = setTimeout(() => {
@@ -108,6 +110,33 @@ class Recorder {
     });
 
     return result;
+  }
+
+  static blobToBase64(blob) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+
+      reader.addEventListener('load', () => {
+        const dataUrl = reader.result;
+        const base64EncodedData = dataUrl.split(',')[1];
+        resolve(base64EncodedData);
+      });
+
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  static async upload(blob) {
+    const data = await Recorder.blobToBase64(blob);
+    const body = JSON.stringify({ data });
+    Axios({
+      method: 'POST',
+      url: `${process.env.API_URL}/api`,
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   }
 }
 

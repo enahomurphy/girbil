@@ -6,7 +6,7 @@ const routes = [
   {
     path: '/',
     async(routeTo, routeFrom, resolve) {
-      const reactComponent = () => import('@/pages/Auth/Logout');
+      const reactComponent = () => import('@/pages/Vid');
       reactComponent().then((rc) => {
         resolve({ component: rc.default });
       });

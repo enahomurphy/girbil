@@ -1,6 +1,5 @@
 import * as jwt from 'jsonwebtoken';
 import CryptoJS from 'crypto-js';
-import Hashids from 'hashids/cjs';
 
 import { User } from '../entity';
 import { keys } from '../config';

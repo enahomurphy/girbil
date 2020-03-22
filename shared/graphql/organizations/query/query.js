@@ -52,6 +52,20 @@ export const GET_ORGANIZATION_USERS = gql`
   }
 `;
 
+export const ORGANIZATION_LOGIN = gql`
+  query organizationLogin($organizationId: String!) {
+    organizationLogin(
+      organizationId: $organizationId
+    ) {
+      token
+      user {
+        id
+        name
+      }
+    }
+  }
+`;
+
 export default {
   ORGANIZATIONS,
   GET_ORGANIZATION_BY_DOMAIN,

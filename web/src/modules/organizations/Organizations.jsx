@@ -1,6 +1,6 @@
 /* eslint-disable global-require */
 import React, { Fragment } from 'react';
-import { useQuery } from '@apollo/client';
+import { useQuery, useLazyQuery } from '@apollo/client';
 import { useHistory } from 'react-router-dom';
 
 import Layout from '@/components/layout';
@@ -13,7 +13,19 @@ import {
 const Organizations = () => {
   const { push } = useHistory();
   const { data, loading } = useQuery(query.ORGANIZATIONS, { fetchPolicy: 'network-only' });
+  const [getOrgLogin, { loading: orgLoading }] = useLazyQuery(
+    query.ORGANIZATION_LOGIN, {
+      fetchPolicy: 'network-only',
+      onCompleted({ organizationLogin }) {
+        window.location.href = `girbil://token=${organizationLogin.token}`;
+      },
+    },
+  );
   const organizations = get(data, 'organizations', []);
+
+  const onOpen = organizationId => async () => getOrgLogin({
+    variables: { organizationId },
+  });
 
   return (
     <Layout loading={loading} title="Welcome back!">
@@ -38,7 +50,14 @@ const Organizations = () => {
                 <Title>{name}</Title>
                 <Text>{domain}</Text>
               </Flex>
-              <Button type="submit" className="green">Open</Button>
+              <Button
+                disabled={orgLoading}
+                type="submit"
+                className="green"
+                onClick={onOpen(id)}
+              >
+                Open
+              </Button>
             </Flex>
           ))
         }

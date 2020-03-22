@@ -5,11 +5,16 @@ import compression from 'compression';
 import passport from 'passport';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
+import socketIO, { Server as SocketIOServer } from 'socket.io';
+import { createServer, Server as HTTPServer } from 'http';
+
 
 import { ContextType, ContextArgs } from './interfaces';
+import middleware, { authorized } from './middleware';
 import { keys } from './config';
 import logger from './utils/logger';
-import middleware, { authorized } from './middleware';
+import socketHandler from './socket';
+import controller from './controller';
 
 const App = async (): Promise<string | undefined> => {
   try {
@@ -26,7 +31,7 @@ const App = async (): Promise<string | undefined> => {
     });
 
     const app: Express.Application = Express();
-    app.use(Express.json());
+    app.use(Express.json({ limit: '50mb' }));
     app.use(Express.urlencoded({ extended: false }));
     app.use(compression());
     app.use(cors());
@@ -35,7 +40,13 @@ const App = async (): Promise<string | undefined> => {
 
     apolloServer.applyMiddleware({ app });
 
-    app.listen(keys.port, () => {
+    const httpServer: HTTPServer = createServer(app);
+    const io: SocketIOServer = socketIO(httpServer);
+
+    controller(app);
+    socketHandler(io);
+
+    httpServer.listen(keys.port, () => {
       logger.info(`server started on http://localhost:${keys.port}/graphql`);
     });
   } catch (error) {

@@ -8,6 +8,7 @@ import {
 import { ApolloProvider } from '@apollo/client';
 import { ToastProvider } from 'react-toast-notifications';
 
+import { storage } from '@shared/lib';
 import ApolloClient from '@shared/graphql/client';
 import Header from './modules/header';
 import Home from './modules/home/Home';
@@ -25,6 +26,7 @@ const client = ApolloClient({
   errorHandler: ({ networkError }) => {
     if (networkError) {
       if (networkError.statusCode === 401) {
+        storage.clear();
         window.location.href = '/';
       }
     }

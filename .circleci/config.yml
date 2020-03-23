@@ -9,14 +9,16 @@ jobs:
   deploy-staging-web:
     working_directory: ~/giribil-web
     docker:
-      - image: circleci/node:10.13.0 
+      - image: circleci/node:12.16.1 
+    executor: aws-cli/default
     steps:
       - checkout
+      - aws-cli/setup
       - run:
           name: Setup Environment Variables
           command: |
-            echo "export GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> web/.env
-            echo "export API_URL=$API_URL" >> web/.env
+            echo "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> web/.env
+            echo "API_URL=http://staging-api.girbil.com" >> web/.env
             echo "export GIRBIL_WEB_STAGING_S3_CLIENT=$GIRBIL_WEB_STAGING_S3_CLIENT" >> $BASH_ENV
             echo "export GIRBIL_WEB_STAGING_CLOUNDFRONT_ID=$GIRBIL_WEB_STAGING_CLOUNDFRONT_ID" >> $BASH_ENV
       - restore_cache:
@@ -40,9 +42,11 @@ jobs:
       - run:
           name: deploy client app
           command: |
-            sudo apt-get install awscli
-            aws configure set preview.cloudfront true
-            sh scripts/deploy-web.sh
+            cd web
+            sudo yarn build-prod
+            sudo aws s3 sync dist/ s3://$GIRBIL_WEB_STAGING_S3_CLIENT
+            # Break the CloudFront cache
+            sudo aws cloudfront create-invalidation --distribution-id $GIRBIL_WEB_STAGING_CLOUNDFRONT_ID --paths "/*"
 
   deploy-staging-api:
     docker:
@@ -131,7 +135,7 @@ workflows:
       - deploy-staging-web:
           filters:
             branches:
-              only: staging
+              only: master
 
   deploy_staging_api:
     jobs:

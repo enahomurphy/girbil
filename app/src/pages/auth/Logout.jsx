@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 import React from 'react';
 import { Page } from 'framework7-react';
 import {
@@ -26,8 +27,20 @@ const Logout = () => (
     </Text>
 
     <Block type="flex" direction="column" align="center">
-      <Button size="18px" inverse>Sign Back In</Button>
-      <Button weight="normal" color="#C9C9C9" borderColor="none">QUIT GIRBIL</Button>
+      <Button
+        size="18px"
+        inverse
+      >
+        Sign Back In
+      </Button>
+      <Button
+        onClick={window.close()}
+        weight="normalconversationMeta"
+        color="#C9C9C9"
+        borderColor="none"
+      >
+        QUIT GIRBIL
+      </Button>
     </Block>
   </Page>
 );

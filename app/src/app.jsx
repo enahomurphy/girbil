@@ -22,7 +22,7 @@ import routes from './js/routes';
 
 const MainApp = () => {
   const [isAuth, setIsAuth] = useState(
-    Boolean(storage.payload && get(storage.payload, 'organization'))
+    Boolean(storage.payload && get(storage.payload, 'organization')),
   );
 
   const [client] = useState(ApolloClient({
@@ -63,10 +63,10 @@ const MainApp = () => {
     emitter.onEventEmitted('logout', () => {
       f7.views.main.router.navigate('/', {
         reloadAll: true,
-        reloadCurrent: true
-      })
+        reloadCurrent: true,
+      });
       setIsAuth(false);
-    })
+    });
   },
   []);
 
@@ -76,10 +76,10 @@ const MainApp = () => {
         {
           isAuth ? (
             <View main url="/conversations" />
-            ) : (
+          ) : (
             <View main url="/" />
           )
-        } 
+        }
       </App>
     </ApolloProvider>
   );

@@ -34,10 +34,10 @@ export function createSignedURL(name: string, type: string): Promise<UploadURL> 
         return reject(err);
       }
 
-      return {
+      return resolve({
         postURL: signedURL,
         getURL: signedURL.split('?')[0],
-      };
+      });
     });
   });
 }

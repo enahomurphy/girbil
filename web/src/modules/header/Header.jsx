@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 
 import { useLazyQuery } from '@apollo/client';
 import { storage, get } from '@shared/lib';
@@ -29,9 +29,11 @@ const Header = () => {
 
   return (
     <HeaderContainer>
-      <Logo>
-        {title}
-      </Logo>
+      <Link to="/organizations">
+        <Logo>
+          {title}
+        </Logo>
+      </Link>
     </HeaderContainer>
   );
 };

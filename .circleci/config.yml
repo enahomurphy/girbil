@@ -68,7 +68,7 @@ jobs:
           paths:
             - ./api/node_modules
       - run:
-          name: deploy api app
+          name: Build Api
           command: |
             cd api
             sudo npm install -g typescript

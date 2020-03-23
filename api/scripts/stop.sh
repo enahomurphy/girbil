@@ -1,3 +1,3 @@
 #!/bin/bash
 cd /home/ubuntu/girbil
-sudo yarn stop
+sudo pm2 stop server.config.js

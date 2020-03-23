@@ -32,7 +32,7 @@ const Invite = ({
         </Text>
         <Title size="18px" color="#ffffff" margin="5px 0 16px 0">
           Invite people to
-          {organizationName}
+          {` ${organizationName}`}
         </Title>
         <Text margin="0 0 24px 0">
           Girbil is more valuable with friends

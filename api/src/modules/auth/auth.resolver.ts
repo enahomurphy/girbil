@@ -9,7 +9,6 @@ import {
   Ctx,
   Authorized,
   Query,
-  Args,
 } from 'type-graphql';
 import { getCustomRepository, getRepository } from 'typeorm';
 import short from 'short-uuid';
@@ -23,7 +22,7 @@ import { isValidPassword } from '../../utils/password';
 import { getGoogleUser } from '../../services/google';
 import { sign, inviteToken } from '../../utils/jwt';
 import {
-  LoginInput, SocialInput, InviteInput, InviteArgs,
+  LoginInput, SocialInput, InviteInput,
 } from './auth.input';
 import { UserInput } from '../user/user.input';
 import { AuthType, InviteOrganization } from './auth.type';
@@ -213,6 +212,7 @@ class AuthResolver implements ResolverInterface<AuthType> {
       const shareId = translator.toUUID(inviteId);
 
       const share = await this.shareRepo.findOne({ where: { id: shareId } });
+      organizationId = share.organizationId;
 
       if (!share) {
         throw new Error('Invite id not found');

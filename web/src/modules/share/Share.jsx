@@ -49,7 +49,7 @@ const Share = () => {
         back
       </button>
       <button
-        onClick={() => {}}
+        onClick={() => window.close()}
         style={{ marginTop: '15px' }}
         className="transparent"
         type="button"

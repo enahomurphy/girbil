@@ -224,6 +224,7 @@ Popover.defaultProps = {
 };
 
 export const Search = styled.div`
+  position: relative;
   input {
     box-sizing: border-box;
     height: 32px;

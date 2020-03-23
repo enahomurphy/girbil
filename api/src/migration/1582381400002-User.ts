@@ -12,7 +12,7 @@ export class User1582381400002 implements MigrationInterface {
         "name" varchar,
         "email" varchar(255) UNIQUE NOT NULL,
         "password" varchar NULL,
-        "is_verified" varchar,
+        "is_verified" boolean DEFAULT false,
         "avatar" varchar,
         "last_active" timestamp DEFAULT Now()
       );

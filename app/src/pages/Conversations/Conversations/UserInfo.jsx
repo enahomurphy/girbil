@@ -13,13 +13,13 @@ import { StyledUser } from './style';
 const UserInfo = ({ user }) => {
   const onClickSettings = () => {
     window.open(
-      `http://localhost:1234/settings?token=${storage.token}`,
+      `http://${process.env.APP_URL}/settings?token=${storage.token}`,
     );
   };
 
   const onShareClick = () => {
     window.open(
-      `http://localhost:1234/invite?token=${storage.token}`,
+      `http://${process.env.APP_URL}/invite?token=${storage.token}`,
     );
   };
 

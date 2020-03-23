@@ -2,7 +2,7 @@
 import React from 'react';
 import { Page, List, ListItem } from 'framework7-react';
 
-import { storage } from '@shared/lib';
+import { storage, get } from '@shared/lib';
 import { query, mutation } from '@shared/graphql/conversations';
 import { mutation as channelMutations } from '@shared/graphql/channels';
 import ConversationListItem from '@/components/List/ListItem';
@@ -17,7 +17,7 @@ const Conversations = () => {
   return (
     <Page>
       <ConversationHeader />
-      <UserInfo user={storage.payload} />
+      <UserInfo user={get(storage, 'payload') || {}} />
       <List className="searchbar-not-found">
         <ListItem title="Nothing found" />
       </List>

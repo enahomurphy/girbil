@@ -1,8 +1,9 @@
 import { ApolloProvider } from '@apollo/client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Device } from 'framework7';
 import IO from 'socket.io-client';
+import emitter from '@/lib/emitter';
 
 import {
   App,
@@ -12,23 +13,28 @@ import {
 } from 'framework7-react';
 
 import ApolloClient from '@shared/graphql/client';
-import cordovaApp from './js/cordova-app';
-import routes from './js/routes';
+import { storage, get } from '@shared/lib';
 
 import '@/css/theme.css';
 
-const client = ApolloClient({
-  errorHandler: ({ networkError }) => {
-    if (networkError) {
-      if (networkError.statusCode === 401) {
-        f7.view.main.router.navigate('/');
-        window.location.href = '/';
-      }
-    }
-  },
-});
+import cordovaApp from './js/cordova-app';
+import routes from './js/routes';
 
 const MainApp = () => {
+  const [isAuth, setIsAuth] = useState(
+    Boolean(storage.payload && get(storage.payload, 'organization'))
+  );
+
+  const [client] = useState(ApolloClient({
+    errorHandler: ({ networkError }) => {
+      if (networkError) {
+        if (networkError.statusCode === 401) {
+          setIsAuth(false);
+        }
+      }
+    },
+  }));
+
   const f7params = {
     id: 'io.app.girbil',
     name: 'girbil',
@@ -54,13 +60,26 @@ const MainApp = () => {
 
   useEffect(() => {
     IO(process.env.API_URL, { forceNew: false });
+    emitter.onEventEmitted('logout', () => {
+      f7.views.main.router.navigate('/', {
+        reloadAll: true,
+        reloadCurrent: true
+      })
+      setIsAuth(false);
+    })
   },
   []);
 
   return (
     <ApolloProvider client={client}>
       <App params={f7params} themeDark>
-        <View main url="/conversations" />
+        {
+          isAuth ? (
+            <View main url="/conversations" />
+            ) : (
+            <View main url="/" />
+          )
+        } 
       </App>
     </ApolloProvider>
   );

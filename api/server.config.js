@@ -6,6 +6,7 @@ module.exports = {
       script: './dist/server.js',
       ignore_watch: ['node_modules'],
       exec_mode: 'cluster',
+      instances: 'max',
       watch: true,
       env: {
         PORT: 8081,

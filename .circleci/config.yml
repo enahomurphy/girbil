@@ -99,6 +99,7 @@ jobs:
                     --deployment-group-name << parameters.deployment-group >> \
                     --deployment-config-name << parameters.deployment-config >> \
                     --ignore-application-stop-failures \
+                    --file-exists-behavior OVERWRITE \
                     --s3-location bucket=<< parameters.bundle-bucket >>,bundleType=<< parameters.bundle-type >>,key=<< parameters.bundle-key >>.<< parameters.bundle-type >> \
                     --output text \
                     --query '[deploymentId]')

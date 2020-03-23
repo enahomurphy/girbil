@@ -49,12 +49,20 @@ jobs:
       - image: circleci/node:12.16.1 
     executor: aws-cli/default
     parameters:
-      deploy-application:
+      application-name:
         type: string
-      deploy-bucket:
+      bundle-bucket:
         type: string
-      deploy-bucket-key:
+      bundle-key:
         type: string
+      bundle-type:
+        default: zip
+        type: string
+      deployment-group:
+        type: string
+      deployment-config:
+        type: string
+        default: CodeDeployDefault.OneAtATime
     steps:
       - checkout
       - aws-cli/setup
@@ -80,15 +88,41 @@ jobs:
           name: deploy api app
           command: |
             aws deploy push \
-              --application-name << parameters.deploy-application >> \
+              --application-name << parameters.application-name >> \
               --source ./api \
-              --s3-location s3://<< parameters.deploy-bucket >>/<< parameters.deploy-bucket-key >>.zip
-      - aws-code-deploy/deploy-bundle:
-          application-name: girbil
-          arguments: '--ignore-application-stop-failures'
-          bundle-bucket: girbil-server
-          bundle-key: girbil-staging
-          deployment-group: girbil-staging
+              --s3-location s3://<< parameters.bundle-bucket >>/<< parameters.bundle-key >>.zip
+      - run:
+          name: deploy api app
+          command: |
+            ID=$(aws deploy create-deployment \
+                    --application-name << parameters.application-name >> \
+                    --deployment-group-name << parameters.deployment-group >> \
+                    --deployment-config-name << parameters.deployment-config >> \
+                    --ignore-application-stop-failures \
+                    --s3-location bucket=<< parameters.bundle-bucket >>,bundleType=<< parameters.bundle-type >>,key=<< parameters.bundle-key >>.<< parameters.bundle-type >> \
+                    --output text \
+                    --query '[deploymentId]')
+            STATUS=$(aws deploy get-deployment \
+                      --deployment-id $ID \
+                      --output text \
+                      --query '[deploymentInfo.status]')
+            while [[ $STATUS == "Created" || $STATUS == "InProgress" || $STATUS == "Pending" || $STATUS == "Queued" || $STATUS == "Ready" ]]; do
+              echo "Status: $STATUS..."
+              STATUS=$(aws deploy get-deployment \
+                        --deployment-id $ID \
+                        --output text \
+                        --query '[deploymentInfo.status]')
+              sleep 5
+            done
+            if [[ $STATUS == "Succeeded" ]]; then
+              EXITCODE=0
+              echo "Deployment finished."
+            else
+              EXITCODE=1
+              echo "Deployment failed!"
+            fi
+            aws deploy get-deployment --deployment-id $ID
+            exit $EXITCODE
 
 workflows:
   deploy_staging_web:
@@ -101,9 +135,10 @@ workflows:
   deploy_staging_api:
     jobs:
       - deploy-staging-api:
-          deploy-application: girbil
-          deploy-bucket: girbil-server
-          deploy-bucket-key: girbil-staging
+          application-name: girbil
+          bundle-bucket: girbil-server
+          bundle-key: girbil-staging
+          deployment-group: girbil-staging
           filters:
             branches:
               only: master

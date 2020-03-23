@@ -3,8 +3,9 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Page } from 'framework7-react';
 
-import { Title, Block, Image } from '@/components/Style';
+import ProfileImage from '@/components/ProfileImage';
 import Header from '@/components/Header';
+import { Title, Block } from '@/components/Style';
 import { query as conversationQuery } from '@shared/graphql/conversations';
 import { query as userQuery, mutation as userMutation } from '@shared/graphql/user';
 
@@ -34,6 +35,7 @@ const Profile = ({ userId, $f7router }) => {
   const [updateUser, { loading: updatingUser }] = useMutation(userMutation.UPDATE_USER);
 
   const user = get(data, 'user', {
+    id: '',
     organization: {
       name: '',
       position: '',
@@ -58,7 +60,12 @@ const Profile = ({ userId, $f7router }) => {
     <Page name="profile">
       <Header title="Team Member Profile" />
       <Block>
-        <Image src="https://i.picsum.photos/id/1/376/375.jpg" />
+        <ProfileImage
+          edit={edit}
+          width="100%"
+          height="376px"
+          url={user.avatar}
+        />
         {!edit && <ProfileOrg>{ user.organization.name }</ProfileOrg>}
       </Block>
       {

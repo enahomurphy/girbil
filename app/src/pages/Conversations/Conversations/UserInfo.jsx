@@ -52,7 +52,7 @@ const UserInfo = ({ user }) => {
           </Block>
           <List>
             <ListItem link="#" popoverClose title="Set yourself to away" />
-            <ListItem link="#" popoverClose title="Profile & personal account" />
+            <ListItem link={`/users/${user.id}/profile`} popoverClose title="Profile & personal account" />
             <ListItem
               onClick={onClickSettings}
               popoverClose

@@ -85,6 +85,7 @@ jobs:
               --s3-location s3://<< parameters.deploy-bucket >>/<< parameters.deploy-bucket-key >>.zip
       - aws-code-deploy/deploy-bundle:
           application-name: girbil
+          arguments: '--ignore-application-stop-failures'
           bundle-bucket: girbil-server
           bundle-key: girbil-staging
           deployment-group: girbil-staging

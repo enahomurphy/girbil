@@ -1,9 +1,8 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Image, Title } from '@/components/Style';
+import { Image, Title, Button } from '@/components/Style';
 import styled from 'styled-components';
-import { Block } from 'framework7-react';
 
 
 const StyledBlock = styled.div`
@@ -27,7 +26,7 @@ const StyledInitialsBlock = styled.div`
 `;
 
 const Profile = ({
-  url, edit, width, height,
+  url, edit, width, height, changeProfile, removeProfile,
 }) => (
   <StyledBlock width={width} height={width}>
     {url && <Image src={url} width={width} height={height} />}
@@ -43,10 +42,11 @@ const Profile = ({
             </Title>
           )
         }
-        <Block>
+        <div>
           {
             Boolean(url && edit) && (
-              <Title
+              <Button
+                onClick={changeProfile}
                 margin="120px 0 0 0"
                 weight="bold"
                 size="18px"
@@ -54,12 +54,13 @@ const Profile = ({
                 color="var(--gb-accent)"
               >
                 Set profile title
-              </Title>
+              </Button>
             )
           }
           {
             Boolean(url && edit) && (
               <Title
+                onClick={removeProfile}
                 margin="8px 0 0 0"
                 weight="bold"
                 size="14px"
@@ -70,7 +71,7 @@ const Profile = ({
               </Title>
             )
           }
-        </Block>
+        </div>
       </StyledInitialsBlock>
     )}
   </StyledBlock>
@@ -79,6 +80,8 @@ const Profile = ({
 Profile.defaultProps = {
   url: '',
   edit: false,
+  changeProfile: () => {},
+  removeProfile: () => {},
 };
 
 Profile.propTypes = {
@@ -86,6 +89,8 @@ Profile.propTypes = {
   edit: PropTypes.bool,
   width: PropTypes.string.isRequired,
   height: PropTypes.string.isRequired,
+  changeProfile: PropTypes.func,
+  removeProfile: PropTypes.func,
 };
 
 export default Profile;

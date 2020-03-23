@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
+import Recorder from '@/components/Recorder/Recorder';
 import {
   Title, Block, Button, BorderedInput,
 } from '@/components/Style';
@@ -53,6 +54,7 @@ const ProfileInfo = ({
             onChange={({ target }) => setForm({ ...form, position: target.value })}
           />
         </BorderedInput>
+        <Recorder name="profile-image" />
       </Block>
     </>
   );

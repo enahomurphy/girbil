@@ -5,6 +5,7 @@ import { Page } from 'framework7-react';
 
 import ProfileImage from '@/components/ProfileImage';
 import Header from '@/components/Header';
+import Recorder from '@/components/Recorder/Recorder';
 import { Title, Block } from '@/components/Style';
 import { query as conversationQuery } from '@shared/graphql/conversations';
 import { query as userQuery, mutation as userMutation } from '@shared/graphql/user';
@@ -23,6 +24,7 @@ const ProfileOrg = styled(Title)`
 
 const Profile = ({ userId, $f7router }) => {
   const [edit, setEdit] = useState(false);
+  const [editImage, setProfileImage] = useState(false);
   const { data, refetch } = useQuery(userQuery.USER, { variables: { userId } });
   const [getConversation] = useLazyQuery(
     conversationQuery.GET_USER_CONVERSATION_OR_CREATE, {
@@ -61,7 +63,8 @@ const Profile = ({ userId, $f7router }) => {
       <Header title="Team Member Profile" />
       <Block>
         <ProfileImage
-          edit={edit}
+          edit
+          changeProfile={() => setProfileImage(true)}
           width="100%"
           height="376px"
           url={user.avatar}
@@ -78,16 +81,19 @@ const Profile = ({ userId, $f7router }) => {
             handleMessage={handleMessage}
           />
         ) : (
-          <ProfileUpdate
-            isUser={isUser}
-            onCancelProfile={() => setEdit(false)}
-            onSaveProfile={onSaveProfile}
-            loading={updatingUser}
-            name={user.name || ''}
-            position={user.organization.position || ''}
-          />
+          <>
+            <ProfileUpdate
+              isUser={isUser}
+              onCancelProfile={() => setEdit(false)}
+              onSaveProfile={onSaveProfile}
+              loading={updatingUser}
+              name={user.name || ''}
+              position={user.organization.position || ''}
+            />
+          </>
         )
       }
+      <Recorder opened={editImage} />
     </Page>
   );
 };

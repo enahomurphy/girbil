@@ -17,6 +17,7 @@ export const BackIcon = styled(Button)`
   border-radius: 24px;
   width: 32px;
   height: 32px;
+  margin: ${({ margin }) => margin || 'initial'};
   position: absolute;
   left: 16px;
   top: 0pc;

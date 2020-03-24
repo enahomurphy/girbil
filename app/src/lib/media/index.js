@@ -1,8 +1,8 @@
 import Video from './Video';
 import Recorder from './Recorder';
+import Gif from './Gif';
 
-export { Video };
-export { Recorder };
+export { Recorder, Gif, Video };
 
 export default {
   Recorder,

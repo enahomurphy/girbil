@@ -5,7 +5,7 @@ import { Page } from 'framework7-react';
 
 import ProfileImage from '@/components/ProfileImage';
 import Header from '@/components/Header';
-import Recorder from '@/components/Recorder/Recorder';
+import Recorder from '@/components/Recorder/GifRecorder';
 import { Title, Block } from '@/components/Style';
 import { query as conversationQuery } from '@shared/graphql/conversations';
 import { query as userQuery, mutation as userMutation } from '@shared/graphql/user';

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import Recorder from '@/components/Recorder/Recorder';
+import Recorder from '@/components/Recorder/GifRecorder';
 import {
   Title, Block, Button, BorderedInput,
 } from '@/components/Style';

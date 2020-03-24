@@ -7,20 +7,19 @@ import {
   Block, Image, Title, Text, Popover, Active,
 } from '@/components/Style';
 import { storage } from '@shared/lib';
+import { openURL } from '@/lib';
 
 import { StyledUser } from './style';
 
 const UserInfo = ({ user }) => {
   const onClickSettings = () => {
-    window.open(
-      `http://${process.env.WEB_URL}/settings?token=${storage.token}`,
-    );
+    const url = `http://${process.env.WEB_URL}/settings?token=${storage.token}`;
+    openURL(url);
   };
 
   const onShareClick = () => {
-    window.open(
-      `http://${process.env.WEB_URL}/invite?token=${storage.token}`,
-    );
+    const url = `http://${process.env.WEB_URL}/invite?token=${storage.token}`;
+    openURL(url);
   };
 
   return (

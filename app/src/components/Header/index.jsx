@@ -10,7 +10,6 @@ import { Title } from '@/components/Style';
 import { Back } from '@/components/Icon';
 import { StyledNavbar } from './style';
 
-
 const Header = ({ title }) => (
   <StyledNavbar>
     <NavLeft>

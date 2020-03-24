@@ -27,14 +27,6 @@ export const useSaveMessage = () => {
   return [handler, { data, loading, error }];
 };
 
-export const useDeleteMessage = () => {
-  const [deleteMessage] = useMutation(DELETE_MESSAGE);
-
-  const handler = (messageId) => deleteMessage({ variables: { messageId } });
-
-  return [handler];
-};
-
 export const useMarkMessage = (state = 'read') => {
   const [markMessage] = useMutation(
     state === 'read' ? MARK_MESSAGE_AS_READ : MARK_MESSAGE_AS_UNREAD,
@@ -101,4 +93,25 @@ export const markMessage = (client, variables, state) => {
   );
 };
 
-export default {};
+export const useDeleteMessage = () => {
+  const [deleteMessage] = useMutation(DELETE_MESSAGE);
+
+  const handler = useCallback(
+    (variables, cb) => deleteMessage({
+      variables: { messageId: variables.messageId },
+      update: (store) => {
+        store.modify('ROOT_QUERY', {
+          messages(items, { readField }) {
+            return items.filter((item) => readField('id', item) !== variables.messageId);
+          },
+        });
+        store.gc();
+        cb();
+      },
+      refetchQueries: ['conversations'],
+    }),
+    [deleteMessage],
+  );
+
+  return [handler];
+};

@@ -6,13 +6,15 @@ import { query, mutation } from '@shared/graphql/conversations';
 import Gallery from '@/components/Gallery';
 import Emoji from '@/components/Emoji';
 import emitter from '@/lib/emitter';
+import { storage } from '@shared/lib';
 
 import EmptyState from './EmptyMessage';
 
 const getPullOverLinks = ({
   conversationId,
-  message: { id, hasRead },
+  message: { id, hasRead, sender },
   markMessage,
+  deleteMessage,
 }) => {
   const options = [
     {
@@ -36,12 +38,15 @@ const getPullOverLinks = ({
       title: `Mark as ${hasRead ? 'unwatched' : 'watched'}`,
       onClick: markMessage,
     },
-    {
+  ];
+
+  if (storage.payload.id === sender.id) {
+    options.push({
       type: 'delete video',
       title: 'delete video',
-      onClick: () => {},
-    },
-  ];
+      onClick: () => deleteMessage(id),
+    });
+  }
 
   return options;
 };
@@ -53,6 +58,7 @@ const Messages = ({
   const [updateState] = mutation.useMessageState();
   const [markAsUnRead] = mutation.useMarkMessage('unread');
   const [markAsRead] = mutation.useMarkMessage('read');
+  const [deleteMessage] = mutation.useDeleteMessage();
 
   useEffect(() => {
     loadMessage();
@@ -118,6 +124,15 @@ const Messages = ({
     pullover: getPullOverLinks({
       conversationId,
       message,
+      deleteMessage: () => {
+        deleteMessage({
+          messageId: message.id,
+          conversationId: message.conversationId,
+          threadId: message.parentId,
+        }, () => {
+          f7.views.main.router.navigate(`/conversations/${message.conversationId}`);
+        });
+      },
       markMessage: () => (message.hasRead ? markAsUnRead : markAsRead)({
         conversationId,
         messageId: message.id,

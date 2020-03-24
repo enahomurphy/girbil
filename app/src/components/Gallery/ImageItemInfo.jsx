@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Popover, ListItem } from 'framework7-react';
+import { Popover, ListItem, f7 } from 'framework7-react';
 
 import { Icon, Link } from '@/components/Style';
 import { RecordingInfo, RecordingInfoContainer, ImageItemOption } from './style';
@@ -17,10 +17,18 @@ const ImageItemInfo = ({
       <Popover className={`popover-menu-${messageId}`}>
         <ImageItemOption>
           {
-            pullover.reduce((acc, { Component, type, ...props }) => {
+            pullover.reduce((acc, { Component, type, onClick, ...props }) => {
               if (type === 'thread' && replyCount) return acc;
               acc.push(
-                <ListItem popoverClose key={type} {...props}>
+                <ListItem
+                  onClick={() => {
+                    if (onClick) onClick();
+                    f7.popover.close(`.popover-menu-${messageId}`);
+                  }}
+                  popoverClose
+                  key={type}
+                  {...props}
+                >
                   { Component && <Component /> }
                 </ListItem>,
               );

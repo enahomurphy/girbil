@@ -79,7 +79,6 @@ export const useMessageState = () => {
 };
 
 export const markMessage = (client, variables, state) => {
-  console.log(variables.messageId);
   const mutation = state === 'read' ? MARK_MESSAGE_AS_READ : MARK_MESSAGE_AS_UNREAD;
 
   return client.mutate(

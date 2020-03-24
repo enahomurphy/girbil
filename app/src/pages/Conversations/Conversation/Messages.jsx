@@ -79,10 +79,10 @@ const Messages = ({
       : `/conversations/${conversationId}/${id}`;
 
     const onUpdate = () => {
+      const message = messages.find(({ id: mId }) => id === mId);
       emitter.emitEvent('read_message', {
-        conversationId,
-        messageId: id,
-        threadId,
+        threadId: message.parentId,
+        message,
       });
     };
     updateState(

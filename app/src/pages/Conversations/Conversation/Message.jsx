@@ -38,27 +38,21 @@ const Message = ({
   useEffect(() => {
     const handleReadMessage = (args) => {
       const variables = {
-        conversationId: args.conversationId,
-        messageId: args.messageId,
+        conversationId: args.message.conversationId,
+        messageId: args.message.id,
         threadId: args.threadId,
       };
 
-      if (!args.hasRead) {
+      if (!args.message.hasRead) {
         markAsRead(variables);
       }
 
-      getMessage({
-        variables: {
-          conversationId: args.conversationId,
-          messageId: args.messageId,
-          threadId: args.threadId,
-        },
-      });
+      getMessage({ variables });
     };
 
     emitter.onEventEmitted('read_message', handleReadMessage);
     return () => emitter.removeListener('read_message', handleReadMessage);
-  }, [getMessage, markAsRead]);
+  }, [getMessage, markAsRead, message.hasRead]);
 
   const goBack = () => {
     updateState({

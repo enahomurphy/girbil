@@ -15,3 +15,24 @@ export class CreateOrganizationType {
     return plainToClass(CreateOrganizationType, { token, organization });
   }
 }
+
+@ObjectType()
+export class SearchType {
+  @Field()
+  id: string
+
+  @Field()
+  name: string
+
+  @Field()
+  avatar: string
+
+  @Field()
+  type: string
+
+  @Field({ nullable: true })
+  conversationid: string
+
+  @Field()
+  members: number
+}

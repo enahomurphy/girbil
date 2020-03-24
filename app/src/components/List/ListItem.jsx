@@ -59,8 +59,9 @@ const ListItem = ({
           ) : null
         }
         <Text margin="0" align="left">
-          { Boolean(unreadCount) && `${unreadCount} new ${unreadCount === 1 ? 'chat' : 'chats'}`}
-          { Boolean(!unreadCount) && user.lastActive}
+          { Boolean(!isChannel && unreadCount) && `${unreadCount} new ${unreadCount === 1 ? 'chat' : 'chats'}`}
+          { Boolean(!isChannel && !unreadCount) && user.lastActive}
+          { Boolean(isChannel) && `${user.members} members`}
         </Text>
       </Block>
       <Img alt={user.name} slot="media" src={user.avatar} width="80" />

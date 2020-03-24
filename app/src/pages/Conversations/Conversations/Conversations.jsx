@@ -1,9 +1,12 @@
 
-import React from 'react';
+import React, { useState }  from 'react';
 import { Page, List, ListItem } from 'framework7-react';
 
 import { storage, get } from '@shared/lib';
+import { useLazyQuery } from '@apollo/client';
+import { useDebounce } from 'react-use';
 import { query, mutation } from '@shared/graphql/conversations';
+import { query as orgQuery } from '@shared/graphql/organizations';
 import { mutation as channelMutations } from '@shared/graphql/channels';
 import ConversationListItem from '@/components/List/ListItem';
 import ConversationHeader from '../../../components/Header/ConversationHeader';
@@ -14,9 +17,23 @@ const Conversations = () => {
   const [closeConversation] = mutation.useCloseConversation();
   const [leaveChannel] = channelMutations.useLeaveChannel();
 
+  const [search, { data, loading }] = useLazyQuery(orgQuery.SEARCH_ORGANIZATION);
+  const [searchText, setSearchText] = useState('');
+
+  useDebounce(() => {
+    if(searchText) search({ variables: { text: searchText } });
+  },
+
+  500,
+  [searchText]);
+  console.log('llll', data)
   return (
     <Page>
-      <ConversationHeader />
+      <ConversationHeader
+        searchResult={get(data, 'searchOrganization', [])}
+        closeConversation={closeConversation}
+        leaveChannel={leaveChannel}
+        handleSearch={setSearchText}/>
       <UserInfo user={get(storage, 'payload') || {}} />
       <List className="searchbar-not-found">
         <ListItem title="Nothing found" />

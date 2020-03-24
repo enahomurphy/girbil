@@ -15,14 +15,15 @@ import { getCustomRepository, getRepository, Not } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import {
-  Organization, User, UserOrganization, RoleType,
+  Organization, User, UserOrganization, RoleType, Channel
 } from '../../entity';
-import { ContextType } from '../../interfaces';
+import { ContextType, SearchResult } from '../../interfaces';
 import { OrganizationRepo } from '../../repo';
-import { CreateOrganizationType } from './organization.type';
+import { CreateOrganizationType, SearchType } from './organization.type';
 import { sign } from '../../utils/jwt';
 import { CanView } from '../../middleware/permissions';
 import { UserIDArgs } from '../user/user.args';
+import { OrgSearchArgs } from './organization.args';
 
 
 registerEnumType(RoleType, {
@@ -37,6 +38,18 @@ class OrganizationResolver {
   @Query(() => [Organization])
   async organizations(@Ctx() { user }: ContextType): Promise<Organization[]> {
     return this.orgRepo.findUserOrganizations(user.id);
+  }
+
+  @Authorized('user', 'admin', 'owner')
+  @Query(() => [SearchType])
+  async searchOrganization(
+    @Args() { text }: OrgSearchArgs,
+      @Ctx() { user: { organization } }: ContextType,
+  ): Promise<SearchResult[]> {
+    return this.orgRepo.search(
+      organization.id,
+      text,
+    );
   }
 
   @Authorized('owner', 'admin', 'user')

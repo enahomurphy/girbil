@@ -30,6 +30,7 @@ import { ContextType } from '../../interfaces';
 import { sendInvites } from '../../services/email';
 import { keys } from '../../config';
 import { handleEmailInvite, handleInvite, tokenForOrgId } from './heplers';
+const orgRepo = getCustomRepository(OrganizationRepo);
 
 @Resolver(AuthType)
 class AuthResolver implements ResolverInterface<AuthType> {

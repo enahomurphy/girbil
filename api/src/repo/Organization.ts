@@ -1,12 +1,14 @@
-import { EntityRepository, Repository, getRepository } from 'typeorm';
+import { EntityRepository, Repository, getRepository, getManager } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import {
   Organization, UserOrganization, User, RoleType,
 } from '../entity';
+import { SearchResult } from '../interfaces';
 
 @EntityRepository(Organization)
 class OrganizationRepository extends Repository<Organization> {
   private readonly userOrgRepo = getRepository(UserOrganization)
+  private readonly entityManager = getManager()
 
   async findUserOrganizations(userId: string): Promise<Organization[]> {
     const userOrganizations = await this.userOrgRepo.createQueryBuilder('organization')
@@ -100,6 +102,39 @@ class OrganizationRepository extends Repository<Organization> {
 
   async findById(organizationId: string): Promise<Organization> {
     return this.findOne({ where: { id: organizationId } });
+  }
+
+  async search(organizationId: string, text: string): Promise<SearchResult[]> {
+
+    const result =  await this.entityManager.query(`
+        SELECT
+          channels.id,
+          channels.name,
+          channels.avatar,
+          'channel' AS type,
+          conversations.id AS conversationid,
+          COUNT(channel_users.channel_id) AS members
+        FROM channels
+        INNER JOIN channel_users ON channel_users.channel_id = channels.id
+        LEFT JOIN conversations ON conversations.receiver_id = channels.id AND conversations.receiver_type = 'channel'
+        WHERE tsv @@ plainto_tsquery($1) AND channels.organization_id = $2
+        GROUP BY channels.id, conversations.id
+        UNION ALL
+        SELECT
+          users.id AS id,
+          users.name AS name,
+          users.avatar AS avatar,
+          'user' AS type,
+          conversations.id AS conversationid,
+          0 as members
+        FROM users
+        INNER JOIN user_organizations ON users.id = user_organizations.user_id
+        LEFT JOIN conversations ON conversations.receiver_id = users.id OR conversations.creator_id = users.id AND conversations.receiver_type = 'user'
+        WHERE users.tsv @@ plainto_tsquery($1) AND user_organizations.organization_id = $2
+        GROUP BY users.id, conversations.id;
+    `, [text, organizationId]);
+
+    return result;
   }
 }
 

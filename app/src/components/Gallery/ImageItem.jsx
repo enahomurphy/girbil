@@ -36,6 +36,7 @@ const ImageItem = ({
         replyCount={replyCount}
         pullover={pullover}
         recording={slideProps.recording}
+        messageId={id}
       />
       <StyledSlide {...slideProps}>
         {<ImageItemPlaying
@@ -74,4 +75,4 @@ ImageItem.propTypes = {
   createdAt: PropTypes.oneOfType([Date, PropTypes.number]).isRequired,
 };
 
-export default React.memo(ImageItem);
+export default ImageItem;

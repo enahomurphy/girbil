@@ -6,15 +6,15 @@ import { Icon, Link } from '@/components/Style';
 import { RecordingInfo, RecordingInfoContainer, ImageItemOption } from './style';
 
 const ImageItemInfo = ({
-  recording, pullover, replyCount, hasRead,
+  recording, pullover, replyCount, hasRead, messageId,
 }) => !recording && (
   <RecordingInfoContainer hasRead={hasRead}>
     {!hasRead && <RecordingInfo /> }
     <div>
-      <Link popoverOpen=".popover-menu">
+      <Link popoverOpen={`.popover-menu-${messageId}`}>
         <Icon f7="ellipsis_vertical" color="#ffffff" />
       </Link>
-      <Popover className="popover-menu">
+      <Popover className={`popover-menu-${messageId}`}>
         <ImageItemOption>
           {
             pullover.reduce((acc, { Component, type, ...props }) => {
@@ -38,6 +38,7 @@ ImageItemInfo.propTypes = {
   pullover: PropTypes.array.isRequired,
   replyCount: PropTypes.number.isRequired,
   hasRead: PropTypes.bool.isRequired,
+  messageId: PropTypes.string.isRequired,
 };
 
 export default ImageItemInfo;

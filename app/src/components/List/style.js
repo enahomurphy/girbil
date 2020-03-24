@@ -37,7 +37,8 @@ export const StyledListItem = styled(ListItem)`
 
   .item-link .item-inner {
     padding: 0 16px 0 0;
-    margin-left: 16px;
+    display: flex;
+    justify-content: flex-start;
 
     &::before {
       display: none;   

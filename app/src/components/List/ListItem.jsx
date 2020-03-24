@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -6,7 +5,8 @@ import {
   Title, Text, Block, ShortTitle,
 } from '@/components/Style';
 import { Lock } from '@/components/Icon';
-import { Img, StyledListItem, Active } from './style';
+import { SimpleProfileImage } from '@/components/ProfileImage';
+import { StyledListItem, Active } from './style';
 import ListInfo from './ListInfo';
 
 const ListItem = ({
@@ -20,6 +20,9 @@ const ListItem = ({
     justify="space-between"
   >
     <StyledListItem link={getLink(user)} onClick={onClick}>
+      <div style={{ marginRight: '16px' }}>
+        <SimpleProfileImage name={user.name} url={user.avatar} width="64px" height="80px" />
+      </div>
       <Block margin>
         <Block
           type="flex"
@@ -64,7 +67,6 @@ const ListItem = ({
           { Boolean(isChannel) && `${user.members} members`}
         </Text>
       </Block>
-      <Img alt={user.name} slot="media" src={user.avatar} width="80" />
     </StyledListItem>
     <ListInfo id={id} options={options} unreadCount={unreadCount} />
   </Block>
@@ -74,6 +76,7 @@ ListItem.defaultProps = {
   unreadCount: 0,
   subText: '',
   options: [],
+  onClick: () => {},
 };
 
 ListItem.propTypes = {
@@ -85,6 +88,7 @@ ListItem.propTypes = {
   isActive: PropTypes.bool.isRequired,
   user: PropTypes.object.isRequired,
   getLink: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
   options: PropTypes.array,
 };
 

@@ -6,10 +6,10 @@ import { Popup, Icon, List } from 'framework7-react';
 import { Search } from '@/components/Style';
 import Close from '@/components/Icon/Close';
 import ConversationListItem from '@/components/List/ListItem';
+import DefaultSearchList from '@/components/List/DefaultSearchList';
 
-const SearchHeader = styled.div`
+const SearchBar = styled.div`
   height: 88px;
-  border-bottom: 1px solid #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,8 +22,12 @@ const SearchHeader = styled.div`
 
 const GlobalSearch = props => {
   const {handleSearch, searchResult, closeConversation, leaveChannel, opened, onClose } = props;
-
   const [isOpen, setOpened] = useState(opened);
+  const [searchText, setSearchText] = useState('');
+
+  useEffect(() => {
+    handleSearch(searchText);
+  }, [searchText]);
 
   useEffect(() => {
     setOpened(opened);
@@ -84,23 +88,34 @@ const GlobalSearch = props => {
 
   return (
     <Popup className="global-search" style={{ background: '#222222' }} opened={isOpen}>
-      <SearchHeader>
-        <div className="global-input">
-          <Search>
-            <Icon f7="search" />
-            <input
-              onChange={(e) => handleSearch(e.target.value)}
-              placeholder="Search channels and DMs..."
-            />
-          </Search>
-        </div>
-        <span
-          role="presentation"
-          onClick={handleClose}
-        >
-          <Close />
-        </span>
-      </SearchHeader>
+      <div style={{ borderBottom: '1px solid #ffffff' }}>
+        <SearchBar>
+          <div className="global-input">
+            <Search>
+              <Icon f7="search" />
+              <input
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                placeholder="Search channels and DMs..."
+              />
+            </Search>
+          </div>
+          <span
+            role="presentation"
+            onClick={handleClose}
+          >
+            <Close />
+          </span>
+        </SearchBar>
+        {
+          Boolean(searchText.length) &&
+          (
+            <div style={{ color: '#EFEFEF', margin: '0 0 16px 42px' }}>
+              Conversations and channels matching search
+            </div>
+          )
+        }
+      </div>
       <List style={{ margin: '32px 0 0 0' }}>
         {
           searchResult.map(({
@@ -143,6 +158,18 @@ const GlobalSearch = props => {
           )))
         }
       </List>
+      {
+        Boolean(!searchText.length) &&
+        (
+          <DefaultSearchList
+            title='Suggested Searches'
+            options={[
+              {text: 'is:unreads', onClick: () => setSearchText('is:unreads ')},
+              {text: 'is:channel', onClick: () => setSearchText('is:channel ')},
+              {text: 'is:user', onClick: () => setSearchText('is:user ')}
+            ]}/>
+        )
+      }
     </Popup>
   );
 };

@@ -1,9 +1,7 @@
 import * as aws from 'aws-sdk';
-import { plainToClass } from 'class-transformer';
 
 import { keys } from '../config';
-import { UploadType } from '../modules/upload/upload.type';
-import { UploadURL } from '../interfaces';
+import { UploadURL, UploadVideo } from '../interfaces';
 
 aws.config.update({
   accessKeyId: keys.aws.key,
@@ -24,7 +22,7 @@ export function createSignedURL(name: string, type: string): Promise<UploadURL> 
     Bucket: keys.aws.s3.bucket,
     ContentType: type,
     Key: name,
-    Expires: 60,
+    Expires: 120,
     ACL: 'public-read',
   };
 
@@ -42,7 +40,7 @@ export function createSignedURL(name: string, type: string): Promise<UploadURL> 
   });
 }
 
-export async function getMessageUploadURL(id: string, path: string): Promise<UploadType> {
+export async function getMessageUploadURL(id: string, path: string): Promise<UploadVideo> {
   const thumbnail = createSignedURL(
     `${path}/${id}-thumbnail.gif`,
     'image/gif',
@@ -55,12 +53,12 @@ export async function getMessageUploadURL(id: string, path: string): Promise<Upl
 
   const urls = await Promise.all([thumbnail, video]);
 
-  return plainToClass(UploadType, {
+  return {
     postThumbnailURL: urls[0].postURL,
     getThumbnailURL: urls[0].getURL,
     postVideoURL: urls[1].postURL,
     getVideoURL: urls[1].getURL,
-  });
+  };
 }
 
 export const upload = async (fileName, stream): Promise<any> => {
@@ -79,7 +77,6 @@ export const upload = async (fileName, stream): Promise<any> => {
     Body: stream,
     ACL: 'public-read',
   };
-
 
   return new Promise((resolve, rejects) => s3Instance.upload(params, (error, data) => {
     if (error) {

@@ -57,7 +57,6 @@ const Share = () => {
             </button>
           </CopyForm>
         </Flex>
-
         <button
           onClick={goBack}
           type="submit"

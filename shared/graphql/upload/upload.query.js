@@ -11,6 +11,16 @@ export const UPLOAD_URLS = gql`
   }
 `;
 
+export const USER_UPLOAD_URL = gql`
+  query getUserUploadURL {
+    getUserUploadURL{
+      postURL
+      getURL
+    }
+  }
+`;
+
 export default {
   UPLOAD_URLS,
+  USER_UPLOAD_URL,
 };

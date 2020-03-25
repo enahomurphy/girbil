@@ -1,7 +1,5 @@
 /* eslint-disable no-undef */
-
 import Video from './Video';
-
 
 class Gif {
   constructor(videoId) {
@@ -19,7 +17,10 @@ class Gif {
 
   init() {
     navigator.getUserMedia(
-      Video.constraints,
+      {
+        ...Video.constraints,
+        audio: false,
+      },
       this.startStream,
       this.error,
     );
@@ -30,7 +31,9 @@ class Gif {
     this.video.srcObject = stream;
     this.video.play();
 
-    this.gif = new RecordRTC(stream, { type: 'gif' });
+    this.gif = new RecordRTC(stream, {
+      type: 'gif',
+    });
   }
 
   startRecording() {
@@ -40,12 +43,12 @@ class Gif {
   }
 
   async stopRecording() {
-    this.playing = false;
     return new Promise((resolve) => {
       this.gif.stopRecording((blob) => {
+        this.playing = false;
         this.file = blob;
         resolve(blob);
-        this.onStop(blob);
+        this.onStop(this.gif.getBlob());
       });
     });
   }
@@ -53,6 +56,14 @@ class Gif {
   error(error) {
     console.error(this.videoId, error);
   }
+
+  getFile(name) {
+    return new File([this.file], name, {
+      lastModified: (new Date()).getTime(),
+      type: 'video/webm',
+    });
+  }
+
 
   reset() {
     this.stream.getTracks().forEach((track) => {

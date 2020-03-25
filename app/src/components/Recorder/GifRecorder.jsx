@@ -21,12 +21,14 @@ export const NewMessageWrapper = styled.div`
   justify-content: center;
 `;
 
-const Recorder = ({ opened }) => {
+const Recorder = ({ opened, onFile }) => {
   const id = 'gif-recorder';
   const [isOpen, setOpened] = useState(opened);
-  const [counter, setCounter] = React.useState(0);
+  const [counter, setCounter] = useState(0);
 
-  const [video] = useVideo({ id, width: '376px', height: '676px' });
+  const [video] = useVideo({
+    id, width: '376px', height: '676px', muted: true,
+  });
   const [gifRecorder] = useState(new Gif(id));
 
   useEffect(() => {
@@ -36,13 +38,19 @@ const Recorder = ({ opened }) => {
   useEffect(() => {
     gifRecorder.init();
     return () => {
-      gifRecorder.stop();
+      gifRecorder.reset();
     };
   }, [gifRecorder]);
 
   useEffect(() => {
     if (counter > 0) {
-      setTimeout(() => setCounter(counter - 1), 1000);
+      setTimeout(() => {
+        if (!gifRecorder.playing) {
+          setCounter(0);
+        } else {
+          setCounter(counter - 1);
+        }
+      }, 1000);
     }
 
     if (gifRecorder.playing && counter === 0) {
@@ -51,16 +59,15 @@ const Recorder = ({ opened }) => {
   }, [counter, gifRecorder]);
 
   gifRecorder.onStop = (file) => {
-    // get file and upload to s3;
-    console.info(file);
+    onFile(file);
   };
 
-  const handleRecording = () => {
+  const handleRecording = async () => {
     if (!gifRecorder.playing) {
       setCounter(3);
       gifRecorder.startRecording();
     } else {
-      gifRecorder.stopRecording();
+      await gifRecorder.stopRecording();
       setCounter(0);
     }
   };
@@ -99,6 +106,7 @@ const Recorder = ({ opened }) => {
 
 Recorder.propTypes = {
   opened: PropTypes.bool.isRequired,
+  onFile: PropTypes.func.isRequired,
 };
 
 export default Recorder;

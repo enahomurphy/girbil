@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Image, Title, Button } from '@/components/Style';
@@ -94,7 +93,7 @@ const Profile = ({
             )
           }
           {
-            Boolean(url && edit) && (
+            Boolean(false && edit) && (
               <Title
                 onClick={removeProfile}
                 margin="8px 0 0 0"

@@ -108,7 +108,7 @@ const Profile = ({ userId, $f7router }) => {
       <Header title="Team Member Profile" />
       <Block>
         <ProfileImage
-          edit
+          edit={edit}
           changeProfile={() => setProfileImage(true)}
           width="100%"
           height="376px"

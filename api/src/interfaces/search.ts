@@ -3,6 +3,8 @@ export interface SearchResult {
   name: string;
   avatar: string;
   type: string;
-  conversationid: string;
+  conversation_id: string;
   members: number;
+  isPrivate: boolean;
+  is_member: boolean;
 }

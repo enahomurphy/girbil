@@ -10,7 +10,7 @@ import { Img, StyledListItem, Active } from './style';
 import ListInfo from './ListInfo';
 
 const ListItem = ({
-  unreadCount, user, isChannel, isPrivate, isActive, subText, getLink, options, id,
+  unreadCount, onClick, user, isChannel, isPrivate, isActive, subText, getLink, options, id,
 }) => (
   <Block
     margin="0"
@@ -19,7 +19,7 @@ const ListItem = ({
     align="center"
     justify="space-between"
   >
-    <StyledListItem link={getLink(user)}>
+    <StyledListItem link={getLink(user)} onClick={onClick}>
       <Block margin>
         <Block
           type="flex"

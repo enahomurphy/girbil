@@ -44,11 +44,12 @@ class OrganizationResolver {
   @Query(() => [SearchType])
   async searchOrganization(
     @Args() { text }: OrgSearchArgs,
-      @Ctx() { user: { organization } }: ContextType,
+      @Ctx() { user: { id: userId, organization } }: ContextType,
   ): Promise<SearchResult[]> {
     return this.orgRepo.search(
       organization.id,
       text,
+      userId
     );
   }
 

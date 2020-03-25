@@ -3,6 +3,7 @@ import { Icon, List } from 'framework7-react';
 import PropTypes from 'prop-types';
 
 import ListItem from '@/components/List/ListItem';
+import { invitePeopleOpener } from '@/lib';
 import {
   Title, Text, Block, Search, Button,
 } from '@/components/Style';
@@ -27,7 +28,13 @@ const DirectMessage = ({
           justify="space-between"
         >
           <Title size="21px">Browse DMs</Title>
-          <Button inverse width="126px">Invite People</Button>
+          <Button
+            inverse
+            width="126px"
+            onClick={invitePeopleOpener}
+          >
+            Invite People
+          </Button>
         </Block>
         <Block margin="0 0 32px 0">
           <Search>

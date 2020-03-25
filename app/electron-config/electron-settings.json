@@ -1,0 +1,13 @@
+{
+  "browserWindow": {
+    "width": 376,
+    "height": 812,
+    "resizable": true,
+    "alwaysOnTop": false,
+    "fullscreenable": false,
+    "frame": false,
+    "webPreferences": {
+      "nodeIntegration": false
+    }
+  }
+}

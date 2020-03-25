@@ -1,3 +1,5 @@
-import ProfileImage from './ProfileImage';
+import ProfileImage, { SimpleProfileImage } from './ProfileImage';
+
+export { SimpleProfileImage };
 
 export default ProfileImage;

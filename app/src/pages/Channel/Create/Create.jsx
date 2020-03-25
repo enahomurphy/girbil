@@ -5,10 +5,11 @@ import { Toggle } from 'framework7-react';
 import {
   Text, Title, Button, Block, BorderedInput,
 } from '@/components/Style';
+import { SimpleProfileImage } from '@/components/ProfileImage';
 import { StyledButton, StyledAvatar } from '../style';
 
 const Create = ({
-  createChannel, name, about, isPrivate, avatar, isOwner, isEdit,
+  createChannel, name, about, isPrivate, avatar, isOwner, isEdit, onImageClick,
 }) => {
   const [form, setForm] = useState({
     name,
@@ -19,9 +20,20 @@ const Create = ({
 
   useEffect(() => {
     setForm({
-      name, about, isPrivate, avatar,
+      name, about, isPrivate, avatar: form.avatar,
     });
-  }, [name, about, isPrivate, avatar]);
+  }, [name, about, isPrivate, form.avatar]);
+
+  useEffect(() => {
+    if (avatar) {
+      setForm({
+        name: form.name,
+        about: form.about,
+        isPrivate: form.isPrivate,
+        avatar,
+      });
+    }
+  }, [avatar, form.about, form.isPrivate, form.name]);
 
   return (
     <>
@@ -59,8 +71,14 @@ const Create = ({
             >
               Set channel title
             </Text>
-            <StyledAvatar>
-              <span aria-label="cat" role="img">🐭</span>
+            <StyledAvatar onClick={onImageClick}>
+              {
+                form.avatar ? (
+                  <SimpleProfileImage url={form.avatar} width="64px" height="80px" />
+                ) : (
+                  <span aria-label="cat" role="img">🐭</span>
+                )
+              }
             </StyledAvatar>
           </Block>
         </Block>
@@ -112,6 +130,7 @@ Create.propTypes = {
   isPrivate: PropTypes.bool.isRequired,
   isEdit: PropTypes.bool.isRequired,
   isOwner: PropTypes.bool.isRequired,
+  onImageClick: PropTypes.func.isRequired,
   avatar: PropTypes.oneOfType([PropTypes.string, () => undefined]),
 };
 

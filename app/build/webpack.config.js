@@ -21,6 +21,7 @@ const isElectronWatch = process.env.ELECTRON_WATCH || false;
 
 module.exports = {
   mode: env,
+  target: 'web',
   entry: {
     entry: ['react-hot-loader/patch', './src/js/app.js'],
   },

@@ -25,4 +25,7 @@ export class UserUpdateInput {
 
   @Field({ nullable: true })
   position?: string
+
+  @Field({ nullable: true })
+  avatar?: string
 }

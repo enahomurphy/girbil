@@ -48,12 +48,12 @@ class UserResolver {
   @CanEdit('user')
   @Mutation(() => String)
   async updateUser(
-    @Arg('input') { name, position }: UserUpdateInput,
+    @Arg('input') { name, position, avatar }: UserUpdateInput,
       @Args() { userId }: UserIDArgs,
       @Ctx() { user: { organization } }: ContextType,
   ): Promise<string> {
     const promises = [];
-    const user = this.userRepo.create();
+    const user = this.userRepo.create({ id: userId });
 
     if (position) {
       promises.push(
@@ -67,15 +67,20 @@ class UserResolver {
       user.name = name;
     }
 
+    if (avatar) {
+      user.avatar = avatar;
+    }
+
     if (Object.keys(user).length) {
       promises.push(
-        this.userRepo.update({ id: userId }, user),
+        this.userRepo.save(user),
       );
     }
 
     if (promises.length) {
       await Promise.all(promises);
     }
+
     return 'user updated';
   }
 }

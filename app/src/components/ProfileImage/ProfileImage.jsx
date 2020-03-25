@@ -1,9 +1,12 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Image, Title, Button } from '@/components/Style';
 import styled from 'styled-components';
 
+const nameToInitials = (name) => {
+  const [first, second = ''] = name.split(' ');
+  return `${first.charAt(0)} ${second.charAt(0) || ''}`.trim();
+};
 
 const StyledBlock = styled.div`
   width: ${({ width }) => width};
@@ -25,8 +28,40 @@ const StyledInitialsBlock = styled.div`
   position: absolute;
 `;
 
+export const SimpleProfileImage = ({
+  name, url, width, height,
+}) => (
+  <StyledBlock width={width} height={width}>
+    {url && <Image radius="6px" src={url} width={width} height={height} />}
+    {!url && (
+    <StyledInitialsBlock url={url} width={width} height={width}>
+      <Title
+        color="var(--gb-accent)"
+        size="18px"
+        transform="capitalize"
+      >
+        {nameToInitials(name)}
+      </Title>
+    </StyledInitialsBlock>
+    )}
+  </StyledBlock>
+);
+
+SimpleProfileImage.defaultProps = {
+  url: '',
+  name: '',
+};
+
+SimpleProfileImage.propTypes = {
+  url: PropTypes.string,
+  width: PropTypes.string.isRequired,
+  height: PropTypes.string.isRequired,
+  name: PropTypes.string,
+};
+
+
 const Profile = ({
-  url, edit, width, height, changeProfile, removeProfile,
+  url, edit, width, height, changeProfile, removeProfile, name,
 }) => (
   <StyledBlock width={width} height={width}>
     {url && <Image src={url} width={width} height={height} />}
@@ -38,7 +73,7 @@ const Profile = ({
               color="var(--gb-dark-grey)"
               size="96px"
             >
-              JW
+              {nameToInitials(name)}
             </Title>
           )
         }
@@ -58,7 +93,7 @@ const Profile = ({
             )
           }
           {
-            Boolean(url && edit) && (
+            Boolean(false && edit) && (
               <Title
                 onClick={removeProfile}
                 margin="8px 0 0 0"
@@ -80,6 +115,7 @@ const Profile = ({
 Profile.defaultProps = {
   url: '',
   edit: false,
+  name: '',
   changeProfile: () => {},
   removeProfile: () => {},
 };
@@ -91,6 +127,7 @@ Profile.propTypes = {
   height: PropTypes.string.isRequired,
   changeProfile: PropTypes.func,
   removeProfile: PropTypes.func,
+  name: PropTypes.string,
 };
 
 export default Profile;

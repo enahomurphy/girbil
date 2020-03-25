@@ -1,6 +1,7 @@
 /* eslint-disable global-require */
 import React from 'react';
 
+import { invitePeopleOpener } from '@/lib';
 import {
   Title, Text, Button, Block,
 } from '@/components/Style';
@@ -44,6 +45,7 @@ const EmptyState = () => (
         height="40px"
         width="150px"
         inverse
+        onClick={invitePeopleOpener}
       >
         Invite People
       </Button>
@@ -51,8 +53,5 @@ const EmptyState = () => (
   </Block>
 );
 
-EmptyState.propTypes = {
-
-};
 
 export default EmptyState;

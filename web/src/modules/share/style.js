@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { Flex } from '@/components/styles';
 
-
 export const CopyForm = styled(Flex)`
   button {
     width: 80px;

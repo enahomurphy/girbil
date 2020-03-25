@@ -1,4 +1,3 @@
-
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable class-methods-use-this */
@@ -19,8 +18,8 @@ export class Message1582381400010 implements MigrationInterface {
         "parent_id" uuid,
         "created_at" timestamp DEFAULT Now(),
         FOREIGN KEY ("sender_id") REFERENCES "users" ("id"),
-        FOREIGN KEY ("conversation_id") REFERENCES "conversations" ("id"),
-        FOREIGN KEY ("parent_id") REFERENCES "messages" ("id")
+        FOREIGN KEY ("conversation_id") REFERENCES "conversations" ("id") ON DELETE CASCADE,
+        FOREIGN KEY ("parent_id") REFERENCES "messages" ("id") ON DELETE CASCADE
       );
     `);
 

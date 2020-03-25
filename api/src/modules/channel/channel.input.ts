@@ -24,7 +24,7 @@ export class ChannelInput {
 
 @InputType()
 export class ChannelUpdateInput extends ChannelInput {
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsString()
   name?: string
 }

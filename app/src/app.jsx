@@ -51,6 +51,7 @@ const MainApp = () => {
   };
 
   useEffect(() => {
+    window.gf = f7;
     f7ready((readyF7) => {
       if (Device.cordova) {
         cordovaApp.init(readyF7);

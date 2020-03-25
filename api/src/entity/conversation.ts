@@ -1,4 +1,3 @@
-
 import {
   Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn, JoinColumn,
 } from 'typeorm';

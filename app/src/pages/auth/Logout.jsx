@@ -34,7 +34,7 @@ const Logout = () => (
         Sign Back In
       </Button>
       <Button
-        onClick={window.close()}
+        onClick={() => window.close()}
         weight="normalconversationMeta"
         color="#C9C9C9"
         borderColor="none"

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 /*
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -45,7 +46,6 @@ function setToken(token) {
   }
 }
 
-
 // Force Single Instance Application
 const gotTheLock = app.requestSingleInstanceLock();
 if (gotTheLock) {
@@ -58,8 +58,6 @@ if (gotTheLock) {
       // Keep only command line / deep linked arguments
       deeplinkingUrl = argv.slice(1);
     }
-
-    logEverywhere(`app.makeSingleInstance# ${deeplinkingUrl}`);
 
     if (mainWindow) {
       if (mainWindow.isMinimized()) mainWindow.restore();
@@ -82,7 +80,15 @@ function createWindow() {
     appIcon = `${__dirname}/img/logo.png`;
   }
 
-  const browserWindowOpts = { ...cdvElectronSettings.browserWindow, icon: appIcon };
+  const browserWindowOpts = {
+    ...cdvElectronSettings.browserWindow,
+    icon: appIcon,
+    webPreferences: {
+      nodeIntegration: false,
+      preload: `${__dirname}/preload.js`,
+    },
+  };
+
   mainWindow = new BrowserWindow(browserWindowOpts);
 
   // and load the index.html of the app.

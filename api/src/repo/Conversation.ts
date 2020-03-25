@@ -132,8 +132,9 @@ class ConversationRepository extends Repository<Conversation> {
             conversation.receiver_id = org_user.user_id
         AND 
             conversation.receiver_type = :type
-      );
+      )
     `)
+      .take(50)
       .getMany();
 
     return result.map(({ user }) => user);

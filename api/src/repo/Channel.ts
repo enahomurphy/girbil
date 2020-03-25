@@ -21,7 +21,7 @@ class ChannelRepository extends Repository<Channel> {
     }
 
     return query.andWhere('channel.organization_id = :organizationId', { organizationId })
-      .take(20)
+      .take(50)
       .skip(0)
       .getMany();
   }

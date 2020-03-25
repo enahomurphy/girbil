@@ -9,8 +9,8 @@ import {
 } from '@/components/Icon';
 import { storage } from '@shared/lib';
 import emitter from '@/lib/emitter';
+import GlobalSearch from '@/components/GlobalSearch';
 import { NavbarWrapper } from './style';
-import GlobalSearch from '../GlobalSearch';
 
 const ConversationHeader = props => {
   const [isOpen, setOpenSearch] = useState(false);
@@ -20,7 +20,9 @@ const ConversationHeader = props => {
     <NavbarWrapper>
       <Navbar>
         <Block type="flex" align="center" margin="0">
-          <Title width="initial" margin="0 10px 0 0" size="24px">Girbil</Title>
+          <Title width="initial" margin="0 10px 0 0" size="24px">
+            {storage.payload.organization.name}
+          </Title>
           <Link>
             <Chevron />
           </Link>

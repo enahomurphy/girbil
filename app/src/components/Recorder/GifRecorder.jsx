@@ -79,9 +79,9 @@ const Recorder = ({ opened, onFile, onClose }) => {
   };
 
   const closeRecorder = () => {
-    gifRecorder.reset();
     setOpened(false);
     onClose();
+    gifRecorder.reset();
   };
 
   return (

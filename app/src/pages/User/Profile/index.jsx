@@ -57,8 +57,9 @@ const Profile = ({ userId, $f7router }) => {
 
   const handleMessage = async () => getConversation({ variables: { userId } });
 
-  const handleAvatarChange = async (blob) => {
+  const handleAvatarChange = async (blob, url) => {
     try {
+      setProfileImage(false);
       const result = await refetchURL();
       f7.dialog.preloader('Updating profile picture');
       const { postURL, getURL } = get(result, 'data.getUserUploadURL', {});
@@ -82,7 +83,7 @@ const Profile = ({ userId, $f7router }) => {
         client.cache.identify({ __typename: 'User', id: user.id }),
         {
           avatar() {
-            return getURL;
+            return url;
           },
         },
       );
@@ -139,7 +140,6 @@ const Profile = ({ userId, $f7router }) => {
         )
       }
       <Recorder
-        onClose={() => setProfileImage(false)}
         onFile={handleAvatarChange}
         opened={editImage}
       />

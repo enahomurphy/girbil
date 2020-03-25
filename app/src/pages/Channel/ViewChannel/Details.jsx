@@ -15,7 +15,7 @@ const Details = ({ channel }) => (
       >
         Name
       </Title>
-      <Title size="14px">#development</Title>
+      <Title size="14px">{`#${channel.name}`}</Title>
     </Block>
 
     {

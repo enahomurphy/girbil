@@ -38,7 +38,7 @@ export const StyledButton = styled(Block)`
   right: 24px;
 `;
 
-export const StyledAvatar = styled(Block)`
+export const StyledAvatar = styled.div`
   width: 64px;
   height: 80px;
   border-radius: 6px;

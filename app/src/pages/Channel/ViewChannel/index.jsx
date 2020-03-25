@@ -1,5 +1,5 @@
 import React from 'react';
-import { Page } from 'framework7-react';
+import { Page, f7 } from 'framework7-react';
 import { useQuery } from '@apollo/client';
 import PropTypes from 'prop-types';
 
@@ -16,9 +16,18 @@ const View = ({ channelId }) => {
   const members = get(data, 'channelMembers.members', []);
   const count = get(data, 'channelMembers.count', 0);
   const channel = get(data, 'channel', {});
+
+  let backURL = '';
+  const { history } = f7.views.main.router;
+  const previousRoute = history[history.length - 2];
+
+  if (['/channels/create', `/channels/${channelId}/edit`].includes(previousRoute)) {
+    backURL = '/conversations';
+  }
+
   return (
     <Page>
-      <Header title="Channel details" />
+      <Header backURL={backURL} title="Channel details" />
       <Block padding="24px 24px">
         <Text margin="0 0 24px 0">
           Channels are spaces for open team communications.

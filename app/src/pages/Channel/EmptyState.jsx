@@ -53,8 +53,5 @@ const EmptyState = () => (
   </Block>
 );
 
-EmptyState.propTypes = {
-
-};
 
 export default EmptyState;

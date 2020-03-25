@@ -21,7 +21,7 @@ export const NewMessageWrapper = styled.div`
   justify-content: center;
 `;
 
-const Recorder = ({ opened, onFile }) => {
+const Recorder = ({ opened, onFile, onClose }) => {
   const id = 'gif-recorder';
   const [isOpen, setOpened] = useState(opened);
   const [counter, setCounter] = useState(0);
@@ -33,14 +33,15 @@ const Recorder = ({ opened, onFile }) => {
 
   useEffect(() => {
     setOpened(opened);
-  }, [opened]);
-
-  useEffect(() => {
-    gifRecorder.init();
+    if (opened) {
+      gifRecorder.init();
+    }
     return () => {
-      gifRecorder.reset();
+      if (gifRecorder.file) {
+        gifRecorder.reset();
+      }
     };
-  }, [gifRecorder]);
+  }, [gifRecorder, opened]);
 
   useEffect(() => {
     if (counter > 0) {
@@ -58,24 +59,35 @@ const Recorder = ({ opened, onFile }) => {
     }
   }, [counter, gifRecorder]);
 
-  gifRecorder.onStop = (file) => {
-    onFile(file);
+  gifRecorder.onStop = (blob, url) => {
+    onFile(blob, url);
   };
 
   const handleRecording = async () => {
     if (!gifRecorder.playing) {
       setCounter(3);
       gifRecorder.startRecording();
-    } else {
-      await gifRecorder.stopRecording();
-      setCounter(0);
+    } else if (gifRecorder.playing && counter === 0) {
+      try {
+        await gifRecorder.stopRecording();
+      } catch (error) {
+        // @TODO log to bug snag
+      } finally {
+        setCounter(0);
+      }
     }
+  };
+
+  const closeRecorder = () => {
+    gifRecorder.reset();
+    setOpened(false);
+    onClose();
   };
 
   return (
     <Popup style={{ background: '#222222' }} opened={isOpen}>
       <NewMessageWrapper>
-        <BackIcon onClick={() => setOpened(false)} margin="16px 0 0 ">
+        <BackIcon onClick={closeRecorder} margin="16px 0 0 ">
           <Back />
         </BackIcon>
         <RecorderButton
@@ -104,8 +116,13 @@ const Recorder = ({ opened, onFile }) => {
   );
 };
 
+Recorder.defaultProps = {
+  onClose: () => {},
+};
+
 Recorder.propTypes = {
   opened: PropTypes.bool.isRequired,
+  onClose: PropTypes.func,
   onFile: PropTypes.func.isRequired,
 };
 

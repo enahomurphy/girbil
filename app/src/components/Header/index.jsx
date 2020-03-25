@@ -10,10 +10,19 @@ import { Title } from '@/components/Style';
 import { Back } from '@/components/Icon';
 import { StyledNavbar } from './style';
 
-const Header = ({ title }) => (
+const Header = ({ title, backURL }) => (
   <StyledNavbar>
     <NavLeft>
-      <Link onClick={() => f7.view.main.router.back()}>
+      <Link onClick={
+        () => {
+          if (backURL) {
+            return f7.view.main.router.navigate(backURL);
+          }
+
+          return f7.view.main.router.back();
+        }
+      }
+      >
         <Back />
       </Link>
       <Title
@@ -27,8 +36,13 @@ const Header = ({ title }) => (
   </StyledNavbar>
 );
 
+Header.defaultProps = {
+  backURL: '',
+};
+
 Header.propTypes = {
   title: PropTypes.string.isRequired,
+  backURL: PropTypes.string,
 };
 
 export default Header;

@@ -7,6 +7,7 @@ import { Page, f7 } from 'framework7-react';
 import ProfileImage from '@/components/ProfileImage';
 import Header from '@/components/Header';
 import Recorder from '@/components/Recorder/GifRecorder';
+import { Gif } from '@/lib/media';
 import { Title, Block } from '@/components/Style';
 import { get, storage } from '@shared/lib';
 import { query as conversationQuery } from '@shared/graphql/conversations';
@@ -38,7 +39,6 @@ const Profile = ({ userId, $f7router }) => {
       fetchPolicy: 'network-only',
     },
   );
-
   const { refetch: refetchURL } = useQuery(uploadQuery.USER_UPLOAD_URL, {
     fetchPolicy: 'network-only',
     skip: true,
@@ -61,12 +61,8 @@ const Profile = ({ userId, $f7router }) => {
     try {
       const result = await refetchURL();
       f7.dialog.preloader('Updating profile picture');
-      setProfileImage(false);
       const { postURL, getURL } = get(result, 'data.getUserUploadURL', {});
-      const file = new File([blob], user.id, {
-        lastModified: (new Date()).getTime(),
-        type: 'image/gif',
-      });
+      const file = Gif.blobToFile(blob, user.id);
 
       await axios({
         method: 'put',
@@ -142,7 +138,11 @@ const Profile = ({ userId, $f7router }) => {
           </>
         )
       }
-      <Recorder onFile={handleAvatarChange} opened={editImage} />
+      <Recorder
+        onClose={() => setProfileImage(false)}
+        onFile={handleAvatarChange}
+        opened={editImage}
+      />
     </Page>
   );
 };

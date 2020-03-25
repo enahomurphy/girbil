@@ -7,6 +7,7 @@ class Gif {
     this.stream = new MediaStream();
     this.playing = false;
     this.file = null;
+    this.url = null;
 
     this.onStart = () => {};
     this.onStop = () => {};
@@ -47,8 +48,9 @@ class Gif {
       this.gif.stopRecording((blob) => {
         this.playing = false;
         this.file = blob;
+        this.url = blob;
         resolve(blob);
-        this.onStop(this.gif.getBlob());
+        this.onStop(this.gif.getBlob(), blob);
       });
     });
   }
@@ -69,11 +71,20 @@ class Gif {
     this.stream.getTracks().forEach((track) => {
       track.stop();
     });
+    this.file = null;
+    this.url = null;
     this.gif.destroy();
   }
 
   get video() {
     return document.getElementById(this.videoId);
+  }
+
+  static blobToFile(blob, name) {
+    return new File([blob], name, {
+      lastModified: (new Date()).getTime(),
+      type: 'image/gif',
+    });
   }
 }
 

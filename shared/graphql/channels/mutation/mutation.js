@@ -28,7 +28,7 @@ export const CREATE_CHANNEL = gql`
 export const UPDATE_CHANNEL = gql`
   mutation updateChannel(
     $isPrivate: Boolean
-    $name: String!
+    $name: String
     $about: String
     $avatar: String
     $channelId: String!
@@ -41,7 +41,14 @@ export const UPDATE_CHANNEL = gql`
         avatar: $avatar
       },
       channelId: $channelId
-    )
+    )  {
+      id
+      avatar
+      name 
+      conversation {
+        id
+      }
+    }
   }
 `;
 

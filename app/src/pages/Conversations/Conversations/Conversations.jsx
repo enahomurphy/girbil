@@ -26,7 +26,6 @@ const Conversations = () => {
 
   500,
   [searchText]);
-  console.log('llll', data)
   return (
     <Page>
       <ConversationHeader

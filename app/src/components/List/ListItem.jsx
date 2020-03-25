@@ -10,7 +10,7 @@ import { Img, StyledListItem, Active } from './style';
 import ListInfo from './ListInfo';
 
 const ListItem = ({
-  unreadCount, user, isChannel, isPrivate, isActive, subText, getLink, options, id,
+  unreadCount, onClick, user, isChannel, isPrivate, isActive, subText, getLink, options, id,
 }) => (
   <Block
     margin="0"
@@ -19,7 +19,7 @@ const ListItem = ({
     align="center"
     justify="space-between"
   >
-    <StyledListItem link={getLink(user)}>
+    <StyledListItem link={getLink(user)} onClick={onClick}>
       <Block margin>
         <Block
           type="flex"
@@ -59,8 +59,9 @@ const ListItem = ({
           ) : null
         }
         <Text margin="0" align="left">
-          { Boolean(unreadCount) && `${unreadCount} new ${unreadCount === 1 ? 'chat' : 'chats'}`}
-          { Boolean(!unreadCount) && user.lastActive}
+          { Boolean(!isChannel && unreadCount) && `${unreadCount} new ${unreadCount === 1 ? 'chat' : 'chats'}`}
+          { Boolean(!isChannel && !unreadCount) && user.lastActive}
+          { Boolean(isChannel) && `${user.members} members`}
         </Text>
       </Block>
       <Img alt={user.name} slot="media" src={user.avatar} width="80" />

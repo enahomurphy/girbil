@@ -66,9 +66,25 @@ export const ORGANIZATION_LOGIN = gql`
   }
 `;
 
+export const SEARCH_ORGANIZATION = gql`
+ query searchOrganization($text: String!) {
+    searchOrganization(text: $text) {
+      id
+      avatar
+      name
+      type
+      conversation_id
+      members
+      is_private
+      is_member
+    }
+  }
+`;
+
 export default {
   ORGANIZATIONS,
   GET_ORGANIZATION_BY_DOMAIN,
   GET_ORGANIZATION,
   GET_ORGANIZATION_USERS,
+  SEARCH_ORGANIZATION
 };

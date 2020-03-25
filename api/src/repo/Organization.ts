@@ -1,12 +1,14 @@
-import { EntityRepository, Repository, getRepository } from 'typeorm';
+import { EntityRepository, Repository, getRepository, getManager } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import {
   Organization, UserOrganization, User, RoleType,
 } from '../entity';
+import { SearchResult } from '../interfaces';
 
 @EntityRepository(Organization)
 class OrganizationRepository extends Repository<Organization> {
   private readonly userOrgRepo = getRepository(UserOrganization)
+  private readonly entityManager = getManager()
 
   async findUserOrganizations(userId: string): Promise<Organization[]> {
     const userOrganizations = await this.userOrgRepo.createQueryBuilder('organization')
@@ -100,6 +102,50 @@ class OrganizationRepository extends Repository<Organization> {
 
   async findById(organizationId: string): Promise<Organization> {
     return this.findOne({ where: { id: organizationId } });
+  }
+
+  async search(organizationId: string, text: string, userId: string): Promise<SearchResult[]> {
+    const channelQuery = `
+      SELECT
+        channels.id,
+        channels.name,
+        channels.avatar,
+        'channel' AS type,
+        conversations.id AS conversation_id,
+        COUNT(channel_users.channel_id) AS members,
+        is_private,
+        (
+          SELECT not COUNT(channel_users.user_id) = 0
+          FROM channel_users
+          WHERE channel_users.user_id = $3
+          AND channel_users.channel_id = channels.id
+          LIMIT 1
+        ) AS is_member
+      FROM channels
+      INNER JOIN channel_users ON channel_users.channel_id = channels.id
+      LEFT JOIN conversations ON conversations.receiver_id = channels.id AND conversations.receiver_type = 'channel'
+      WHERE tsv @@ plainto_tsquery($1) AND channels.organization_id = $2
+      GROUP BY channels.id, conversations.id`;
+
+    const userQuery = `
+      SELECT
+        users.id AS id,
+        users.name AS name,
+        users.avatar AS avatar,
+        'user' AS type,
+        conversations.id AS conversation_id,
+        NULL as members,
+        NULL AS is_private,
+        NULL AS is_member
+      FROM users
+      INNER JOIN user_organizations ON users.id = user_organizations.user_id
+      LEFT JOIN conversations ON conversations.receiver_id = users.id OR conversations.creator_id = users.id AND conversations.receiver_type = 'user'
+      WHERE users.tsv @@ plainto_tsquery($1) AND user_organizations.organization_id = $2
+      GROUP BY users.id, conversations.id;`
+
+    const result =  await this.entityManager.query(`${channelQuery} UNION ALL ${userQuery}`, [text, organizationId, userId])
+
+    return result;
   }
 }
 

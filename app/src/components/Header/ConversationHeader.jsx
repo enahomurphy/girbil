@@ -12,8 +12,9 @@ import emitter from '@/lib/emitter';
 import { NavbarWrapper } from './style';
 import GlobalSearch from '../GlobalSearch';
 
-const ConversationHeader = () => {
+const ConversationHeader = props => {
   const [isOpen, setOpenSearch] = useState(false);
+  const { searchResult, handleSearch, closeConversation, leaveChannel } = props;
 
   return (
     <NavbarWrapper>
@@ -56,7 +57,13 @@ const ConversationHeader = () => {
           </Popover>
         </NavRight>
       </Navbar>
-      <GlobalSearch onClose={() => setOpenSearch(false)} opened={isOpen} />
+      <GlobalSearch
+        searchResult={searchResult}
+        closeConversation={closeConversation}
+        leaveChannel={leaveChannel}
+        handleSearch={handleSearch}
+        onClose={() => setOpenSearch(false)}
+        opened={isOpen} />
     </NavbarWrapper>
   );
 };

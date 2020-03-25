@@ -20,7 +20,7 @@ const Home = ({ onLoginSuccess, onLoginError, loading }) => (
         margin="40px 0 32px 0"
         weight="600"
       >
-        Use and authentication service
+        Use an authentication service
       </Text>
 
       <GoogleLogin

@@ -18,7 +18,7 @@ import { plainToClass } from 'class-transformer';
 import { ChannelRepo, ConversationRepo } from '../../repo';
 import { ContextType } from '../../interfaces';
 import { ChannelArgs, ChannelIDArgs } from './channel.args';
-import { ChannelInput, AddUsersToChannelInput } from './channel.input';
+import { ChannelInput, AddUsersToChannelInput, ChannelUpdateInput } from './channel.input';
 import { pick } from '../../utils/utils';
 import {
   Channel, ConversationType, Conversation, UserOrganization, ChannelUsers,
@@ -99,13 +99,13 @@ class ChannelResolver implements ResolverInterface<Channel> {
   // @TODO add canEdit
   // only members of a channel can update a channel
   @Authorized('user', 'admin', 'owner')
-  @Mutation(() => String)
+  @Mutation(() => Channel)
   async updateChannel(
-    @Arg('input') input: ChannelInput,
+    @Arg('input') input: ChannelUpdateInput,
       @Args() { channelId }: ChannelIDArgs,
-      @Ctx() { user: { id, organization } }: ContextType,
-  ): Promise<string> {
-    const update = pick(input, ['name', 'about', 'isPrivate']);
+      @Ctx() { user: { id } }: ContextType,
+  ): Promise<Channel> {
+    const update = pick(input, ['name', 'about', 'isPrivate', 'avatar']);
     if (update.isPrivate) {
       const channel = await this.channelRepo.findOne({ id: channelId });
 
@@ -113,13 +113,12 @@ class ChannelResolver implements ResolverInterface<Channel> {
         delete update.isPrivate;
       }
     }
+    update.id = channelId;
 
-    await this.channelRepo.update(
-      { organizationId: organization.id, id: channelId },
-      update,
-    );
+    const channel = this.channelRepo.create(update);
+    await this.channelRepo.manager.save(channel);
 
-    return 'channel updated';
+    return channel;
   }
 
   @Authorized('user', 'admin', 'owner')

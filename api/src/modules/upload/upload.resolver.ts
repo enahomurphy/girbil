@@ -12,6 +12,7 @@ import { UploadURLArgs } from './upload.args';
 import { AWS, ContextType } from '../../interfaces';
 import aws from '../../services/aws';
 import { CanView } from '../../middleware/permissions';
+import { ChannelIDArgs } from '../channel/channel.args';
 
 @Resolver(UploadType)
 class UploadResolver {
@@ -34,7 +35,16 @@ class UploadResolver {
     @Ctx() { user: { id } }: ContextType,
   ): Promise<UploadURLType> {
     const path = `/users/${id}/avatar.gif`;
-    return this.aws.createSignedURL(id, path);
+    return this.aws.createSignedURL(path, 'image/gif');
+  }
+
+  @Authorized()
+  @Query(() => UploadURLType, { nullable: true })
+  async getChannelUploadURL(
+    @Args() { channelId }: ChannelIDArgs,
+  ): Promise<UploadURLType> {
+    const path = `/channels/${channelId}/avatar.gif`;
+    return this.aws.createSignedURL(path, 'image/gif');
   }
 }
 

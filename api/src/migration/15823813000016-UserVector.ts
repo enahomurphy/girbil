@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class UserTsv1582381400017 implements MigrationInterface {
+export class UserTsv1582381400016 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(
       'ALTER TABLE users ADD COLUMN tsv tsvector;',

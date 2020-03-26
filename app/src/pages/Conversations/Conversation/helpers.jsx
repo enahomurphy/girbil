@@ -7,6 +7,7 @@ export const getPullOverLinks = ({
   message: { id, hasRead, sender },
   markMessage,
   deleteMessage,
+  handleReact
 }) => {
   const options = [
     {
@@ -15,7 +16,7 @@ export const getPullOverLinks = ({
         <Emoji
           reaction={false}
           vertical={false}
-          onClick={console.info}
+          onClick={reaction => handleReact(id, reaction.value)}
         />
       ),
     },

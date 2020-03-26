@@ -17,6 +17,7 @@ const Messages = ({
   const [markAsUnRead] = mutation.useMarkMessage('unread');
   const [markAsRead] = mutation.useMarkMessage('read');
   const [deleteMessage] = mutation.useDeleteMessage();
+  const [reactToMessage] = mutation.useAddReaction();
 
   useEffect(() => {
     loadMessage();
@@ -36,6 +37,14 @@ const Messages = ({
     emitter.onEventEmitted('pause_message', handler);
   }, [threadId, updateState]);
 
+
+  const handleReact = (messageId, reaction) => {
+
+    reactToMessage({
+      messageId,
+      reaction
+    })
+  };
 
   const onClick = async (id) => {
     const link = isThread
@@ -82,6 +91,7 @@ const Messages = ({
     pullover: getPullOverLinks({
       conversationId,
       message,
+      handleReact,
       deleteMessage: () => {
         deleteMessage({
           messageId: message.id,

@@ -104,6 +104,15 @@ export const DELETE_MESSAGE = gql`
   }
 `;
 
+export const REACT_TO_MESSAGE = gql`
+  mutation reactToMessage($messageId: String!, $reaction: String!)  {
+    reactToMessage(
+      messageId: $messageId
+      reaction: $reaction
+    )
+  }
+`;
+
 export default {
   UPDATE_MESSAGE,
   ADD_MESSAGE,
@@ -111,4 +120,5 @@ export default {
   SAVE_MESSAGE,
   MARK_MESSAGE_AS_READ,
   CLOSE_CONVERSATION,
+  REACT_TO_MESSAGE
 };

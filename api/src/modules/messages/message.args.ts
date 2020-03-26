@@ -31,3 +31,13 @@ export class MessageIDArgs {
   @IsUUID()
   messageId?: string
 }
+
+@ArgsType()
+export class MessageReactionArgs {
+  @Field()
+  @IsUUID()
+  messageId: string
+
+  @Field()
+  reaction: string
+}

@@ -13,7 +13,7 @@ import { plainToClass } from 'class-transformer';
 import { MessageRepo } from '../../repo';
 import { Message } from '../../entity';
 import { CanView, CanEdit } from '../../middleware/permissions';
-import { MessagesArgs, MessageIDArgs } from './message.args';
+import { MessagesArgs, MessageIDArgs, MessageReactionArgs } from './message.args';
 import { ValidateArgs } from '../../middleware/decorators';
 import { AddMessageInput } from './message.input';
 import { ContextType } from '../../interfaces';
@@ -148,6 +148,18 @@ class MessageResolver {
     message.sender = user;
     socket.broadcast(organization.id, socket.events.MESSAGE_DELETED, { message });
     return 'Message deleted';
+  }
+
+
+  @Authorized('user', 'admin', 'owner')
+  @Mutation(() => String)
+  async reactToMessage(
+    @Args() { messageId, reaction }: MessageReactionArgs,
+      @Ctx() { user }: ContextType,
+  ): Promise<string> {
+    await this.messageRepo.updateReaction(messageId, user.id, reaction);
+
+    return `Reacted with ${reaction}`;
   }
 }
 

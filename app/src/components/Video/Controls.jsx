@@ -11,7 +11,7 @@ import {
 } from './style';
 
 const Controls = ({
-  playing, play, pause, played, duration, seek, playBack,
+  playing, play, pause, played, duration, seek, playBack, handleReact
 }) => (
   <ControlContainer>
     {
@@ -51,7 +51,7 @@ const Controls = ({
     }
     <BottomControls>
       <Speed onClick={({ value }) => playBack(value)} />
-      <Emoji vertical reaction onClick={() => {}} />
+      <Emoji vertical reaction onClick={handleReact} />
     </BottomControls>
     {
       Boolean(duration && duration !== Infinity) && (

@@ -11,6 +11,10 @@ export const MESSAGE_FRAGMENT = gql`
     conversationId
     parentId
     createdAt
+    reactions {
+      userId
+      reaction
+    }
   }
 `;
 

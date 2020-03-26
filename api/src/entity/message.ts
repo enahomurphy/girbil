@@ -1,5 +1,5 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne, JoinColumn, AfterLoad,
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne, JoinColumn,
 } from 'typeorm';
 import { Field, ObjectType, Int } from 'type-graphql';
 import { User } from '.';
@@ -65,19 +65,21 @@ export class Message {
 
   @Field(() => Int, { nullable: true })
   @Column({
+    type: 'integer',
     select: false,
     insert: false,
     readonly: true,
   })
-  replyCount?: number;
+  replyCount = 0;
 
   @Field(() => Boolean, { nullable: true, description: 'Returns true if the user requesting the message has read it' })
   @Column({
+    type: 'boolean',
     select: false,
     insert: false,
     readonly: true,
   })
-  hasRead?: number;
+  hasRead = false;
 
   @Field(() => User)
   @OneToOne(() => User, { eager: true })

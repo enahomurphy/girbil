@@ -49,7 +49,6 @@ const ConversationHeader = props => {
               <ListItem
                 popoverClose
                 onClick={() => {
-                  storage.clear();
                   emitter.emitEvent('logout');
                   f7.popover.close('.popover-settings');
                 }}
@@ -65,8 +64,10 @@ const ConversationHeader = props => {
         leaveChannel={leaveChannel}
         handleSearch={handleSearch}
         onClose={() => setOpenSearch(false)}
-        opened={isOpen} />
+        opened={isOpen}
+      />
     </NavbarWrapper>
   );
 };
+
 export default ConversationHeader;

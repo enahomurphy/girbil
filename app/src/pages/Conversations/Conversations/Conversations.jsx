@@ -1,5 +1,4 @@
-
-import React, { useState }  from 'react';
+import React, { useState } from 'react';
 import { Page, List, ListItem } from 'framework7-react';
 
 import { storage, get } from '@shared/lib';
@@ -8,6 +7,7 @@ import { useDebounce } from 'react-use';
 import { query, mutation } from '@shared/graphql/conversations';
 import { query as orgQuery } from '@shared/graphql/organizations';
 import { mutation as channelMutations } from '@shared/graphql/channels';
+import { useOrgMessageListener } from '@/lib/socket';
 import ConversationListItem from '@/components/List/ListItem';
 import ConversationHeader from '../../../components/Header/ConversationHeader';
 import UserInfo from './UserInfo';
@@ -17,22 +17,25 @@ const Conversations = () => {
   const [closeConversation] = mutation.useCloseConversation();
   const [leaveChannel] = channelMutations.useLeaveChannel();
 
-  const [search, { data, loading }] = useLazyQuery(orgQuery.SEARCH_ORGANIZATION);
+  const [search, { data }] = useLazyQuery(orgQuery.SEARCH_ORGANIZATION);
   const [searchText, setSearchText] = useState('');
+  useOrgMessageListener();
 
   useDebounce(() => {
-    if(searchText) search({ variables: { text: searchText } });
+    if (searchText) search({ variables: { text: searchText } });
   },
 
   500,
   [searchText]);
+
   return (
     <Page>
       <ConversationHeader
         searchResult={get(data, 'searchOrganization', [])}
         closeConversation={closeConversation}
         leaveChannel={leaveChannel}
-        handleSearch={setSearchText}/>
+        handleSearch={setSearchText}
+      />
       <UserInfo user={get(storage, 'payload') || {}} />
       <List className="searchbar-not-found">
         <ListItem title="Nothing found" />
@@ -96,6 +99,7 @@ const Conversations = () => {
                 lastActive: 'Active 17h ago',
                 avatar: channel.avatar,
                 isPrivate: true,
+                members: channel.members,
               }}
             />
           )))

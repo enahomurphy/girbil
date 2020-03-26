@@ -5,7 +5,6 @@ import compression from 'compression';
 import passport from 'passport';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
-import socketIO, { Server as SocketIOServer } from 'socket.io';
 import { createServer, Server as HTTPServer } from 'http';
 
 
@@ -13,7 +12,6 @@ import { ContextType, ContextArgs } from './interfaces';
 import middleware, { authorized } from './middleware';
 import { keys } from './config';
 import logger from './utils/logger';
-import socketHandler from './socket';
 import controller from './controller';
 
 const resolvers = keys.environment === 'development'
@@ -46,11 +44,7 @@ const App = async (): Promise<string | undefined> => {
     apolloServer.applyMiddleware({ app });
 
     const httpServer: HTTPServer = createServer(app);
-    const io: SocketIOServer = socketIO(httpServer);
-
     controller(app);
-    socketHandler(io);
-
     httpServer.listen(keys.port, () => {
       logger.info(`server started on http://localhost:${keys.port}/graphql`);
     });

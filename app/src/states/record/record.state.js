@@ -1,4 +1,4 @@
-import { assign } from 'xstate';
+import { assign, send } from 'xstate';
 
 const thumbnail = {
   initial: 'idle',
@@ -83,6 +83,9 @@ const processing = {
           target: 'idle',
         },
         onError: {
+
+          target: 'idle',
+          actions: send('idle'),
           // @TODO handle video upload failure
           // ideas, cache for retry
           // or retry twice before failing completely

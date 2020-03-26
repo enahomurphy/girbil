@@ -37,5 +37,6 @@ export const CHANNEL_FRAGMENT = gql`
     name
     avatar
     isPrivate
+    members
   }
 `;

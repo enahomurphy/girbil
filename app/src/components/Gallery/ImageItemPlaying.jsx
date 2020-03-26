@@ -69,7 +69,7 @@ ImageRecordingItem.propTypes = {
   sender: PropTypes.object.isRequired,
   state: PropTypes.string.isRequired,
   replyCount: PropTypes.number.isRequired,
-  createdAt: PropTypes.oneOfType([Date, PropTypes.number]).isRequired,
+  createdAt: PropTypes.oneOfType([Date, PropTypes.number, PropTypes.object]).isRequired,
 };
 
 export default ImageRecordingItem;

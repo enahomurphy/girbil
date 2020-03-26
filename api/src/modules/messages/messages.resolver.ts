@@ -18,6 +18,7 @@ import { ValidateArgs } from '../../middleware/decorators';
 import { AddMessageInput } from './message.input';
 import { ContextType } from '../../interfaces';
 import { ConversationIDArgs } from '../conversations/conversation.args';
+import * as socket from '../../services/socket';
 
 @Resolver(Message)
 class MessageResolver {
@@ -42,21 +43,23 @@ class MessageResolver {
       video, thumbnail, id, parentId,
     }: AddMessageInput,
     @Args() { conversationId }: ConversationIDArgs,
-    @Ctx() { user }: ContextType,
+    @Ctx() { user: { id: userId, organization, user } }: ContextType,
   ): Promise<Message> {
     const message = plainToClass(Message, {
       id,
       conversationId,
-      senderId: user.id,
+      senderId: userId,
       video,
       thumbnail,
       parentId: parentId || null,
-      read: [user.id],
+      read: [userId],
     });
 
     const createdMessage = await this.messageRepo.save(message);
     createdMessage.state = 'done';
+    createdMessage.sender = user;
 
+    socket.broadcast(organization.id, socket.events.MESSAGE_CREATED, message);
     return createdMessage;
   }
 

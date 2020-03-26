@@ -138,7 +138,7 @@ class MessageResolver {
   @Mutation(() => String)
   async deleteMessage(
     @Args() { messageId }: MessageIDArgs,
-      @Ctx() { user: { organization, ...user } }: ContextType,
+      @Ctx() { user: { organization, user } }: ContextType,
   ): Promise<string> {
     const message = await this.messageRepo.findOne({ id: messageId });
     if (message) {

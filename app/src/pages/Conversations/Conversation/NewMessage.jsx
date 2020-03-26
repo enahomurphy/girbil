@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { f7 } from 'framework7-react';
 import { useVideo } from 'react-use';
 import { useMachine } from '@xstate/react';
 import { useMutation, useLazyQuery, useQuery } from '@apollo/client';
@@ -10,7 +9,7 @@ import { Video as VideoComponent, useVideoData, Header } from '@/components/Vide
 import { mutation, query } from '@shared/graphql/conversations';
 import { query as uploadQuery } from '@shared/graphql/upload';
 import { RecorderButton } from '@/components/Recorder';
-import { Video } from '@/lib/media';
+import { Video, blobToFile } from '@/lib/media';
 import { useConversationMeta } from '@/lib/hooks';
 import { Page } from '@/components/Style';
 import { get } from '@shared/lib';
@@ -50,12 +49,14 @@ const NewMessage = ({ isThread, conversationId }) => {
     const messageId = get(data, 'addMessage.id');
     const threadId = getParam('threadId');
 
-    updateState({
-      conversationId,
-      messageId,
-      threadId,
-      state: 'ok',
-    });
+    if (matches('record.start')) {
+      updateState({
+        conversationId,
+        messageId,
+        threadId,
+        state: 'complete',
+      });
+    }
 
     const file = await videoRecorder.stopRecordAndGetFile(messageId);
     send('STOP');
@@ -86,8 +87,9 @@ const NewMessage = ({ isThread, conversationId }) => {
     }
   };
 
-  videoRecorder.onRecordStart = async () => {
-    const thumbnail = await videoRecorder.thumbnail();
+  videoRecorder.onThumbnailStop = async (blob) => {
+    const messageId = get(data, 'addMessage.id');
+    const thumbnail = blobToFile(blob, messageId);
     send('UPLOAD_THUMBNAIL', { thumbnail, urls });
   };
 
@@ -101,12 +103,6 @@ const NewMessage = ({ isThread, conversationId }) => {
       videoRecorder.stop();
     };
   }, [videoRecorder, isThread]);
-
-  const goBack = () => {
-    if (matches('record.idle')) {
-      f7.views.main.router.back();
-    }
-  };
 
   const {
     name = '',
@@ -122,8 +118,8 @@ const NewMessage = ({ isThread, conversationId }) => {
         <Header
           name={name}
           isPrivate={isPrivate}
-          goBack={goBack}
           back
+          showBack={matches('record.idle') && matches('processing.idle')}
           isThread={isThread}
           onClick={() => {}}
           members={members}

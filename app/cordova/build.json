@@ -1,5 +1,6 @@
 {
   "electron": {
+    "appId": "com.girbil.app",
     "mac": {
       "package": [ "pkg" ],
       "arch": [ "x64" ]

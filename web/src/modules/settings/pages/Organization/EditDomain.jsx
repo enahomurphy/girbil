@@ -22,7 +22,7 @@ const EditDomain = ({
             >
               url
             </Text>
-            <Title>{`${domain}.unbird.com`}</Title>
+            <Title>{`${domain}.girbil.com`}</Title>
           </div>
           <Text
             weight="600"

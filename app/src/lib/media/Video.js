@@ -4,7 +4,7 @@ import Recorder from './Recorder';
 
 class Video extends Recorder {
   constructor(videoId, width, height) {
-    super();
+    super(videoId);
 
     this.videoId = videoId;
     this.stream = new MediaStream();

@@ -10,12 +10,17 @@ export const openURL = (url) => {
 };
 
 export const invitePeopleOpener = () => {
-  const url = `http://${process.env.WEB_URL}/invite?token=${storage.token}`;
+  const url = `${process.env.WEB_URL}/invite?token=${storage.token}`;
   openURL(url);
 };
 
 export const settingsOpener = () => {
-  const url = `http://${process.env.WEB_URL}/invite?token=${storage.token}`;
+  const url = `${process.env.WEB_URL}/settings?token=${storage.token}`;
+  openURL(url);
+};
+
+export const openHome = () => {
+  const url = `${process.env.WEB_URL}`;
   openURL(url);
 };
 

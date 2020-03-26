@@ -140,6 +140,7 @@ const Profile = ({ userId, $f7router }) => {
         )
       }
       <Recorder
+        onClose={() => setProfileImage(false)}
         onFile={handleAvatarChange}
         opened={editImage}
       />

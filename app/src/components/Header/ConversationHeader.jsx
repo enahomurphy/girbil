@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   Navbar, Link, NavRight, List, ListItem, f7,
 } from 'framework7-react';
+import PropTypes from 'prop-types';
 
 import { Title, Block, Popover } from '@/components/Style';
 import {
@@ -12,9 +13,11 @@ import emitter from '@/lib/emitter';
 import GlobalSearch from '@/components/GlobalSearch';
 import { NavbarWrapper } from './style';
 
-const ConversationHeader = props => {
+const ConversationHeader = (props) => {
   const [isOpen, setOpenSearch] = useState(false);
-  const { searchResult, handleSearch, closeConversation, leaveChannel } = props;
+  const {
+    searchResult, handleSearch, closeConversation, leaveChannel,
+  } = props;
 
   return (
     <NavbarWrapper>
@@ -45,7 +48,6 @@ const ConversationHeader = props => {
           <Popover margin="0 30px 0 0" className="popover-settings">
             <List>
               <ListItem popoverClose href="/preferences" title="System preference" />
-              <ListItem popoverClose href="/logout" title="Sign out of Girbil" />
               <ListItem
                 popoverClose
                 onClick={() => {
@@ -54,6 +56,7 @@ const ConversationHeader = props => {
                 }}
                 title="Quit Girbil"
               />
+              <ListItem popoverClose onClick={() => window.close()} title="Sign out of Girbil" />
             </List>
           </Popover>
         </NavRight>
@@ -68,6 +71,13 @@ const ConversationHeader = props => {
       />
     </NavbarWrapper>
   );
+};
+
+ConversationHeader.propTypes = {
+  searchResult: PropTypes.object.isRequired,
+  handleSearch: PropTypes.func.isRequired,
+  closeConversation: PropTypes.func.isRequired,
+  leaveChannel: PropTypes.func.isRequired,
 };
 
 export default ConversationHeader;

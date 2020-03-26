@@ -4,6 +4,7 @@ import { Page } from 'framework7-react';
 import {
   Title, Text, Block, Button,
 } from '@/components/Style';
+import { openHome } from '@/lib/opener';
 
 const Logout = () => (
   <Page
@@ -12,6 +13,7 @@ const Logout = () => (
       alignItems: 'center',
       display: 'flex',
       padding: '100px 24px 0 24px',
+      '-webkit-app-region': 'drag',
     }}
     noToolbar
     noNavbar
@@ -28,6 +30,7 @@ const Logout = () => (
 
     <Block type="flex" direction="column" align="center">
       <Button
+        onClick={openHome}
         size="18px"
         inverse
       >
@@ -35,7 +38,7 @@ const Logout = () => (
       </Button>
       <Button
         onClick={() => window.close()}
-        weight="normalconversationMeta"
+        weight="normal"
         color="#C9C9C9"
         borderColor="none"
       >

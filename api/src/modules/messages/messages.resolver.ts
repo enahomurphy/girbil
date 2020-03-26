@@ -138,9 +138,15 @@ class MessageResolver {
   @Mutation(() => String)
   async deleteMessage(
     @Args() { messageId }: MessageIDArgs,
+      @Ctx() { user: { organization, user } }: ContextType,
   ): Promise<string> {
-    await this.messageRepo.delete({ id: messageId });
+    const message = await this.messageRepo.findOne({ id: messageId });
+    if (message) {
+      this.messageRepo.delete({ id: message.id });
+    }
 
+    message.sender = user;
+    socket.broadcast(organization.id, socket.events.MESSAGE_DELETED, { message });
     return 'Message deleted';
   }
 }

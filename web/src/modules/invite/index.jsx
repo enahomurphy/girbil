@@ -21,7 +21,7 @@ const Invite = () => {
 
     addToast('Invite sent', { appearance: 'success' });
 
-    push('/download');
+    push('/organizations');
   };
 
   const skip = () => push('/download');

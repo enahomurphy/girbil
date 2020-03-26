@@ -30,7 +30,7 @@
       "preserveAssetsPaths": false,
       "inlineAssets": true
     },
-    "pkg": "io.app.girbil",
+    "pkg": "com.girbil.app",
     "cordova": {
       "folder": "cordova",
       "platforms": [

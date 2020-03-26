@@ -2,12 +2,14 @@
   "browserWindow": {
     "width": 376,
     "height": 812,
-    "resizable": true,
+    "resizable": false,
     "alwaysOnTop": false,
     "fullscreenable": false,
-    "frame": false,
+    "title": "Girbil",
+    "frame":false,
     "webPreferences": {
-      "nodeIntegration": false
+      "nodeIntegration": false,
+      "devTools": false
     }
   }
 }

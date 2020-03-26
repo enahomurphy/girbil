@@ -1,13 +1,14 @@
 import Axios from 'axios';
+import { blobToFile } from './helpers';
 
 /* eslint-disable no-undef */
 class Recorder {
   constructor() {
     this.duration = 30000;
+    this.thumbnailDuration = 3000;
 
     this.onMediaError = this.onMediaError.bind(this);
     this.onMediaStop = this.onMediaStop.bind(this);
-    this.thumbnail = this.thumbnail.bind(this);
     this.media = new MediaRecorder(new MediaStream());
 
     this.onRecordStop = () => {};
@@ -15,6 +16,7 @@ class Recorder {
     this.onRecordStart = () => {};
     this.onRecordError = () => {};
     this.onRecordThumbnail = () => {};
+    this.onThumbnailStop = () => {};
   }
 
   initRecorder(stream) {
@@ -34,26 +36,27 @@ class Recorder {
     this.onRecordStop(blobURL);
   }
 
-  stopRecord() {
-    this.onRecordStop(this.media.getBlob());
-  }
-
   async stopRecordAndGetFile(name) {
     return new Promise((resolve) => {
+      if (this.gif.state === 'active') {
+        this.stopThumbnailRecord();
+        clearTimeout(this.thumbnailTimeout);
+      }
       this.media.stopRecording(() => {
-        resolve(this.file(name));
+        resolve(blobToFile(this.media.getBlob(), name));
       });
     });
   }
 
-  pauseRecord() {
-    this.media.pause();
-  }
-
   startRecord() {
     this.media.startRecording();
-
+    this.gif.startRecording();
     this.onRecordStart();
+
+    this.thumbnailTimeout = setTimeout(() => {
+      this.stopThumbnailRecord();
+      clearTimeout(this.thumbnailTimeout);
+    }, this.thumbnailDuration);
 
     this.timeout = setTimeout(() => {
       this.onDurationEnd();
@@ -61,15 +64,11 @@ class Recorder {
     }, this.duration);
   }
 
-  async thumbnail() {
-    this.gif.startRecording();
-    const sleep = (m) => new Promise((r) => setTimeout(r, m));
-    await sleep(2000);
-
+  async stopThumbnailRecord() {
     return new Promise((resolve) => {
-      this.gif.stopRecording(() => {
-        const blob = this.gif.getBlob();
+      this.gif.stopRecording((blob) => {
         resolve(blob);
+        this.onThumbnailStop(this.gif.getBlob(), blob);
       });
     });
   }

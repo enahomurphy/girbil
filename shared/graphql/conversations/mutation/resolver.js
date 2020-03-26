@@ -67,7 +67,7 @@ export const addMessage = (_, { conversationId, messageId }, { cache }) => {
       id,
       name,
       avatar,
-      createdAt: new Date(),
+      createdAt: new Date().getTime(),
       __typename: 'User',
     },
   };

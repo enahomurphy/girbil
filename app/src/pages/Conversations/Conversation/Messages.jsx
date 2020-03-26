@@ -4,52 +4,10 @@ import PropTypes from 'prop-types';
 
 import { query, mutation } from '@shared/graphql/conversations';
 import Gallery from '@/components/Gallery';
-import Emoji from '@/components/Emoji';
 import emitter from '@/lib/emitter';
-import { storage } from '@shared/lib';
 
 import EmptyState from './EmptyMessage';
-
-const getPullOverLinks = ({
-  conversationId,
-  message: { id, hasRead, sender },
-  markMessage,
-  deleteMessage,
-}) => {
-  const options = [
-    {
-      type: 'emoji',
-      Component: () => (
-        <Emoji
-          reaction={false}
-          vertical={false}
-          onClick={console.info}
-        />
-      ),
-    },
-    {
-      type: 'thread',
-      link: `/conversations/${conversationId}/thread/${id}/`,
-      title: 'Start a thread',
-      onClick: () => {},
-    },
-    {
-      type: 'watch',
-      title: `Mark as ${hasRead ? 'unwatched' : 'watched'}`,
-      onClick: markMessage,
-    },
-  ];
-
-  if (storage.payload.id === sender.id) {
-    options.push({
-      type: 'delete video',
-      title: 'delete video',
-      onClick: () => deleteMessage(id),
-    });
-  }
-
-  return options;
-};
+import { getPullOverLinks } from './helpers';
 
 const Messages = ({
   conversationId, threadId, isThread,
@@ -166,6 +124,5 @@ Messages.propTypes = {
   conversationId: PropTypes.string.isRequired,
   threadId: PropTypes.oneOfType([() => undefined, PropTypes.object]),
 };
-
 
 export default Messages;

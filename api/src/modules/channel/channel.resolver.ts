@@ -106,19 +106,23 @@ class ChannelResolver implements ResolverInterface<Channel> {
       @Ctx() { user: { id } }: ContextType,
   ): Promise<Channel> {
     const update = pick(input, ['name', 'about', 'isPrivate', 'avatar']);
-    if (update.isPrivate) {
-      const channel = await this.channelRepo.findOne({ id: channelId });
+    const channel = await this.channelRepo.findOne({ id: channelId });
 
+    if (!channel) {
+      throw new Error('Channel not found');
+    }
+
+    if (update.isPrivate) {
       if (channel.userId !== id) {
         delete update.isPrivate;
       }
     }
-    update.id = channelId;
 
-    const channel = this.channelRepo.create(update);
-    await this.channelRepo.manager.save(channel);
+    const channelToUpdate = plainToClass(Channel, { ...channel, ...update });
 
-    return channel;
+    await this.channelRepo.update({ id: channel.id }, update);
+
+    return channelToUpdate;
   }
 
   @Authorized('user', 'admin', 'owner')

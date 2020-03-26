@@ -50,7 +50,6 @@ export const getUploadUrls = async (_, { getUploadURLS, message, conversationId 
   })
 );
 
-
 export default {
   processing,
   getUploadUrls,

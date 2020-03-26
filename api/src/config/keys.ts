@@ -13,6 +13,13 @@ interface S3 {
   bucket: string;
 }
 
+interface Pusher {
+  appId: string;
+  key: string;
+  secret: string;
+  cluster: string;
+}
+
 interface AWS {
   key: string;
   secret: string;
@@ -32,6 +39,7 @@ interface Keys {
   email: Email;
   environment: string;
   url: string;
+  pusher: Pusher;
 }
 
 const keys: Keys = {
@@ -52,6 +60,12 @@ const keys: Keys = {
   },
   environment: process.env.NODE_ENV,
   url: url(),
+  pusher: {
+    appId: process.env.PUSHER_APP_ID,
+    key: process.env.PUSHER_KEY,
+    secret: process.env.PUSHER_SECRET,
+    cluster: process.env.PUSHER_CLUSTER,
+  },
 };
 
 export default keys;

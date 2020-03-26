@@ -2,7 +2,6 @@ import { ApolloProvider } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Device } from 'framework7';
-import IO from 'socket.io-client';
 import emitter from '@/lib/emitter';
 
 import {
@@ -14,6 +13,7 @@ import {
 
 import ApolloClient from '@shared/graphql/client';
 import { storage, get } from '@shared/lib';
+import { SocketContext, socket } from '@/lib/socket';
 
 import '@/css/theme.css';
 
@@ -24,12 +24,13 @@ const MainApp = () => {
   const [isAuth, setIsAuth] = useState(
     Boolean(storage.payload && get(storage.payload, 'organization')),
   );
+  const [socketConnection, setSocket] = useState();
 
   const [client] = useState(ApolloClient({
     errorHandler: ({ networkError }) => {
       if (networkError) {
         if (networkError.statusCode === 401) {
-          setIsAuth(false);
+          emitter.emitEvent('logout');
         }
       }
     },
@@ -51,7 +52,12 @@ const MainApp = () => {
   };
 
   useEffect(() => {
-    window.gf = f7;
+    if (isAuth) {
+      setSocket(socket());
+    }
+  }, [isAuth]);
+
+  useEffect(() => {
     f7ready((readyF7) => {
       if (Device.cordova) {
         cordovaApp.init(readyF7);
@@ -60,8 +66,8 @@ const MainApp = () => {
   }, []);
 
   useEffect(() => {
-    IO(process.env.API_URL, { forceNew: false });
     emitter.onEventEmitted('logout', () => {
+      localStorage.clear();
       f7.views.main.router.navigate('/', {
         reloadAll: true,
         reloadCurrent: true,
@@ -73,15 +79,18 @@ const MainApp = () => {
 
   return (
     <ApolloProvider client={client}>
-      <App params={f7params} themeDark>
-        {
-          isAuth ? (
-            <View main url="/conversations" />
-          ) : (
-            <View main url="/" />
-          )
-        }
-      </App>
+      <SocketContext.Provider value={socketConnection}>
+        <App params={f7params} themeDark>
+          {
+            isAuth ? (
+              <View main url="/conversations" />
+            ) : (
+              <View main url="/" />
+
+            )
+          }
+        </App>
+      </SocketContext.Provider>
     </ApolloProvider>
   );
 };

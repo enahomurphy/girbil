@@ -72,7 +72,7 @@ ImageItem.propTypes = {
   replyCount: PropTypes.number,
   hasRead: PropTypes.bool,
   onReplyClicked: PropTypes.func.isRequired,
-  createdAt: PropTypes.oneOfType([Date, PropTypes.number]).isRequired,
+  createdAt: PropTypes.oneOfType([Date, PropTypes.number, PropTypes.object]).isRequired,
 };
 
 export default ImageItem;

@@ -13,7 +13,7 @@ import { plainToClass } from 'class-transformer';
 import { MessageRepo } from '../../repo';
 import { Message } from '../../entity';
 import { CanView, CanEdit } from '../../middleware/permissions';
-import { MessagesArgs, MessageIDArgs } from './message.args';
+import { MessagesArgs, MessageIDArgs, MessageReactionArgs } from './message.args';
 import { ValidateArgs } from '../../middleware/decorators';
 import { AddMessageInput } from './message.input';
 import { ContextType } from '../../interfaces';

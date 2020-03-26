@@ -4,6 +4,15 @@ import {
 import { Field, ObjectType, Int } from 'type-graphql';
 import { User } from '.';
 
+@ObjectType()
+class Reaction {
+  @Field({ nullable: true })
+  reaction: string
+
+  @Field({ nullable: true })
+  userId: string
+}
+
 @Entity('messages')
 @ObjectType()
 export class Message {
@@ -50,6 +59,10 @@ export class Message {
     nullable: true,
   })
   note?: string;
+
+  @Field(() => [Reaction], { nullable: true })
+  @Column({ type: 'json', array: true })
+  reactions?: Reaction[];
 
   @Field(() => String)
   state = 'done';

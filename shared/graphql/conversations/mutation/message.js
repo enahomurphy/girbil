@@ -28,11 +28,10 @@ export const useSaveMessage = () => {
   return [handler, { data, loading, error }];
 };
 
-export const useMarkAsRead = () => {
-  const [markAsRead] = useMutation(MARK_MESSAGE_AS_READ);
-
+export const useAddReaction = () => {
+  const [reactToMessage] = useMutation(REACT_TO_MESSAGE);
   const handler = useCallback(
-    (variables) => markAsRead({
+    (variables) => reactToMessage({
       variables,
       update: (store) => {
         const storeMessage = store.readQuery({
@@ -43,12 +42,12 @@ export const useMarkAsRead = () => {
         store.writeQuery({
           query: GET_MESSAGE,
           variables,
-          data: { message: { ...storeMessage.message, hasRead: true } },
+          data: { message: { ...storeMessage.message } },
         });
       },
-      refetchQueries: ['conversations'],
+      refetchQueries: ['userMessages'],
     }),
-    [markAsRead],
+    [reactToMessage],
   );
 
   return [handler];

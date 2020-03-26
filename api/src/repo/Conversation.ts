@@ -78,7 +78,7 @@ class ConversationRepository extends Repository<Conversation> {
       .setParameter('id', id)
       .setParameter('userId', userId)
       .setParameter('organizationId', organizationId)
-      .where('conversation.id = :conversationId')
+      .where('conversation.id = :id')
       .andWhere('conversation.organization_id = :organizationId')
       .andWhere(
         `

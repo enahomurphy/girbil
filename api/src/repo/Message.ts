@@ -1,4 +1,3 @@
-
 import { EntityRepository, Repository } from 'typeorm';
 import { Message } from '../entity';
 
@@ -19,6 +18,7 @@ class MessageRepository extends Repository<Message> {
           WHERE thread.parent_id = message.id
         )
       `, 'message_replyCount');
+
       query.where('message.conversation_id = :conversationId AND message.parent_id IS NULL');
     }
 
@@ -41,26 +41,29 @@ class MessageRepository extends Repository<Message> {
   async updateReaction(messageId: string, userId: string, reaction: string): Promise<any> {
     const reactionData = {
       userId,
-      reaction
+      reaction,
     };
 
-    const [{position} = {}] = await this.query(`
+    const [result]: any = await this.query(`
       SELECT index-1 AS position
       FROM messages, jsonb_array_elements(reactions) with ordinality arr(reaction, index)
       where reaction->>'reaction' = $1 and reaction->>'userId' = $2
       and id = $3 LIMIT 1
     `, [reaction, userId, messageId]);
 
-    if(Number(position) >= 0) {
+
+    const { position } = result || {};
+
+    if (Number(position || {}) >= 0) {
       await this.query(`
         UPDATE messages SET reactions = reactions::jsonb - ${position}
         WHERE id = $1
-      `, [messageId])
+      `, [messageId]);
     } else {
-      const q = await this.query(`
+      await this.query(`
         UPDATE messages SET reactions = reactions || $1::jsonb
         WHERE id = $2
-      `, [reactionData, messageId])
+      `, [reactionData, messageId]);
     }
 
     return [];

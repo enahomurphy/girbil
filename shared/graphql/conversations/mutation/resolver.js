@@ -61,6 +61,7 @@ export const addMessage = (_, { conversationId, messageId }, { cache }) => {
     parentId: messageId || null,
     state: 'recording',
     hasRead: true,
+    reactions: null,
     createdAt: new Date(),
     __typename: 'Message',
     sender: {

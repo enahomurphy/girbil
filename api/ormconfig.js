@@ -8,7 +8,7 @@ module.exports = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   synchronize: false,
-  logging: ['development', 'test'].includes(process.env.NODE_ENV) ? [] : [],
+  logging: ['development', 'test'].includes(process.env.NODE_ENV) ? ['query'] : [],
   entities: [
     'src/entity/**/*.ts',
   ],

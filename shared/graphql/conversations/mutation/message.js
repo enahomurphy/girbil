@@ -9,6 +9,7 @@ import {
   UPDATE_MESSAGE_STATE,
   REACT_TO_MESSAGE,
 } from './mutation';
+import { GET_MESSAGE } from '../query';
 
 export const useSaveMessage = () => {
   const [save, { data, loading, error }] = useMutation(SAVE_MESSAGE);

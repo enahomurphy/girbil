@@ -20,8 +20,10 @@ const SearchBar = styled.div`
   }
 `;
 
-const GlobalSearch = props => {
-  const {handleSearch, searchResult, closeConversation, leaveChannel, opened, onClose } = props;
+const GlobalSearch = (props) => {
+  const {
+    handleSearch, searchResult, closeConversation, leaveChannel, opened, onClose,
+  } = props;
   const [isOpen, setOpened] = useState(opened);
   const [searchText, setSearchText] = useState('');
 
@@ -39,45 +41,45 @@ const GlobalSearch = props => {
   };
 
   const createOptions = (id, type, is_member, conversation_id) => {
-    let options = [];
+    const options = [];
 
-    if(type === 'channel') {
+    if (type === 'channel') {
       options.push({
         title: 'View Channel',
         getLink: () => `/channels/${id}`,
-        onClick: handleClose
+        onClick: handleClose,
       });
 
-      if(is_member) {
+      if (is_member) {
         options.push({
           title: 'Leave Channel',
           onClick: () => {
-            handleClose()
-            leaveChannel(id)
+            handleClose();
+            leaveChannel(id);
           },
         });
       } else {
         options.push({
           title: 'Join Channel',
           onClick: handleClose,
-          getLink: () => `/conversations/${conversation_id}/`
+          getLink: () => `/conversations/${conversation_id}/`,
         });
       }
     }
 
-    if(type === 'user') {
+    if (type === 'user') {
       options.push({
         title: 'View Profile',
         getLink: () => `/users/${id}/profile`,
-        onClick: handleClose
+        onClick: handleClose,
       });
 
-      if(conversation_id) {
+      if (conversation_id) {
         options.push({
           title: 'Close Direct Message',
           onClick: () => {
             handleClose();
-            closeConversation(conversation_id)
+            closeConversation(conversation_id);
           },
         });
       }
@@ -108,8 +110,8 @@ const GlobalSearch = props => {
           </span>
         </SearchBar>
         {
-          Boolean(searchText.length) &&
-          (
+          Boolean(searchText.length)
+          && (
             <div style={{ color: '#EFEFEF', margin: '0 0 16px 42px' }}>
               Conversations and channels matching search
             </div>
@@ -119,55 +121,56 @@ const GlobalSearch = props => {
       <List style={{ margin: '32px 0 0 0' }}>
         {
           searchResult.map(({
-            id, name, conversation_id, avatar, type, members, is_private, is_member
+            id, name, conversation_id, avatar, type, members, is_private, is_member,
           }) => (type === 'user' ? (
-              <ConversationListItem
-                options={createOptions(id, type, is_member, conversation_id)}
-                getLink={() => `/conversations/${conversation_id}/`}
-                key={id}
-                onClick={handleClose}
-                id={conversation_id}
-                isChannel={false}
-                isActive={false}
-                isPrivate={is_private}
-                user={{
-                  id: id,
-                  name: name,
-                  lastActive: 'Active 17h ago',
-                  avatar: avatar,
-                }}
-              />
-            ) : (
-              <ConversationListItem
-                options={createOptions(id, type, is_member, conversation_id)}
-                getLink={() => `/conversations/${conversation_id}/`}
-                key={id}
-                onClick={handleClose}
-                isActive={false}
-                isChannel
-                id={conversation_id}
-                isPrivate={is_private}
-                user={{
-                  id: id,
-                  name: name,
-                  members: members,
-                  avatar: avatar,
-                  isPrivate: true,
-                }}
-              />
+            <ConversationListItem
+              options={createOptions(id, type, is_member, conversation_id)}
+              getLink={() => `/conversations/${conversation_id}/`}
+              key={id}
+              onClick={handleClose}
+              id={conversation_id}
+              isChannel={false}
+              isActive={false}
+              isPrivate={is_private}
+              user={{
+                id,
+                name,
+                lastActive: 'Active 17h ago',
+                avatar,
+              }}
+            />
+          ) : (
+            <ConversationListItem
+              options={createOptions(id, type, is_member, conversation_id)}
+              getLink={() => `/conversations/${conversation_id}/`}
+              key={id}
+              onClick={handleClose}
+              isActive={false}
+              isChannel
+              id={conversation_id}
+              isPrivate={is_private}
+              user={{
+                id,
+                name,
+                members,
+                avatar,
+                isPrivate: true,
+              }}
+            />
           )))
         }
       </List>
       {
-        Boolean(!searchText.length) &&
-        (
+        Boolean(!searchText.length)
+        && (
           <DefaultSearchList
-            title='Suggested Searches'
+            title="Suggested Searches"
             options={[
-              {text: 'is:unreads', onClick: () => setSearchText('is:unreads ')},
-              {text: 'is:channel', onClick: () => setSearchText('is:channel ')},
-              {text: 'is:user', onClick: () => setSearchText('is:user ')}
-            ]}/>
+              { text: 'is:unreads', onClick: () => setSearchText('is:unreads ') },
+              { text: 'is:channel', onClick: () => setSearchText('is:channel ') },
+              { text: 'is:user', onClick: () => setSearchText('is:user ') },
+            ]}
+          />
         )
       }
     </Popup>

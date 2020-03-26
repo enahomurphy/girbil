@@ -11,7 +11,7 @@ import {
 } from './style';
 
 const Controls = ({
-  playing, play, pause, played, duration, seek, playBack, handleReact
+  playing, play, pause, played, duration, seek, playBack, handleReact,
 }) => (
   <ControlContainer>
     {
@@ -75,6 +75,7 @@ Controls.propTypes = {
   duration: PropTypes.number.isRequired,
   played: PropTypes.number.isRequired,
   playBack: PropTypes.func.isRequired,
+  handleReact: PropTypes.func.isRequired,
 };
 
 export default Controls;

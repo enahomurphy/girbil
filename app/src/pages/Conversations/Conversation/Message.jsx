@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useVideo, useConversationMeta } from '@/lib/hooks';
 import { query, mutation } from '@shared/graphql/conversations';
 import {
-  Video, Header, useVideoData, Controls, Reactions
+  Video, Header, useVideoData, Controls, Reactions,
 } from '@/components/Video';
 import { get } from '@shared/lib';
 import emitter from '@/lib/emitter';
@@ -55,11 +55,11 @@ const Message = ({
     return () => emitter.removeListener('read_message', handleReadMessage);
   }, [getMessage, markAsRead, message.hasRead]);
 
-  const handleReact = ({ value, name }) => {
+  const handleReact = ({ value }) => {
     reactToMessage({
       messageId,
-      reaction: value
-    })
+      reaction: value,
+    });
   };
 
   const goBack = () => {
@@ -107,7 +107,7 @@ const Message = ({
         playBack={controls.playbackRate}
         handleReact={handleReact}
       />
-      <Reactions reactions={message.reactions}/>
+      <Reactions reactions={message.reactions} />
       <Video video={video} id="video" />
     </Page>
   );

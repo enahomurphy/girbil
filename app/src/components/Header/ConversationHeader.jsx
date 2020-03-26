@@ -4,13 +4,13 @@ import {
 } from 'framework7-react';
 import PropTypes from 'prop-types';
 
+import GlobalSearch from '@/components/GlobalSearch';
+import emitter from '@/lib/emitter';
 import { Title, Block, Popover } from '@/components/Style';
 import {
   Add, Settings, Chevron, Search,
 } from '@/components/Icon';
-import { storage } from '@shared/lib';
-import emitter from '@/lib/emitter';
-import GlobalSearch from '@/components/GlobalSearch';
+import { storage, get } from '@shared/lib';
 import { NavbarWrapper } from './style';
 
 const ConversationHeader = (props) => {
@@ -24,7 +24,7 @@ const ConversationHeader = (props) => {
       <Navbar>
         <Block type="flex" align="center" margin="0">
           <Title width="initial" margin="0 10px 0 0" size="24px">
-            {storage.payload.organization.name}
+            {get(storage, 'payload.organization.name')}
           </Title>
           <Link>
             <Chevron />
@@ -74,7 +74,7 @@ const ConversationHeader = (props) => {
 };
 
 ConversationHeader.propTypes = {
-  searchResult: PropTypes.object.isRequired,
+  searchResult: PropTypes.array.isRequired,
   handleSearch: PropTypes.func.isRequired,
   closeConversation: PropTypes.func.isRequired,
   leaveChannel: PropTypes.func.isRequired,

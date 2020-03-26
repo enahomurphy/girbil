@@ -1,15 +1,15 @@
 import { useContext, useEffect } from 'react';
 import { useApolloClient } from '@apollo/client';
 
-import { storage } from '@shared/lib';
+import { storage, get } from '@shared/lib';
 import { SocketContext } from '../socket';
 import { MESSAGE_CREATED } from '../events';
 
 export const useOrgMessageListener = () => {
   const pusher = useContext(SocketContext);
   const client = useApolloClient();
-  const userId = storage.payload.id;
-  const orgId = storage.payload.organization.id;
+  const userId = get(storage, 'payload.id');
+  const orgId = get(storage, 'payload.organization.id');
 
   useEffect(() => {
     const channel = pusher.subscribe(orgId);

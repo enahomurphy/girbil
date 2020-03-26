@@ -9,6 +9,7 @@ import { get } from '@shared/lib';
 
 import AddPeopleList from './AddPeopleList';
 
+// @TODO handle error
 const AddPeople = ({ channelId, $f7router }) => {
   const onError = () => f7.dialog.close();
   const onCompleted = () => {
@@ -32,7 +33,9 @@ const AddPeople = ({ channelId, $f7router }) => {
   const [users, setUsers] = useState(updateData(members));
 
   useEffect(() => {
-    setUsers(updateData(members));
+    if (members && members.length) {
+      setUsers(updateData(members));
+    }
   }, [members]);
 
   const hasSelected = useCallback(

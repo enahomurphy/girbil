@@ -90,7 +90,7 @@ const CreateChannel = ({ $f7router, title, channelId }) => {
       handleAvatarChange(channelAvatar.blob, channelId || channel.id);
     } else {
       f7.dialog.close();
-      $f7router.navigate(`/channels/${channelId}`);
+      $f7router.navigate(`/channels/${channelId || channel.id}`);
     }
   };
 

@@ -1,4 +1,6 @@
-import { EntityRepository, Repository, getRepository, getManager } from 'typeorm';
+import {
+  EntityRepository, Repository, getRepository, getManager,
+} from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import {
   Organization, UserOrganization, User, RoleType,
@@ -8,6 +10,7 @@ import { SearchResult } from '../interfaces';
 @EntityRepository(Organization)
 class OrganizationRepository extends Repository<Organization> {
   private readonly userOrgRepo = getRepository(UserOrganization)
+
   private readonly entityManager = getManager()
 
   async findUserOrganizations(userId: string): Promise<Organization[]> {
@@ -141,9 +144,9 @@ class OrganizationRepository extends Repository<Organization> {
       INNER JOIN user_organizations ON users.id = user_organizations.user_id
       LEFT JOIN conversations ON conversations.receiver_id = users.id OR conversations.creator_id = users.id AND conversations.receiver_type = 'user'
       WHERE users.tsv @@ plainto_tsquery($1) AND user_organizations.organization_id = $2
-      GROUP BY users.id, conversations.id;`
+      GROUP BY users.id, conversations.id;`;
 
-    const result =  await this.entityManager.query(`${channelQuery} UNION ALL ${userQuery}`, [text, organizationId, userId])
+    const result = await this.entityManager.query(`${channelQuery} UNION ALL ${userQuery}`, [text, organizationId, userId]);
 
     return result;
   }

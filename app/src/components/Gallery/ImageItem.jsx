@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { SwiperSlide } from 'framework7-react';
 
 import { get } from '@shared/lib';
+import { Complete } from '@/components/Icon';
 import ImageItemInfo from './ImageItemInfo';
 import ImageRecordingItem from './ImageRecordingItem';
 import ImageItemPlaying from './ImageItemPlaying';
-import { StyledSlide } from './style';
+import { StyledSlide, StyledComplete } from './style';
 
 const ImageItem = ({
   onClick, id, thumbnail, state, sender,
@@ -47,10 +48,16 @@ const ImageItem = ({
           replyCount={replyCount}
           onReplyClicked={onReplyClicked}
         />}
-        {slideProps.recording && (
+        {state === 'recording' && (
           <ImageRecordingItem
             thumbnail={renderThumbnail}
           />
+        )}
+
+        {state === 'complete' && (
+          <StyledComplete>
+            <Complete />
+          </StyledComplete>
         )}
       </StyledSlide>
     </SwiperSlide>

@@ -11,3 +11,4 @@ export { default as Chevron } from './Chevron';
 export { default as Back } from './Back';
 export { default as UserAccount } from './UserAccount';
 export { default as BlankLink } from './BlankLink';
+export { default as Complete } from './Complete';

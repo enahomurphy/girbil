@@ -17,7 +17,9 @@ const ImageItemInfo = ({
       <Popover className={`popover-menu-${messageId}`}>
         <ImageItemOption>
           {
-            pullover.reduce((acc, { Component, type, onClick, ...props }) => {
+            pullover.reduce((acc, {
+              Component, type, onClick, ...props
+            }) => {
               if (type === 'thread' && replyCount) return acc;
               acc.push(
                 <ListItem

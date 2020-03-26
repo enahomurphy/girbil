@@ -195,3 +195,11 @@ export const RepliesInfo = styled(Block)`
     }
   }
 `;
+
+export const StyledComplete = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #636366;
+  width: 100%;
+`;

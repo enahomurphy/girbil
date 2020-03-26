@@ -18,6 +18,11 @@ const Gallery = ({ messages, onClick }) => {
     }
   }, [messages]);
 
+  useEffect(() => {
+    const slide = f7.swiper.get('.swiper-container');
+    slide.slideTo(messages.length);
+  }, [messages.length]);
+
   const onReplyClicked = (id, conversationId) => () => {
     f7.views.main.router.navigate(`/conversations/${conversationId}/thread/${id}/`);
   };

@@ -79,7 +79,7 @@ MessageHeader.propTypes = {
 };
 
 const Header = ({
-  back, goBack, onClick, isThread, isPrivate, name, members, isChannel, typeId,
+  back, goBack, onClick, isThread, isPrivate, name, members, isChannel, typeId, showBack,
 }) => (
   <StyledHeader>
     <Popover className="message-header-popover-menu">
@@ -97,9 +97,13 @@ const Header = ({
         )
        }
     </Popover>
-    <BackIcon back={back} onClick={goBack}>
-      { back ? <Back /> : <Icon f7="multiply" /> }
-    </BackIcon>
+    {
+      showBack && (
+      <BackIcon back={back} onClick={goBack}>
+        { back ? <Back /> : <Icon f7="multiply" /> }
+      </BackIcon>
+      )
+    }
     <Block role="presentation" onClick={onClick}>
       {
         isThread
@@ -120,13 +124,16 @@ const Header = ({
 Header.defaultProps = {
   back: false,
   isThread: false,
+  goBack: () => {},
+  showBack: true,
 };
 
 Header.propTypes = {
   back: PropTypes.bool,
+  showBack: PropTypes.bool,
   isThread: PropTypes.oneOfType([() => undefined, PropTypes.object]),
   onClick: PropTypes.func.isRequired,
-  goBack: PropTypes.func.isRequired,
+  goBack: PropTypes.func,
   isPrivate: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
   members: PropTypes.number.isRequired,

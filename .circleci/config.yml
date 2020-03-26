@@ -19,6 +19,9 @@ jobs:
           command: |
             echo "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> web/.env
             echo "API_URL=https://staging-api.girbil.com" >> web/.env
+            echo "WEB_URL=https://staging.girbil.com" >> web/.env
+            echo "PUSHER_KEY=$PUSHER_KEY_STAGING" >> web/.env
+            echo "PUSHER_CLUSTER=$PUSHER_CLUSTER_STAGING" >> web/.env
             echo "export GIRBIL_WEB_STAGING_S3_CLIENT=$GIRBIL_WEB_STAGING_S3_CLIENT" >> $BASH_ENV
             echo "export GIRBIL_WEB_STAGING_CLOUNDFRONT_ID=$GIRBIL_WEB_STAGING_CLOUNDFRONT_ID" >> $BASH_ENV
       - restore_cache:

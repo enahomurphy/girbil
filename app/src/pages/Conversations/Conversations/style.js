@@ -1,4 +1,4 @@
-import { ListItem } from 'framework7-react';
+import { ListItem, Page as f7Page } from 'framework7-react';
 
 import { Title, Block } from '@/components/Style';
 import styled from 'styled-components';
@@ -68,4 +68,29 @@ export const StyledTitle = styled(Title)`
   margin: 0 9px 0 2px;
   width: initial;
   max-width: 140px;
+`;
+
+
+export const Page = styled(f7Page)`
+  /* scrollbar-width: thin;
+  scrollbar-color: var(--gb-medium-gray);
+  
+  &:hover {
+    overflow-y: scroll;
+    -webkit-overflow-y: overlay;
+  }
+
+  &::-webkit-scrollbar {
+    width: 2px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--gb-medium-grey);
+    border-radius: 100px;
+  }
+
+  &:scrollbar[orient="horizontal"] {
+    color: green;
+  } */
 `;

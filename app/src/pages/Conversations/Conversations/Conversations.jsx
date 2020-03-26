@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Page, List, ListItem } from 'framework7-react';
-
-import { storage, get } from '@shared/lib';
+import { List, ListItem } from 'framework7-react';
 import { useLazyQuery } from '@apollo/client';
 import { useDebounce } from 'react-use';
+
+import { storage, get } from '@shared/lib';
 import { query, mutation } from '@shared/graphql/conversations';
 import { query as orgQuery } from '@shared/graphql/organizations';
 import { mutation as channelMutations } from '@shared/graphql/channels';
@@ -11,6 +11,7 @@ import { useOrgMessageListener } from '@/lib/socket';
 import ConversationListItem from '@/components/List/ListItem';
 import ConversationHeader from '../../../components/Header/ConversationHeader';
 import UserInfo from './UserInfo';
+import { Page } from './style';
 
 const Conversations = () => {
   const { conversations } = query.useGetUserConversations();

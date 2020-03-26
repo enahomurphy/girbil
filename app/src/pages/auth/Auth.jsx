@@ -59,7 +59,6 @@ const Auth = ({
             {buttonText}
           </Button>
         </Block>
-
         <StyledLink href={meta.path}>
           {meta.name}
         </StyledLink>

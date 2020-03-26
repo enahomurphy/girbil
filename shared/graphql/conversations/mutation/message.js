@@ -7,6 +7,7 @@ import {
   MARK_MESSAGE_AS_UNREAD,
   MARK_MESSAGE_AS_READ,
   UPDATE_MESSAGE_STATE,
+  REACT_TO_MESSAGE,
 } from './mutation';
 
 export const useSaveMessage = () => {
@@ -25,6 +26,32 @@ export const useSaveMessage = () => {
   });
 
   return [handler, { data, loading, error }];
+};
+
+export const useMarkAsRead = () => {
+  const [markAsRead] = useMutation(MARK_MESSAGE_AS_READ);
+
+  const handler = useCallback(
+    (variables) => markAsRead({
+      variables,
+      update: (store) => {
+        const storeMessage = store.readQuery({
+          query: GET_MESSAGE,
+          variables,
+        });
+
+        store.writeQuery({
+          query: GET_MESSAGE,
+          variables,
+          data: { message: { ...storeMessage.message, hasRead: true } },
+        });
+      },
+      refetchQueries: ['conversations'],
+    }),
+    [markAsRead],
+  );
+
+  return [handler];
 };
 
 export const useMarkMessage = (state = 'read') => {

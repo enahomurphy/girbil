@@ -1,6 +1,6 @@
 import React from 'react';
 import Emoji from '@/components/Emoji';
-import { storage } from '@shared/lib';
+import { storage, get } from '@shared/lib';
 
 export const getPullOverLinks = ({
   conversationId,
@@ -32,7 +32,7 @@ export const getPullOverLinks = ({
     },
   ];
 
-  if (storage.payload.id === sender.id) {
+  if (get(storage, 'payload.id') === sender.id) {
     options.push({
       type: 'delete video',
       title: 'delete video',

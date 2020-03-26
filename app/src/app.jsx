@@ -37,7 +37,7 @@ const MainApp = () => {
   }));
 
   const f7params = {
-    id: 'io.app.girbil',
+    id: 'com.girbil.app',
     name: 'girbil',
     theme: 'aurora',
     routes,

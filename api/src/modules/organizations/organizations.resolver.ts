@@ -15,7 +15,7 @@ import { getCustomRepository, getRepository, Not } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import {
-  Organization, User, UserOrganization, RoleType, Channel
+  Organization, User, UserOrganization, RoleType,
 } from '../../entity';
 import { ContextType, SearchResult } from '../../interfaces';
 import { OrganizationRepo } from '../../repo';
@@ -49,7 +49,7 @@ class OrganizationResolver {
     return this.orgRepo.search(
       organization.id,
       text,
-      userId
+      userId,
     );
   }
 

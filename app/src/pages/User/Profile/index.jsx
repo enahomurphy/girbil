@@ -53,7 +53,7 @@ const Profile = ({ userId, $f7router }) => {
     },
   });
 
-  const isUser = storage.payload.id === user.id;
+  const isUser = get(storage, 'payload.id') === user.id;
 
   const handleMessage = async () => getConversation({ variables: { userId } });
 
@@ -90,6 +90,7 @@ const Profile = ({ userId, $f7router }) => {
       f7.dialog.close();
     } catch (error) {
       f7.dialog.alert('Unable to update profile picture');
+      f7.dialog.close();
     }
   };
 

@@ -4,6 +4,7 @@ import {
   Text, Title, Block, Active, Button,
 } from '@/components/Style';
 import { BlankLink } from '@/components/Icon';
+import { settingsOpener } from '@/lib/opener';
 
 const ProfileInfo = ({
   isUser, onEditProfile, handleMessage, name, position,
@@ -18,7 +19,7 @@ const ProfileInfo = ({
         isUser ? (
           <>
             <Button onClick={onEditProfile}>Edit Profile</Button>
-            <Button withIcon>
+            <Button onClick={settingsOpener} withIcon>
               Edit Account
               <BlankLink />
             </Button>

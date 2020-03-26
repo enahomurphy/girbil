@@ -22,7 +22,8 @@ class ConversationRepository extends Repository<Conversation> {
             AND conversation_id = "conversation"."id"
         )
       `, 'conversation_unread')
-      .where("conversation.receiver_type = 'channel'");
+      .where('conversation.organizationId = :organizationId')
+      .andWhere("conversation.receiver_type = 'channel'");
 
     query.andWhere(`
       (
@@ -40,9 +41,8 @@ class ConversationRepository extends Repository<Conversation> {
           OR conversation.receiver_id = :userId
         )
         AND conversation.open = 'true'::boolean
+        AND conversation.organizationId = :organizationId
       )
-      
-      AND "conversation"."organization_id" = :organizationId
     `);
 
     const conversations = await query.getMany();
@@ -79,7 +79,7 @@ class ConversationRepository extends Repository<Conversation> {
       .setParameter('userId', userId)
       .setParameter('organizationId', organizationId)
       .where('conversation.id = :conversationId')
-      .where('conversation.organization_id = :organizationId')
+      .andWhere('conversation.organization_id = :organizationId')
       .andWhere(
         `
         (

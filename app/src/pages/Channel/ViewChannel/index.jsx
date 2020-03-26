@@ -34,7 +34,9 @@ const View = ({ channelId }) => {
           We recommend organizing them around a topic; e.g., design, marketing, development.
         </Text>
         <Details channel={channel} />
-        <Members channel={channel} count={count} members={members} />
+        {(members && members.length) && (
+          <Members channel={channel} count={count} members={members} />
+        )}
       </Block>
     </Page>
   );

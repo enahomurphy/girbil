@@ -50,7 +50,6 @@ const BrowseChannels = ({ channels, handleSearchChange, onCreateChannel }) => (
             getLink={(item) => `/conversations/${item.conversation.id}/`}
             key={channel.id}
             isChannel
-            subText={`${channel.members} members`}
             isActive={false}
             isPrivate={false}
             user={channel}

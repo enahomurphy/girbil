@@ -149,6 +149,18 @@ class MessageResolver {
     socket.broadcast(organization.id, socket.events.MESSAGE_DELETED, { message });
     return 'Message deleted';
   }
+
+
+  @Authorized('user', 'admin', 'owner')
+  @Mutation(() => String)
+  async reactToMessage(
+    @Args() { messageId, reaction }: MessageReactionArgs,
+      @Ctx() { user }: ContextType,
+  ): Promise<string> {
+    await this.messageRepo.updateReaction(messageId, user.id, reaction);
+
+    return `Reacted with ${reaction}`;
+  }
 }
 
 export default MessageResolver;

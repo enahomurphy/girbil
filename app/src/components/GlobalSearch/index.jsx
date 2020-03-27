@@ -30,7 +30,7 @@ const GlobalSearch = (props) => {
 
   useEffect(() => {
     handleSearch(searchText);
-  }, [searchText]);
+  }, [searchText, handleSearch]);
 
   useEffect(() => {
     setOpened(opened);
@@ -42,7 +42,7 @@ const GlobalSearch = (props) => {
     onClose();
   };
 
-  const setSearchHelpers = helper => {
+  const setSearchHelpers = (helper) => {
     inputEl.current.focus();
     setSearchText(helper);
   };
@@ -186,6 +186,10 @@ const GlobalSearch = (props) => {
 };
 
 GlobalSearch.propTypes = {
+  handleSearch: PropTypes.func.isRequired,
+  searchResult: PropTypes.array.isRequired,
+  closeConversation: PropTypes.func.isRequired,
+  leaveChannel: PropTypes.func.isRequired,
   opened: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
 };

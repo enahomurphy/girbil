@@ -82,6 +82,7 @@ const Message = ({
     isPrivate = false,
     isChannel,
     typeId,
+    members = 0,
   } = conversationMeta;
 
   return (
@@ -95,7 +96,7 @@ const Message = ({
         onClick={() => {}}
         isChannel={isChannel}
         typeId={typeId}
-        members={0}
+        members={members}
       />
       <Controls
         play={controls.play}

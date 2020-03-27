@@ -8,3 +8,19 @@ export interface SearchResult {
   isPrivate: boolean;
   is_member: boolean;
 }
+
+export interface ParsedText {
+  searchType: string;
+  searchText: string;
+}
+
+interface QueryParam {
+  query: string
+  params: string[]
+}
+
+export interface QueryMap {
+  channel: QueryParam,
+  user: QueryParam,
+  all: QueryParam
+}

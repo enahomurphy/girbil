@@ -5,7 +5,7 @@ import { plainToClass } from 'class-transformer';
 import {
   Organization, UserOrganization, User, RoleType,
 } from '../entity';
-import { SearchResult } from '../interfaces';
+import { SearchResult, QueryMap, ParsedText } from '../interfaces';
 
 @EntityRepository(Organization)
 class OrganizationRepository extends Repository<Organization> {
@@ -107,7 +107,23 @@ class OrganizationRepository extends Repository<Organization> {
     return this.findOne({ where: { id: organizationId } });
   }
 
-  async search(organizationId: string, text: string, userId: string): Promise<SearchResult[]> {
+  private getParseSearchText(text: string): ParsedText {
+    const searchTypeMap = {
+      'is:channel': 'channel',
+      'is:unreads': 'unread',
+      'is:user': 'user'
+    };
+    const textArr = text.split(' ');
+    const searchTypeText = textArr.find(i => i.startsWith('is:'));
+    const searchType = searchTypeMap[searchTypeText] || 'all';
+    const searchText = textArr.filter(i => i !== searchTypeText).join(' ');
+    return {
+      searchType,
+      searchText,
+    }
+  }
+
+  private getQueryMap(searchText: string, organizationId: string, userId: string): QueryMap {
     const channelQuery = `
       SELECT
         channels.id,
@@ -146,8 +162,27 @@ class OrganizationRepository extends Repository<Organization> {
       WHERE users.tsv @@ plainto_tsquery($1) AND user_organizations.organization_id = $2
       GROUP BY users.id, conversations.id;`;
 
-    const result = await this.entityManager.query(`${channelQuery} UNION ALL ${userQuery}`, [text, organizationId, userId]);
+    return {
+      channel: {
+        query: `${channelQuery}`,
+        params: [searchText, organizationId, userId]
+      },
+      user: {
+        query: `${userQuery}`,
+        params: [searchText, organizationId]
+      },
+      all: {
+        query: `${channelQuery} UNION ALL ${userQuery}`,
+        params: [searchText, organizationId, userId]
+      },
+    };
+  }
 
+  async search(organizationId: string, text: string, userId: string): Promise<SearchResult[]> {
+    const {searchType, searchText} = this.getParseSearchText(text);
+    const queryMap = this.getQueryMap(searchText, organizationId, userId);
+    const { query, params } = queryMap[searchType];
+    const result = await this.entityManager.query(query, params);
     return result;
   }
 }

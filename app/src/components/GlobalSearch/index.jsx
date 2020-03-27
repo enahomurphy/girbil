@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Popup, Icon, List } from 'framework7-react';
@@ -26,6 +26,7 @@ const GlobalSearch = (props) => {
   } = props;
   const [isOpen, setOpened] = useState(opened);
   const [searchText, setSearchText] = useState('');
+  const inputEl = useRef(null);
 
   useEffect(() => {
     handleSearch(searchText);
@@ -36,11 +37,17 @@ const GlobalSearch = (props) => {
   }, [opened]);
 
   const handleClose = () => {
+    setSearchText('');
     setOpened(false);
     onClose();
   };
 
-  const createOptions = (id, type, is_member, conversation_id) => {
+  const setSearchHelpers = helper => {
+    inputEl.current.focus();
+    setSearchText(helper);
+  };
+
+  const createOptions = (id, type, isMember, conversationId) => {
     const options = [];
 
     if (type === 'channel') {
@@ -97,6 +104,7 @@ const GlobalSearch = (props) => {
               <Icon f7="search" />
               <input
                 value={searchText}
+                ref={inputEl}
                 onChange={(e) => setSearchText(e.target.value)}
                 placeholder="Search channels and DMs..."
               />
@@ -166,9 +174,9 @@ const GlobalSearch = (props) => {
           <DefaultSearchList
             title="Suggested Searches"
             options={[
-              { text: 'is:unreads', onClick: () => setSearchText('is:unreads ') },
-              { text: 'is:channel', onClick: () => setSearchText('is:channel ') },
-              { text: 'is:user', onClick: () => setSearchText('is:user ') },
+              { text: 'is:unreads', onClick: () => setSearchHelpers('is:unreads ') },
+              { text: 'is:channel', onClick: () => setSearchHelpers('is:channel ') },
+              { text: 'is:user', onClick: () => setSearchHelpers('is:user ') },
             ]}
           />
         )

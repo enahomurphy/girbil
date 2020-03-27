@@ -119,7 +119,7 @@ class OrganizationRepository extends Repository<Organization> {
     const searchText = textArr.filter(i => i !== searchTypeText).join(' ');
     return {
       searchType,
-      searchText,
+      searchText: searchText.trim().length ? `%${searchText}%` : '',
     }
   }
 
@@ -130,20 +130,20 @@ class OrganizationRepository extends Repository<Organization> {
         channels.name,
         channels.avatar,
         'channel' AS type,
-        conversations.id AS conversation_id,
+        conversations.id AS "conversationId",
         COUNT(channel_users.channel_id) AS members,
-        is_private,
+        is_private AS "isPrivate",
         (
           SELECT not COUNT(channel_users.user_id) = 0
           FROM channel_users
           WHERE channel_users.user_id = $3
           AND channel_users.channel_id = channels.id
           LIMIT 1
-        ) AS is_member
+        ) AS "isMember"
       FROM channels
       INNER JOIN channel_users ON channel_users.channel_id = channels.id
       LEFT JOIN conversations ON conversations.receiver_id = channels.id AND conversations.receiver_type = 'channel'
-      WHERE tsv @@ plainto_tsquery($1) AND channels.organization_id = $2
+      WHERE channels.name ILIKE $1 AND channels.organization_id = $2
       GROUP BY channels.id, conversations.id`;
 
     const userQuery = `
@@ -152,14 +152,14 @@ class OrganizationRepository extends Repository<Organization> {
         users.name AS name,
         users.avatar AS avatar,
         'user' AS type,
-        conversations.id AS conversation_id,
+        conversations.id AS "conversationId",
         NULL as members,
-        NULL AS is_private,
-        NULL AS is_member
+        NULL AS "isPrivate",
+        NULL AS "isMember"
       FROM users
       INNER JOIN user_organizations ON users.id = user_organizations.user_id
       LEFT JOIN conversations ON conversations.receiver_id = users.id OR conversations.creator_id = users.id AND conversations.receiver_type = 'user'
-      WHERE users.tsv @@ plainto_tsquery($1) AND user_organizations.organization_id = $2
+      WHERE users.name ILIKE $1 AND user_organizations.organization_id = $2
       GROUP BY users.id, conversations.id;`;
 
     return {

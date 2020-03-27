@@ -1,7 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import emojis from '../Emoji/emojis';
-
 
 export const ReactionContainer = styled.div`
   display: flex;
@@ -14,21 +14,25 @@ export const ReactionContainer = styled.div`
 `;
 
 const Reactions = ({
-  reactions
+  reactions,
 }) => {
   const reactionsWithCount = reactions && reactions.reduce((acc, value) => {
-    let emoji = emojis.find(i => i.value === value.reaction);
-    acc[emoji.name] = acc[emoji.name] ? acc[emoji.name]++ : 1;
+    const emoji = emojis.find((i) => i.value === value.reaction);
+    acc[emoji.name] = acc[emoji.name] ? acc[emoji.name] + 1 : 1;
     return acc;
   }, {}) || [];
 
   return (
     <ReactionContainer>
-      {Object.keys(reactionsWithCount).map(key => (
+      {Object.keys(reactionsWithCount).map((key) => (
         <span>{`${key}${reactionsWithCount[key]}`}</span>
       ))}
     </ReactionContainer>
   );
-}
+};
+
+Reactions.propTypes = {
+  reactions: PropTypes.object.isRequired,
+};
 
 export default Reactions;

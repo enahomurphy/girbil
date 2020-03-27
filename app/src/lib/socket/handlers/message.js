@@ -6,13 +6,13 @@ import { SocketContext } from '../socket';
 import { MESSAGE_CREATED } from '../events';
 
 export const useOrgMessageListener = () => {
-  const pusher = useContext(SocketContext);
+  const socket = useContext(SocketContext);
   const client = useApolloClient();
   const userId = get(storage, 'payload.id');
   const orgId = get(storage, 'payload.organization.id');
 
   useEffect(() => {
-    const channel = pusher.subscribe(orgId);
+    const channel = socket.subscribe(orgId);
     channel.bind(MESSAGE_CREATED, ({ data }) => {
       const conversation = client.cache.identify({
         __typename: 'Conversation',
@@ -37,9 +37,9 @@ export const useOrgMessageListener = () => {
     });
 
     return () => {
-      pusher.unsubscribe(orgId);
+      socket.unsubscribe(orgId);
     };
-  }, [client.cache, orgId, pusher, userId]);
+  }, [client.cache, orgId, socket, userId]);
 };
 
 

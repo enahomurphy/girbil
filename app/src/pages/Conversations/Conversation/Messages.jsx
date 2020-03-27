@@ -1,126 +1,40 @@
 import React, { useEffect } from 'react';
-import { f7 } from 'framework7-react';
 import PropTypes from 'prop-types';
 
-import { query, mutation } from '@shared/graphql/conversations';
+import { query } from '@shared/graphql/conversations';
 import Gallery from '@/components/Gallery';
-import emitter from '@/lib/emitter';
 
+import { usePlayerEvents, useFormatMessages, useMessageClicked } from './hooks/messages';
 import EmptyState from './EmptyMessage';
-import { getPullOverLinks } from './helpers';
 
 const Messages = ({
   conversationId, threadId, isThread,
 }) => {
   const [loadMessage, { messages, loading }] = query.useMessages(conversationId, threadId);
-  const [updateState] = mutation.useMessageState();
-  const [markAsUnRead] = mutation.useMarkMessage('unread');
-  const [markAsRead] = mutation.useMarkMessage('read');
-  const [deleteMessage] = mutation.useDeleteMessage();
-  const [reactToMessage] = mutation.useAddReaction();
+  const updatedMessages = useFormatMessages(messages);
+  usePlayerEvents(threadId);
 
   useEffect(() => {
     loadMessage();
   }, [loadMessage]);
 
-  useEffect(() => {
-    const handler = ({ message, state }) => {
-      updateState({
-        conversationId: message.conversationId,
-        messageId: message.id,
-        threadId,
-        state,
-      });
-    };
-
-    emitter.onEventEmitted('play_message', handler);
-    emitter.onEventEmitted('pause_message', handler);
-  }, [threadId, updateState]);
-
-
-  const handleReact = (messageId, reaction) => {
-
-    reactToMessage({
-      messageId,
-      reaction
-    })
-  };
-
-  const onClick = async (id) => {
-    const link = isThread
-      ? `/conversations/${conversationId}/thread/${threadId}/message/${id}`
-      : `/conversations/${conversationId}/${id}`;
-
-    const onUpdate = () => {
-      const message = messages.find(({ id: mId }) => id === mId);
-      emitter.emitEvent('read_message', {
-        threadId: message.parentId,
-        message,
-      });
-    };
-    updateState(
-      {
-        conversationId,
-        messageId: id,
-        threadId,
-        state: 'toggle',
-      },
-      onUpdate,
-    );
-
-    f7.views.main.router.navigate(
-      link,
-      {
-        animate: 'f7-dive',
-        props: {
-          messageId: id,
-          threadId,
-          isThread,
-          conversationId,
-        },
-      },
-    );
-  };
+  const onClick = useMessageClicked({
+    messages,
+    isThread,
+    threadId,
+    conversationId,
+  });
 
   if (loading) {
     return null;
   }
 
-  const updatedMessages = messages.map((message) => ({
-    ...message,
-    pullover: getPullOverLinks({
-      conversationId,
-      message,
-      handleReact,
-      deleteMessage: () => {
-        deleteMessage({
-          messageId: message.id,
-          conversationId: message.conversationId,
-          threadId: message.parentId,
-        }, () => {
-          f7.views.main.router.navigate(`/conversations/${message.conversationId}`);
-        });
-      },
-      markMessage: () => (message.hasRead ? markAsUnRead : markAsRead)({
-        conversationId,
-        messageId: message.id,
-        threadId,
-      }),
-    }),
-    link: '#',
-  }));
-
   return (
-    <>
-      {
-        messages.length ? (
-          <Gallery messages={updatedMessages} onClick={onClick} />
-        ) : (
-          <EmptyState isThread={isThread} />
-        )
-      }
-      {}
-    </>
+    messages.length ? (
+      <Gallery messages={updatedMessages} onClick={onClick} />
+    ) : (
+      <EmptyState isThread={isThread} />
+    )
   );
 };
 

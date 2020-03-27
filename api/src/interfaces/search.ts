@@ -3,10 +3,10 @@ export interface SearchResult {
   name: string;
   avatar: string;
   type: string;
-  conversation_id: string;
+  conversationId: string;
   members: number;
   isPrivate: boolean;
-  is_member: boolean;
+  isMember: boolean;
 }
 
 export interface ParsedText {

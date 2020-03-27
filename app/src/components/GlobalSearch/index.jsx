@@ -50,7 +50,7 @@ const GlobalSearch = (props) => {
         onClick: handleClose,
       });
 
-      if (is_member) {
+      if (isMember) {
         options.push({
           title: 'Leave Channel',
           onClick: () => {
@@ -62,7 +62,7 @@ const GlobalSearch = (props) => {
         options.push({
           title: 'Join Channel',
           onClick: handleClose,
-          getLink: () => `/conversations/${conversation_id}/`,
+          getLink: () => `/conversations/${conversationId}/`,
         });
       }
     }
@@ -74,12 +74,12 @@ const GlobalSearch = (props) => {
         onClick: handleClose,
       });
 
-      if (conversation_id) {
+      if (conversationId) {
         options.push({
           title: 'Close Direct Message',
           onClick: () => {
             handleClose();
-            closeConversation(conversation_id);
+            closeConversation(conversationId);
           },
         });
       }
@@ -121,17 +121,17 @@ const GlobalSearch = (props) => {
       <List style={{ margin: '32px 0 0 0' }}>
         {
           searchResult.map(({
-            id, name, conversation_id, avatar, type, members, is_private, is_member,
+            id, name, conversationId, avatar, type, members, isPrivate, isMember,
           }) => (type === 'user' ? (
             <ConversationListItem
-              options={createOptions(id, type, is_member, conversation_id)}
-              getLink={() => `/conversations/${conversation_id}/`}
+              options={createOptions(id, type, isMember, conversationId)}
+              getLink={() => `/conversations/${conversationId}/`}
               key={id}
               onClick={handleClose}
-              id={conversation_id}
+              id={conversationId}
               isChannel={false}
               isActive={false}
-              isPrivate={is_private}
+              isPrivate={isPrivate}
               user={{
                 id,
                 name,
@@ -141,14 +141,14 @@ const GlobalSearch = (props) => {
             />
           ) : (
             <ConversationListItem
-              options={createOptions(id, type, is_member, conversation_id)}
-              getLink={() => `/conversations/${conversation_id}/`}
+              options={createOptions(id, type, isMember, conversationId)}
+              getLink={() => `/conversations/${conversationId}/`}
               key={id}
               onClick={handleClose}
               isActive={false}
               isChannel
-              id={conversation_id}
-              isPrivate={is_private}
+              id={conversationId}
+              isPrivate={isPrivate}
               user={{
                 id,
                 name,

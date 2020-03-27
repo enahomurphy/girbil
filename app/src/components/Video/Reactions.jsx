@@ -15,7 +15,11 @@ export const ReactionContainer = styled.div`
 
 const Reactions = ({
   reactions,
+  handleReact
 }) => {
+
+  const getEmojiNameByValue = (value) => emojis.find((i) => i.name === value).value;
+
   const reactionsWithCount = reactions && reactions.reduce((acc, value) => {
     const emoji = emojis.find((i) => i.value === value.reaction);
     acc[emoji.name] = acc[emoji.name] ? acc[emoji.name] + 1 : 1;
@@ -25,7 +29,9 @@ const Reactions = ({
   return (
     <ReactionContainer>
       {Object.keys(reactionsWithCount).map((key) => (
-        <span>{`${key}${reactionsWithCount[key]}`}</span>
+        <span onClick={() => handleReact({ value: getEmojiNameByValue(key) })}>
+          {`${key}${reactionsWithCount[key]}`}
+        </span>
       ))}
     </ReactionContainer>
   );

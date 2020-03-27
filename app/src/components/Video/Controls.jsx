@@ -11,11 +11,11 @@ import {
 } from './style';
 
 const Controls = ({
-  playing, play, pause, played, duration, seek, playBack, handleReact,
+  playing, play, pause, played, duration, seek, playBack, handleReact, show,
 }) => (
   <ControlContainer>
     {
-      !playing && (
+      (!playing || show) && (
         (
           <>
             <ForwardControls>
@@ -76,6 +76,7 @@ Controls.propTypes = {
   played: PropTypes.number.isRequired,
   playBack: PropTypes.func.isRequired,
   handleReact: PropTypes.func.isRequired,
+  show: PropTypes.bool.isRequired,
 };
 
 export default Controls;

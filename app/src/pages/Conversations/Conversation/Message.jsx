@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import { Page, f7 } from 'framework7-react';
 import PropTypes from 'prop-types';
@@ -35,6 +35,7 @@ const Message = ({
   const [reactToMessage] = mutation.useAddReaction();
 
   const conversationMeta = useConversationMeta(get(conversationData, 'conversation', {}));
+  const [showControls, setShowControls] = useState(false);
 
   useEffect(() => {
     const handleReadMessage = (args) => {
@@ -98,18 +99,24 @@ const Message = ({
         typeId={typeId}
         members={members}
       />
-      <Controls
-        play={controls.play}
-        pause={controls.pause}
-        seek={controls.seek}
-        playing={state.playing}
-        duration={state.duration || 0}
-        played={state.played}
-        playBack={controls.playbackRate}
-        handleReact={handleReact}
-      />
-      <Reactions reactions={message.reactions} handleReact={handleReact}/>
-      <Video video={video} id="video" />
+      <div
+        onMouseEnter={() => setShowControls(true)}
+        onMouseLeave={() => setShowControls(false)}
+      >
+        <Controls
+          show={showControls}
+          play={controls.play}
+          pause={controls.pause}
+          seek={controls.seek}
+          playing={state.playing}
+          duration={state.duration || 0}
+          played={state.played}
+          playBack={controls.playbackRate}
+          handleReact={handleReact}
+        />
+        <Reactions reactions={message.reactions} />
+        <Video video={video} id="video" />
+      </div>
     </Page>
   );
 };

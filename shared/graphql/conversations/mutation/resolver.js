@@ -70,8 +70,10 @@ export const updateState = (_, args, { cache }) => {
     {
       messages(items, { readField }) {
         items.forEach((item) => {
+          const itemId = readField('id', item);
           const isNotDone = readField('state', item) !== 'done';
-          if (isNotDone) {
+
+          if (isNotDone && args.messageId !== itemId) {
             cache.modify(
               cache.identify({ __typename: 'Message', id: readField('id', item) }),
               {

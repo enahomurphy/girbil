@@ -47,7 +47,7 @@ export const getPullOverLinks = ({
   return options;
 };
 
-export const useFormatMessages = (messages = [], threadId) => {
+export const useFormatMessages = (messages = []) => {
   const [markAsUnRead] = mutation.useMarkMessage('unread');
   const [markAsRead] = mutation.useMarkMessage('read');
   const [deleteMessage] = mutation.useDeleteMessage();
@@ -67,9 +67,9 @@ export const useFormatMessages = (messages = [], threadId) => {
         });
       },
       markMessage: () => (message.hasRead ? markAsUnRead : markAsRead)({
-        conversationId: messages.conversationId,
+        conversationId: message.conversationId,
         messageId: message.id,
-        threadId,
+        threadId: message.parentId,
       }),
     }),
     link: '#',
@@ -95,24 +95,11 @@ const changeRoute = (message) => {
 };
 
 export const useMessageClicked = (messages) => {
-  const [updateState] = mutation.useMessageState();
-
   const handler = (id) => {
     const message = messages.find(({ id: mId }) => id === mId);
     if (message) {
-      const onUpdate = () => {
-        emitter.emitEvent('read_message', {
-          threadId: message.parentId,
-          message,
-        });
-      };
-      updateState(
-        {
-          messageId: id,
-          state: 'toggle',
-        },
-        onUpdate,
-      );
+      const state = message.state === 'playing' ? 'pause' : 'playing';
+      emitter.emitEvent('play_message', { message, state });
       changeRoute(message);
     }
   };
@@ -120,21 +107,32 @@ export const useMessageClicked = (messages) => {
   return handler;
 };
 
-export const usePlayerEvents = (threadId) => {
+export const useReadEvent = (getMessage) => {
+  const [markAsRead] = mutation.useMarkMessage('read');
+
+  useEffect(() => {
+    const handleReadMessage = (args) => {
+      const variables = { messageId: args.message.id };
+
+      if (!args.message.hasRead) {
+        markAsRead(variables);
+      }
+    };
+
+    emitter.onLastListenedEventEmitted('read_message', handleReadMessage);
+    return () => emitter.removeListener('read_message', handleReadMessage);
+  }, [getMessage, markAsRead]);
+};
+
+export const usePlayerPlayPauseEvents = (threadId) => {
   const [updateState] = mutation.useMessageState();
 
   useEffect(() => {
     const handler = ({ message, state }) => {
-      updateState({
-        conversationId: message.conversationId,
-        messageId: message.id,
-        threadId,
-        state,
-      });
+      updateState({ messageId: message.id, state });
     };
 
-    emitter.onEventEmitted('play_message', handler);
-    emitter.onEventEmitted('pause_message', handler);
+    emitter.onLastListenedEventEmitted('play_message', handler);
   }, [threadId, updateState]);
 };
 

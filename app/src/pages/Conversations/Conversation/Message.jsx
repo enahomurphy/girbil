@@ -10,12 +10,16 @@ import {
 } from '@/components/Video';
 import { get } from '@shared/lib';
 import emitter from '@/lib/emitter';
-import { useGoBack, useReadEvent } from './hooks/message';
+import { useGoBack } from './hooks/message';
 
 const Message = ({
   isThread, conversationId, messageId, threadId,
 }) => {
-  const [getMessage, { data }] = useLazyQuery(query.GET_MESSAGE);
+  const [getMessage, { data }] = useLazyQuery(query.GET_MESSAGE, {
+    onCompleted({ message }) {
+      emitter.emitEvent('play_message', { message, state: 'playing' });
+    },
+  });
   const message = get(data, 'message', {});
 
   const { params } = useVideoData(message, 'video');
@@ -25,6 +29,7 @@ const Message = ({
     width: params.width,
     height: params.height,
     onPlay: () => emitter.emitEvent('play_message', { message, state: 'playing' }),
+    onPause: () => emitter.emitEvent('play_message', { message, state: 'pause' }),
     onEnd: () => emitter.emitEvent('next_message', { id: message.id, action: 'next' }),
   });
 
@@ -45,15 +50,8 @@ const Message = ({
     members = 0,
   } = useConversationMeta(get(conversationData, 'conversation', {}));
 
-  useReadEvent();
   useEffect(() => {
-    getMessage({
-      variables: {
-        conversationId,
-        messageId,
-        threadId,
-      },
-    });
+    getMessage({ variables: { messageId } });
   }, [getMessage, conversationId, threadId, messageId]);
 
   const handleReact = ({ value }) => {

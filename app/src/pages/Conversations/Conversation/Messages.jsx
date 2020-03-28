@@ -6,7 +6,8 @@ import { query } from '@shared/graphql/conversations';
 import Gallery from '@/components/Gallery';
 
 import {
-  usePlayerEvents, useFormatMessages, useMessageClicked, usePlayerPrevNextEvent,
+  usePlayerPlayPauseEvents, useFormatMessages,
+  useMessageClicked, usePlayerPrevNextEvent, useReadEvent,
 } from './hooks/messages';
 import EmptyState from './EmptyMessage';
 
@@ -17,8 +18,9 @@ const Messages = ({
   const updatedMessages = useFormatMessages(messages);
   const onClick = useMessageClicked(messages);
 
-  usePlayerEvents(threadId);
+  usePlayerPlayPauseEvents(threadId);
   usePlayerPrevNextEvent(messages, isThread, threadId);
+  useReadEvent();
 
   useEffect(() => {
     loadMessage();

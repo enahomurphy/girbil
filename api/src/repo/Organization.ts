@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import {
   EntityRepository, Repository, getRepository, getManager,
 } from 'typeorm';
@@ -111,16 +112,16 @@ class OrganizationRepository extends Repository<Organization> {
     const searchTypeMap = {
       'is:channel': 'channel',
       'is:unreads': 'unread',
-      'is:user': 'user'
+      'is:user': 'user',
     };
     const textArr = text.split(' ');
-    const searchTypeText = textArr.find(i => i.startsWith('is:'));
+    const searchTypeText = textArr.find((i) => i.startsWith('is:'));
     const searchType = searchTypeMap[searchTypeText] || 'all';
-    const searchText = textArr.filter(i => i !== searchTypeText).join(' ');
+    const searchText = textArr.filter((i) => i !== searchTypeText).join(' ');
     return {
       searchType,
       searchText: searchText.trim().length ? `%${searchText}%` : '',
-    }
+    };
   }
 
   private getQueryMap(searchText: string, organizationId: string, userId: string): QueryMap {
@@ -165,21 +166,21 @@ class OrganizationRepository extends Repository<Organization> {
     return {
       channel: {
         query: `${channelQuery}`,
-        params: [searchText, organizationId, userId]
+        params: [searchText, organizationId, userId],
       },
       user: {
         query: `${userQuery}`,
-        params: [searchText, organizationId]
+        params: [searchText, organizationId],
       },
       all: {
         query: `${channelQuery} UNION ALL ${userQuery}`,
-        params: [searchText, organizationId, userId]
+        params: [searchText, organizationId, userId],
       },
     };
   }
 
   async search(organizationId: string, text: string, userId: string): Promise<SearchResult[]> {
-    const {searchType, searchText} = this.getParseSearchText(text);
+    const { searchType, searchText } = this.getParseSearchText(text);
     const queryMap = this.getQueryMap(searchText, organizationId, userId);
     const { query, params } = queryMap[searchType];
     const result = await this.entityManager.query(query, params);

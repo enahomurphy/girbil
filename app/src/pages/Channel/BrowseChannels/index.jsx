@@ -10,7 +10,7 @@ import BrowseChannels from './BrowseChannels';
 
 const BrowseChannel = () => {
   const [search, { data, loading }] = useLazyQuery(
-    query.SEARCH_CHANNELS, { fetchPolicy: 'network-only' },
+    query.CHANNELS_NOT_A_MEMBER, { fetchPolicy: 'network-only' },
   );
   const [value, setValue] = useState('');
 
@@ -29,7 +29,7 @@ const BrowseChannel = () => {
     <BrowseChannels
       loading={loading}
       handleSearchChange={setValue}
-      channels={get(data, 'channels', [])}
+      channels={get(data, 'searchChannelsNotIn', []) || []}
       onCreateChannel={handleCreateChannel}
     />
   );

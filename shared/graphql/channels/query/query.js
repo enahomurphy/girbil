@@ -63,6 +63,21 @@ export const GET_USERS_NOT_IN_CHANNEL = gql`
   }
 `;
 
+export const CHANNELS_NOT_A_MEMBER = gql`
+  query searchChannelsNotIn($text: String) {
+    searchChannelsNotIn(text: $text) {
+      id
+      avatar,
+      members
+      name
+      userId
+      conversation {
+        id
+      }
+    }
+  }
+`;
+
 export default {
   SEARCH_CHANNELS,
   GET_CHANNEL_MEMBERS,

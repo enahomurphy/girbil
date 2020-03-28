@@ -110,6 +110,38 @@ class ChannelRepository extends Repository<Channel> {
       count: result[1],
     };
   }
+
+  async getPublicChannelsUserIsNotIn(
+    organizationId: string, userId: string, text?: string,
+  ): Promise<Channel[]> {
+    const query = this.createQueryBuilder('channel')
+      .setParameter('organizationId', organizationId)
+      .setParameter('userId', userId)
+      .setParameter('text', `${text}%`)
+      .leftJoinAndSelect('channel.conversation', 'conversation')
+      .where("channel.organizationId = :organizationId AND channel.isPrivate = 'false'::boolean")
+      .addSelect('( SELECT COUNT(*) FROM channel_users WHERE channel_id = channel.id )', 'channel_members');
+
+    if (text) {
+      query.andWhere('channel.name ILIKE :text');
+    }
+
+    return query.andWhere(
+      ` (
+          SELECT 
+            COUNT(channel_users.user_id) = 0 as not_joined
+          FROM 
+            channel_users
+          WHERE 
+          channel_users.user_id = :userId 
+          AND 
+            channel_users.channel_id = channel.id
+          LIMIT 1
+        )`,
+    )
+      .limit(50)
+      .getMany();
+  }
 }
 
 export default ChannelRepository;

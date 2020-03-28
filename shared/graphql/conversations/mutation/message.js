@@ -97,29 +97,6 @@ export const useMessageState = () => {
   return [handler];
 };
 
-export const markMessage = (client, variables, state) => {
-  const mutation = state === 'read' ? MARK_MESSAGE_AS_READ : MARK_MESSAGE_AS_UNREAD;
-
-  return client.mutate(
-    {
-      mutation,
-      variables,
-      fetchPolicy: 'no-cache',
-      update: (store) => {
-        store.modify(
-          store.identify({ __typename: 'Message', id: variables.messageId }),
-          {
-            hasRead(value) {
-              return !value;
-            },
-          },
-        );
-      },
-      refetchQueries: ['conversations'],
-    },
-  );
-};
-
 export const useDeleteMessage = () => {
   const [deleteMessage] = useMutation(DELETE_MESSAGE);
 

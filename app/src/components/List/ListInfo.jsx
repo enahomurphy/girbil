@@ -21,16 +21,16 @@ const ListInfo = ({ unreadCount, options, id }) => (
           <Popover width="176px" className={`popover-menu${id}`}>
             <List>
               {
-            options.map(({ title, getLink, onClick }) => (
-              <ListItem
-                key={title}
-                link={getLink ? getLink() : '#'}
-                onClick={onClick}
-                popoverClose
-                title={title}
-              />
-            ))
-          }
+                options.map(({ title, getLink, onClick }) => (
+                  <ListItem
+                    key={title}
+                    link={getLink ? getLink() : '#'}
+                    onClick={onClick}
+                    popoverClose={`.popover-menu${id}`}
+                    title={title}
+                  />
+                ))
+              }
             </List>
           </Popover>
           <Link popoverOpen={`.popover-menu${id}`} iconF7="ellipsis_vertical" color="white " />

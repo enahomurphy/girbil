@@ -121,17 +121,23 @@ class ConversationRepository extends Repository<Conversation> {
     const result = await query.andWhere(`
       (
         SELECT COUNT(id) = 0 as has_conversation
-            FROM conversations as conversation 
-        WHERE 
+          FROM conversations as conversation 
+        WHERE (
+          conversation.organization_id = :organizationId
+          AND conversation.receiver_type = :type
+          AND conversation.open != 'false'::boolean
+        )
+        AND (
+          (
             conversation.receiver_id = :userId
-        AND 
-            conversation.creator_id = org_user.user_id
-        OR 
-            conversation.creator_id = :userId
-        AND 
-            conversation.receiver_id = org_user.user_id
-        AND 
-            conversation.receiver_type = :type
+            AND conversation.creator_id = org_user.user_id
+          )
+          OR (
+              conversation.creator_id = :userId
+              AND conversation.receiver_id = org_user.user_id
+            )
+          )  
+        LIMIT 1
       )
     `)
       .take(50)

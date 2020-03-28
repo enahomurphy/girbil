@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { CONVERSATION_FRAGMENT } from '../query';
 
 export const UPDATE_MESSAGE = gql`
   mutation updateMessage($id: String!, $thumbnail: String, $url: String) {
@@ -113,6 +114,16 @@ export const REACT_TO_MESSAGE = gql`
   }
 `;
 
+export const GET_USER_CONVERSATION_OR_CREATE = gql`
+  mutation getUserConversationOrCreate($userId: String!) {
+    getUserConversationOrCreate(userId: $userId) {
+      ...ConversationParts
+    }
+  }
+  ${CONVERSATION_FRAGMENT}
+`;
+
+
 export default {
   UPDATE_MESSAGE,
   ADD_MESSAGE,
@@ -121,4 +132,5 @@ export default {
   MARK_MESSAGE_AS_READ,
   CLOSE_CONVERSATION,
   REACT_TO_MESSAGE,
+  GET_USER_CONVERSATION_OR_CREATE,
 };

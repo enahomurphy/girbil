@@ -16,7 +16,6 @@ const View = ({ channelId }) => {
       variables: { channelId },
       fetchPolicy: 'network-only',
     },
-
   );
 
   const members = get(data, 'channelMembers.members', []);

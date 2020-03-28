@@ -1,29 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { MESSAGES, CONVERSATION_MESSAGES } from '../query';
+import { CONVERSATION_MESSAGES } from '../query';
 import { UPDATE_MESSAGE } from './mutation';
 import { storage } from '../../../lib';
 
-
-export const updateMessage = (_, args, { cache }) => {
-  const data = cache.readQuery({
-    query: MESSAGES,
-  });
-
-  const message = data.messages.find((m) => args.id === m.id);
-
-  if (message) {
-    const updatedMessage = {
-      ...message,
-      url: args.input.url,
-      state: 'done',
-    };
-    cache.writeQuery({
-      UPDATE_MESSAGE,
-      data: { message: updatedMessage },
-    });
-  }
-};
 
 export const readMessage = (_, { id, conversationId }, { cache }) => {
   const data = cache.readQuery({
@@ -40,6 +20,17 @@ export const readMessage = (_, { id, conversationId }, { cache }) => {
 };
 
 export const addMessage = (_, { conversationId, messageId }, { cache }) => {
+  const variables = { conversationId };
+
+  if (messageId) {
+    variables.messageId = messageId;
+  }
+
+  const data = cache.readQuery({
+    query: CONVERSATION_MESSAGES,
+    variables,
+  });
+
   const { id, avatar, name } = storage.payload;
   const message = {
     id: uuidv4(),
@@ -62,14 +53,13 @@ export const addMessage = (_, { conversationId, messageId }, { cache }) => {
     },
   };
 
-  cache.modify(
-    'ROOT_QUERY',
-    {
-      messages(items) {
-        return [...items, message];
-      },
-    },
-  );
+  const messages = [...data.messages, message];
+
+  cache.writeQuery({
+    query: CONVERSATION_MESSAGES,
+    variables,
+    data: { messages },
+  });
 
   return message;
 };
@@ -105,6 +95,7 @@ export const updateState = (_, args, { cache }) => {
         if (args.state === 'toggle') {
           return value === 'playing' ? 'pause' : 'playing';
         }
+
         return args.state;
       },
     },

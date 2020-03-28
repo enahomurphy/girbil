@@ -63,7 +63,7 @@ export const useFormatMessages = (messages = [], threadId) => {
           conversationId: message.conversationId,
           threadId: message.parentId,
         }, () => {
-          f7.views.main.router.navigate(`/conversations/${message.conversationId}`);
+          f7.views.conversation.router.navigate(`/conversations/${message.conversationId}/record`);
         });
       },
       markMessage: () => (message.hasRead ? markAsUnRead : markAsRead)({

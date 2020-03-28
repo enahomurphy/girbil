@@ -85,7 +85,6 @@ export const StyledSlide = styled.div`
 export const SliderWrapper = styled.div`
   width: 100%;
   height: 120px;
-  background: red;
 `;
 
 export const SliderNav = styled.div`

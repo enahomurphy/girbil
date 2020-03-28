@@ -28,7 +28,6 @@ export const StyledSlide = styled.div`
 export const SliderWrapper = styled.div`
   width: 100%;
   height: var(--gb-message-height);
-  background: red;
   position: relative;
   box-sizing: border-box;
 `;
@@ -70,7 +69,6 @@ export const SliderNavWrapper = styled.div`
   right: ${({ right }) => (right ? 0 : 'initial')};
 
   .swiper-button-disabled {
-    background-color: red;
     display: none;
   }
 `;

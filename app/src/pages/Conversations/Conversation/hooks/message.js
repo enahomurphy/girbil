@@ -26,14 +26,17 @@ export const useReadEvent = (getMessage) => {
 };
 
 export const useGoBack = ({ message, isThread }) => {
-  const [updateState] = mutation.useMessageState();
-
   const handler = () => {
-    updateState({ state: 'done', messageId: message.id });
     if (isThread) {
-      f7.views.conversationThread.router.back();
+      f7.views.conversationThread.router.back(
+        `/conversations/${message.conversationId}/thread/record`,
+        { force: true },
+      );
     } else {
-      f7.views.conversation.router.back();
+      f7.views.conversation.router.back(
+        `/conversations/${message.conversationId}/record`,
+        { force: true },
+      );
     }
   };
 

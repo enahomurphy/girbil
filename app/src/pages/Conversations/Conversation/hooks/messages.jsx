@@ -102,8 +102,6 @@ export const useMessageClicked = (messages) => {
 
     if (message) {
       changeRoute(message);
-      const state = message.state === 'playing' ? 'pause' : 'playing';
-      emitter.emitEvent('play_message', { message, state });
     }
   };
 
@@ -115,7 +113,10 @@ export const useReadEvent = (getMessage) => {
 
   useEffect(() => {
     const handleReadMessage = (args) => {
-      const variables = { messageId: args.message.id };
+      const variables = {
+        messageId: args.message.id,
+        conversationId: args.message.conversationId,
+      };
 
       if (!args.message.hasRead) {
         markAsRead(variables);

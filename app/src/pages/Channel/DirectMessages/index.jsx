@@ -7,8 +7,13 @@ import { get } from '@shared/lib';
 
 import DirectMessage from './DirectMessages';
 
-const BrowseChannel = () => {
-  const [search, { data, loading }] = useLazyQuery(query.GET_USERS_WITHOUT_CONVERSATION);
+const BrowseDirectMessage = () => {
+  const [search, { data, loading }] = useLazyQuery(
+    query.GET_USERS_WITHOUT_CONVERSATION,
+    {
+      fetchPolicy: 'network-only',
+    },
+  );
   const [value, setValue] = useState('');
 
   useDebounce(() => {
@@ -27,4 +32,4 @@ const BrowseChannel = () => {
   );
 };
 
-export default BrowseChannel;
+export default BrowseDirectMessage;

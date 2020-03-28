@@ -47,7 +47,7 @@ export const getPullOverLinks = ({
   if (get(storage, 'payload.id') === sender.id) {
     options.push({
       type: 'delete video',
-      title: 'delete video',
+      title: 'Delete video',
       onClick: () => deleteMessage(id),
     });
   }

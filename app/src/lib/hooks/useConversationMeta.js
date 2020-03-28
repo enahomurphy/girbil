@@ -10,7 +10,7 @@ const conversationMeta = (conversation) => {
 
   const data = {
     id,
-    name: get(receiver || channel, 'name'),
+    name: get(receiver || channel, 'name', ''),
     typeId: get(receiver || channel, 'id', ''),
     isPrivate: get(receiver || channel, 'isPrivate', false),
     avatar: get(receiver || channel, 'avatar', false),

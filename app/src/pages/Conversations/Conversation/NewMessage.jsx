@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useVideo } from 'react-use';
 import { useMachine } from '@xstate/react';
 import { useMutation, useLazyQuery, useQuery } from '@apollo/client';
+import { f7 } from 'framework7-react';
 import PropTypes from 'prop-types';
 
 import RecordMachine from '@/states/record';
@@ -119,6 +120,7 @@ const NewMessage = ({ isThread, conversationId }) => {
           name={name}
           isPrivate={isPrivate}
           back
+          goBack={() => f7.views.main.router.back()}
           showBack={matches('record.idle') && matches('processing.idle')}
           isThread={isThread}
           onClick={() => {}}

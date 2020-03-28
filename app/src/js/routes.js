@@ -34,25 +34,7 @@ const routes = [
     name: 'conversation',
     path: '/conversations/:conversationId',
     component: Conversation,
-    tabs: [
-      {
-        path: '/',
-        id: 'record',
-        component: NewMessage,
-      },
-      {
-        path: '/:messageId',
-        id: 'view',
-        component: Message,
-        options: {
-          props: {
-            isThread: false,
-          },
-          animate: true,
-          transition: 'f7-cover-v',
-        },
-      },
-    ],
+
   },
   {
     name: 'thread',

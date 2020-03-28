@@ -77,6 +77,56 @@ export const useFormatMessages = (messages = [], threadId) => {
 };
 
 
+const changeRoute = ({
+  threadId, message, isThread,
+}) => {
+  const link = isThread
+    ? `/conversations/${message.conversationId}/thread/${threadId}/message/${message.id}`
+    : `/conversations/${message.conversationId}/messages/${message.id}`;
+
+  f7.views.conversation.router.navigate(
+    link,
+    {
+      ignoreCache: true,
+      props: {
+        message,
+        threadId,
+        isThread,
+      },
+    },
+  );
+};
+
+export const useMessageClicked = ({
+  messages, isThread, threadId, conversationId,
+}) => {
+  const [updateState] = mutation.useMessageState();
+
+  const handler = (id) => {
+    const message = messages.find(({ id: mId }) => id === mId);
+    if (message) {
+      const onUpdate = () => {
+        emitter.emitEvent('read_message', {
+          threadId: message.parentId,
+          message,
+        });
+      };
+      updateState(
+        {
+          conversationId,
+          message,
+          threadId,
+          state: 'toggle',
+        },
+        onUpdate,
+      );
+      changeRoute({ message, threadId, isThread });
+    }
+  };
+
+  return handler;
+};
+
 export const usePlayerEvents = (threadId) => {
   const [updateState] = mutation.useMessageState();
 
@@ -95,65 +145,60 @@ export const usePlayerEvents = (threadId) => {
   }, [threadId, updateState]);
 };
 
-export const usePrevNextEvents = (threadId) => {
+export const usePlayerPrevNextEvent = (messages, isThread, threadId) => {
   const [updateState] = mutation.useMessageState();
 
   useEffect(() => {
-    const handler = ({ message, state }) => {
-      updateState({
-        conversationId: message.conversationId,
-        messageId: message.id,
-        threadId,
-        state,
-      });
+    const getNextMessage = ({ id, action }) => {
+      const messageLength = messages.length - 1;
+      const messageIndex = messages.findIndex((mId) => mId.id === id);
+      const hasMessage = (messageIndex > -1);
+
+      if (hasMessage && action === 'next') {
+        const isLast = messageIndex === messageLength;
+
+        if (isLast) {
+          return null;
+        }
+
+        return messages[messageIndex + 1];
+      }
+
+      if (hasMessage && action === 'prev') {
+        const isFirst = messageIndex === 0;
+
+        if (isFirst) {
+          return null;
+        }
+
+        return messages[messageIndex - 1];
+      }
+
+
+      return null;
     };
 
-    emitter.onEventEmitted('play_message', handler);
-    emitter.onEventEmitted('pause_message', handler);
-  }, [threadId, updateState]);
-};
+    const handler = ({ id, action }) => {
+      const message = getNextMessage({ id, action });
 
-
-export const useMessageClicked = ({
-  messages, isThread, threadId, conversationId,
-}) => {
-  const [updateState] = mutation.useMessageState();
-
-  const handler = (id) => {
-    const link = isThread
-      ? `/conversations/${conversationId}/thread/${threadId}/message/${id}`
-      : `/conversations/${conversationId}/${id}`;
-
-    const onUpdate = () => {
-      const message = messages.find(({ id: mId }) => id === mId);
-      emitter.emitEvent('read_message', {
-        threadId: message.parentId,
-        message,
-      });
-    };
-    updateState(
-      {
-        conversationId,
-        messageId: id,
-        threadId,
-        state: 'toggle',
-      },
-      onUpdate,
-    );
-
-    f7.views.main.router.navigate(
-      link,
-      {
-        animate: 'f7-dive',
-        props: {
-          messageId: id,
+      if (message) {
+        updateState({
+          conversationId: message.conversationId,
+          messageId: message.id,
           threadId,
-          isThread,
-          conversationId,
-        },
-      },
-    );
-  };
+          state: 'playing',
+        });
 
-  return handler;
+        changeRoute({
+          id: message.id, threadId, isThread, conversationId: message.conversationId,
+        });
+      }
+    };
+
+    emitter.onLastListenedEventEmitted('next_message', handler);
+
+    return () => {
+      emitter.removeListener('next_message', handler);
+    };
+  }, [isThread, messages, threadId, updateState]);
 };

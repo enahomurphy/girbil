@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 import { query } from '@shared/graphql/conversations';
 import Gallery from '@/components/Gallery';
 
-import { usePlayerEvents, useFormatMessages, useMessageClicked } from './hooks/messages';
+import {
+  usePlayerEvents, useFormatMessages, useMessageClicked, usePlayerPrevNextEvent,
+} from './hooks/messages';
 import EmptyState from './EmptyMessage';
 
 const Messages = ({
@@ -12,18 +14,20 @@ const Messages = ({
 }) => {
   const [loadMessage, { messages, loading }] = query.useMessages(conversationId, threadId);
   const updatedMessages = useFormatMessages(messages);
-  usePlayerEvents(threadId);
-
-  useEffect(() => {
-    loadMessage();
-  }, [loadMessage]);
-
   const onClick = useMessageClicked({
     messages,
     isThread,
     threadId,
     conversationId,
   });
+
+  usePlayerEvents(threadId);
+  usePlayerPrevNextEvent(messages, isThread, threadId);
+
+  useEffect(() => {
+    loadMessage();
+  }, [loadMessage]);
+
 
   if (loading) {
     return null;

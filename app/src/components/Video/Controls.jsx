@@ -11,7 +11,7 @@ import {
 } from './style';
 
 const Controls = ({
-  playing, play, pause, played, duration, seek, playBack, handleReact, show,
+  playing, play, pause, played, duration, seek, playBack, handleReact, show, next, prev,
 }) => (
   <ControlContainer>
     {
@@ -19,7 +19,7 @@ const Controls = ({
         (
           <>
             <ForwardControls>
-              <Button>
+              <Button onClick={prev}>
                 <Previous />
               </Button>
               <Button onClick={playing ? pause : play}>
@@ -33,7 +33,7 @@ const Controls = ({
                   }}
                 />
               </Button>
-              <Button>
+              <Button onClick={next}>
                 <Next />
               </Button>
             </ForwardControls>
@@ -66,12 +66,13 @@ const Controls = ({
   </ControlContainer>
 );
 
-
 Controls.propTypes = {
   playing: PropTypes.bool.isRequired,
   play: PropTypes.func.isRequired,
   pause: PropTypes.func.isRequired,
   seek: PropTypes.func.isRequired,
+  next: PropTypes.func.isRequired,
+  prev: PropTypes.func.isRequired,
   duration: PropTypes.number.isRequired,
   played: PropTypes.number.isRequired,
   playBack: PropTypes.func.isRequired,

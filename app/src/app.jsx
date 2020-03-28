@@ -86,7 +86,6 @@ const MainApp = () => {
               <View main url="/conversations" />
             ) : (
               <View main url="/" />
-
             )
           }
           </App>

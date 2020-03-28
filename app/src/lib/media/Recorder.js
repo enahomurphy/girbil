@@ -75,8 +75,8 @@ class Recorder {
   }
 
   reset() {
-    this.media.reset();
-    this.gif.reset();
+    this.media.destroy();
+    this.gif.destroy();
   }
 
   file(name) {

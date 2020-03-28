@@ -40,17 +40,6 @@ export const readMessage = (_, { id, conversationId }, { cache }) => {
 };
 
 export const addMessage = (_, { conversationId, messageId }, { cache }) => {
-  const variables = { conversationId };
-
-  if (messageId) {
-    variables.messageId = messageId;
-  }
-
-  const data = cache.readQuery({
-    query: CONVERSATION_MESSAGES,
-    variables,
-  });
-
   const { id, avatar, name } = storage.payload;
   const message = {
     id: uuidv4(),
@@ -73,56 +62,51 @@ export const addMessage = (_, { conversationId, messageId }, { cache }) => {
     },
   };
 
-  const messages = [...data.messages, message];
-
-  cache.writeQuery({
-    query: CONVERSATION_MESSAGES,
-    variables,
-    data: { messages },
-  });
+  cache.modify(
+    'ROOT_QUERY',
+    {
+      messages(items) {
+        return [...items, message];
+      },
+    },
+  );
 
   return message;
 };
 
 export const updateState = (_, args, { cache }) => {
-  const {
-    conversationId, messageId, threadId, state,
-  } = args;
+  cache.modify(
+    'ROOT_QUERY',
+    {
+      messages(items, { readField }) {
+        items.forEach((item) => {
+          const isNotDone = readField('state', item) !== 'done';
+          if (isNotDone) {
+            cache.modify(
+              cache.identify({ __typename: 'Message', id: readField('id', item) }),
+              {
+                state() {
+                  return 'done';
+                },
+              },
+            );
+          }
+        });
 
-  const variables = { conversationId };
+        return [...items];
+      },
+    },
+  );
 
-  if (threadId) {
-    variables.messageId = threadId;
-  }
-
-  const data = cache.readQuery({
-    query: CONVERSATION_MESSAGES,
-    variables,
-  });
-
-  const messages = data.messages.map((message) => {
-    if (message.id === messageId) {
-      let newState = state;
-
-      if (
-        ((state === 'toggle') && (message.state === 'done'))
-        || (message.state === 'pause')
-      ) {
-        newState = 'playing';
-      } else if (state === 'toggle' && message.state === 'playing') {
-        newState = 'pause';
-      }
-
-      return { ...message, state: newState };
-    }
-
-    return { ...message, state: 'done' };
-  });
-
-
-  cache.writeQuery({
-    query: CONVERSATION_MESSAGES,
-    variables,
-    data: { messages },
-  });
+  cache.modify(
+    cache.identify({ __typename: 'Message', id: args.messageId }),
+    {
+      state(value) {
+        if (args.state === 'toggle') {
+          return value === 'playing' ? 'pause' : 'playing';
+        }
+        return args.state;
+      },
+    },
+  );
 };

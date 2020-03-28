@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
@@ -14,12 +15,7 @@ const Messages = ({
 }) => {
   const [loadMessage, { messages, loading }] = query.useMessages(conversationId, threadId);
   const updatedMessages = useFormatMessages(messages);
-  const onClick = useMessageClicked({
-    messages,
-    isThread,
-    threadId,
-    conversationId,
-  });
+  const onClick = useMessageClicked(messages);
 
   usePlayerEvents(threadId);
   usePlayerPrevNextEvent(messages, isThread, threadId);

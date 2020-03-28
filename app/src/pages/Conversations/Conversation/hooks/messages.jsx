@@ -77,11 +77,9 @@ export const useFormatMessages = (messages = [], threadId) => {
 };
 
 
-const changeRoute = ({
-  threadId, message, isThread,
-}) => {
-  const link = isThread
-    ? `/conversations/${message.conversationId}/thread/${threadId}/message/${message.id}`
+const changeRoute = (message) => {
+  const link = message.parentId
+    ? `/conversations/${message.conversationId}/thread/${message.parentId}/message/${message.id}`
     : `/conversations/${message.conversationId}/messages/${message.id}`;
 
   f7.views.conversation.router.navigate(
@@ -90,16 +88,13 @@ const changeRoute = ({
       ignoreCache: true,
       props: {
         message,
-        threadId,
-        isThread,
+        isThread: Boolean(message.parentId),
       },
     },
   );
 };
 
-export const useMessageClicked = ({
-  messages, isThread, threadId, conversationId,
-}) => {
+export const useMessageClicked = (messages) => {
   const [updateState] = mutation.useMessageState();
 
   const handler = (id) => {
@@ -113,14 +108,12 @@ export const useMessageClicked = ({
       };
       updateState(
         {
-          conversationId,
-          message,
-          threadId,
+          messageId: id,
           state: 'toggle',
         },
         onUpdate,
       );
-      changeRoute({ message, threadId, isThread });
+      changeRoute(message);
     }
   };
 
@@ -145,7 +138,7 @@ export const usePlayerEvents = (threadId) => {
   }, [threadId, updateState]);
 };
 
-export const usePlayerPrevNextEvent = (messages, isThread, threadId) => {
+export const usePlayerPrevNextEvent = (messages) => {
   const [updateState] = mutation.useMessageState();
 
   useEffect(() => {
@@ -174,7 +167,6 @@ export const usePlayerPrevNextEvent = (messages, isThread, threadId) => {
         return messages[messageIndex - 1];
       }
 
-
       return null;
     };
 
@@ -185,13 +177,11 @@ export const usePlayerPrevNextEvent = (messages, isThread, threadId) => {
         updateState({
           conversationId: message.conversationId,
           messageId: message.id,
-          threadId,
+          threadId: message.parentId,
           state: 'playing',
         });
 
-        changeRoute({
-          id: message.id, threadId, isThread, conversationId: message.conversationId,
-        });
+        changeRoute(message);
       }
     };
 
@@ -200,5 +190,5 @@ export const usePlayerPrevNextEvent = (messages, isThread, threadId) => {
     return () => {
       emitter.removeListener('next_message', handler);
     };
-  }, [isThread, messages, threadId, updateState]);
+  }, [messages, updateState]);
 };

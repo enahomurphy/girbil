@@ -25,7 +25,7 @@ const Message = ({
     width: params.width,
     height: params.height,
     onPlay: () => emitter.emitEvent('play_message', { message, state: 'playing' }),
-    onEnd: () => emitter.emitEvent('pause_message', { message, state: 'pause' }),
+    onEnd: () => emitter.emitEvent('next_message', { id: message.id, action: 'next' }),
   });
 
   const { data: conversationData } = useQuery(
@@ -54,7 +54,7 @@ const Message = ({
         threadId,
       },
     });
-  }, [conversationId, getMessage, messageId, threadId]);
+  }, [getMessage, conversationId, threadId, messageId]);
 
   const handleReact = ({ value }) => {
     reactToMessage({

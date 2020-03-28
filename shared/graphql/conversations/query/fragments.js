@@ -15,6 +15,11 @@ export const MESSAGE_FRAGMENT = gql`
       userId
       reaction
     }
+    sender {
+      id
+      name
+      avatar
+    }
   }
 `;
 

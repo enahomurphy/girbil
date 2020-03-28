@@ -1,23 +1,17 @@
 import {
   USER_CONVERSATIONS,
-  CONVERSATION_MESSAGES,
   CONVERSATION,
 } from './query';
 import { get } from '../../../lib';
+import { MESSAGE_FRAGMENT } from './fragments';
 
-export const message = (_, { conversationId, messageId, threadId }, { cache }) => {
-  const variables = { conversationId };
-
-  if (threadId) {
-    variables.messageId = threadId;
-  }
-
-  const { messages } = cache.readQuery({
-    query: CONVERSATION_MESSAGES,
-    variables,
+export const message = (_, { messageId }, { cache }) => {
+  const foundMessage = cache.readFragment({
+    fragment: MESSAGE_FRAGMENT,
+    id: cache.identify({ __typename: 'Message', id: messageId }),
   });
 
-  return messages.find((item) => item.id === messageId);
+  return foundMessage;
 };
 
 export const conversation = (_, { conversationId }, { cache }) => {

@@ -7,11 +7,6 @@ export const MESSAGES = gql`
   query messages @client {
     messages {
       ...MessageParts
-      sender {
-        id
-        name
-        avatar
-      }
     }
   }
   ${MESSAGE_FRAGMENT}

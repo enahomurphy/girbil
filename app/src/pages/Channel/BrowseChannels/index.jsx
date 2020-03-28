@@ -9,7 +9,9 @@ import { f7 } from 'framework7-react';
 import BrowseChannels from './BrowseChannels';
 
 const BrowseChannel = () => {
-  const [search, { data, loading }] = useLazyQuery(query.SEARCH_CHANNELS);
+  const [search, { data, loading }] = useLazyQuery(
+    query.SEARCH_CHANNELS, { fetchPolicy: 'network-only' },
+  );
   const [value, setValue] = useState('');
 
   useDebounce(() => {

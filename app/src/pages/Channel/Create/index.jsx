@@ -9,6 +9,7 @@ import axios from 'axios';
 import Header from '@/components/Header';
 import GifRecorder from '@/components/Recorder/GifRecorder';
 import { mutation, query } from '@shared/graphql/channels';
+import { query as conversationQuery } from '@shared/graphql/conversations';
 import { query as uploadQuery } from '@shared/graphql/upload';
 import { get, storage, pick } from '@shared/lib';
 import { Gif } from '@/lib/media';
@@ -81,32 +82,41 @@ const CreateChannel = ({ $f7router, title, channelId }) => {
       // send this to bug snag
     } finally {
       f7.dialog.close();
-      $f7router.navigate(`/channels/${uploadId}`);
     }
   };
 
-  const update = async (_, { data: { createChannel: channel } }) => {
+  const update = async (_, {
+    data: {
+      createChannel: createdChannel,
+      updateChannel: updatedChannel,
+    },
+  }) => {
+    const channel = (createdChannel || updatedChannel);
     if (channelAvatar.blob) {
-      handleAvatarChange(channelAvatar.blob, channelId || channel.id);
+      await handleAvatarChange(channelAvatar.blob, channel.id);
+      $f7router.navigate(`/conversations/${channel.conversation.id}`);
     } else {
       f7.dialog.close();
-      $f7router.navigate(`/channels/${channelId || channel.id}`);
+      $f7router.navigate(`/conversations/${channel.conversation.id}`);
     }
   };
 
   const handleCreateOrUpdate = async (formData) => {
     f7.dialog.preloader('Creating channel');
     const variables = pick(formData, ['name', 'about', 'isPrivate']);
+    const refetchQueries = [{ query: conversationQuery.USER_CONVERSATIONS }];
 
     if (channelId) {
       await updateChannel({
         variables: { ...variables, channelId },
         update,
+        refetchQueries,
       });
     } else {
       await createChannel({
         variables,
         update,
+        refetchQueries,
       });
     }
   };

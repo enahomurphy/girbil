@@ -1,6 +1,4 @@
-import {
-  Conversation, Conversations, Message, NewMessage, Thread,
-} from '@/pages/Conversations';
+import { Conversation, Conversations } from '@/pages/Conversations';
 
 const routes = [
   {
@@ -34,41 +32,18 @@ const routes = [
     name: 'conversation',
     path: '/conversations/:conversationId',
     component: Conversation,
-
   },
   {
     name: 'thread',
     path: '/conversations/:conversationId/thread/:threadId',
-    component: Thread,
+    component: Conversation,
     options: {
-      animate: true,
+      clearPreviousHistory: true,
       transition: 'f7-cover-v',
       props: {
-        reloadPrevious: true,
-        reloadCurrent: true,
-        ignoreCache: true,
         isThread: true,
       },
     },
-    tabs: [
-      {
-        path: '/',
-        id: 'thread-record',
-        component: NewMessage,
-        props: {
-          ignoreCache: true,
-          isThread: true,
-        },
-      },
-      {
-        path: '/message/:messageId',
-        id: 'thread-view',
-        component: Message,
-        options: {
-          ignoreCache: true,
-        },
-      },
-    ],
   },
   {
     path: '/users',

@@ -11,7 +11,6 @@ export const conversationRoutes = [
       props: {
         isThread: false,
       },
-      animate: true,
       transition: 'f7-fade',
     },
   },
@@ -23,8 +22,31 @@ export const conversationRoutes = [
       props: {
         isThread: false,
       },
-      animate: true,
       transition: 'f7-fade',
+    },
+  },
+  {
+    path: '/conversations/:conversationId/thread/:threadId/record',
+    id: 'thread-record',
+    component: NewMessage,
+    options: {
+      clearPreviousHistory: true,
+      transition: 'f7-cover-v',
+      props: {
+        isThread: true,
+      },
+    },
+
+  },
+  {
+    path: '/conversations/:conversationId/thread/:threadId/messages/:messageId',
+    id: 'thread-view',
+    component: Message,
+    options: {
+      transition: 'f7-fade',
+      props: {
+        isThread: true,
+      },
     },
   },
 ];

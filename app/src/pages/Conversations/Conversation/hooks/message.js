@@ -20,30 +20,21 @@ export const useReadEvent = (getMessage) => {
       }
     };
 
-    emitter.onEventEmitted('read_message', handleReadMessage);
+    emitter.onLastListenedEventEmitted('read_message', handleReadMessage);
     return () => emitter.removeListener('read_message', handleReadMessage);
   }, [getMessage, markAsRead]);
 };
 
-export const useGoBack = ({ message, isThread, messageId }) => {
+export const useGoBack = ({ message }) => {
   const [updateState] = mutation.useMessageState();
 
   const handler = () => {
-    updateState({
-      conversationId: message.conversationId,
-      messageId: message.id,
-      threadId: isThread && messageId,
-      state: 'done',
-    });
-
-    const link = isThread
-      ? `/conversations/${message.conversationId}/thread/${message.id}/`
-      : `/conversations/${message.conversationId}/record`;
-
-    f7.views.conversation.router.navigate(
-      link,
-      { transition: 'f7-fade' },
-    );
+    updateState({ state: 'done', messageId: message.id });
+    if (message.parentId) {
+      f7.views.current.router.back();
+    } else {
+      f7.views.conversation.router.back();
+    }
   };
 
   return handler;

@@ -24,7 +24,7 @@ const Gallery = ({ messages, onClick }) => {
   }, [messages.length]);
 
   const onReplyClicked = (id, conversationId) => () => {
-    f7.views.main.router.navigate(`/conversations/${conversationId}/thread/${id}/`);
+    f7.views.main.router.navigate(`/conversations/${conversationId}/thread/${id}`);
   };
 
   const params = {

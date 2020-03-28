@@ -15,7 +15,11 @@ const Conversation = ({
       routes={conversationRoutes}
       style={{ height: '676px' }}
       name="conversation"
-      url={`/conversations/${conversationId}/record`}
+      url={
+        isThread
+          ? `/conversations/${conversationId}/thread/${threadId}/record`
+          : `/conversations/${conversationId}/record`
+      }
     />
     <Messages
       isThread={Boolean(isThread)}

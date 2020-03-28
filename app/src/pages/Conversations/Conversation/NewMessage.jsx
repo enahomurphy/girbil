@@ -46,6 +46,13 @@ const NewMessage = ({ isThread, conversationId }) => {
     },
   });
 
+  useEffect(() => {
+    videoRecorder.initVideo();
+    return () => {
+      videoRecorder.stop();
+    };
+  }, [videoRecorder, isThread]);
+
   const stopRecord = async () => {
     const messageId = get(data, 'addMessage.id');
     const threadId = getParam('threadId');
@@ -98,12 +105,17 @@ const NewMessage = ({ isThread, conversationId }) => {
     stopRecord();
   };
 
-  useEffect(() => {
-    videoRecorder.initVideo();
-    return () => {
-      videoRecorder.stop();
-    };
-  }, [videoRecorder, isThread]);
+  const goBack = () => {
+    if (isThread) {
+      f7.views.main.router.back(
+        `/conversations/${conversationId}`,
+      );
+    } else {
+      f7.views.main.router.back(
+        '/conversations',
+      );
+    }
+  };
 
   const {
     name = '',
@@ -120,7 +132,7 @@ const NewMessage = ({ isThread, conversationId }) => {
           name={name}
           isPrivate={isPrivate}
           back
-          goBack={() => f7.views.main.router.back()}
+          goBack={goBack}
           showBack={matches('record.idle') && matches('processing.idle')}
           isThread={isThread}
           onClick={() => {}}

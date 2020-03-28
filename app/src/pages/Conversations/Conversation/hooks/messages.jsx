@@ -7,8 +7,9 @@ import { mutation } from '@shared/graphql/conversations';
 import emitter from '@/lib/emitter';
 
 export const getPullOverLinks = ({
-  conversationId,
-  message: { id, hasRead, sender },
+  message: {
+    id, hasRead, sender, conversationId,
+  },
   markMessage,
   deleteMessage,
 }) => {
@@ -25,7 +26,7 @@ export const getPullOverLinks = ({
     },
     {
       type: 'thread',
-      link: `/conversations/${conversationId}/thread/${id}/`,
+      link: `/conversations/${conversationId}/thread/${id}`,
       title: 'Start a thread',
       onClick: () => {},
     },
@@ -55,7 +56,6 @@ export const useFormatMessages = (messages = []) => {
   return messages.map((message) => ({
     ...message,
     pullover: getPullOverLinks({
-      conversationId: messages.conversationId,
       message,
       deleteMessage: () => {
         deleteMessage({
@@ -79,10 +79,10 @@ export const useFormatMessages = (messages = []) => {
 
 const changeRoute = (message) => {
   const link = message.parentId
-    ? `/conversations/${message.conversationId}/thread/${message.parentId}/message/${message.id}`
+    ? `/conversations/${message.conversationId}/thread/${message.parentId}/messages/${message.id}`
     : `/conversations/${message.conversationId}/messages/${message.id}`;
 
-  f7.views.conversation.router.navigate(
+  (f7.views.conversation || f7.views.current).router.navigate(
     link,
     {
       ignoreCache: true,

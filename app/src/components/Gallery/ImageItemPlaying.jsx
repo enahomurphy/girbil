@@ -53,7 +53,12 @@ const ImageRecordingItem = ({
         }
         >
           <RepliesInfo>
-            <Title line="unset" size="12px">{`${replyCount} ${replyCount === 1 ? 'reply' : 'replies'}`}</Title>
+            <Title
+              line="unset"
+              size="12px"
+            >
+              {`${replyCount} ${replyCount === 1 ? 'reply' : 'replies'}`}
+            </Title>
             <span>
               <Chevron />
             </span>

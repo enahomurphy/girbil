@@ -20,6 +20,7 @@ const Message = ({
       emitter.emitEvent('play_message', { message, state: 'playing' });
     },
   });
+
   const message = get(data, 'message', {});
 
   const { params } = useVideoData(message, 'video');
@@ -39,6 +40,8 @@ const Message = ({
   );
 
   const [reactToMessage] = mutation.useAddReaction();
+  const [updateState] = mutation.useMessageState();
+
   const [showControls, setShowControls] = useState(false);
 
   const goBack = useGoBack({ message, isThread });
@@ -51,8 +54,13 @@ const Message = ({
   } = useConversationMeta(get(conversationData, 'conversation', {}));
 
   useEffect(() => {
-    getMessage({ variables: { messageId } });
-  }, [getMessage, conversationId, threadId, messageId]);
+    const variables = { messageId: isThread ? threadId : messageId };
+    getMessage({ variables });
+
+    return () => {
+      updateState({ variables: { messageId, state: 'done' } });
+    };
+  }, [getMessage, isThread, messageId, threadId, updateState]);
 
   const handleReact = ({ value }) => {
     reactToMessage({

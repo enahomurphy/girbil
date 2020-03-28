@@ -20,7 +20,7 @@ export default [
     name: '🙏',
   },
   {
-    value: 'bunny',
+    value: 'girbil',
     name: '🐭',
   },
 ];

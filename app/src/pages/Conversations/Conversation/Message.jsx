@@ -13,7 +13,7 @@ import emitter from '@/lib/emitter';
 import { useGoBack } from './hooks/message';
 
 const Message = ({
-  isThread, conversationId, messageId, threadId,
+  isThread, conversationId, messageId,
 }) => {
   const [getMessage, { data }] = useLazyQuery(query.GET_MESSAGE, {
     onCompleted({ message }) {
@@ -54,13 +54,12 @@ const Message = ({
   } = useConversationMeta(get(conversationData, 'conversation', {}));
 
   useEffect(() => {
-    const variables = { messageId: isThread ? threadId : messageId };
-    getMessage({ variables });
+    getMessage({ variables: { messageId } });
 
     return () => {
-      updateState({ variables: { messageId, state: 'done' } });
+      updateState({ variables: { state: 'done' } });
     };
-  }, [getMessage, isThread, messageId, threadId, updateState]);
+  }, [getMessage, isThread, messageId, updateState]);
 
   const handleReact = ({ value }) => {
     reactToMessage({
@@ -112,7 +111,6 @@ const Message = ({
 
 Message.propTypes = {
   isThread: PropTypes.oneOfType([() => undefined, PropTypes.object]).isRequired,
-  threadId: PropTypes.oneOfType([() => undefined, PropTypes.string]).isRequired,
   conversationId: PropTypes.string.isRequired,
   messageId: PropTypes.string.isRequired,
 };

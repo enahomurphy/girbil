@@ -25,13 +25,13 @@ export const useReadEvent = (getMessage) => {
   }, [getMessage, markAsRead]);
 };
 
-export const useGoBack = ({ message }) => {
+export const useGoBack = ({ message, isThread }) => {
   const [updateState] = mutation.useMessageState();
 
   const handler = () => {
     updateState({ state: 'done', messageId: message.id });
-    if (message.parentId) {
-      f7.views.current.router.back();
+    if (isThread) {
+      f7.views.conversationThread.router.back();
     } else {
       f7.views.conversation.router.back();
     }

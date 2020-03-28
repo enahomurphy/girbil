@@ -8,7 +8,7 @@ import emitter from '@/lib/emitter';
 
 export const getPullOverLinks = ({
   message: {
-    id, hasRead, sender, conversationId,
+    id, hasRead, sender, conversationId, replyCount,
   },
   markMessage,
   deleteMessage,
@@ -26,9 +26,10 @@ export const getPullOverLinks = ({
     },
     {
       type: 'thread',
-      link: `/conversations/${conversationId}/thread/${id}`,
-      title: 'Start a thread',
-      onClick: () => {},
+      title: `${replyCount > 0 ? 'Replies' : 'Start a thread'}`,
+      onClick: () => {
+        f7.views.main.router.navigate(`/conversations/${conversationId}/thread/${id}`);
+      },
     },
     {
       type: 'watch',
@@ -62,8 +63,6 @@ export const useFormatMessages = (messages = []) => {
           messageId: message.id,
           conversationId: message.conversationId,
           threadId: message.parentId,
-        }, () => {
-          f7.views.conversation.router.navigate(`/conversations/${message.conversationId}/record`);
         });
       },
       markMessage: () => (message.hasRead ? markAsUnRead : markAsRead)({
@@ -78,29 +77,33 @@ export const useFormatMessages = (messages = []) => {
 
 
 const changeRoute = (message) => {
-  const link = message.parentId
-    ? `/conversations/${message.conversationId}/thread/${message.parentId}/messages/${message.id}`
-    : `/conversations/${message.conversationId}/messages/${message.id}`;
-
-  (f7.views.conversation || f7.views.current).router.navigate(
-    link,
-    {
-      ignoreCache: true,
-      props: {
-        message,
-        isThread: Boolean(message.parentId),
-      },
+  const options = {
+    props: {
+      message,
+      isThread: Boolean(message.parentId),
     },
-  );
+  };
+
+  if (message.parentId) {
+    f7.views.conversationThread.router.navigate(
+      `/conversations/${message.conversationId}/thread/${message.parentId}/messages/${message.id}`,
+    );
+  } else {
+    f7.views.conversation.router.navigate(
+      `/conversations/${message.conversationId}/messages/${message.id}`,
+      options,
+    );
+  }
 };
 
 export const useMessageClicked = (messages) => {
   const handler = (id) => {
     const message = messages.find(({ id: mId }) => id === mId);
+
     if (message) {
+      changeRoute(message);
       const state = message.state === 'playing' ? 'pause' : 'playing';
       emitter.emitEvent('play_message', { message, state });
-      changeRoute(message);
     }
   };
 

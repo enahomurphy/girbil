@@ -14,7 +14,7 @@ const Conversation = ({
     <View
       routes={conversationRoutes}
       style={{ height: '676px' }}
-      name="conversation"
+      name={`conversation${isThread ? 'Thread' : ''}`}
       url={
         isThread
           ? `/conversations/${conversationId}/thread/${threadId}/record`

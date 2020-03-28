@@ -50,20 +50,16 @@ const NewMessage = ({ isThread, conversationId }) => {
     videoRecorder.initVideo();
     return () => {
       videoRecorder.stop();
+      updateState({ state: 'done' });
     };
-  }, [videoRecorder, isThread]);
+  }, [videoRecorder, updateState]);
 
   const stopRecord = async () => {
     const messageId = get(data, 'addMessage.id');
     const threadId = getParam('threadId');
 
     if (matches('record.start')) {
-      updateState({
-        conversationId,
-        messageId,
-        threadId,
-        state: 'complete',
-      });
+      updateState({ messageId, state: 'complete' });
     }
 
     const file = await videoRecorder.stopRecordAndGetFile(messageId);

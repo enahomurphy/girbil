@@ -124,7 +124,7 @@ export const useDeleteMessage = () => {
   const [deleteMessage] = useMutation(DELETE_MESSAGE);
 
   const handler = useCallback(
-    (variables, cb) => deleteMessage({
+    (variables, cb = () => {}) => deleteMessage({
       variables: { messageId: variables.messageId },
       update: (store) => {
         store.modify('ROOT_QUERY', {

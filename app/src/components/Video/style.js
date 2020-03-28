@@ -7,6 +7,8 @@ export const VideoWrapper = styled.div`
   max-height: calc(100vh - var(--gb-message-height));
   video {
     object-fit: cover;
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
   }
 `;
 

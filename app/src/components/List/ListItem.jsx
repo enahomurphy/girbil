@@ -14,7 +14,7 @@ const ListItem = ({
 }) => (
   <Block
     margin="0"
-    padding="0 24px"
+    padding="0 24px 16px"
     type="flex"
     align="center"
     justify="space-between"
@@ -23,7 +23,7 @@ const ListItem = ({
       <div style={{ marginRight: '16px' }}>
         <SimpleProfileImage name={user.name} url={user.avatar} width="64px" height="80px" />
       </div>
-      <Block margin>
+      <Block>
         <Block
           type="flex"
           align="flex-end"

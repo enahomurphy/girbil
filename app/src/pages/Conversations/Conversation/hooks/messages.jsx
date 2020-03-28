@@ -62,13 +62,6 @@ export const useFormatMessages = (messages = []) => {
   const [deleteMessage] = mutation.useDeleteMessage();
   const [reactToMessage] = mutation.useAddReaction();
 
-  const handleReact = (messageId, reaction) => {
-    reactToMessage({
-      messageId,
-      reaction
-    })
-  };
-
   return messages.map((message) => ({
     ...message,
     pullover: getPullOverLinks({
@@ -85,7 +78,12 @@ export const useFormatMessages = (messages = []) => {
         messageId: message.id,
         threadId: message.parentId,
       }),
-      handleReact,
+      handleReact: (messageId, reaction) => {
+        reactToMessage({
+          messageId,
+          reaction
+        })
+      },
     }),
     link: '#',
   }));

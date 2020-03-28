@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Icon, List } from 'framework7-react';
 import PropTypes from 'prop-types';

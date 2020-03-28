@@ -16,10 +16,7 @@ const BrowseChannel = () => {
     query.CHANNELS_NOT_A_MEMBER, { fetchPolicy: 'network-only' },
   );
 
-  const addUsersToChannel = mutation.useAddUsersToChannel(
-    () => {},
-    () => {},
-  );
+  const addUsersToChannel = mutation.useAddUsersToChannel();
 
   useDebounce(() => {
     search({ variables: { text: value } });
@@ -33,12 +30,20 @@ const BrowseChannel = () => {
   };
 
   const joinChannel = (channel) => {
+    f7.dialog.preloader('Joining to channel');
     addUsersToChannel(
       {
         variables: { channelId: channel.id, userIds: [storage.payload.id] },
         refetchQueries: [{ query: conversationQuery.USER_CONVERSATIONS }],
         onResolved: () => {
-          f7.views.main.router.navigate(`/conversations/${channel.conversation.id}/`);
+          f7.dialog.close();
+
+          f7.views.main.router.navigate(
+            `/conversations/${channel.conversation.id}/`,
+            {
+              clearPreviousHistory: true,
+            },
+          );
         },
       },
     );

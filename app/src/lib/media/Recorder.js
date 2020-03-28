@@ -9,6 +9,7 @@ class Recorder {
 
     this.onMediaError = this.onMediaError.bind(this);
     this.onMediaStop = this.onMediaStop.bind(this);
+    this.reset = this.reset.bind(this);
     this.media = new MediaRecorder(new MediaStream());
 
     this.onRecordStop = () => {};
@@ -74,8 +75,8 @@ class Recorder {
   }
 
   reset() {
-    this.media.destroy();
-    this.gif.destroy();
+    this.media.reset();
+    this.gif.reset();
   }
 
   file(name) {

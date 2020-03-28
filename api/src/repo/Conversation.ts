@@ -185,6 +185,17 @@ class ConversationRepository extends Repository<Conversation> {
 
     return conversation;
   }
+
+  async getChannelConversation(
+    organizationId: string, channelId: string,
+  ): Promise<Conversation> {
+    return this.createQueryBuilder('conversation')
+      .setParameter('organizationId', organizationId)
+      .setParameter('channelId', channelId)
+      .where('conversation.receiverId = :channelId')
+      .andWhere('conversation.organizationId = :organizationId')
+      .getOne();
+  }
 }
 
 export default ConversationRepository;

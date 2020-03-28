@@ -26,7 +26,9 @@ const ListInfo = ({ unreadCount, options, id }) => (
                     key={title}
                     link={getLink ? getLink() : '#'}
                     onClick={() => {
-                      onClick();
+                      if (onClick) {
+                        onClick();
+                      }
                       // hack to fix popover not been completely removed
                       document.querySelector(`.popover-menu${id}`).remove();
                     }}

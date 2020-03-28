@@ -70,7 +70,7 @@ const CreateChannel = ({ $f7router, title, channelId }) => {
       });
 
       client.cache.modify(
-        client.cache.identify({ __typename: 'Channel', uploadId }),
+        client.cache.identify({ __typename: 'Channel', id: uploadId }),
         {
           avatar() {
             return getURL;

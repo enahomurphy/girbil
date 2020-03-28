@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 import Header from '@/components/Header';
 import { query, mutation } from '@shared/graphql/channels';
+import { query as conversationQuery } from '@shared/graphql/conversations';
 import { get } from '@shared/lib';
 
 import AddPeopleList from './AddPeopleList';
@@ -20,7 +21,10 @@ const AddPeople = ({ channelId, $f7router }) => {
   const updateData = (organizationMembers) => (
     organizationMembers.map((user) => ({ ...user, selected: Boolean(user.selected) }))
   );
-  const { data } = useQuery(query.GET_USERS_NOT_IN_CHANNEL, { variables: { channelId } });
+  const { data } = useQuery(
+    query.GET_USERS_NOT_IN_CHANNEL,
+    { variables: { channelId }, fetchPolicy: 'network-only' },
+  );
   const [addUsersToChannel] = useMutation(
     mutation.ADD_USERS_TO_CHANNEL,
     {
@@ -70,33 +74,18 @@ const AddPeople = ({ channelId, $f7router }) => {
     if (userIds) {
       addUsersToChannel({
         variables: { channelId, userIds },
-        refetchQueries: ['channelMembers'],
-        update: (store) => {
-          const storeData = store.readQuery({
-            query: query.GET_USERS_NOT_IN_CHANNEL,
-            variables: { channelId },
-          });
-
-          let usersInsStore = get(storeData, 'usersNotInChannel.members', []);
-
-          const addedIds = new Set(userIds);
-          usersInsStore = usersInsStore.filter(({ id }) => !addedIds.has(id));
-
-
-          const newData = {
-            ...storeData,
-            usersNotInChannel: {
-              ...storeData.usersNotInChannel,
-              members: usersInsStore,
-            },
-          };
-
-          store.writeQuery({
-            query: query.GET_USERS_NOT_IN_CHANNEL,
-            data: newData,
-            variables: { channelId },
-          });
-        },
+        refetchQueries: ['channelMembers', { query: conversationQuery.USER_CONVERSATIONS }],
+        // update: (store, { data }) => {
+        //   console.log(data);
+        //   store.modify(
+        //     store.identify({ __typename: 'Channel', id: channelId }),
+        //     {
+        //       members(value) {
+        //         return value + 1;
+        //       },
+        //     },
+        //   );
+        // },
       });
     }
 

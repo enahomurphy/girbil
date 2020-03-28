@@ -8,7 +8,7 @@ import emitter from '@/lib/emitter';
 
 export const getPullOverLinks = ({
   message: {
-    id, hasRead, sender, conversationId, replyCount,
+    id, hasRead, sender, conversationId, replyCount, parentId,
   },
   markMessage,
   deleteMessage,
@@ -24,19 +24,25 @@ export const getPullOverLinks = ({
         />
       ),
     },
-    {
+  ];
+
+  if (!parentId) {
+    options.push({
       type: 'thread',
       title: `${replyCount > 0 ? 'Replies' : 'Start a thread'}`,
       onClick: () => {
         f7.views.main.router.navigate(`/conversations/${conversationId}/thread/${id}`);
       },
-    },
+    });
+  }
+
+  options.push(
     {
       type: 'watch',
       title: `Mark as ${hasRead ? 'unwatched' : 'watched'}`,
       onClick: markMessage,
     },
-  ];
+  );
 
   if (get(storage, 'payload.id') === sender.id) {
     options.push({

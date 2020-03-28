@@ -1,25 +1,26 @@
 import React from 'react';
-import { Tabs, Tab } from 'framework7-react';
+import { View } from 'framework7-react';
 import PropTypes from 'prop-types';
 
-import styled from 'styled-components';
 import { Page } from '@/components/Style';
 
 import Messages from './Messages';
-
-const TabsWrapper = styled(Tabs)`
-  height: calc(100vh - var(--gb-message-height));
-`;
+import { conversationRoutes } from './routes';
 
 const Conversation = ({
   conversationId, threadId, isThread,
 }) => (
   <Page overflow="hidden">
-    <TabsWrapper routable>
-      <Tab id="view" />
-
-      <Tab id="record" />
-    </TabsWrapper>
+    <View
+      routes={conversationRoutes}
+      style={{ height: '676px' }}
+      name={`conversation${isThread ? 'Thread' : ''}`}
+      url={
+        isThread
+          ? `/conversations/${conversationId}/thread/${threadId}/record`
+          : `/conversations/${conversationId}/record`
+      }
+    />
     <Messages
       isThread={Boolean(isThread)}
       threadId={threadId}

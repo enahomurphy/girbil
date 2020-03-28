@@ -1,24 +1,24 @@
 import React from 'react';
-import { Tabs, Tab } from 'framework7-react';
+import { View } from 'framework7-react';
 import PropTypes from 'prop-types';
 
-import styled from 'styled-components';
 import { Page } from '@/components/Style';
 
 import Messages from './Messages';
+import { conversationRoutes } from './routes';
 
-const TabsWrapper = styled(Tabs)`
-  height: calc(100vh - var(--gb-message-height));
-`;
-
-const Conversation = ({ conversationId, threadId }) => (
+const Conversation = ({
+  conversationId, threadId, isThread,
+}) => (
   <Page overflow="hidden">
-    <TabsWrapper routable>
-      <Tab id="thread-view" />
-      <Tab id="thread-record" />
-    </TabsWrapper>
+    <View
+      routes={conversationRoutes}
+      style={{ height: '676px' }}
+      name="conversation"
+      url={`/conversations/${conversationId}/thread/${threadId}`}
+    />
     <Messages
-      isThread
+      isThread={Boolean(isThread)}
       threadId={threadId}
       conversationId={conversationId}
     />
@@ -26,10 +26,12 @@ const Conversation = ({ conversationId, threadId }) => (
 );
 
 Conversation.defaultProps = {
+  isThread: false,
   threadId: undefined,
 };
 
 Conversation.propTypes = {
+  isThread: PropTypes.bool,
   conversationId: PropTypes.string.isRequired,
   threadId: PropTypes.oneOfType([undefined, PropTypes.object]),
 };

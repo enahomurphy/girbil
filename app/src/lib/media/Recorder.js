@@ -9,6 +9,7 @@ class Recorder {
 
     this.onMediaError = this.onMediaError.bind(this);
     this.onMediaStop = this.onMediaStop.bind(this);
+    this.reset = this.reset.bind(this);
     this.media = new MediaRecorder(new MediaStream());
 
     this.onRecordStop = () => {};

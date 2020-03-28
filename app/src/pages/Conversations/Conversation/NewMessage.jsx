@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useVideo } from 'react-use';
 import { useMachine } from '@xstate/react';
 import { useMutation, useLazyQuery, useQuery } from '@apollo/client';
+import { f7 } from 'framework7-react';
 import PropTypes from 'prop-types';
 
 import RecordMachine from '@/states/record';
@@ -45,17 +46,20 @@ const NewMessage = ({ isThread, conversationId }) => {
     },
   });
 
+  useEffect(() => {
+    videoRecorder.initVideo();
+    return () => {
+      videoRecorder.stop();
+      updateState({ state: 'done' });
+    };
+  }, [videoRecorder, updateState]);
+
   const stopRecord = async () => {
     const messageId = get(data, 'addMessage.id');
     const threadId = getParam('threadId');
 
     if (matches('record.start')) {
-      updateState({
-        conversationId,
-        messageId,
-        threadId,
-        state: 'complete',
-      });
+      updateState({ messageId, state: 'complete' });
     }
 
     const file = await videoRecorder.stopRecordAndGetFile(messageId);
@@ -97,12 +101,17 @@ const NewMessage = ({ isThread, conversationId }) => {
     stopRecord();
   };
 
-  useEffect(() => {
-    videoRecorder.initVideo();
-    return () => {
-      videoRecorder.stop();
-    };
-  }, [videoRecorder, isThread]);
+  const goBack = () => {
+    if (isThread) {
+      f7.views.main.router.back(
+        `/conversations/${conversationId}`,
+      );
+    } else {
+      f7.views.main.router.back(
+        '/conversations',
+      );
+    }
+  };
 
   const {
     name = '',
@@ -119,6 +128,7 @@ const NewMessage = ({ isThread, conversationId }) => {
           name={name}
           isPrivate={isPrivate}
           back
+          goBack={goBack}
           showBack={matches('record.idle') && matches('processing.idle')}
           isThread={isThread}
           onClick={() => {}}

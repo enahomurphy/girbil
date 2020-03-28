@@ -47,6 +47,7 @@ const ImageItem = ({
           sender={sender}
           replyCount={replyCount}
           onReplyClicked={onReplyClicked}
+          messageId={id}
         />}
         {state === 'recording' && (
           <ImageRecordingItem

@@ -15,10 +15,10 @@ import ApolloClient from '@shared/graphql/client';
 import { storage, get } from '@shared/lib';
 import { SocketContext, socket } from '@/lib/socket';
 
-import '@/css/theme.css';
-
+import Error from './error';
 import cordovaApp from './js/cordova-app';
 import routes from './js/routes';
+import '@/css/theme.css';
 
 const MainApp = () => {
   const [isAuth, setIsAuth] = useState(
@@ -66,8 +66,7 @@ const MainApp = () => {
   }, []);
 
   useEffect(() => {
-    emitter.onEventEmitted('logout', () => {
-      localStorage.clear();
+    emitter.onLastListenedEventEmitted('logout', () => {
       f7.views.main.router.navigate('/', {
         reloadAll: true,
         reloadCurrent: true,
@@ -78,20 +77,21 @@ const MainApp = () => {
   []);
 
   return (
-    <ApolloProvider client={client}>
-      <SocketContext.Provider value={socketConnection}>
-        <App params={f7params} themeDark>
-          {
+    <Error>
+      <ApolloProvider client={client}>
+        <SocketContext.Provider value={socketConnection}>
+          <App params={f7params} themeDark>
+            {
             isAuth ? (
               <View main url="/conversations" />
             ) : (
               <View main url="/" />
-
             )
           }
-        </App>
-      </SocketContext.Provider>
-    </ApolloProvider>
+          </App>
+        </SocketContext.Provider>
+      </ApolloProvider>
+    </Error>
   );
 };
 

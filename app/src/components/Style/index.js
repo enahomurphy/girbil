@@ -4,7 +4,7 @@ import {
   Page as f7Page, Icon as f7Icon, Link as f7Link, Popover as f7Popover,
 } from 'framework7-react';
 
-export const Text = styled(F7Block)`
+export const Text = styled.p`
   text-align: ${(props) => props.align};
   font: normal ${(props) => props.size}/20px Source Sans Pro;
   margin: ${(props) => props.margin};
@@ -26,7 +26,7 @@ Text.defaultProps = {
   line: 'initial',
 };
 
-export const Title = styled(Text)`
+export const Title = styled.h1`
   text-align: ${(props) => props.align};
   font: ${(props) => props.weight} ${(props) => props.size}/24px Source Sans Pro;
   margin: ${(props) => props.margin};
@@ -39,7 +39,7 @@ Title.defaultProps = {
   margin: '0',
   color: '#ffffff',
   size: '18px',
-  weight: 'bold',
+  weight: '600',
   transform: 'initial',
   line: 'initial',
 };

@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Icon, ListItem, List, Link,
-} from 'framework7-react';
+import { ListItem, List, Link } from 'framework7-react';
 import {
   Title, Text, Popover, Block, ShortTitle,
 } from '@/components/Style';
-import { Back, Lock } from '@/components/Icon';
+import { Back, Lock, Chevron } from '@/components/Icon';
 import { BackIcon, StyledHeader } from './style';
+import Close from '../Icon/Close';
 
 const ThreadHeader = ({ isPrivate, name }) => (
   <>
@@ -55,15 +54,11 @@ const MessageHeader = ({
             </span>
           )
         }
-        {
-          name && (
-            <>
-              {name}
-            </>
-          )
-        }
+        { name && (name) }
       </ShortTitle>
-      <Icon f7="chevron_right" style={{ color: '#ffffff', fontSize: '16px' }} />
+      <span style={{ transform: 'rotate(270deg)' }}>
+        <Chevron />
+      </span>
     </Link>
     {
       isChannel && <Text align="center" color="var(--gb-medium-grey)">{`${members} members`}</Text>
@@ -100,7 +95,7 @@ const Header = ({
     {
       showBack && (
       <BackIcon back={back} onClick={goBack}>
-        { back ? <Back /> : <Icon f7="multiply" /> }
+        { back ? <Back /> : <Close /> }
       </BackIcon>
       )
     }

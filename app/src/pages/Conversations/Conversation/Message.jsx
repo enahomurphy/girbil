@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useLazyQuery } from '@apollo/client';
-import { Page, f7 } from 'framework7-react';
+import { Page } from 'framework7-react';
 import PropTypes from 'prop-types';
 
 import { useVideo, useConversationMeta } from '@/lib/hooks';
@@ -10,12 +10,19 @@ import {
 } from '@/components/Video';
 import { get } from '@shared/lib';
 import emitter from '@/lib/emitter';
+import { useGoBack } from './hooks/message';
 
 const Message = ({
-  isThread, messageId, conversationId,
+  isThread, conversationId, messageId,
 }) => {
-  const [getMessage, { data }] = useLazyQuery(query.GET_MESSAGE);
+  const [getMessage, { data }] = useLazyQuery(query.GET_MESSAGE, {
+    onCompleted({ message }) {
+      emitter.emitEvent('play_message', { message, state: 'playing' });
+    },
+  });
+
   const message = get(data, 'message', {});
+
   const { params } = useVideoData(message, 'video');
   const [video, state, controls] = useVideo({
     url: params.src,
@@ -23,66 +30,50 @@ const Message = ({
     width: params.width,
     height: params.height,
     onPlay: () => emitter.emitEvent('play_message', { message, state: 'playing' }),
-    onEnd: () => emitter.emitEvent('pause_message', { message, state: 'pause' }),
+    onPause: () => emitter.emitEvent('play_message', { message, state: 'pause' }),
+    onEnd: () => {
+      emitter.emitEvent('next_message', { id: message.id, action: 'next' });
+      emitter.emitEvent('read_message', { message });
+    },
   });
 
   const { data: conversationData } = useQuery(
     query.CONVERSATION,
     { variables: { conversationId } },
   );
-  const [markAsRead] = mutation.useMarkMessage('read');
-  const [updateState] = mutation.useMessageState();
+
   const [reactToMessage] = mutation.useAddReaction();
+  const [updateState] = mutation.useMessageState();
 
-  const conversationMeta = useConversationMeta(get(conversationData, 'conversation', {}));
+  const [showControls, setShowControls] = useState(false);
 
-  useEffect(() => {
-    const handleReadMessage = (args) => {
-      const variables = {
-        conversationId: args.message.conversationId,
-        messageId: args.message.id,
-        threadId: args.threadId,
-      };
-
-      if (!args.message.hasRead) {
-        markAsRead(variables);
-      }
-
-      getMessage({ variables });
-    };
-
-    emitter.onEventEmitted('read_message', handleReadMessage);
-    return () => emitter.removeListener('read_message', handleReadMessage);
-  }, [getMessage, markAsRead, message.hasRead]);
-
-  const handleReact = ({ value }) => {
-    reactToMessage({
-      messageId,
-      reaction: value,
-    });
-  };
-
-  const goBack = () => {
-    updateState({
-      conversationId,
-      messageId: message.id,
-      threadId: isThread && messageId,
-      state: 'done',
-    });
-
-    const link = isThread
-      ? `/conversations/${conversationId}/thread/${messageId}/`
-      : `/conversations/${conversationId}/`;
-
-    f7.view.current.router.navigate(link);
-  };
-
+  const goBack = useGoBack({ message, isThread });
   const {
     name = '',
     isPrivate = false,
     isChannel,
     typeId,
-  } = conversationMeta;
+    members = 0,
+  } = useConversationMeta(get(conversationData, 'conversation', {}));
+
+  useEffect(() => {
+    getMessage({ variables: { messageId } });
+
+    return () => {
+      updateState({ variables: { state: 'done' } });
+    };
+  }, [getMessage, isThread, messageId, updateState]);
+
+  const handleReact = ({ value }) => {
+    reactToMessage({
+      messageId: message.id,
+      reaction: value,
+    });
+  };
+
+  const handleNextMessage = (action) => () => {
+    emitter.emitEvent('next_message', { id: message.id, action });
+  };
 
   return (
     <Page>
@@ -95,28 +86,36 @@ const Message = ({
         onClick={() => {}}
         isChannel={isChannel}
         typeId={typeId}
-        members={0}
+        members={members}
       />
-      <Controls
-        play={controls.play}
-        pause={controls.pause}
-        seek={controls.seek}
-        playing={state.playing}
-        duration={state.duration || 0}
-        played={state.played}
-        playBack={controls.playbackRate}
-        handleReact={handleReact}
-      />
-      <Reactions reactions={message.reactions} handleReact={handleReact}/>
-      <Video video={video} id="video" />
+      <div
+        onMouseEnter={() => setShowControls(true)}
+        onMouseLeave={() => setShowControls(false)}
+      >
+        <Controls
+          show={showControls}
+          play={controls.play}
+          pause={controls.pause}
+          seek={controls.seek}
+          playing={state.playing}
+          duration={state.duration || 0}
+          played={state.played}
+          playBack={controls.playbackRate}
+          handleReact={handleReact}
+          next={handleNextMessage('next')}
+          prev={handleNextMessage('prev')}
+        />
+        <Reactions reactions={message.reactions} />
+        <Video video={video} id="video" />
+      </div>
     </Page>
   );
 };
 
 Message.propTypes = {
   isThread: PropTypes.oneOfType([() => undefined, PropTypes.object]).isRequired,
-  messageId: PropTypes.oneOfType([() => undefined, PropTypes.object]).isRequired,
   conversationId: PropTypes.string.isRequired,
+  messageId: PropTypes.string.isRequired,
 };
 
 export default Message;

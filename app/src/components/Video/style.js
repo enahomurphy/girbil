@@ -25,6 +25,8 @@ export const BackIcon = styled(Button)`
   justify-content: center;
   align-items: center;
   z-index: var(--gb-back-z-index);
+  padding: 0px;
+  box-shadow: ${({ back }) => (back ? '0px 2px 8px rgba(0, 0, 0, 0.3)' : 'none')};
 
   &:hover,
   .aurora.device-desktop .button:not(.active-state):not(.no-hover):hover {
@@ -36,6 +38,11 @@ export const BackIcon = styled(Button)`
   i {
     font-size: 18px;
     color: #ffffff;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
   }
 `;
 
@@ -62,13 +69,17 @@ export const StyledHeader = styled.div`
   -webkit-app-region: drag;
 
   h1 {
-    font: bold 24px/30px PT sans;
+    font: bold 24px/30px Source Sans Pro;
     margin: 0 0 5px 0;
   }
 
   p {
     font: normal 14px/20px Lato;
     margin: 0;
+  }
+
+  h1, p, svg, i {
+    text-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
   }
 `;
 

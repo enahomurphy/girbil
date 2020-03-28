@@ -20,7 +20,7 @@ const DefaultSearchList = ({ title, options }) => (
       options.map(({
         text, onClick,
       }) => (
-        <ListItem>
+        <ListItem key={text}>
           <Search />
           <div role="presentation" style={{ fontSize: '18px', marginLeft: '8px' }} onClick={onClick}>
             {text}
@@ -32,7 +32,7 @@ const DefaultSearchList = ({ title, options }) => (
 );
 
 DefaultSearchList.propTypes = {
-  title: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
   options: PropTypes.array.isRequired,
 };
 

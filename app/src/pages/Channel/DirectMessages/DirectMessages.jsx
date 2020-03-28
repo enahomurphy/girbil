@@ -12,7 +12,7 @@ import EmptyState from '../EmptyState';
 
 
 const DirectMessage = ({
-  users, handleSearchChange, loading, isSearching,
+  users, handleSearchChange, loading, isSearching, handleUserClick,
 }) => {
   if (!loading && !isSearching && !users.length) {
     return <EmptyState />;
@@ -56,7 +56,8 @@ const DirectMessage = ({
         {
           users.map((user) => (
             <ListItem
-              getLink={(item) => `/users/${item.id}/profile`}
+              getLink={() => '#'}
+              onClick={() => handleUserClick(user.id)}
               key={user.id}
               id={user.id}
               isChannel={false}
@@ -76,6 +77,7 @@ DirectMessage.propTypes = {
   handleSearchChange: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   isSearching: PropTypes.bool.isRequired,
+  handleUserClick: PropTypes.func.isRequired,
 };
 
 export default DirectMessage;

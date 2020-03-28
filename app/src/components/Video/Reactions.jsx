@@ -7,7 +7,7 @@ export const ReactionContainer = styled.div`
   display: flex;
   justify-content: space-around;
   position: absolute;
-  bottom: 200px;
+  bottom: 50px;
   z-index: 10000;
   width: 70%;
   left: 60px;
@@ -29,7 +29,7 @@ const Reactions = ({
   return (
     <ReactionContainer>
       {Object.keys(reactionsWithCount).map((key) => (
-        <span onClick={() => handleReact({ value: getEmojiNameByValue(key) })}>
+        <span key={key} onClick={() => handleReact({ value: getEmojiNameByValue(key) })}>
           {`${key}${reactionsWithCount[key]}`}
         </span>
       ))}
@@ -38,7 +38,7 @@ const Reactions = ({
 };
 
 Reactions.propTypes = {
-  reactions: PropTypes.object.isRequired,
+  reactions: PropTypes.array,
 };
 
 export default Reactions;

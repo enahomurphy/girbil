@@ -12,6 +12,7 @@ export const getPullOverLinks = ({
   },
   markMessage,
   deleteMessage,
+  handleReact
 }) => {
   const options = [
     {
@@ -20,7 +21,7 @@ export const getPullOverLinks = ({
         <Emoji
           reaction={false}
           vertical={false}
-          onClick={console.info}
+          onClick={(reaction) => handleReact(id, reaction.value)}
         />
       ),
     },
@@ -59,6 +60,14 @@ export const useFormatMessages = (messages = []) => {
   const [markAsUnRead] = mutation.useMarkMessage('unread');
   const [markAsRead] = mutation.useMarkMessage('read');
   const [deleteMessage] = mutation.useDeleteMessage();
+  const [reactToMessage] = mutation.useAddReaction();
+
+  const handleReact = (messageId, reaction) => {
+    reactToMessage({
+      messageId,
+      reaction
+    })
+  };
 
   return messages.map((message) => ({
     ...message,
@@ -76,6 +85,7 @@ export const useFormatMessages = (messages = []) => {
         messageId: message.id,
         threadId: message.parentId,
       }),
+      handleReact,
     }),
     link: '#',
   }));

@@ -5,7 +5,7 @@ import { plainToClass } from 'class-transformer';
 import {
   Organization, UserOrganization, User, RoleType,
 } from '../entity';
-import { SearchResult } from '../interfaces';
+import { SearchResult, QueryMap, ParsedText } from '../interfaces';
 
 @EntityRepository(Organization)
 class OrganizationRepository extends Repository<Organization> {
@@ -107,27 +107,43 @@ class OrganizationRepository extends Repository<Organization> {
     return this.findOne({ where: { id: organizationId } });
   }
 
-  async search(organizationId: string, text: string, userId: string): Promise<SearchResult[]> {
+  private getParseSearchText(text: string): ParsedText {
+    const searchTypeMap = {
+      'is:channel': 'channel',
+      'is:unreads': 'unread',
+      'is:user': 'user'
+    };
+    const textArr = text.split(' ');
+    const searchTypeText = textArr.find(i => i.startsWith('is:'));
+    const searchType = searchTypeMap[searchTypeText] || 'all';
+    const searchText = textArr.filter(i => i !== searchTypeText).join(' ');
+    return {
+      searchType,
+      searchText: searchText.trim().length ? `%${searchText}%` : '',
+    }
+  }
+
+  private getQueryMap(searchText: string, organizationId: string, userId: string): QueryMap {
     const channelQuery = `
       SELECT
         channels.id,
         channels.name,
         channels.avatar,
         'channel' AS type,
-        conversations.id AS conversation_id,
+        conversations.id AS "conversationId",
         COUNT(channel_users.channel_id) AS members,
-        is_private,
+        is_private AS "isPrivate",
         (
           SELECT not COUNT(channel_users.user_id) = 0
           FROM channel_users
           WHERE channel_users.user_id = $3
           AND channel_users.channel_id = channels.id
           LIMIT 1
-        ) AS is_member
+        ) AS "isMember"
       FROM channels
       INNER JOIN channel_users ON channel_users.channel_id = channels.id
       LEFT JOIN conversations ON conversations.receiver_id = channels.id AND conversations.receiver_type = 'channel'
-      WHERE tsv @@ plainto_tsquery($1) AND channels.organization_id = $2
+      WHERE channels.name ILIKE $1 AND channels.organization_id = $2
       GROUP BY channels.id, conversations.id`;
 
     const userQuery = `
@@ -136,18 +152,37 @@ class OrganizationRepository extends Repository<Organization> {
         users.name AS name,
         users.avatar AS avatar,
         'user' AS type,
-        conversations.id AS conversation_id,
+        conversations.id AS "conversationId",
         NULL as members,
-        NULL AS is_private,
-        NULL AS is_member
+        NULL AS "isPrivate",
+        NULL AS "isMember"
       FROM users
       INNER JOIN user_organizations ON users.id = user_organizations.user_id
       LEFT JOIN conversations ON conversations.receiver_id = users.id OR conversations.creator_id = users.id AND conversations.receiver_type = 'user'
-      WHERE users.tsv @@ plainto_tsquery($1) AND user_organizations.organization_id = $2
+      WHERE users.name ILIKE $1 AND user_organizations.organization_id = $2
       GROUP BY users.id, conversations.id;`;
 
-    const result = await this.entityManager.query(`${channelQuery} UNION ALL ${userQuery}`, [text, organizationId, userId]);
+    return {
+      channel: {
+        query: `${channelQuery}`,
+        params: [searchText, organizationId, userId]
+      },
+      user: {
+        query: `${userQuery}`,
+        params: [searchText, organizationId]
+      },
+      all: {
+        query: `${channelQuery} UNION ALL ${userQuery}`,
+        params: [searchText, organizationId, userId]
+      },
+    };
+  }
 
+  async search(organizationId: string, text: string, userId: string): Promise<SearchResult[]> {
+    const {searchType, searchText} = this.getParseSearchText(text);
+    const queryMap = this.getQueryMap(searchText, organizationId, userId);
+    const { query, params } = queryMap[searchType];
+    const result = await this.entityManager.query(query, params);
     return result;
   }
 }

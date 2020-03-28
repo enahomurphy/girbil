@@ -31,14 +31,14 @@ export class SearchType {
   type: string
 
   @Field({ nullable: true })
-  conversation_id: string
+  conversationId: string
 
   @Field({ nullable: true })
   members: number
 
   @Field({ nullable: true })
-  is_private: boolean
+  isPrivate: boolean
 
   @Field({ nullable: true })
-  is_member: boolean
+  isMember: boolean
 }

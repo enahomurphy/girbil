@@ -107,7 +107,7 @@ const Message = ({
         playBack={controls.playbackRate}
         handleReact={handleReact}
       />
-      <Reactions reactions={message.reactions} />
+      <Reactions reactions={message.reactions} handleReact={handleReact}/>
       <Video video={video} id="video" />
     </Page>
   );

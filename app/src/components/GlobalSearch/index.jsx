@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Popup, Icon, List } from 'framework7-react';
@@ -26,21 +26,28 @@ const GlobalSearch = (props) => {
   } = props;
   const [isOpen, setOpened] = useState(opened);
   const [searchText, setSearchText] = useState('');
+  const inputEl = useRef(null);
 
   useEffect(() => {
     handleSearch(searchText);
-  }, [searchText]);
+  }, [searchText, handleSearch]);
 
   useEffect(() => {
     setOpened(opened);
   }, [opened]);
 
   const handleClose = () => {
+    setSearchText('');
     setOpened(false);
     onClose();
   };
 
-  const createOptions = (id, type, is_member, conversation_id) => {
+  const setSearchHelpers = (helper) => {
+    inputEl.current.focus();
+    setSearchText(helper);
+  };
+
+  const createOptions = (id, type, isMember, conversationId) => {
     const options = [];
 
     if (type === 'channel') {
@@ -50,7 +57,7 @@ const GlobalSearch = (props) => {
         onClick: handleClose,
       });
 
-      if (is_member) {
+      if (isMember) {
         options.push({
           title: 'Leave Channel',
           onClick: () => {
@@ -62,7 +69,7 @@ const GlobalSearch = (props) => {
         options.push({
           title: 'Join Channel',
           onClick: handleClose,
-          getLink: () => `/conversations/${conversation_id}/`,
+          getLink: () => `/conversations/${conversationId}/`,
         });
       }
     }
@@ -74,12 +81,12 @@ const GlobalSearch = (props) => {
         onClick: handleClose,
       });
 
-      if (conversation_id) {
+      if (conversationId) {
         options.push({
           title: 'Close Direct Message',
           onClick: () => {
             handleClose();
-            closeConversation(conversation_id);
+            closeConversation(conversationId);
           },
         });
       }
@@ -97,6 +104,7 @@ const GlobalSearch = (props) => {
               <Icon f7="search" />
               <input
                 value={searchText}
+                ref={inputEl}
                 onChange={(e) => setSearchText(e.target.value)}
                 placeholder="Search channels and DMs..."
               />
@@ -121,17 +129,17 @@ const GlobalSearch = (props) => {
       <List style={{ margin: '32px 0 0 0' }}>
         {
           searchResult.map(({
-            id, name, conversation_id, avatar, type, members, is_private, is_member,
+            id, name, conversationId, avatar, type, members, isPrivate, isMember,
           }) => (type === 'user' ? (
             <ConversationListItem
-              options={createOptions(id, type, is_member, conversation_id)}
-              getLink={() => `/conversations/${conversation_id}/`}
+              options={createOptions(id, type, isMember, conversationId)}
+              getLink={() => `/conversations/${conversationId}/`}
               key={id}
               onClick={handleClose}
-              id={conversation_id}
+              id={conversationId}
               isChannel={false}
               isActive={false}
-              isPrivate={is_private}
+              isPrivate={isPrivate}
               user={{
                 id,
                 name,
@@ -141,14 +149,14 @@ const GlobalSearch = (props) => {
             />
           ) : (
             <ConversationListItem
-              options={createOptions(id, type, is_member, conversation_id)}
-              getLink={() => `/conversations/${conversation_id}/`}
+              options={createOptions(id, type, isMember, conversationId)}
+              getLink={() => `/conversations/${conversationId}/`}
               key={id}
               onClick={handleClose}
               isActive={false}
               isChannel
-              id={conversation_id}
-              isPrivate={is_private}
+              id={conversationId}
+              isPrivate={isPrivate}
               user={{
                 id,
                 name,
@@ -166,9 +174,9 @@ const GlobalSearch = (props) => {
           <DefaultSearchList
             title="Suggested Searches"
             options={[
-              { text: 'is:unreads', onClick: () => setSearchText('is:unreads ') },
-              { text: 'is:channel', onClick: () => setSearchText('is:channel ') },
-              { text: 'is:user', onClick: () => setSearchText('is:user ') },
+              { text: 'is:unreads', onClick: () => setSearchHelpers('is:unreads ') },
+              { text: 'is:channel', onClick: () => setSearchHelpers('is:channel ') },
+              { text: 'is:user', onClick: () => setSearchHelpers('is:user ') },
             ]}
           />
         )
@@ -178,6 +186,10 @@ const GlobalSearch = (props) => {
 };
 
 GlobalSearch.propTypes = {
+  handleSearch: PropTypes.func.isRequired,
+  searchResult: PropTypes.array.isRequired,
+  closeConversation: PropTypes.func.isRequired,
+  leaveChannel: PropTypes.func.isRequired,
   opened: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
 };

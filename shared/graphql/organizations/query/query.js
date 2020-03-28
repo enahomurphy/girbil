@@ -73,10 +73,10 @@ export const SEARCH_ORGANIZATION = gql`
       avatar
       name
       type
-      conversation_id
+      conversationId
       members
-      is_private
-      is_member
+      isPrivate
+      isMember
     }
   }
 `;

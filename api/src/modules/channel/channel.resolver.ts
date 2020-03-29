@@ -85,8 +85,8 @@ class ChannelResolver implements ResolverInterface<Channel> {
   @Authorized('user', 'admin', 'owner')
   @Query(() => [Channel], { nullable: true })
   async searchChannelsNotIn(
-    @Arg('text', { nullable: true }) text?: string,
-      @Ctx() { user: { id, organization } }: ContextType,
+    @Arg('text', { nullable: true }) text: string,
+      @Ctx() { user: { organization, id } }: ContextType,
   ): Promise<Channel[]> {
     return this.channelRepo.getPublicChannelsUserIsNotIn(
       organization.id,

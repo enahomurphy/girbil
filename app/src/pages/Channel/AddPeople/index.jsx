@@ -75,17 +75,6 @@ const AddPeople = ({ channelId, $f7router }) => {
       addUsersToChannel({
         variables: { channelId, userIds },
         refetchQueries: ['channelMembers', { query: conversationQuery.USER_CONVERSATIONS }],
-        // update: (store, { data }) => {
-        //   console.log(data);
-        //   store.modify(
-        //     store.identify({ __typename: 'Channel', id: channelId }),
-        //     {
-        //       members(value) {
-        //         return value + 1;
-        //       },
-        //     },
-        //   );
-        // },
       });
     }
 

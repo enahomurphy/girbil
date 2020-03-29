@@ -1,4 +1,4 @@
-/* eslint-disable import/no-unresolved */
+/* eslint-disable import/no-extraneous-dependencies */
 /*
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -80,11 +80,15 @@ function createWindow() {
     appIcon = `${__dirname}/img/logo.png`;
   }
 
+  const { browserWindow } = cdvElectronSettings;
+  logEverywhere(JSON.stringify(browserWindow));
   const browserWindowOpts = {
-    ...cdvElectronSettings.browserWindow,
+    ...browserWindow,
     icon: appIcon,
     webPreferences: {
+      ...(browserWindow.webPreferences || {}),
       nodeIntegration: false,
+      devTools: false,
       preload: `${__dirname}/preload.js`,
     },
   };
@@ -108,7 +112,6 @@ function createWindow() {
     // Keep only command line / deep linked arguments
     deeplinkingUrl = process.argv.slice(1);
   }
-  logEverywhere(`createWindow# ${deeplinkingUrl} ${appIcon}`);
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
@@ -154,10 +157,10 @@ app.on('will-finish-launching', () => {
   app.on('open-url', (event, url) => {
     event.preventDefault();
     deeplinkingUrl = url;
+    logEverywhere(`open-url# ${deeplinkingUrl}`);
 
     if (deeplinkingUrl && deeplinkingUrl.match('token=')) {
       setToken(deeplinkingUrl.split('token=')[1]);
     }
-    logEverywhere(`open-url# ${deeplinkingUrl}`);
   });
 });

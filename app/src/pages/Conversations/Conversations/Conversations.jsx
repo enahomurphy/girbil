@@ -9,7 +9,7 @@ import { query as orgQuery } from '@shared/graphql/organizations';
 import { mutation as channelMutations } from '@shared/graphql/channels';
 import { useOrgMessageListener } from '@/lib/socket';
 import ConversationListItem from '@/components/List/ListItem';
-import ConversationHeader from '../../../components/Header/ConversationHeader';
+import ConversationHeader from './ConversationHeader';
 import UserInfo from './UserInfo';
 import { Page } from './style';
 

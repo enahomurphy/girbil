@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Page, f7 } from 'framework7-react';
+import { useQuery, useMutation, useApolloClient } from '@apollo/client';
 
 import ProfileImage from '@/components/ProfileImage';
 import Header from '@/components/Header';
@@ -10,12 +11,9 @@ import Recorder from '@/components/Recorder/GifRecorder';
 import { Gif } from '@/lib/media';
 import { Title, Block } from '@/components/Style';
 import { get, storage } from '@shared/lib';
-import { query as conversationQuery } from '@shared/graphql/conversations';
+import { query as conversationQuery, mutation as conversationMutation } from '@shared/graphql/conversations';
 import { query as uploadQuery } from '@shared/graphql/upload';
 import { query as userQuery, mutation as userMutation } from '@shared/graphql/user';
-import {
-  useQuery, useLazyQuery, useMutation, useApolloClient,
-} from '@apollo/client';
 import ProfileInfo from './ProfileInfo';
 import ProfileUpdate from './ProfileUpdate';
 
@@ -29,22 +27,16 @@ const ProfileOrg = styled(Title)`
 const Profile = ({ userId, $f7router }) => {
   const [edit, setEdit] = useState(false);
   const [editImage, setProfileImage] = useState(false);
+
   const { data, refetch } = useQuery(userQuery.USER, { variables: { userId } });
-  const [updateUser, { loading: updatingUser }] = useMutation(userMutation.UPDATE_USER);
-  const [getConversation] = useLazyQuery(
-    conversationQuery.GET_USER_CONVERSATION_OR_CREATE, {
-      onCompleted: ({ getUserConversationOrCreate: { id } }) => {
-        $f7router.navigate(`/conversations/${id}/`);
-      },
-      fetchPolicy: 'network-only',
-    },
-  );
+  const [getConversation] = useMutation(conversationMutation.GET_USER_CONVERSATION_OR_CREATE);
   const { refetch: refetchURL } = useQuery(uploadQuery.USER_UPLOAD_URL, {
     fetchPolicy: 'network-only',
     skip: true,
   });
-  const client = useApolloClient();
+  const [updateUser, { loading: updatingUser }] = useMutation(userMutation.UPDATE_USER);
 
+  const client = useApolloClient();
   const user = get(data, 'user', {
     id: '',
     organization: {
@@ -55,13 +47,22 @@ const Profile = ({ userId, $f7router }) => {
 
   const isUser = get(storage, 'payload.id') === user.id;
 
-  const handleMessage = async () => getConversation({ variables: { userId } });
+  const handleMessage = async () => {
+    getConversation({
+      variables: { userId },
+      update(_, { data: { getUserConversationOrCreate: { id } } }) {
+        $f7router.navigate(`/conversations/${id}/`);
+      },
+      refetchQueries: [{ query: conversationQuery.USER_CONVERSATIONS }],
+      awaitRefetchQueries: true,
+    });
+  };
 
   const handleAvatarChange = async (blob, url) => {
     try {
       setProfileImage(false);
-      const result = await refetchURL();
       f7.dialog.preloader('Updating profile picture');
+      const result = await refetchURL();
       const { postURL, getURL } = get(result, 'data.getUserUploadURL', {});
       const file = Gif.blobToFile(blob, user.id);
 

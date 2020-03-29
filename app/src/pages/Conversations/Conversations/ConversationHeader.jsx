@@ -5,13 +5,14 @@ import {
 import PropTypes from 'prop-types';
 
 import GlobalSearch from '@/components/GlobalSearch';
-import emitter from '@/lib/emitter';
-import { Title, Block, Popover } from '@/components/Style';
+import { Title, Popover } from '@/components/Style';
 import {
   Add, Settings, Chevron, Search,
 } from '@/components/Icon';
 import { storage, get } from '@shared/lib';
-import { NavbarWrapper } from './style';
+import { NavbarWrapper } from '@/components/Header/style';
+
+import { Logo } from './style';
 
 const ConversationHeader = (props) => {
   const [isOpen, setOpenSearch] = useState(false);
@@ -22,14 +23,20 @@ const ConversationHeader = (props) => {
   return (
     <NavbarWrapper>
       <Navbar>
-        <Block type="flex" align="center" margin="0">
+        <Logo
+          onClick={() => f7.popover.open('.user-popover')}
+          type="flex"
+          align="center"
+          padding="0px"
+          inverse
+          background="transparent"
+          margin="0"
+        >
           <Title width="initial" margin="0 10px 0 0" size="24px">
             {get(storage, 'payload.organization.name')}
           </Title>
-          <Link>
-            <Chevron />
-          </Link>
-        </Block>
+          <Chevron />
+        </Logo>
         <NavRight style={{
           width: '90px',
           display: 'flex',
@@ -47,11 +54,11 @@ const ConversationHeader = (props) => {
           </Link>
           <Popover margin="0 30px 0 0" className="popover-settings">
             <List>
-              <ListItem popoverClose href="/preferences" title="System preference" />
+              <ListItem popoverClose href="/preferences" title="System Preferences" />
               <ListItem
                 popoverClose
                 onClick={() => {
-                  emitter.emitEvent('logout');
+                  window.close();
                   f7.popover.close('.popover-settings');
                 }}
                 title="Quit Girbil"

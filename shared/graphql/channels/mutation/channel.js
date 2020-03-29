@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { USER_CONVERSATIONS } from '../../conversations/query';
-import { LEAVE_CHANNEL } from './mutation';
+import { LEAVE_CHANNEL, ADD_USERS_TO_CHANNEL } from './mutation';
 
 
 export const useLeaveChannel = () => {
@@ -30,4 +30,24 @@ export const useLeaveChannel = () => {
   return [handelLeaveChannel];
 };
 
-export default {};
+
+export const useAddUsersToChannel = (onCompleted = () => {}, onError = () => {}) => {
+  const [addUsersToChannel] = useMutation(
+    ADD_USERS_TO_CHANNEL,
+    {
+      onCompleted,
+      onError,
+    },
+  );
+
+  return ({ variables, refetchQueries = ['channelMembers'], onResolved = () => {} }) => {
+    const { channelId, userIds } = variables;
+    addUsersToChannel({
+      variables: { channelId, userIds },
+      refetchQueries: [...refetchQueries],
+      update: () => {
+        onResolved();
+      },
+    });
+  };
+};

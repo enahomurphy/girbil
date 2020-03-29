@@ -1,6 +1,6 @@
 import { ListItem, Page as f7Page } from 'framework7-react';
 
-import { Title, Block } from '@/components/Style';
+import { Title, Block, Button } from '@/components/Style';
 import styled from 'styled-components';
 
 export const StyledUser = styled(Block)`
@@ -72,25 +72,14 @@ export const StyledTitle = styled(Title)`
 
 
 export const Page = styled(f7Page)`
-  /* scrollbar-width: thin;
-  scrollbar-color: var(--gb-medium-gray);
-  
-  &:hover {
-    overflow-y: scroll;
-    -webkit-overflow-y: overlay;
-  }
+`;
 
-  &::-webkit-scrollbar {
-    width: 2px;
-    height: 8px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: var(--gb-medium-grey);
-    border-radius: 100px;
-  }
-
-  &:scrollbar[orient="horizontal"] {
-    color: green;
-  } */
+export const Logo = styled(Button)`
+  padding: 0;
+  background: transparent;
+  width: fit-content;
+  justify-content: flex-start;
+  margin-left: 7px;
+  display: flex;
+  align-items: center;
 `;

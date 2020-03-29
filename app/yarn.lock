@@ -6556,7 +6556,7 @@ object.entries@^1.1.0, object.entries@^1.1.1:
     function-bind "^1.1.1"
     has "^1.0.3"
 
-object.fromentries@^2.0.2:
+object.fromentries@^2.0.0, object.fromentries@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/object.fromentries/-/object.fromentries-2.0.2.tgz#4a09c9b9bb3843dd0f89acdb517a794d4f355ac9"
   integrity sha512-r3ZiBH7MQppDJVLx6fhD618GKNG40CZYH9wgwdhKxBDDbQgjeWGGd4AtkZad84d291YxvWe7bJGuE65Anh0dxQ==
@@ -7982,6 +7982,13 @@ react-player@^1.15.2:
     deepmerge "^4.0.0"
     load-script "^1.0.0"
     prop-types "^15.7.2"
+
+react-scrubber@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/react-scrubber/-/react-scrubber-0.4.0.tgz#7022915c01385773d62428a0fb3cebe06b6b024c"
+  integrity sha512-XdmoPwL7654g7iIYjJvlVfy03DTAH73JzpAvClfpztEzaUtgmgol2C9iJX6ZYnMH6L5cfWvSvZv7dSaS8u6Hng==
+  dependencies:
+    object.fromentries "^2.0.0"
 
 react-use@^13.26.1:
   version "13.27.0"

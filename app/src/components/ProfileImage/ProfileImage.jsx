@@ -15,6 +15,7 @@ const StyledBlock = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 6px;
 `;
 
 const StyledInitialsBlock = styled.div`
@@ -31,7 +32,7 @@ const StyledInitialsBlock = styled.div`
 export const SimpleProfileImage = ({
   name, url, width, height,
 }) => (
-  <StyledBlock width={width} height={width}>
+  <StyledBlock width={width} height={height}>
     {url && <Image radius="6px" src={url} width={width} height={height} />}
     {!url && (
     <StyledInitialsBlock url={url} width={width} height={width}>

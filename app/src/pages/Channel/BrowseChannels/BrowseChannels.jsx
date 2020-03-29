@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Icon, List } from 'framework7-react';
 import PropTypes from 'prop-types';
@@ -8,7 +7,9 @@ import {
   Title, Text, Block, Search, Button,
 } from '@/components/Style';
 
-const BrowseChannels = ({ channels, handleSearchChange, onCreateChannel }) => (
+const BrowseChannels = ({
+  channels, handleSearchChange, onCreateChannel, joinChannel,
+}) => (
   <Block>
     <Block margin="0 24px">
       <Block
@@ -47,7 +48,8 @@ const BrowseChannels = ({ channels, handleSearchChange, onCreateChannel }) => (
         channels.map((channel) => (
           <ListItem
             id={channel.id}
-            getLink={(item) => `/conversations/${item.conversation.id}/`}
+            onClick={() => joinChannel(channel)}
+            getLink={() => '#'}
             key={channel.id}
             isChannel
             isActive={false}
@@ -63,6 +65,7 @@ const BrowseChannels = ({ channels, handleSearchChange, onCreateChannel }) => (
 BrowseChannels.propTypes = {
   channels: PropTypes.array.isRequired,
   handleSearchChange: PropTypes.func.isRequired,
+  joinChannel: PropTypes.func.isRequired,
   onCreateChannel: PropTypes.func.isRequired,
 };
 

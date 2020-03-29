@@ -13,7 +13,7 @@ import { StyledUser } from './style';
 const UserInfo = ({ user }) => (
   <>
     <Link popoverOpen=".user-popover">
-      <StyledUser type="flex" margin="16px 0 0 0" align="center">
+      <StyledUser type="flex" margin="5px 0 0 0" align="center">
         <Active active width="16px" />
         <Text color="#EFEFEF" margin="0" align="left">{user.name}</Text>
       </StyledUser>

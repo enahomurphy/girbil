@@ -35,6 +35,8 @@ class MessageRepository extends Repository<Message> {
         .andWhere('message.parent_id = :parentId');
     }
 
+    query.orderBy('message.createdAt', 'ASC');
+
     return query.getMany();
   }
 

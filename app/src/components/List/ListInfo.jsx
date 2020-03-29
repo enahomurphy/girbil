@@ -21,16 +21,22 @@ const ListInfo = ({ unreadCount, options, id }) => (
           <Popover width="176px" className={`popover-menu${id}`}>
             <List>
               {
-            options.map(({ title, getLink, onClick }) => (
-              <ListItem
-                key={title}
-                link={getLink ? getLink() : '#'}
-                onClick={onClick}
-                popoverClose
-                title={title}
-              />
-            ))
-          }
+                options.map(({ title, getLink, onClick }) => (
+                  <ListItem
+                    key={title}
+                    link={getLink ? getLink() : '#'}
+                    onClick={() => {
+                      if (onClick) {
+                        onClick();
+                      }
+                      // hack to fix popover not been completely removed
+                      document.querySelector(`.popover-menu${id}`).remove();
+                    }}
+                    popoverClose={`.popover-menu${id}`}
+                    title={title}
+                  />
+                ))
+              }
             </List>
           </Popover>
           <Link popoverOpen={`.popover-menu${id}`} iconF7="ellipsis_vertical" color="white " />

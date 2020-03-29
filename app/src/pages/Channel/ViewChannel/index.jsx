@@ -11,7 +11,12 @@ import Details from './Details';
 import Members from './Members';
 
 const View = ({ channelId }) => {
-  const { data } = useQuery(query.GET_CHANNEL_MEMBERS, { variables: { channelId } });
+  const { data } = useQuery(
+    query.GET_CHANNEL_MEMBERS, {
+      variables: { channelId },
+      fetchPolicy: 'network-only',
+    },
+  );
 
   const members = get(data, 'channelMembers.members', []);
   const count = get(data, 'channelMembers.count', 0);

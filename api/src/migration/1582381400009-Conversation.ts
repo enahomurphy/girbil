@@ -1,6 +1,3 @@
-
-/* eslint-disable import/prefer-default-export */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable class-methods-use-this */
 import { MigrationInterface, QueryRunner } from 'typeorm';
 

@@ -73,7 +73,7 @@ class ConversationResolver {
 
   @Authorized('user', 'admin', 'owner')
   @CanView('user')
-  @Query(() => Conversation)
+  @Mutation(() => Conversation)
   async getUserConversationOrCreate(
     @Args() { userId }: UserIDArgs,
       @Ctx() { user }: ContextType,
@@ -86,8 +86,10 @@ class ConversationResolver {
 
     if (!conversation.open) {
       conversation.open = true;
-      this.conversationRepo.manager.save(conversation);
+      this.conversationRepo.update({ id: conversation.id }, { open: true });
     }
+
+    conversation.receiver = user.user;
 
     return conversation;
   }

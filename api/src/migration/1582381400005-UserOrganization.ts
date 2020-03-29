@@ -1,4 +1,3 @@
-
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable class-methods-use-this */
@@ -14,7 +13,7 @@ export class UserOrganization1582381400005 implements MigrationInterface {
       CREATE TABLE IF NOT EXISTS "user_organizations" (
         "user_id" uuid,
         "organization_id" uuid,
-        "accepted" boolean DEFAULT false,
+        "accepted" boolean DEFAULT true,
         "joined_date" timestamp DEFAULT Now(),
         "role" role_type DEFAULT 'user',
         "position" varchar(255),

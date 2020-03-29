@@ -105,10 +105,12 @@ const NewMessage = ({ isThread, conversationId }) => {
     if (isThread) {
       f7.views.main.router.back(
         `/conversations/${conversationId}`,
+        { force: true, reloadPrevious: true },
       );
     } else {
       f7.views.main.router.back(
         '/conversations',
+        { force: true, reloadPrevious: true },
       );
     }
   };

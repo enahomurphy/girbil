@@ -57,7 +57,8 @@ export const Right = styled(SliderNav)`
 `;
 
 export const SliderNavWrapper = styled.div`
-  height: var(--gb-message-height);
+  height: 56px;
+  margin-top: calc((var(--gb-message-height) /2) - (56px / 2));
   max-width: 16px;
   display: flex;
   justify-content: center;

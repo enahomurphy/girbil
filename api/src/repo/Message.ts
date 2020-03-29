@@ -22,12 +22,10 @@ class MessageRepository extends Repository<Message> {
       query.where('message.conversation_id = :conversationId AND message.parent_id IS NULL');
     }
 
-    query.addSelect(`(
-        SELECT COUNT(id) > 0 as read FROM messages  as gn
-        WHERE :userId = ANY(coalesce(gn.read, array[]::uuid[]))
-        AND id = message.id
-        LIMIT 1
-      )`, 'message_hasRead');
+    query.addSelect(
+      '(:userId = ANY(coalesce(message.read, array[]::uuid[])))',
+      'message_hasRead',
+    );
 
     if (parentId) {
       query
@@ -69,6 +67,19 @@ class MessageRepository extends Repository<Message> {
     }
 
     return [];
+  }
+
+  async findAllUnreadMessagesBeforeDate(
+    conversationId: string, userId: string, createdAt: string,
+  ): Promise<Message[]> {
+    return this.createQueryBuilder('message')
+      .setParameter('conversationId', conversationId)
+      .setParameter('userId', userId)
+      .setParameter('createdAt', createdAt)
+      .where('message.conversation_id = :conversationId')
+      .andWhere('(message.created_at::timestamptz(0) < :createdAt OR message.created_at = :createdAt::timestamptz(0))')
+      .andWhere('NOT :userId = ANY(coalesce(read, array[]::uuid[]))')
+      .getMany();
   }
 }
 

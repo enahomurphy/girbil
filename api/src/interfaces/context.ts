@@ -1,10 +1,12 @@
-import { User } from '../entity';
 import Express from 'express';
+
+import { User } from '../entity';
 
 export interface ContextType {
   user: User;
   req: Express.Request;
   res: Express.Response;
+  timezone: string;
 }
 
 export type Response = Express.Response

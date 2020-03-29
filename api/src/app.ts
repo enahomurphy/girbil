@@ -30,7 +30,12 @@ const App = async (): Promise<string | undefined> => {
 
     const apolloServer = new ApolloServer({
       schema,
-      context: ({ req, res }: ContextArgs): ContextType => ({ req, res, user: req.user }),
+      context: ({ req, res }: ContextArgs): ContextType => ({
+        req,
+        res,
+        user: req.user,
+        timezone: req.get('timezone'),
+      }),
     });
 
     const app: Express.Application = Express();

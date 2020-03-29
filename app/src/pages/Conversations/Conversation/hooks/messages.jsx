@@ -12,7 +12,7 @@ export const getPullOverLinks = ({
   },
   markMessage,
   deleteMessage,
-  handleReact
+  handleReact,
 }) => {
   const options = [
     {
@@ -47,7 +47,7 @@ export const getPullOverLinks = ({
 
   if (get(storage, 'payload.id') === sender.id) {
     options.push({
-      type: 'delete video',
+      type: 'delete',
       title: 'Delete video',
       onClick: () => deleteMessage(id),
     });
@@ -81,8 +81,8 @@ export const useFormatMessages = (messages = []) => {
       handleReact: (messageId, reaction) => {
         reactToMessage({
           messageId,
-          reaction
-        })
+          reaction,
+        });
       },
     }),
     link: '#',

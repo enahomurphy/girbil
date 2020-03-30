@@ -89,6 +89,7 @@ export const useFormatMessages = (messages = []) => {
   }));
 };
 
+const router = (threadId) => f7.views[threadId ? 'conversationThread' : 'conversation'].router;
 
 const changeRoute = (message) => {
   const options = {
@@ -110,11 +111,16 @@ const changeRoute = (message) => {
   }
 };
 
+
 export const useMessageClicked = (messages) => {
+  const [updateState] = mutation.useMessageState();
+
   const handler = (id) => {
     const message = messages.find(({ id: mId }) => id === mId);
 
-    if (message) {
+    if (['playing', 'pause'].includes(message.state)) {
+      updateState({ messageId: message.id, state: 'toggle' });
+    } else if (message) {
       changeRoute(message);
     }
   };
@@ -163,37 +169,42 @@ export const usePlayerPrevNextEvent = (messages) => {
       const messageIndex = messages.findIndex((mId) => mId.id === id);
       const hasMessage = (messageIndex > -1);
 
-      if (hasMessage && action === 'next') {
-        const isLast = messageIndex === messageLength;
+      const isLast = (hasMessage && action === 'next') && messageIndex === messageLength;
+      const isFirst = (hasMessage && action === 'prev') && messageIndex === 0;
+      let message = null;
 
-        if (isLast) {
-          return null;
-        }
-
-        return messages[messageIndex + 1];
+      if (!isLast && action === 'next') {
+        message = messages[messageIndex + 1];
       }
 
-      if (hasMessage && action === 'prev') {
-        const isFirst = messageIndex === 0;
-
-        if (isFirst) {
-          return null;
-        }
-
-        return messages[messageIndex - 1];
+      if (!isFirst && action === 'prev') {
+        message = messages[messageIndex - 1];
       }
 
-      return null;
+      return { message, isLast, isFirst };
     };
 
     const handler = ({ id, action }) => {
-      const message = getNextMessage({ id, action });
+      const { message, isLast } = getNextMessage({ id, action });
+
+      if (isLast) {
+        const { conversationId, parentId } = messages[0];
+        if (parentId) {
+          router(parentId).back(
+            `/conversations/${conversationId}/thread/${parentId}`,
+            { reloadPrevious: true },
+          );
+        } else {
+          router(parentId).back(
+            `/conversations/${conversationId}/record`,
+            { force: true },
+          );
+        }
+      }
 
       if (message) {
         updateState({
-          conversationId: message.conversationId,
           messageId: message.id,
-          threadId: message.parentId,
           state: 'playing',
         });
 

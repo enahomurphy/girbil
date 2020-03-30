@@ -51,14 +51,15 @@ const Create = ({
             />
           </BorderedInput>
           <Block>
-            <Title>Channel title</Title>
+            <Title>Channel tile</Title>
             <Text
+              onClick={onImageClick}
               size="18px"
               line="23px"
               color="var(--gb-accent)"
               margin="8px 0 0 0"
             >
-              Set channel title
+              Set channel tile
             </Text>
             <StyledAvatar onClick={onImageClick}>
               {

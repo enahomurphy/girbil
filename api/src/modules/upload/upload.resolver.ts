@@ -12,6 +12,7 @@ import { AWS, ContextType } from '../../interfaces';
 import aws from '../../services/aws';
 import { CanView } from '../../middleware/permissions';
 import { ChannelIDArgs } from '../channel/channel.args';
+import { keys } from '../../config';
 
 @Resolver(UploadType)
 class UploadResolver {
@@ -24,7 +25,7 @@ class UploadResolver {
     @Args() { id, conversationId }: UploadURLArgs,
       @Ctx() { user: { organization } }: ContextType,
   ): Promise<UploadType> {
-    const path = `${organization.id}/videos/${conversationId}`;
+    const path = `${keys.environment}/${organization.id}/videos/${conversationId}`;
     return this.aws.getMessageUploadURL(id, path);
   }
 
@@ -33,7 +34,7 @@ class UploadResolver {
   async getUserUploadURL(
     @Ctx() { user: { id } }: ContextType,
   ): Promise<UploadURLType> {
-    const path = `/users/${id}/avatar.gif`;
+    const path = `${keys.environment}/users/${id}/avatar.gif`;
     return this.aws.createSignedURL(path, 'image/gif');
   }
 
@@ -41,8 +42,9 @@ class UploadResolver {
   @Query(() => UploadURLType, { nullable: true })
   async getChannelUploadURL(
     @Args() { channelId }: ChannelIDArgs,
+      @Ctx() { user: { organization } }: ContextType,
   ): Promise<UploadURLType> {
-    const path = `/channels/${channelId}/avatar.gif`;
+    const path = `${keys.environment}/${organization.id}/channels/${channelId}/avatar.gif`;
     return this.aws.createSignedURL(path, 'image/gif');
   }
 }

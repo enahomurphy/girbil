@@ -77,21 +77,26 @@ class MessageResolver {
       throw new Error('Message does not exist');
     }
 
-    let { read } = message;
-    if (!read) {
-      read = [];
-    }
-
-    read.push(user.id);
-    await this.messageRepo.update(
-      {
-        id: messageId,
-        conversationId,
-      },
-      {
-        read: Array.from(new Set(read)),
-      },
+    const messages = await this.messageRepo.findAllUnreadMessagesBeforeDate(
+      conversationId,
+      user.id,
+      message.createdAt,
     );
+
+    const updates = messages.map(({ id, read }) => {
+      let readUsers = [];
+      if (Array.isArray(read)) {
+        readUsers = [...read];
+      }
+      readUsers.push(user.id);
+      return this.messageRepo.update(
+        { id },
+        { read: Array.from(new Set(readUsers)) },
+      );
+    });
+
+    Promise.all(updates);
+
     return message;
   }
 

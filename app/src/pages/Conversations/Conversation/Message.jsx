@@ -105,7 +105,7 @@ const Message = ({
           next={handleNextMessage('next')}
           prev={handleNextMessage('prev')}
         />
-        <Reactions reactions={message.reactions} handleReact={handleReact}/>
+        <Reactions reactions={message.reactions} handleReact={handleReact} />
         <Video video={video} id="video" />
       </div>
     </Page>

@@ -1,12 +1,8 @@
-import Axios from 'axios';
 import { blobToFile } from './helpers';
 
 /* eslint-disable no-undef */
 class Recorder {
   constructor() {
-    this.duration = 30000;
-    this.thumbnailDuration = 3000;
-
     this.onMediaError = this.onMediaError.bind(this);
     this.onMediaStop = this.onMediaStop.bind(this);
     this.reset = this.reset.bind(this);
@@ -26,7 +22,11 @@ class Recorder {
       timeSlice: 3000,
     });
 
-    this.gif = new RecordRTC(stream, { type: 'gif' });
+    this.gif = new RecordRTC(stream, {
+      type: 'gif',
+      frameRate: 150,
+      quality: 1,
+    });
   }
 
   onMediaError(error) {
@@ -41,28 +41,33 @@ class Recorder {
     return new Promise((resolve) => {
       if (this.gif.state === 'active') {
         this.stopThumbnailRecord();
-        clearTimeout(this.thumbnailTimeout);
       }
-      this.media.stopRecording(() => {
+
+      if (this.media.state !== 'inactive') {
         resolve(blobToFile(this.media.getBlob(), name));
-      });
+      } else {
+        this.media.stopRecording(() => {
+          resolve(blobToFile(this.media.getBlob(), name));
+        });
+      }
     });
   }
 
   startRecord() {
+    this.media.setRecordingDuration(Recorder.videoDuration).onRecordingStopped(() => {
+      const blob = this.media.getBlob();
+      this.onDurationEnd(blob);
+    });
+
+
+    this.gif.setRecordingDuration(Recorder.thumbnailDuration).onRecordingStopped(() => {
+      const blob = this.gif.getBlob();
+      this.onThumbnailStop(blob);
+    });
+
     this.media.startRecording();
     this.gif.startRecording();
     this.onRecordStart();
-
-    this.thumbnailTimeout = setTimeout(() => {
-      this.stopThumbnailRecord();
-      clearTimeout(this.thumbnailTimeout);
-    }, this.thumbnailDuration);
-
-    this.timeout = setTimeout(() => {
-      this.onDurationEnd();
-      clearTimeout(this.timeout);
-    }, this.duration);
   }
 
   async stopThumbnailRecord() {
@@ -90,28 +95,6 @@ class Recorder {
     return this.media.toURL(this.media.blob);
   }
 
-  static async getMediaDevices() {
-    const deviceInfos = await navigator.mediaDevices.enumerateDevices();
-
-    const result = {
-      microphone: [],
-      speaker: [],
-      video: [],
-    };
-
-    deviceInfos.forEach((deviceInfo) => {
-      if (deviceInfo.kind === 'audioinput') {
-        result.microphone.push(deviceInfo);
-      } else if (deviceInfo.kind === 'audiooutput') {
-        result.speaker.push(deviceInfo);
-      } else if (deviceInfo.kind === 'videoinput') {
-        result.video.push(deviceInfo);
-      }
-    });
-
-    return result;
-  }
-
   static blobToBase64(blob) {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -126,17 +109,12 @@ class Recorder {
     });
   }
 
-  static async upload(blob) {
-    const data = await Recorder.blobToBase64(blob);
-    const body = JSON.stringify({ data });
-    Axios({
-      method: 'POST',
-      url: `${process.env.API_URL}/api`,
-      data: body,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+  static get videoDuration() {
+    return 30000;
+  }
+
+  static get thumbnailDuration() {
+    return 3000;
   }
 }
 

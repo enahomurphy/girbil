@@ -72,6 +72,7 @@ export class Message {
 
   @CreateDateColumn({
     name: 'created_at',
+    type: 'timestamp with time zone',
   })
   @Field()
   createdAt?: Date;

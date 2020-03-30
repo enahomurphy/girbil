@@ -2,12 +2,13 @@
 import Video from './Video';
 
 class Gif {
-  constructor(videoId) {
+  constructor(videoId, duration = 3000) {
     this.videoId = videoId;
     this.stream = new MediaStream();
     this.playing = false;
     this.file = null;
     this.url = null;
+    this.duration = duration;
 
     this.onStart = () => {};
     this.onStop = () => {};
@@ -34,6 +35,8 @@ class Gif {
 
     this.gif = new RecordRTC(stream, {
       type: 'gif',
+      frameRate: 150,
+      quality: 1,
     });
   }
 
@@ -41,6 +44,11 @@ class Gif {
     this.playing = true;
     this.gif.startRecording();
     this.onStart();
+    this.gif.setRecordingDuration(this.duration).onRecordingStopped((url) => {
+      this.playing = false;
+      const blob = this.gif.getBlob();
+      this.onStop(blob, url);
+    });
   }
 
   async stopRecording() {

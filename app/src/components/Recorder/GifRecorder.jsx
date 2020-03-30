@@ -53,10 +53,6 @@ const Recorder = ({ opened, onFile, onClose }) => {
         }
       }, 1000);
     }
-
-    if (gifRecorder.playing && counter === 0) {
-      gifRecorder.stopRecording();
-    }
   }, [counter, gifRecorder]);
 
   gifRecorder.onStop = (blob, url) => {
@@ -91,6 +87,7 @@ const Recorder = ({ opened, onFile, onClose }) => {
           <Back />
         </BackIcon>
         <RecorderButton
+          duration={3000}
           onClick={handleRecording}
           recording={gifRecorder.playing}
         />

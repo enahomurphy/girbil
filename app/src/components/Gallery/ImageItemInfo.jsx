@@ -23,9 +23,13 @@ const ImageItemInfo = ({
               <ListItem
                 onClick={() => {
                   if (onClick) onClick();
+                  // hack to fix popover not been completely removed
                   f7.popover.close(`.popover-menu-${messageId}`);
+
+                  if (type === 'delete') {
+                    document.querySelector(`.popover-menu-${messageId}`).remove();
+                  }
                 }}
-                popoverClose
                 key={type}
                 {...props}
               >

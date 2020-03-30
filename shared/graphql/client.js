@@ -49,6 +49,7 @@ export default ({
     headers: {
       ...headers,
       authorization: storage.token ? `Bearer ${storage.token}` : '',
+      timezone: window.Intl ? Intl.DateTimeFormat().resolvedOptions().timeZone : '',
     },
   }));
 

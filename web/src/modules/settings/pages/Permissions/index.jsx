@@ -63,7 +63,7 @@ const Permissions = () => {
       buttonText={
         isList ? 'Invite  People' : ''
       }
-      buttonAction={() => push('/organizations/invite')}
+      buttonAction={() => push('/invite')}
       backAction={isList ? null : () => setState('list')}
     >
       <Fragment>

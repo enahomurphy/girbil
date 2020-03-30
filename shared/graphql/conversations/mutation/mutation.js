@@ -74,6 +74,8 @@ export const MARK_MESSAGE_AS_READ = gql`
       conversationId: $conversationId
     ) {
       id
+      parentId
+      conversationId
     }
   }
 `;
@@ -85,6 +87,8 @@ export const MARK_MESSAGE_AS_UNREAD = gql`
       conversationId: $conversationId
     ) {
       id
+      parentId
+      conversationId
     }
   }
 `;

@@ -5,6 +5,7 @@ import { useMutation, useLazyQuery, useQuery } from '@apollo/client';
 import { f7 } from 'framework7-react';
 import PropTypes from 'prop-types';
 
+import emitter from '@/lib/emitter';
 import RecordMachine from '@/states/record';
 import { Video as VideoComponent, useVideoData, Header } from '@/components/Video';
 import { mutation, query } from '@shared/graphql/conversations';
@@ -20,7 +21,7 @@ import { NewMessageWrapper } from './style';
 const NewMessage = ({ isThread, conversationId }) => {
   const { data: conversationData } = useQuery(
     query.CONVERSATION,
-    { variables: { conversationId }, fetchPolicy: 'network-only' },
+    { variables: { conversationId } },
   );
   const conversationMeta = useConversationMeta(get(conversationData, 'conversation', {}));
 
@@ -53,6 +54,10 @@ const NewMessage = ({ isThread, conversationId }) => {
       updateState({ state: 'done' });
     };
   }, [videoRecorder, updateState]);
+
+  useEffect(() => {
+    emitter.emitEvent('play_unread');
+  }, []);
 
   const stopRecord = async () => {
     const messageId = get(data, 'addMessage.id');

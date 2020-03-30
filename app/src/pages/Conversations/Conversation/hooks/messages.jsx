@@ -9,14 +9,15 @@ import emitter from '@/lib/emitter';
 export const router = (threadId) => f7.views[threadId ? 'conversationThread' : 'conversation'].router;
 
 export const changeRoute = (message) => {
+  const isThread = get(message, 'parentId', false);
   const options = {
     props: {
       message,
-      isThread: Boolean(message.parentId),
+      isThread,
     },
   };
 
-  if (message.parentId) {
+  if (isThread) {
     f7.views.conversationThread.router.navigate(
       `/conversations/${message.conversationId}/thread/${message.parentId}/messages/${message.id}`,
     );

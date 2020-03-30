@@ -77,7 +77,7 @@ class MessageRepository extends Repository<Message> {
       .setParameter('userId', userId)
       .setParameter('createdAt', createdAt)
       .where('message.conversation_id = :conversationId')
-      .andWhere('(message.created_at::timestamptz(0) < :createdAt OR message.created_at = :createdAt::timestamptz(0))')
+      .andWhere('(message.created_at::timestamptz(0) < :createdAt OR message.created_at::timestamptz(0) = :createdAt::timestamptz(0))')
       .andWhere('NOT :userId = ANY(coalesce(read, array[]::uuid[]))')
       .getMany();
   }

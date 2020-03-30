@@ -9,7 +9,7 @@ import {
   UPDATE_MESSAGE_STATE,
   REACT_TO_MESSAGE,
 } from './mutation';
-import { GET_MESSAGE } from '../query';
+import { GET_MESSAGE, GET_MESSAGES } from '../query';
 
 export const useSaveMessage = () => {
   const [save, { data, loading, error }] = useMutation(SAVE_MESSAGE);
@@ -62,19 +62,47 @@ export const useMarkMessage = (state = 'read') => {
   const handler = useCallback(
     (variables) => markMessage({
       variables,
-      update: (store) => {
-        store.modify(
-          store.identify({ __typename: 'Message', id: variables.messageId }),
-          {
-            hasRead(value) {
-              return !value;
+      update: (store, { data: { markAsUnRead, markAsRead } }) => {
+        if (state === 'read') {
+          const { parentId, id, conversationId } = (markAsUnRead || markAsRead);
+          const queryVariables = { conversationId };
+          if (parentId) {
+            queryVariables.messageId = parentId;
+          }
+
+          const { messages } = store.readQuery({
+            query: GET_MESSAGES,
+            variables: queryVariables,
+          });
+
+          const messageIndex = messages.findIndex(({ id: mId }) => id === mId);
+
+          const newMessages = messages.map((m, index) => {
+            if (index <= messageIndex) {
+              return { ...m, hasRead: true };
+            }
+            return m;
+          });
+
+          store.writeQuery({
+            query: GET_MESSAGES,
+            variables: queryVariables,
+            data: { messages: newMessages },
+          });
+        } else {
+          store.modify(
+            store.identify({ __typename: 'Message', id: variables.messageId }),
+            {
+              hasRead(value) {
+                return !value;
+              },
             },
-          },
-        );
+          );
+        }
       },
       refetchQueries: ['conversations'],
     }),
-    [markMessage],
+    [markMessage, state],
   );
 
   return [handler];

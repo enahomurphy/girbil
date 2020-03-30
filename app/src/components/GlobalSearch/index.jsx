@@ -29,7 +29,9 @@ const GlobalSearch = (props) => {
   const inputEl = useRef(null);
 
   useEffect(() => {
-    handleSearch(searchText);
+    if (searchText) {
+      handleSearch(searchText);
+    }
   }, [searchText, handleSearch]);
 
   useEffect(() => {

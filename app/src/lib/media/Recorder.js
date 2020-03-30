@@ -80,8 +80,10 @@ class Recorder {
   }
 
   reset() {
-    this.media.destroy();
-    this.gif.destroy();
+    if (this.media.destroy) {
+      this.media.destroy();
+      this.gif.destroy();
+    }
   }
 
   file(name) {

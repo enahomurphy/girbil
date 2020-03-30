@@ -32,6 +32,10 @@ const MainApp = () => {
         if (networkError.statusCode === 401) {
           emitter.emitEvent('logout');
         }
+
+        if (networkError.statusCode === 500 || !networkError.statusCode) {
+          f7.views.main.router.navigate('/error');
+        }
       }
     },
   }));

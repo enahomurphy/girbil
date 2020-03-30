@@ -94,8 +94,6 @@
     "react-circular-progressbar": "^2.0.3",
     "react-dom": "^16.13.0",
     "react-hot-loader": "^4.12.19",
-    "react-player": "^1.15.2",
-    "react-scrubber": "^0.4.0",
     "react-use": "^13.26.1",
     "recordrtc": "^5.5.9",
     "styled-components": "^5.0.1",

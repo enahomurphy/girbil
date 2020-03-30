@@ -96,7 +96,7 @@ export class Message {
   hasRead = false;
 
   @Field(() => User)
-  @OneToOne(() => User, { eager: true })
+  @OneToOne(() => User, { eager: false })
   @JoinColumn({
     name: 'sender_id',
     referencedColumnName: 'id',

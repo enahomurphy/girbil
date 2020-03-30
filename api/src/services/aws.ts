@@ -42,12 +42,12 @@ export function createSignedURL(name: string, type: string): Promise<UploadURL> 
 
 export async function getMessageUploadURL(id: string, path: string): Promise<UploadVideo> {
   const thumbnail = createSignedURL(
-    `${path}/${id}-thumbnail.gif`,
+    `${path}/${id}/thumbnail.gif`,
     'image/gif',
   );
 
   const video = createSignedURL(
-    `${path}/${id}-message.webm`,
+    `${path}/${id}/message.webm`,
     'video/webm',
   );
 

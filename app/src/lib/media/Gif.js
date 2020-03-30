@@ -67,14 +67,6 @@ class Gif {
     console.error(this.videoId, error);
   }
 
-  getFile(name) {
-    return new File([this.file], name, {
-      lastModified: (new Date()).getTime(),
-      type: 'video/webm',
-    });
-  }
-
-
   reset() {
     this.stream.getTracks().forEach((track) => {
       track.stop();

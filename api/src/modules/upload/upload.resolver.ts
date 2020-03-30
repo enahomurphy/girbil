@@ -25,7 +25,7 @@ class UploadResolver {
     @Args() { id, conversationId }: UploadURLArgs,
       @Ctx() { user: { organization } }: ContextType,
   ): Promise<UploadType> {
-    const path = `${keys.environment}/${organization.id}/videos/${conversationId}`;
+    const path = `${keys.environment}/${organization.id}/conversations/${conversationId}`;
     return this.aws.getMessageUploadURL(id, path);
   }
 

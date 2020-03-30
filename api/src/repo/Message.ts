@@ -70,7 +70,7 @@ class MessageRepository extends Repository<Message> {
   }
 
   async findAllUnreadMessagesBeforeDate(
-    conversationId: string, userId: string, createdAt: string,
+    conversationId: string, userId: string, createdAt: Date,
   ): Promise<Message[]> {
     return this.createQueryBuilder('message')
       .setParameter('conversationId', conversationId)

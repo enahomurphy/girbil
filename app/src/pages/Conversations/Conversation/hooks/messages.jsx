@@ -91,7 +91,7 @@ export const useFormatMessages = (messages = []) => {
 
 const router = (threadId) => f7.views[threadId ? 'conversationThread' : 'conversation'].router;
 
-const changeRoute = (message) => {
+export const changeRoute = (message) => {
   const options = {
     props: {
       message,

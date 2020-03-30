@@ -20,7 +20,7 @@ const EmptyState = () => (
       type="flex"
       justify="center"
     >
-      <img src="/assets/images/empty.jpg" alt="empty" />
+      <img src="https://girbil.s3-us-west-2.amazonaws.com/app/assets/images/empty.jpg" alt="empty" />
     </Block>
     <Title
       align="center"

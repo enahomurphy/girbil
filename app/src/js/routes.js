@@ -11,6 +11,18 @@ const routes = [
     },
   },
   {
+    path: '/error',
+    async(routeTo, routeFrom, resolve) {
+      const reactComponent = () => import('@/pages/Error');
+      reactComponent().then((rc) => {
+        resolve({ component: rc.default });
+      });
+    },
+    options: {
+      animate: false,
+    },
+  },
+  {
     path: '/preferences',
     async(routeTo, routeFrom, resolve) {
       const reactComponent = () => import('@/pages/Preferences');

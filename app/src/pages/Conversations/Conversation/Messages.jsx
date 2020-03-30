@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { query } from '@shared/graphql/conversations';
 import Gallery from '@/components/Gallery';
 
-import emitter from '@/lib/emitter';
 import {
   usePlayerPlayPauseEvents, useFormatMessages, changeRoute,
   useMessageClicked, usePlayerPrevNextEvent, useReadEvent,
@@ -14,7 +13,7 @@ import EmptyState from './EmptyMessage';
 const Messages = ({
   conversationId, threadId, isThread,
 }) => {
-  const [loaded, setLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(false);
 
   const [loadMessage, { messages, loading }] = query.useMessages(conversationId, threadId);
   const updatedMessages = useFormatMessages(messages);
@@ -27,11 +26,13 @@ const Messages = ({
   useEffect(() => {
     if (!loaded && messages.length) {
       const message = messages.find(({ hasRead }) => !hasRead);
-      changeRoute(message)
+      if (message) {
+        changeRoute(message);
+      }
+
       setLoaded(true);
     }
-   
-  }, [messages]);
+  }, [loaded, messages]);
 
   useEffect(() => {
     loadMessage();

@@ -22,7 +22,11 @@ class Recorder {
       timeSlice: 3000,
     });
 
-    this.gif = new RecordRTC(stream, { type: 'gif' });
+    this.gif = new RecordRTC(stream, {
+      type: 'gif',
+      frameRate: 150,
+      quality: 1,
+    });
   }
 
   onMediaError(error) {

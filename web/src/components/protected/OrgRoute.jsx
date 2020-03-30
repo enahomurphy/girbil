@@ -21,7 +21,7 @@ const OrgRoute = (props) => {
     !get(storage.payload, 'organization.role', null)
    || (
      storage.payload
-    && ['user', 'admin'].includes(get(storage.payload, 'organization.role'))
+    && ['user'].includes(get(storage.payload, 'organization.role'))
    )
   ) {
     return <Redirect to="/not-found" />;

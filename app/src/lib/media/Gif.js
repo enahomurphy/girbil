@@ -34,6 +34,8 @@ class Gif {
 
     this.gif = new RecordRTC(stream, {
       type: 'gif',
+      frameRate: 150,
+      quality: 1,
     });
   }
 

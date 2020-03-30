@@ -35,8 +35,14 @@ const useVideo = ({
 
   const playerControls = {
     loop: setLoop,
-    play: () => setPlaying(true),
-    pause: () => setPlaying(false),
+    play: () => {
+      setPlaying(true);
+      onPlay();
+    },
+    pause: () => {
+      setPlaying(false)
+      onPause()
+    },
     seek: (value) => ref.current.seekTo(value),
     playbackRate: setPlaybackRate,
     pip: () => setPip(!pip),
@@ -63,15 +69,8 @@ const useVideo = ({
     playbackRate,
     volume,
     muted,
-    onPlay: () => {
-      setPlaying(true);
-      onPlay(true);
-    },
     onEnablePIP: () => setPip(true),
     onDisablePIP: () => setPip(false),
-    onPause: () => {
-      onPause();
-    },
     onEnded: () => {
       onEnd();
     },

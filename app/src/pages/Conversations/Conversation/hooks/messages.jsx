@@ -6,6 +6,28 @@ import { f7 } from 'framework7-react';
 import { mutation } from '@shared/graphql/conversations';
 import emitter from '@/lib/emitter';
 
+export const router = (threadId) => f7.views[threadId ? 'conversationThread' : 'conversation'].router;
+
+export const changeRoute = (message) => {
+  const options = {
+    props: {
+      message,
+      isThread: Boolean(message.parentId),
+    },
+  };
+
+  if (message.parentId) {
+    f7.views.conversationThread.router.navigate(
+      `/conversations/${message.conversationId}/thread/${message.parentId}/messages/${message.id}`,
+    );
+  } else {
+    f7.views.conversation.router.navigate(
+      `/conversations/${message.conversationId}/messages/${message.id}`,
+      options,
+    );
+  }
+};
+
 export const getPullOverLinks = ({
   message: {
     id, hasRead, sender, conversationId, replyCount, parentId,
@@ -89,29 +111,6 @@ export const useFormatMessages = (messages = []) => {
   }));
 };
 
-const router = (threadId) => f7.views[threadId ? 'conversationThread' : 'conversation'].router;
-
-export const changeRoute = (message) => {
-  const options = {
-    props: {
-      message,
-      isThread: Boolean(message.parentId),
-    },
-  };
-
-  if (message.parentId) {
-    f7.views.conversationThread.router.navigate(
-      `/conversations/${message.conversationId}/thread/${message.parentId}/messages/${message.id}`,
-    );
-  } else {
-    f7.views.conversation.router.navigate(
-      `/conversations/${message.conversationId}/messages/${message.id}`,
-      options,
-    );
-  }
-};
-
-
 export const useMessageClicked = (messages) => {
   const [updateState] = mutation.useMessageState();
 
@@ -153,7 +152,13 @@ export const usePlayerPlayPauseEvents = (threadId) => {
 
   useEffect(() => {
     const handler = ({ message, state }) => {
-      updateState({ messageId: message.id, state });
+      if (state === 'playing' && message.state !== 'playing') {
+        updateState({ messageId: message.id, state: 'playing' });
+      }
+
+      if (state === 'pause' && message.state !== 'pause') {
+        updateState({ messageId: message.id, state: 'pause' });
+      }
     };
 
     emitter.onLastListenedEventEmitted('play_message', handler);
@@ -191,7 +196,7 @@ export const usePlayerPrevNextEvent = (messages) => {
         const { conversationId, parentId } = messages[0];
         if (parentId) {
           router(parentId).back(
-            `/conversations/${conversationId}/thread/${parentId}`,
+            `/conversations/${conversationId}/thread/${parentId}/record`,
             { reloadPrevious: true },
           );
         } else {
@@ -203,11 +208,6 @@ export const usePlayerPrevNextEvent = (messages) => {
       }
 
       if (message) {
-        updateState({
-          messageId: message.id,
-          state: 'playing',
-        });
-
         changeRoute(message);
       }
     };

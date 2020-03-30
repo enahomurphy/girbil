@@ -30,10 +30,14 @@ const Message = ({
     width: params.width,
     height: params.height,
     onPlay: () => emitter.emitEvent('play_message', { message, state: 'playing' }),
-    onPause: () => emitter.emitEvent('play_message', { message, state: 'pause' }),
+    onPause: () => {
+      emitter.emitEvent('play_message', { message, state: 'pause' })
+    },
     onEnd: () => {
       emitter.emitEvent('next_message', { id: message.id, action: 'next' });
-      emitter.emitEvent('read_message', { message });
+      if (!message.hasRead) {
+        emitter.emitEvent('read_message', { message });
+      }
     },
   });
 

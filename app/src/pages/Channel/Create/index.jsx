@@ -93,7 +93,7 @@ const CreateChannel = ({ $f7router, title, channelId }) => {
   }) => {
     const channel = (createdChannel || updatedChannel);
     if (channelAvatar.blob) {
-      await handleAvatarChange(channelAvatar.blob, channel.id);
+      handleAvatarChange(channelAvatar.blob, channel.id);
       $f7router.navigate(`/conversations/${channel.conversation.id}`);
     } else {
       f7.dialog.close();
@@ -119,6 +119,8 @@ const CreateChannel = ({ $f7router, title, channelId }) => {
         refetchQueries,
       });
     }
+
+    f7.dialog.close();
   };
 
   const handleChannelImage = (blob, url) => {

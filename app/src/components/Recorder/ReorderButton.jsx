@@ -50,8 +50,8 @@ const ReorderButtonWrapper = styled.div`
   margin-bottom: 16px;
 `;
 
-const Progress = () => {
-  const elapsed = useTween('inOutQuad', 31000);
+const Progress = ({ duration }) => {
+  const elapsed = useTween('linear', duration);
   const value = 100 - (elapsed * 100);
 
   let color = '#33AB77';
@@ -68,7 +68,7 @@ const Progress = () => {
     <CircularProgressbar
       counterClockwise
       maxValue={100}
-      value={100 - (elapsed * 100)}
+      value={value}
       styles={buildStyles({
         pathColor: color,
         backgroundColor: 'transparent',
@@ -79,11 +79,15 @@ const Progress = () => {
   );
 };
 
-const ReorderButton = ({ recording, onClick }) => (
+Progress.propTypes = {
+  duration: PropTypes.number.isRequired,
+};
+
+const ReorderButton = ({ recording, duration, onClick }) => (
   <ReorderButtonWrapper>
     {
       recording && (
-        <Progress />
+        <Progress duration={duration} />
       )
     }
     <Idle recording={recording}>
@@ -93,7 +97,13 @@ const ReorderButton = ({ recording, onClick }) => (
   </ReorderButtonWrapper>
 );
 
+
+ReorderButton.defaultProps = {
+  duration: 30000,
+};
+
 ReorderButton.propTypes = {
+  duration: PropTypes.number,
   recording: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
 };

@@ -15,25 +15,14 @@ const Create = ({
     name,
     about,
     isPrivate,
-    avatar,
   });
 
   useEffect(() => {
     setForm({
-      name, about, isPrivate, avatar: form.avatar,
+      name, about, isPrivate,
     });
-  }, [name, about, isPrivate, form.avatar]);
+  }, [name, about, isPrivate]);
 
-  useEffect(() => {
-    if (avatar) {
-      setForm({
-        name: form.name,
-        about: form.about,
-        isPrivate: form.isPrivate,
-        avatar,
-      });
-    }
-  }, [avatar, form.about, form.isPrivate, form.name]);
 
   return (
     <>
@@ -73,8 +62,8 @@ const Create = ({
             </Text>
             <StyledAvatar onClick={onImageClick}>
               {
-                form.avatar ? (
-                  <SimpleProfileImage url={form.avatar} width="64px" height="80px" />
+                avatar ? (
+                  <SimpleProfileImage url={avatar} width="64px" height="80px" />
                 ) : (
                   <span aria-label="cat" role="img">🐭</span>
                 )

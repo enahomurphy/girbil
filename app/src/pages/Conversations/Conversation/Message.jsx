@@ -106,10 +106,10 @@ const Message = ({
           played={state.played}
           playBack={controls.playbackRate}
           handleReact={handleReact}
+          reactions={message.reactions}
           next={handleNextMessage('next')}
           prev={handleNextMessage('prev')}
         />
-        <Reactions reactions={message.reactions} handleReact={handleReact} />
         <Video video={video} id="video" />
       </div>
     </Page>

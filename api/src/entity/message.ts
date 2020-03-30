@@ -7,10 +7,13 @@ import { User } from '.';
 @ObjectType()
 class Reaction {
   @Field({ nullable: true })
+  userReacted: boolean
+
+  @Field({ nullable: true })
   reaction: string
 
   @Field({ nullable: true })
-  userId: string
+  count: number
 }
 
 @Entity('messages')

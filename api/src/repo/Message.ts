@@ -27,6 +27,19 @@ class MessageRepository extends Repository<Message> {
       'message_hasRead',
     );
 
+    query.addSelect(`
+    (
+      SELECT array_agg(
+        json_build_object('reaction', each.reaction, 'count', each.reaction_count, 'userReacted', each.user_reacted)
+        ) FROM (
+          SELECT x.reaction, count(x.reaction) as reaction_count,
+          SUM((case when x."userId" = :userId then 1 end)) = 1 as user_reacted
+          FROM messages m, jsonb_to_recordset(m.reactions) as x(reaction text, "userId" text)
+          WHERE m.id = message.id
+          GROUP BY x.reaction
+      ) as each
+    )`, 'message_reactions')
+
     if (parentId) {
       query
         .where('message.conversation_id = :conversationId AND message.parent_id IS NOT NULL')

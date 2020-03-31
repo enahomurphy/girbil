@@ -29,14 +29,16 @@ const GlobalSearch = (props) => {
   const inputEl = useRef(null);
 
   useEffect(() => {
-    if (searchText) {
-      handleSearch(searchText);
-    }
+    handleSearch(searchText);
   }, [searchText, handleSearch]);
 
   useEffect(() => {
     setOpened(opened);
   }, [opened]);
+
+  useEffect(() => {
+    if (isOpen) inputEl.current.focus();
+  }, [isOpen]);
 
   const handleClose = () => {
     setSearchText('');
@@ -131,14 +133,14 @@ const GlobalSearch = (props) => {
       <List style={{ margin: '32px 0 0 0' }}>
         {
           searchResult.map(({
-            id, name, conversationId, avatar, type, members, isPrivate, isMember,
+            id, name, conversationId, avatar, type, members, isPrivate = false, isMember,
           }) => (type === 'user' ? (
             <ConversationListItem
               options={createOptions(id, type, isMember, conversationId)}
               getLink={() => `/conversations/${conversationId}/`}
               key={id}
               onClick={handleClose}
-              id={conversationId}
+              id={conversationId || id}
               isChannel={false}
               isActive={false}
               isPrivate={isPrivate}
@@ -157,7 +159,7 @@ const GlobalSearch = (props) => {
               onClick={handleClose}
               isActive={false}
               isChannel
-              id={conversationId}
+              id={conversationId || id}
               isPrivate={isPrivate}
               user={{
                 id,

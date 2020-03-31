@@ -12,8 +12,9 @@ export const MESSAGE_FRAGMENT = gql`
     parentId
     createdAt
     reactions {
-      userId
+      count
       reaction
+      userReacted
     }
     sender {
       id

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { List, ListItem } from 'framework7-react';
 import { useLazyQuery } from '@apollo/client';
 import { useDebounce } from 'react-use';
@@ -20,12 +20,20 @@ const Conversations = () => {
 
   const [search, { data }] = useLazyQuery(orgQuery.SEARCH_ORGANIZATION);
   const [searchText, setSearchText] = useState('');
+  const [searchResult, setSearchResult] = useState([]);
+
+  useEffect(() => {
+    setSearchResult(get(data, 'searchOrganization', []));
+  }, [data, setSearchResult]);
+
+  useEffect(() => {
+    if (!searchText) setSearchResult([]);
+  }, [searchText, setSearchResult]);
+
   useOrgMessageListener();
 
   useDebounce(() => {
-    if (searchText) {
-      search({ variables: { text: searchText } });
-    }
+    if (searchText) search({ variables: { text: searchText } });
   },
 
   500,
@@ -34,7 +42,7 @@ const Conversations = () => {
   return (
     <Page>
       <ConversationHeader
-        searchResult={get(data, 'searchOrganization', [])}
+        searchResult={searchResult}
         closeConversation={closeConversation}
         leaveChannel={leaveChannel}
         handleSearch={setSearchText}

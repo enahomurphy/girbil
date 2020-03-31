@@ -153,15 +153,22 @@ class OrganizationRepository extends Repository<Organization> {
         users.name AS name,
         users.avatar AS avatar,
         'user' AS type,
-        conversations.id AS "conversationId",
+        (
+          SELECT c.id
+          FROM conversations as c
+          WHERE c.receiver_id = users.id
+          OR c.creator_id = users.id
+          AND c.receiver_type = 'user'
+          ORDER BY c.created_at DESC
+          LIMIT 1
+        ) as "conversationId",
         NULL as members,
         NULL AS "isPrivate",
         NULL AS "isMember"
       FROM users
       INNER JOIN user_organizations ON users.id = user_organizations.user_id
-      LEFT JOIN conversations ON conversations.receiver_id = users.id OR conversations.creator_id = users.id AND conversations.receiver_type = 'user'
       WHERE users.name ILIKE $1 AND user_organizations.organization_id = $2
-      GROUP BY users.id, conversations.id;`;
+      GROUP BY users.id;`;
 
     return {
       channel: {

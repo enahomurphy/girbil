@@ -29,14 +29,16 @@ const GlobalSearch = (props) => {
   const inputEl = useRef(null);
 
   useEffect(() => {
-    if (searchText) {
-      handleSearch(searchText);
-    }
+    handleSearch(searchText);
   }, [searchText, handleSearch]);
 
   useEffect(() => {
     setOpened(opened);
   }, [opened]);
+
+  useEffect(() => {
+    if(isOpen) inputEl.current.focus();
+  }, [isOpen]);
 
   const handleClose = () => {
     setSearchText('');

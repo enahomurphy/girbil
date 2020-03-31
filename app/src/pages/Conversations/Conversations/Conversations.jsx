@@ -23,9 +23,7 @@ const Conversations = () => {
   useOrgMessageListener();
 
   useDebounce(() => {
-    if (searchText) {
-      search({ variables: { text: searchText } });
-    }
+    search({ variables: { text: searchText } });
   },
 
   500,

@@ -5,7 +5,7 @@ import { query } from '@shared/graphql/conversations';
 import Gallery from '@/components/Gallery';
 
 import {
-  usePlayerPlayPauseEvents, useFormatMessages, changeRoute,
+  useFormatMessages, changeRoute,
   useMessageClicked, usePlayerPrevNextEvent, useReadEvent,
 } from './hooks/messages';
 import EmptyState from './EmptyMessage';
@@ -19,7 +19,6 @@ const Messages = ({
   const updatedMessages = useFormatMessages(messages);
   const onClick = useMessageClicked(messages);
 
-  usePlayerPlayPauseEvents();
   usePlayerPrevNextEvent(messages, isThread, threadId);
   useReadEvent();
 

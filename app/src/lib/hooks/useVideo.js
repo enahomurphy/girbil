@@ -20,13 +20,13 @@ const useCustomVideo = ({
   });
 
   const playerControls = {
-    play: () => {
+    play: ({ useCb = true }) => {
       controls.play();
-      onPlay();
+      if (useCb) onPlay();
     },
-    pause: () => {
+    pause: ({ useCb = true }) => {
       controls.pause();
-      onPause();
+      if (useCb) onPause();
     },
     seek: (value) => controls.seek(value),
     playbackRate: (playbackRate) => {

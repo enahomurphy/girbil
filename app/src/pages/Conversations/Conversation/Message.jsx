@@ -11,6 +11,7 @@ import {
 import { get } from '@shared/lib';
 import emitter from '@/lib/emitter';
 import { useGoBack } from './hooks/message';
+import { usePlayerPlayPauseEvents } from './hooks/messages';
 
 const Message = ({
   isThread, conversationId, messageId,
@@ -40,6 +41,8 @@ const Message = ({
       }
     },
   });
+
+  usePlayerPlayPauseEvents(messageId, controls);
 
   const { data: conversationData } = useQuery(
     query.CONVERSATION,

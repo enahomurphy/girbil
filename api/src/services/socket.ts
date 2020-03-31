@@ -10,17 +10,23 @@ export const pusher = new Pusher({
 });
 
 export enum events {
-  MESSAGE_CREATED = 'message-created',
-  MESSAGE_DELETED = 'message-deleted',
-  MESSAGE_READ = 'message-read',
-  MESSAGE_UNREAD = 'message-unread',
+  MESSAGE_CREATED = 'message_created',
+  MESSAGE_DELETED = 'message_deleted',
+  MESSAGE_READ = 'message_read',
+  MESSAGE_UNREAD = 'message_unread',
 
-  USER_ONLINE = 'user-online',
-  USER_OFFLINE = 'user-offline',
+  USER_ONLINE = 'user_online',
+  USER_OFFLINE = 'user_offline',
 }
 
 export const broadcast = (channel: string, event: events, data: any): void => {
-  pusher.trigger(channel, event, { data });
+  const formatData = {
+    event,
+    timestamp: new Date(),
+    data,
+  };
+
+  pusher.trigger(channel, event, formatData);
 };
 
 export default pusher;

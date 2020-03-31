@@ -65,7 +65,7 @@ export class Message {
 
   @Field(() => [Reaction], { nullable: true })
   @Column({ type: 'json', array: true })
-  reactions?: Reaction[];
+  reactions?: Reaction[] = []
 
   @Field(() => String)
   state = 'done';

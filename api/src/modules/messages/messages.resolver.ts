@@ -56,10 +56,12 @@ class MessageResolver {
     });
 
     const createdMessage = await this.messageRepo.save(message);
+
     createdMessage.state = 'done';
     createdMessage.sender = user;
 
-    socket.broadcast(organization.id, socket.events.MESSAGE_CREATED, message);
+    const channel = `conversation_${conversationId}_${organization.id}`;
+    socket.broadcast(channel, socket.events.MESSAGE_CREATED, message);
     return createdMessage;
   }
 

@@ -163,12 +163,12 @@ export const usePlayerPlayPauseEvents = (id, control) => {
   useEffect(() => {
     const handler = ({ message, state }) => {
       if (state === 'playing' && message.state !== 'playing') {
-        if (control) control.play({ useCb: false });
+        if (control) control.play({ triggerCb: false });
         updateState({ messageId: message.id, state: 'playing' });
       }
 
       if (state === 'pause' && message.state !== 'pause') {
-        if (control) control.pause({ useCb: false });
+        if (control) control.pause({ triggerCb: false });
         updateState({ messageId: message.id, state: 'pause' });
       }
     };

@@ -93,6 +93,7 @@ const Conversations = () => {
                 {
                   title: 'Leave Channel',
                   clickable: true,
+                  shouldHide: channel.isOwner,
                   onClick: leaveChannel(channel.id),
                 },
               ]}

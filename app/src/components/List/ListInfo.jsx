@@ -21,7 +21,7 @@ const ListInfo = ({ unreadCount, options, id }) => (
           <Popover width="176px" className={`popover-menu${id}`}>
             <List>
               {
-                options.map(({ title, getLink, onClick }) => (
+                options.map(({ title, getLink, onClick, shouldHide }) => !shouldHide && (
                   <ListItem
                     key={title}
                     link={getLink ? getLink() : '#'}

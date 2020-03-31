@@ -48,5 +48,6 @@ export const CHANNEL_FRAGMENT = gql`
     avatar
     isPrivate
     members
+    isOwner
   }
 `;

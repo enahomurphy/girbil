@@ -1,8 +1,12 @@
 export const pick = (obj, keys) => keys.reduce((acc, key) => {
-  if (!obj[key]) {
+  const [initial, real] = key.split(':');
+  const realKey = real || initial;
+
+  if (!obj[initial]) {
     return acc;
   }
-  return { ...acc, [key]: obj[key] };
+
+  return { ...acc, [realKey]: obj[initial] };
 }, {});
 
 

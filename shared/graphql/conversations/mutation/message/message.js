@@ -8,8 +8,8 @@ import {
   MARK_MESSAGE_AS_READ,
   UPDATE_MESSAGE_STATE,
   REACT_TO_MESSAGE,
-} from './mutation';
-import { GET_MESSAGE, GET_MESSAGES } from '../query';
+} from '../mutation';
+import { GET_MESSAGE, GET_MESSAGES } from '../../query';
 
 export const useSaveMessage = () => {
   const [save, { data, loading, error }] = useMutation(SAVE_MESSAGE);

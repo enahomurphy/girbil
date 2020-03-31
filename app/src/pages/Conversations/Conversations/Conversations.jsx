@@ -6,7 +6,6 @@ import { storage, get } from '@shared/lib';
 import { query, mutation } from '@shared/graphql/conversations';
 import { query as orgQuery } from '@shared/graphql/organizations';
 import { mutation as channelMutations } from '@shared/graphql/channels';
-import { useOrgMessageListener } from '@/lib/socket';
 import ConversationList from '@/components/List/ConversationList';
 import ConversationHeader from './ConversationHeader';
 import EmptyConversation from './EmptyConversation';
@@ -29,8 +28,6 @@ const Conversations = () => {
     if (!searchText) setSearchResult([]);
   }, [searchText, setSearchResult]);
 
-  useOrgMessageListener();
-
   useDebounce(() => {
     if (searchText) search({ variables: { text: searchText } });
   },
@@ -38,7 +35,7 @@ const Conversations = () => {
   500,
   [searchText]);
 
-  if(loading) return null;
+  if (loading) return null;
 
   return (
     <Page>

@@ -10,7 +10,6 @@ import { mutation as channelMutations } from '@shared/graphql/channels';
 import { useOrgMessageListener } from '@/lib/socket';
 import ConversationListItem from '@/components/List/ListItem';
 import ConversationHeader from './ConversationHeader';
-import UserInfo from './UserInfo';
 import { Page } from './style';
 
 const Conversations = () => {
@@ -42,12 +41,12 @@ const Conversations = () => {
   return (
     <Page>
       <ConversationHeader
+        userData={get(storage, 'payload') || {}}
         searchResult={searchResult}
         closeConversation={closeConversation}
         leaveChannel={leaveChannel}
         handleSearch={setSearchText}
       />
-      <UserInfo user={get(storage, 'payload') || {}} />
       <List className="searchbar-not-found">
         <ListItem title="Nothing found" />
       </List>

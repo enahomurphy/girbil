@@ -11,32 +11,36 @@ import {
 } from '@/components/Icon';
 import { storage, get } from '@shared/lib';
 import { NavbarWrapper } from '@/components/Header/style';
-
-import { Logo } from './style';
+import UserInfo from './UserInfo';
+import { Logo, UserOrgDetails } from './style';
 
 const ConversationHeader = (props) => {
   const [isOpen, setOpenSearch] = useState(false);
   const {
-    searchResult, handleSearch, closeConversation, leaveChannel,
+    searchResult, handleSearch, closeConversation, leaveChannel, userData,
   } = props;
 
   return (
     <NavbarWrapper>
       <Navbar>
-        <Logo
-          onClick={() => f7.popover.open('.user-popover')}
-          type="flex"
-          align="center"
-          padding="0px"
-          inverse
-          background="transparent"
-          margin="0"
-        >
-          <Title width="initial" margin="0 10px 0 0" size="24px">
-            {get(storage, 'payload.organization.name')}
-          </Title>
-          <Chevron />
-        </Logo>
+        <UserOrgDetails
+          onClick={() => f7.popover.open('.user-popover', '.user-org-details')}
+          className="user-org-details">
+          <Logo
+            type="flex"
+            align="center"
+            padding="0px"
+            inverse
+            background="transparent"
+            margin="0"
+          >
+            <Title width="initial" margin="0 10px 0 0" size="24px">
+              {get(storage, 'payload.organization.name')}
+            </Title>
+            <Chevron />
+          </Logo>
+          <UserInfo user={userData} />
+        </UserOrgDetails>
         <NavRight style={{
           width: '90px',
           display: 'flex',

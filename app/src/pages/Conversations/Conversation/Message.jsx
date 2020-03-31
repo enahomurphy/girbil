@@ -6,11 +6,12 @@ import PropTypes from 'prop-types';
 import { useVideo, useConversationMeta } from '@/lib/hooks';
 import { query, mutation } from '@shared/graphql/conversations';
 import {
-  Video, Header, useVideoData, VideoProperties, Reactions,
+  Video, Header, useVideoData, VideoProperties,
 } from '@/components/Video';
 import { get } from '@shared/lib';
 import emitter from '@/lib/emitter';
 import { useGoBack } from './hooks/message';
+import { usePlayerPlayPauseEvents } from './hooks/messages';
 
 const Message = ({
   isThread, conversationId, messageId,
@@ -40,6 +41,8 @@ const Message = ({
       }
     },
   });
+
+  usePlayerPlayPauseEvents(messageId, controls);
 
   const { data: conversationData } = useQuery(
     query.CONVERSATION,

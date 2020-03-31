@@ -117,10 +117,19 @@ export const useMessageClicked = (messages) => {
 
   const handler = (id) => {
     const message = messages.find(({ id: mId }) => id === mId);
+    const stateMap = {
+      playing: 'pause',
+      pause: 'playing',
+      done: 'pause',
+    };
 
     if (['playing', 'pause'].includes(message.state)) {
       updateState({ messageId: message.id, state: 'toggle' });
-    } else if (message) {
+    }
+
+    emitter.emitEvent('play_message', { message, state: stateMap[message.state] });
+
+    if (message.state === 'done' && message) {
       changeRoute(message);
     }
   };
@@ -148,22 +157,25 @@ export const useReadEvent = (getMessage) => {
   }, [getMessage, markAsRead]);
 };
 
-export const usePlayerPlayPauseEvents = (threadId) => {
+export const usePlayerPlayPauseEvents = (id, control) => {
   const [updateState] = mutation.useMessageState();
 
   useEffect(() => {
     const handler = ({ message, state }) => {
       if (state === 'playing' && message.state !== 'playing') {
+        if (control) control.play({ triggerCb: false });
         updateState({ messageId: message.id, state: 'playing' });
       }
 
       if (state === 'pause' && message.state !== 'pause') {
+        if (control) control.pause({ triggerCb: false });
         updateState({ messageId: message.id, state: 'pause' });
       }
     };
 
     emitter.onLastListenedEventEmitted('play_message', handler);
-  }, [threadId, updateState]);
+    return () => emitter.removeListener('play_message', handler);
+  }, [id, control, updateState]);
 };
 
 export const usePlayerPrevNextEvent = (messages) => {

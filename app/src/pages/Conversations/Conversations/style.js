@@ -4,7 +4,7 @@ import { Title, Block, Button } from '@/components/Style';
 import styled from 'styled-components';
 
 export const StyledUser = styled(Block)`
-  padding: 0 16px;
+  margin-left: 7px;
 `;
 
 export const Img = styled.img`
@@ -23,7 +23,7 @@ export const StyledListItem = styled(ListItem)`
   }
 
   .item-content {
-    padding: 0px;    
+    padding: 0px;
   }
 
   .item-link .item-inner {
@@ -31,7 +31,7 @@ export const StyledListItem = styled(ListItem)`
     margin-left: 16px;
 
     &::before {
-      display: none;   
+      display: none;
     }
 
     .badge {
@@ -74,7 +74,7 @@ export const StyledTitle = styled(Title)`
 export const Page = styled(f7Page)`
 `;
 
-export const Logo = styled(Button)`
+export const Logo = styled.div`
   padding: 0;
   background: transparent;
   width: fit-content;
@@ -82,4 +82,9 @@ export const Logo = styled(Button)`
   margin-left: 7px;
   display: flex;
   align-items: center;
+`;
+
+export const UserOrgDetails = styled.div`
+  display: flex;
+  flex-direction: column;
 `;

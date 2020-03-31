@@ -97,6 +97,28 @@ class Recorder {
     return this.media.toURL(this.media.blob);
   }
 
+  static async getMediaDevices() {
+    const deviceInfos = await navigator.mediaDevices.enumerateDevices();
+
+    const result = {
+      microphone: [],
+      speaker: [],
+      video: [],
+    };
+
+    deviceInfos.forEach((deviceInfo) => {
+      if (deviceInfo.kind === 'audioinput') {
+        result.microphone.push(deviceInfo);
+      } else if (deviceInfo.kind === 'audiooutput') {
+        result.speaker.push(deviceInfo);
+      } else if (deviceInfo.kind === 'videoinput') {
+        result.video.push(deviceInfo);
+      }
+    });
+
+    return result;
+  }
+
   static blobToBase64(blob) {
     return new Promise((resolve) => {
       const reader = new FileReader();

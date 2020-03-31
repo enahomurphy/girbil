@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useVideo, useConversationMeta } from '@/lib/hooks';
 import { query, mutation } from '@shared/graphql/conversations';
 import {
-  Video, Header, useVideoData, Controls, Reactions,
+  Video, Header, useVideoData, VideoProperties, Reactions,
 } from '@/components/Video';
 import { get } from '@shared/lib';
 import emitter from '@/lib/emitter';
@@ -96,7 +96,7 @@ const Message = ({
         onMouseEnter={() => setShowControls(true)}
         onMouseLeave={() => setShowControls(false)}
       >
-        <Controls
+        <VideoProperties
           show={showControls}
           play={controls.play}
           pause={controls.pause}

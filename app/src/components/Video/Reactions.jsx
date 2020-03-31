@@ -19,9 +19,8 @@ const Reaction = styled.span`
 
 const Reactions = ({
   reactions = [],
-  handleReact
+  handleReact,
 }) => {
-
   const getEmojiByValue = (value) => emojis.find((i) => i.value === value);
 
   return (
@@ -38,8 +37,13 @@ const Reactions = ({
   );
 };
 
+Reactions.defaultProps = {
+  reactions: [],
+};
+
 Reactions.propTypes = {
   reactions: PropTypes.array,
+  handleReact: PropTypes.func.isRequired,
 };
 
 export default Reactions;

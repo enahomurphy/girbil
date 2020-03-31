@@ -11,8 +11,8 @@ import {
   ControlContainer, ForwardControls, RewindControl, BottomControls,
 } from './style';
 
-const Controls = ({
-  playing, play, pause, played, duration, seek, playBack, handleReact, show, next, prev, reactions
+const VideoProperties = ({
+  playing, play, pause, played, duration, seek, playBack, handleReact, show, next, prev, reactions,
 }) => (
   <ControlContainer>
     {
@@ -68,7 +68,11 @@ const Controls = ({
   </ControlContainer>
 );
 
-Controls.propTypes = {
+VideoProperties.defaultProps = {
+  reactions: [],
+};
+
+VideoProperties.propTypes = {
   playing: PropTypes.bool.isRequired,
   play: PropTypes.func.isRequired,
   pause: PropTypes.func.isRequired,
@@ -83,4 +87,4 @@ Controls.propTypes = {
   reactions: PropTypes.array,
 };
 
-export default Controls;
+export default VideoProperties;

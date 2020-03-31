@@ -1,19 +1,19 @@
 import Video, { useVideoData } from './Video';
 import Header from './Header';
-import Controls from './Controls';
+import VideoProperties from './VideoProperties';
 import Reactions from './Reactions';
 
 export {
   Video,
   useVideoData,
   Header,
-  Controls,
+  VideoProperties,
   Reactions,
 };
 
 export default {
   Video,
   Header,
-  Controls,
+  VideoProperties,
   Reactions,
 };

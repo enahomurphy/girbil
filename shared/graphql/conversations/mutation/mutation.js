@@ -102,9 +102,10 @@ export const CLOSE_CONVERSATION = gql`
 `;
 
 export const DELETE_MESSAGE = gql`
-  mutation deleteMessage($messageId: String!)  {
+  mutation deleteMessage($messageId: String!, $conversationId: String!)  {
     deleteMessage(
       messageId: $messageId
+      conversationId: $conversationId
     )
   }
 `;

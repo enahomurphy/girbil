@@ -13,7 +13,9 @@ import { plainToClass } from 'class-transformer';
 import { MessageRepo } from '../../repo';
 import { Message } from '../../entity';
 import { CanView, CanEdit } from '../../middleware/permissions';
-import { MessagesArgs, MessageIDArgs, MessageReactionArgs } from './message.args';
+import {
+  MessagesArgs, MessageIDArgs, MessageReactionArgs, MessageDeleteArgs,
+} from './message.args';
 import { ValidateArgs } from '../../middleware/decorators';
 import { AddMessageInput } from './message.input';
 import { ContextType } from '../../interfaces';
@@ -144,7 +146,7 @@ class MessageResolver {
   @CanEdit('message')
   @Mutation(() => String)
   async deleteMessage(
-    @Args() { messageId }: MessageIDArgs,
+    @Args() { messageId, conversationId }: MessageDeleteArgs,
       @Ctx() { user: { organization, user } }: ContextType,
   ): Promise<string> {
     const message = await this.messageRepo.findOne({ id: messageId });
@@ -152,8 +154,9 @@ class MessageResolver {
       this.messageRepo.delete({ id: message.id });
     }
 
-    message.sender = user;
-    socket.broadcast(organization.id, socket.events.MESSAGE_DELETED, { message });
+    const channel = `conversation_${conversationId}_${organization.id}`;
+    const data = { sender: user, id: messageId, conversationId };
+    socket.broadcast(channel, socket.events.MESSAGE_DELETED, data);
     return 'Message deleted';
   }
 

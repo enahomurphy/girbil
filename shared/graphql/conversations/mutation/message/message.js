@@ -130,7 +130,7 @@ export const useDeleteMessage = () => {
 
   const handler = useCallback(
     (variables, cb = () => {}) => deleteMessage({
-      variables: { messageId: variables.messageId },
+      variables,
       update: (store) => {
         store.modify('ROOT_QUERY', {
           messages(items, { readField }) {

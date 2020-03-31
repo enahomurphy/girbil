@@ -33,6 +33,13 @@ export class MessageIDArgs {
 }
 
 @ArgsType()
+export class MessageDeleteArgs extends MessageIDArgs {
+  @Field()
+  @IsUUID()
+  conversationId?: string
+}
+
+@ArgsType()
 export class MessageReactionArgs {
   @Field()
   @IsUUID()

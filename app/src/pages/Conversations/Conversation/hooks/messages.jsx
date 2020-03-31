@@ -72,7 +72,7 @@ export const getPullOverLinks = ({
     options.push({
       type: 'delete',
       title: 'Delete video',
-      onClick: () => deleteMessage(id),
+      onClick: () => deleteMessage(),
     });
   }
 
@@ -93,7 +93,6 @@ export const useFormatMessages = (messages = []) => {
         deleteMessage({
           messageId: message.id,
           conversationId: message.conversationId,
-          threadId: message.parentId,
         });
       },
       markMessage: () => (message.hasRead ? markAsUnRead : markAsRead)({

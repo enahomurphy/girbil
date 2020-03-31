@@ -1,6 +1,6 @@
 import { useApolloClient } from '@apollo/client';
 
-import { CONVERSATION_MESSAGES } from '../../query';
+import { CONVERSATION_MESSAGES, MESSAGE_FRAGMENT } from '../../query';
 import { pick } from '../../../../lib';
 
 
@@ -20,7 +20,6 @@ export const getConversationMessages = (cache, variables) => {
 
 export const useMesageReceived = () => {
   const client = useApolloClient();
-
 
   return (message) => {
     const variables = pick(message, ['conversationId', 'parentId:messageId']);
@@ -59,5 +58,41 @@ export const useMesageReceived = () => {
   };
 };
 
+export const useMessageDeleted = () => {
+  const client = useApolloClient();
+
+  return ({ id: messageId, conversationId }) => {
+    const message = client.readFragment({
+      id: client.cache.identify({
+        __typename: 'Message',
+        id: messageId,
+      }),
+      fragment: MESSAGE_FRAGMENT,
+    });
+    console.log(message);
+    if (!message) {
+      return null;
+    }
+
+    client.cache.modify('ROOT_QUERY', {
+      messages(items, { readField }) {
+        return items.filter((item) => readField('id', item) !== messageId);
+      },
+    });
+
+    client.cache.gc();
+
+    client.cache.modify(
+      client.cache.identify({ __typename: 'Conversation', id: conversationId }),
+      {
+        unread(value = 0) {
+          console.log(value, 'was called')
+          return message.hasRead ? value : value - 1;
+        },
+      },
+    );
+    return null;
+  };
+};
 
 export default { useMesageReceived };

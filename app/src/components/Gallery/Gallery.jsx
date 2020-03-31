@@ -62,7 +62,7 @@ const Gallery = ({ messages, onClick }) => {
               state={state}
               pullover={pullover}
               sender={sender}
-              createdAt={createdAt}
+              createdAt={new Date(createdAt)}
               replyCount={replyCount}
               hasRead={hasRead}
             />

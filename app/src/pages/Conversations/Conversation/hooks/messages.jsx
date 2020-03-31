@@ -118,9 +118,9 @@ export const useMessageClicked = (messages) => {
   const handler = (id) => {
     const message = messages.find(({ id: mId }) => id === mId);
     const stateMap = {
-      'playing': 'pause',
-      'pause': 'playing',
-      'done': 'pause',
+      playing: 'pause',
+      pause: 'playing',
+      done: 'pause',
     };
 
     if (['playing', 'pause'].includes(message.state)) {
@@ -132,7 +132,6 @@ export const useMessageClicked = (messages) => {
     if (message.state === 'done' && message) {
       changeRoute(message);
     }
-
   };
 
   return handler;
@@ -163,7 +162,6 @@ export const usePlayerPlayPauseEvents = (id, control) => {
 
   useEffect(() => {
     const handler = ({ message, state }) => {
-
       if (state === 'playing' && message.state !== 'playing') {
         if (control) control.play({ useCb: false });
         updateState({ messageId: message.id, state: 'playing' });
@@ -177,7 +175,7 @@ export const usePlayerPlayPauseEvents = (id, control) => {
 
     emitter.onLastListenedEventEmitted('play_message', handler);
     return () => emitter.removeListener('play_message', handler);
-  }, [id, updateState]);
+  }, [id, control, updateState]);
 };
 
 export const usePlayerPrevNextEvent = (messages) => {

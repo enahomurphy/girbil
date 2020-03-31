@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useVideo, useConversationMeta } from '@/lib/hooks';
 import { query, mutation } from '@shared/graphql/conversations';
 import {
-  Video, Header, useVideoData, VideoProperties, Reactions,
+  Video, Header, useVideoData, VideoProperties,
 } from '@/components/Video';
 import { get } from '@shared/lib';
 import emitter from '@/lib/emitter';

@@ -1,6 +1,7 @@
 import Redis from 'ioredis';
+import { keys } from '../../config';
 
 export default new Redis({
-  host: 'localhost',
-  port: 6379,
+  host: keys.redis.host,
+  port: keys.redis.port,
 });

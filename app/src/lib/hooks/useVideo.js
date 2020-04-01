@@ -28,7 +28,9 @@ const useCustomVideo = ({
       controls.pause();
       if (triggerCb) onPause();
     },
-    seek: (value) => controls.seek(value),
+    seek: (value, { skipToTime = false } = {}) => {
+      controls.seek(skipToTime ? value : state.time + value)
+    },
     playbackRate: (playbackRate) => {
       ref.current.playbackRate = playbackRate;
     },

@@ -1,8 +1,6 @@
 import React from 'react';
-import { useQuery } from '@apollo/client';
 import { useCopyToClipboard } from 'react-use';
-import { query } from '@shared/graphql/auth';
-import { get } from '@shared/lib';
+import { storage } from '@shared/lib';
 import { Link } from 'framework7-react';
 import AddConversation from '@/components/Icon/AddConversation';
 import {
@@ -11,8 +9,7 @@ import {
 
 const EmptyConversation = () => {
   const [state, copyToClipboard] = useCopyToClipboard();
-  const { data } = useQuery(query.INVITE_URL);
-  const url = get(data, 'inviteUrl', '');
+  const url = `${process.env.WEB_URL}/invite?token=${storage.token}`;
 
   return (
     <EmptyConversationContainer>

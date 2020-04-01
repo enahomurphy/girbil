@@ -219,7 +219,6 @@ class ChannelResolver implements ResolverInterface<Channel> {
       @Ctx() { user: { id } },
   ): Promise<boolean> {
     return channel.userId && channel.userId === id;
-
   }
 }
 

@@ -19,6 +19,8 @@ export const useCloseConversation = () => {
           query: USER_CONVERSATIONS,
           data: { conversations: newConverse },
         });
+
+        store.gc();
       },
     });
   };

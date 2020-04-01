@@ -1,6 +1,6 @@
 import { useApolloClient } from '@apollo/client';
 
-import { CONVERSATION_MESSAGES, MESSAGE_FRAGMENT } from '../../query';
+import { CONVERSATION_MESSAGES, USER_CONVERSATIONS, MESSAGE_FRAGMENT } from '../../query';
 import { pick } from '../../../../lib';
 
 
@@ -70,27 +70,29 @@ export const useMessageDeleted = () => {
       fragment: MESSAGE_FRAGMENT,
     });
 
-    if (!message) {
-      return null;
+    if (message) {
+      client.cache.modify('ROOT_QUERY', {
+        messages(items, { readField }) {
+          return items.filter((item) => readField('id', item) !== messageId);
+        },
+      });
+
+      client.cache.modify(
+        client.cache.identify({ __typename: 'Conversation', id: conversationId }),
+        {
+          unread(value = 0) {
+            return message.hasRead ? value : value - 1;
+          },
+        },
+      );
+    } else {
+      client.query({
+        query: USER_CONVERSATIONS,
+        fetchPolicy: 'network-only',
+      });
     }
 
-    client.cache.modify('ROOT_QUERY', {
-      messages(items, { readField }) {
-        return items.filter((item) => readField('id', item) !== messageId);
-      },
-    });
-
     client.cache.gc();
-
-    client.cache.modify(
-      client.cache.identify({ __typename: 'Conversation', id: conversationId }),
-      {
-        unread(value = 0) {
-          return message.hasRead ? value : value - 1;
-        },
-      },
-    );
-    return null;
   };
 };
 

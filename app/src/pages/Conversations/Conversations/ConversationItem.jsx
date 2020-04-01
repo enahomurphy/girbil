@@ -60,6 +60,11 @@ const ConversationItem = ({ conversation }) => {
                clickable: true,
                onClick: leaveChannel(channel.id),
              },
+             {
+               title: 'Close Channel',
+               clickable: true,
+               onClick: closeConversation(id),
+             },
            ]}
            getLink={() => `/conversations/${id}/`}
            key={id}

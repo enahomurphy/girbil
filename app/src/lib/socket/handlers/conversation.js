@@ -4,11 +4,10 @@ import { storage, get } from '@shared/lib';
 import { mutation } from '@shared/graphql/conversations';
 
 import { SocketContext } from '../socket';
-import { MESSAGE_CREATED, MESSAGE_DELETED } from '../events';
+import { MESSAGE_DELETED } from '../events';
 
 export const useConversationListener = (conversationId) => {
   const socket = useContext(SocketContext);
-  const addMessage = mutation.useMesageReceived();
   const deleteMessage = mutation.useMessageDeleted();
 
   const orgId = get(storage, 'payload.organization.id');
@@ -20,13 +19,6 @@ export const useConversationListener = (conversationId) => {
 
   if (!subscribed) {
     const channel = socket.subscribe(channelId);
-
-    channel.bind(MESSAGE_CREATED, ({ data }) => {
-      const { sender } = data;
-      if (sender.id !== userId && conversationId === data.conversationId) {
-        addMessage(data);
-      }
-    });
 
     channel.bind(MESSAGE_DELETED, ({ data }) => {
       const { sender } = data;

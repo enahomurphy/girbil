@@ -24,7 +24,6 @@ export class Conversation1582381400009 implements MigrationInterface {
       `
         CREATE INDEX ON "conversations" ("creator_id", "receiver_id", "organization_id");
         CREATE INDEX ON "conversations" ("creator_id", "receiver_id", "organization_id", "receiver_type");
-        CREATE INDEX ON "conversations" ("creator_id", "receiver_id", "organization_id", "receiver_type");
       `,
     );
   }

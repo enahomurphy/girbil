@@ -130,10 +130,7 @@ class MessageResolver {
 
     read = read.filter((id) => id !== user.id);
     await this.messageRepo.update(
-      {
-        id: messageId,
-        conversationId,
-      },
+      { id: messageId },
       {
         read: Array.from(new Set(read)),
       },

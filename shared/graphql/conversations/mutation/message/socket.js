@@ -69,7 +69,7 @@ export const useMessageDeleted = () => {
       }),
       fragment: MESSAGE_FRAGMENT,
     });
-    console.log(message);
+
     if (!message) {
       return null;
     }
@@ -86,7 +86,6 @@ export const useMessageDeleted = () => {
       client.cache.identify({ __typename: 'Conversation', id: conversationId }),
       {
         unread(value = 0) {
-          console.log(value, 'was called')
           return message.hasRead ? value : value - 1;
         },
       },

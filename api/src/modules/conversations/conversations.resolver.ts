@@ -84,9 +84,9 @@ class ConversationResolver {
       userId,
     );
 
-    if (!conversation.open) {
-      conversation.open = true;
-      this.conversationRepo.update({ id: conversation.id }, { open: true });
+    if (!conversation.closed.includes(userId)) {
+      const closed = conversation.closed.filter((id) => userId === id);
+      this.conversationRepo.update({ id: conversation.id }, { closed });
     }
 
     conversation.receiver = user.user;
@@ -99,8 +99,16 @@ class ConversationResolver {
   @Mutation(() => String, { nullable: true })
   async closeConversation(
     @Args() { conversationId }: ConversationIDArgs,
+      @Ctx() { user: { id: userId } }: ContextType,
   ): Promise<string> {
-    await this.conversationRepo.update({ id: conversationId }, { open: false });
+    const { closed } = await this.conversationRepo.findOne({ id: conversationId });
+    closed.push(userId);
+
+    await this.conversationRepo.update(
+      { id: conversationId },
+      { closed: Array.from(new Set(closed)) },
+    );
+
     return 'conversation closed';
   }
 }

@@ -5,6 +5,8 @@ export class ConversationOpenUpdate15823813000019 implements MigrationInterface 
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(`
       DROP INDEX IF EXISTS conversations_creator_id_receiver_id_organization_id_receiv_idx;
+      CREATE INDEX ON conversations ("organization_id");
+      CREATE UNIQUE INDEX ON conversations ("organization_id", "id");
     `);
 
     await queryRunner.query(`

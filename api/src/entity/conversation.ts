@@ -47,6 +47,12 @@ export class Conversation {
   @Field()
   receiverType: ConversationType
 
+  @Column({
+    type: 'uuid',
+    array: true,
+  })
+  closed: string[] = []
+
   @Field()
   @CreateDateColumn({
     name: 'created_at',

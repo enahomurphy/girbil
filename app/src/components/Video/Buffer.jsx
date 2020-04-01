@@ -10,7 +10,7 @@ const Buffer = ({ duration, played, seek }) => (
       max={duration}
       value={played}
       step={1}
-      onRangeChanged={seek}
+      onRangeChange={(val) => seek(val, { skipToTime: true })}
     />
   </BufferWrapper>
 );

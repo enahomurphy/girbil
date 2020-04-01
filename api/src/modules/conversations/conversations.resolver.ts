@@ -84,7 +84,7 @@ class ConversationResolver {
       userId,
     );
 
-    if (!conversation.closed.includes(userId)) {
+    if (conversation.closed.includes(userId)) {
       const closed = conversation.closed.filter((id) => userId === id);
       this.conversationRepo.update({ id: conversation.id }, { closed });
     }

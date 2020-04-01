@@ -133,6 +133,7 @@ class OrganizationRepository extends Repository<Organization> {
         'channel' AS type,
         conversations.id AS "conversationId",
         COUNT(channel_users.channel_id) AS members,
+        channels.user_id = $3 AS "isOwner",
         is_private AS "isPrivate",
         (
           SELECT not COUNT(channel_users.user_id) = 0
@@ -163,6 +164,7 @@ class OrganizationRepository extends Repository<Organization> {
           LIMIT 1
         ) as "conversationId",
         NULL as members,
+        NULL as "isOwner",
         NULL AS "isPrivate",
         NULL AS "isMember"
       FROM users

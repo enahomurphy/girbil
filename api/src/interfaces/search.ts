@@ -7,6 +7,7 @@ export interface SearchResult {
   members: number;
   isPrivate: boolean;
   isMember: boolean;
+  isOwner: boolean;
 }
 
 export interface ParsedText {

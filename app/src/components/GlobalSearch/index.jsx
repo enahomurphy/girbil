@@ -51,54 +51,6 @@ const GlobalSearch = (props) => {
     setSearchText(helper);
   };
 
-  const createOptions = (id, type, isMember, conversationId) => {
-    const options = [];
-
-    if (type === 'channel') {
-      options.push({
-        title: 'View Channel',
-        getLink: () => `/channels/${id}`,
-        onClick: handleClose,
-      });
-
-      if (isMember) {
-        options.push({
-          title: 'Leave Channel',
-          onClick: () => {
-            handleClose();
-            leaveChannel(id);
-          },
-        });
-      } else {
-        options.push({
-          title: 'Join Channel',
-          onClick: handleClose,
-          getLink: () => `/conversations/${conversationId}/`,
-        });
-      }
-    }
-
-    if (type === 'user') {
-      options.push({
-        title: 'View Profile',
-        getLink: () => `/users/${id}/profile`,
-        onClick: handleClose,
-      });
-
-      if (conversationId) {
-        options.push({
-          title: 'Close Direct Message',
-          onClick: () => {
-            handleClose();
-            closeConversation(conversationId);
-          },
-        });
-      }
-    }
-
-    return options;
-  };
-
   return (
     <Popup className="global-search" style={{ background: '#222222' }} opened={isOpen}>
       <div style={{ borderBottom: '1px solid #ffffff' }}>
@@ -136,7 +88,20 @@ const GlobalSearch = (props) => {
             id, name, conversationId, avatar, type, members, isPrivate = false, isMember,
           }) => (type === 'user' ? (
             <ConversationListItem
-              options={createOptions(id, type, isMember, conversationId)}
+              options={[
+                {
+                  title: 'View Profile',
+                  getLink: () => `/users/${id}/profile`,
+                  onClick: handleClose,
+                }, {
+                  title: 'Close Direct Message',
+                  shouldHide: !conversationId,
+                  onClick: () => {
+                    handleClose();
+                    closeConversation(conversationId);
+                  },
+                }
+              ]}
               getLink={() => `/conversations/${conversationId}/`}
               key={id}
               onClick={handleClose}
@@ -153,7 +118,27 @@ const GlobalSearch = (props) => {
             />
           ) : (
             <ConversationListItem
-              options={createOptions(id, type, isMember, conversationId)}
+              options={[
+                {
+                  title: 'View Channel',
+                  getLink: () => `/channels/${id}`,
+                  onClick: handleClose,
+                },
+                {
+                  title: 'Leave Channel',
+                  shouldHide: !isMember,
+                  onClick: () => {
+                    handleClose();
+                    leaveChannel(id);
+                  },
+                },
+                {
+                  title: 'Join Channel',
+                  onClick: handleClose,
+                  shouldHide: isMember,
+                  getLink: () => `/conversations/${conversationId}/`,
+                }
+              ]}
               getLink={() => `/conversations/${conversationId}/`}
               key={id}
               onClick={handleClose}

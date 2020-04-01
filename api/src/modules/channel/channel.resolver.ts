@@ -212,6 +212,14 @@ class ChannelResolver implements ResolverInterface<Channel> {
 
     return this.channelRepo.membersCount(channel.organizationId, channel.id);
   }
+
+  @FieldResolver()
+  async isOwner(
+    @Root() channel: Channel,
+      @Ctx() { user: { id } },
+  ): Promise<boolean> {
+    return channel.userId && channel.userId === id;
+  }
 }
 
 export default ChannelResolver;

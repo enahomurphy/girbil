@@ -133,6 +133,14 @@ export class Channel {
   })
   members?: number;
 
+  @Field()
+  @Column({
+    select: false,
+    insert: false,
+    type: 'boolean',
+  })
+  isOwner?: boolean;
+
   @ManyToMany(() => User)
   @JoinTable({
     name: 'channel_users',

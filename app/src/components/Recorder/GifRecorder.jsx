@@ -83,7 +83,7 @@ const Recorder = ({ opened, onFile, onClose }) => {
   return (
     <Popup style={{ background: '#222222' }} opened={isOpen}>
       <NewMessageWrapper>
-        <BackIcon onClick={closeRecorder} margin="16px 0 0 ">
+        <BackIcon back onClick={closeRecorder} margin="16px 0 0 ">
           <Back />
         </BackIcon>
         <RecorderButton

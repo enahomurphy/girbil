@@ -36,6 +36,7 @@ export const CONVERSATION = gql`
       ...ConversationParts
       channel {
         ...ChannelParts
+        isOwner
         members
       }
       receiver {

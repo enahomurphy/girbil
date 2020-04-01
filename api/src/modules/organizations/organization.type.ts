@@ -24,7 +24,7 @@ export class SearchType {
   @Field()
   name: string
 
-  @Field()
+  @Field({ nullable: true })
   avatar: string
 
   @Field()
@@ -41,4 +41,7 @@ export class SearchType {
 
   @Field({ nullable: true })
   isMember: boolean
+
+  @Field({ nullable: true })
+  isOwner: boolean
 }

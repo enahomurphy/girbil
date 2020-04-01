@@ -77,6 +77,7 @@ export const SEARCH_ORGANIZATION = gql`
       members
       isPrivate
       isMember
+      isOwner
     }
   }
 `;

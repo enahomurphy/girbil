@@ -23,7 +23,8 @@ class ConversationRepository extends Repository<Conversation> {
         )
       `, 'conversation_unread')
       .where('conversation.organizationId = :organizationId')
-      .andWhere("conversation.receiver_type = 'channel'");
+      .andWhere("conversation.receiver_type = 'channel'")
+      .andWhere('NOT :userId = ANY(coalesce(closed, array[]::uuid[]))');
 
     query.andWhere(`
       (
@@ -40,7 +41,6 @@ class ConversationRepository extends Repository<Conversation> {
           conversation.creator_id = :userId
           OR conversation.receiver_id = :userId
         )
-        AND conversation.open = 'true'::boolean
         AND conversation.organizationId = :organizationId
       )
     `);
@@ -125,7 +125,6 @@ class ConversationRepository extends Repository<Conversation> {
         WHERE (
           conversation.organization_id = :organizationId
           AND conversation.receiver_type = :type
-          AND conversation.open != 'false'::boolean
         )
         AND (
           (
@@ -182,6 +181,7 @@ class ConversationRepository extends Repository<Conversation> {
 
       await this.save(conversation);
     }
+
 
     return conversation;
   }

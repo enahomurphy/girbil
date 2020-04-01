@@ -1,10 +1,11 @@
 import { ListItem, Page as f7Page } from 'framework7-react';
 
-import { Title, Block, Button } from '@/components/Style';
+import { Title, Block } from '@/components/Style';
 import styled from 'styled-components';
 
 export const StyledUser = styled(Block)`
   margin-left: 7px;
+  cursor: pointer;
 `;
 
 export const Img = styled.img`
@@ -82,6 +83,7 @@ export const Logo = styled.div`
   margin-left: 7px;
   display: flex;
   align-items: center;
+  cursor: pointer;
 `;
 
 export const UserOrgDetails = styled.div`

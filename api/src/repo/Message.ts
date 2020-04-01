@@ -38,7 +38,7 @@ class MessageRepository extends Repository<Message> {
           WHERE m.id = message.id
           GROUP BY x.reaction
       ) as each
-    )`, 'message_reactions')
+    )`, 'message_reactions');
 
     if (parentId) {
       query

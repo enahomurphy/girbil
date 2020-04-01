@@ -37,16 +37,6 @@ export class Conversation {
   })
   organizationId?: string;
 
-  @Column('boolean')
-  open?: boolean;
-
-  @Field()
-  @CreateDateColumn({
-    name: 'created_at',
-    default: new Date(),
-  })
-  createdAt?: Date;
-
   @Column({
     type: 'enum',
     enum: ConversationType,
@@ -56,6 +46,13 @@ export class Conversation {
   })
   @Field()
   receiverType: ConversationType
+
+  @Field()
+  @CreateDateColumn({
+    name: 'created_at',
+    default: new Date(),
+  })
+  createdAt?: Date;
 
   @Field(() => User, { nullable: true })
   @OneToOne(() => User)

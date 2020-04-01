@@ -120,8 +120,12 @@ const Message = ({
   );
 };
 
+Message.defaultProps = {
+  isThread: false,
+};
+
 Message.propTypes = {
-  isThread: PropTypes.oneOfType([() => undefined, PropTypes.object]).isRequired,
+  isThread: PropTypes.oneOfType([() => undefined, PropTypes.bool]),
   conversationId: PropTypes.string.isRequired,
   messageId: PropTypes.string.isRequired,
 };

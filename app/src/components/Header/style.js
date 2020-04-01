@@ -4,7 +4,10 @@ import styled from 'styled-components';
 
 export const NavbarWrapper = styled.div`
   padding-top: 24px;
-  -webkit-app-region: drag;
+
+  &:not(input) {
+    -webkit-app-region: drag;
+  }
 
   .navbar-bg::after {
     border: none;
@@ -14,5 +17,7 @@ export const NavbarWrapper = styled.div`
 export const StyledNavbar = styled(Navbar)`
   height: 80px;
   border-bottom: 1px solid #ffffff;
-  -webkit-app-region: drag;
+  &:not(input) {
+    -webkit-app-region: drag;
+  }
 `;

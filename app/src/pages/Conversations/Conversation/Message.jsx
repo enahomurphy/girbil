@@ -79,6 +79,7 @@ const Message = ({
   };
 
   const handleNextMessage = (action) => () => {
+    controls.pause();
     emitter.emitEvent('next_message', { id: message.id, action });
   };
 

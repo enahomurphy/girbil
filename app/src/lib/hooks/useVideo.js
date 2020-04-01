@@ -20,11 +20,11 @@ const useCustomVideo = ({
   });
 
   const playerControls = {
-    play: ({ triggerCb = true }) => {
+    play: ({ triggerCb = true } = {}) => {
       controls.play();
       if (triggerCb) onPlay();
     },
-    pause: ({ triggerCb = true }) => {
+    pause: ({ triggerCb = true } = {}) => {
       controls.pause();
       if (triggerCb) onPause();
     },

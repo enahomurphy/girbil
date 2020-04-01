@@ -174,7 +174,7 @@ export const usePlayerPlayPauseEvents = (id, control) => {
 
     emitter.onLastListenedEventEmitted('play_message', handler);
     return () => emitter.removeListener('play_message', handler);
-  }, [id, updateState]);
+  }, [control, id, updateState]);
 };
 
 export const usePlayerPrevNextEvent = (messages) => {

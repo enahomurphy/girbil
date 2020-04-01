@@ -1,8 +1,4 @@
-import { useEffect } from 'react';
 import { f7 } from 'framework7-react';
-
-import { mutation } from '@shared/graphql/conversations';
-import emitter from '@/lib/emitter';
 
 export const useGoBack = ({ message, isThread }) => {
   const handler = () => {
@@ -21,3 +17,5 @@ export const useGoBack = ({ message, isThread }) => {
 
   return handler;
 };
+
+export default {};

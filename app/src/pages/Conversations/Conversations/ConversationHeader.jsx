@@ -25,7 +25,8 @@ const ConversationHeader = (props) => {
       <Navbar>
         <UserOrgDetails
           onClick={() => f7.popover.open('.user-popover', '.user-org-details')}
-          className="user-org-details">
+          className="user-org-details"
+        >
           <Logo
             type="flex"
             align="center"
@@ -89,6 +90,7 @@ ConversationHeader.propTypes = {
   handleSearch: PropTypes.func.isRequired,
   closeConversation: PropTypes.func.isRequired,
   leaveChannel: PropTypes.func.isRequired,
+  userData: PropTypes.object.isRequired,
 };
 
 export default ConversationHeader;

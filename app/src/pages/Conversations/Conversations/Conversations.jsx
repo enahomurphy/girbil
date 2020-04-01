@@ -7,10 +7,10 @@ import { storage, get } from '@shared/lib';
 import { query, mutation } from '@shared/graphql/conversations';
 import { query as orgQuery } from '@shared/graphql/organizations';
 import { mutation as channelMutations } from '@shared/graphql/channels';
+import { Page } from '@/components/Style';
 import ConversationHeader from './ConversationHeader';
 import EmptyConversation from './EmptyConversation';
 import ConversationItem from './ConversationItem';
-import { Page } from './style';
 
 const Conversations = () => {
   const { conversations, loading } = query.useGetUserConversations();

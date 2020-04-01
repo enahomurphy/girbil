@@ -111,8 +111,23 @@ Block.defaultProps = {
 };
 
 export const Page = styled(f7Page)`
-  .page-content  {
-    overflow: ${({ overflow }) => overflow};
+   .page-content {
+    scrollbar-width: thin;
+    overflow-y: overlay;
+    -webkit-overflow-y: overlay;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+      height: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 100px;
+    }
+
+    &:scrollbar[orient="horizontal"] {
+      color:green;
+    }
   }
 `;
 

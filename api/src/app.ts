@@ -13,6 +13,8 @@ import middleware, { authorized } from './middleware';
 import { keys } from './config';
 import logger from './utils/logger';
 import controller from './controller';
+import { initializeSocketQueue } from './services/socket';
+import { queue } from './services/redis';
 
 const resolvers = keys.environment === 'development'
   ? [`${__dirname}/modules/**/*.resolver.ts`]
@@ -47,9 +49,10 @@ const App = async (): Promise<string | undefined> => {
     app.use(middleware);
 
     apolloServer.applyMiddleware({ app });
-
     const httpServer: HTTPServer = createServer(app);
     controller(app);
+    initializeSocketQueue(queue);
+
     httpServer.listen(keys.port, () => {
       logger.info(`server started on http://localhost:${keys.port}/graphql`);
     });

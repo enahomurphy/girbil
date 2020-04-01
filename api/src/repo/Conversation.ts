@@ -8,10 +8,13 @@ import {
 class ConversationRepository extends Repository<Conversation> {
   private readonly userOrgRepo = getRepository(UserOrganization)
 
-  async conversations(userId: string, organizationId: string): Promise<Conversation[]> {
+  async conversations(
+    userId: string, organizationId: string, conversationId?: string,
+  ): Promise<Conversation[]> {
     const query = this.createQueryBuilder('conversation')
       .setParameter('userId', userId)
       .setParameter('organizationId', organizationId)
+      .setParameter('conversationId', conversationId)
       .leftJoinAndSelect('conversation.creator', 'creator')
       .leftJoinAndSelect('conversation.receiver', 'receiver')
       .leftJoinAndSelect('conversation.channel', 'channel')
@@ -21,9 +24,15 @@ class ConversationRepository extends Repository<Conversation> {
             WHERE NOT (:userId = ANY(coalesce(read, array[]::uuid[])))
             AND conversation_id = "conversation"."id"
         )
-      `, 'conversation_unread')
-      .where('conversation.organizationId = :organizationId')
-      .andWhere(`
+      `, 'conversation_unread');
+
+    if (conversationId) {
+      query.where('conversation.id = :conversationId');
+    } else {
+      query.where('conversation.organizationId = :organizationId');
+    }
+
+    query.andWhere(`
         (
           SELECT COUNT(channel_users.user_id)
           FROM channel_users
@@ -43,7 +52,13 @@ class ConversationRepository extends Repository<Conversation> {
         )
       `);
 
-    const conversations = await query.getMany();
+    let conversations = [];
+    if (conversationId) {
+      const result = await query.getOne();
+      conversations = [result];
+    } else {
+      conversations = await query.getMany();
+    }
 
     return conversations.map((conversation) => {
       if (conversation.receiverType !== ConversationType.CHANNEL) {
@@ -73,6 +88,7 @@ class ConversationRepository extends Repository<Conversation> {
 
   async hasUser(id: string, userId: string, organizationId: string): Promise<Conversation> {
     return this.createQueryBuilder('conversation')
+      .cache(true)
       .setParameter('id', id)
       .setParameter('userId', userId)
       .setParameter('organizationId', organizationId)

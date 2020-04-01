@@ -20,7 +20,7 @@ import { ValidateArgs } from '../../middleware/decorators';
 import { AddMessageInput } from './message.input';
 import { ContextType } from '../../interfaces';
 import { ConversationIDArgs } from '../conversations/conversation.args';
-import * as socket from '../../services/socket';
+import { broadcast, queue, events } from '../../services/socket';
 
 @Resolver(Message)
 class MessageResolver {
@@ -62,8 +62,12 @@ class MessageResolver {
     createdMessage.state = 'done';
     createdMessage.sender = user;
 
-    const channel = `conversation_${conversationId}_${organization.id}`;
-    socket.broadcast(channel, socket.events.MESSAGE_CREATED, message);
+    const data = {
+      channel: organization.id,
+      data: createdMessage,
+    };
+
+    queue.emit(events.MESSAGE_CREATED, data);
     return createdMessage;
   }
 
@@ -109,7 +113,7 @@ class MessageResolver {
   @CanView('conversation')
   @Mutation(() => Message, { nullable: true })
   async markAsUnRead(
-    @Args() { conversationId, messageId }: MessagesArgs,
+    @Args() { messageId }: MessagesArgs,
       @Ctx() { user }: ContextType,
   ): Promise<Message> {
     const message = await this.messageRepo.findOne({ id: messageId });
@@ -153,7 +157,7 @@ class MessageResolver {
 
     const channel = `conversation_${conversationId}_${organization.id}`;
     const data = { sender: user, id: messageId, conversationId };
-    socket.broadcast(channel, socket.events.MESSAGE_DELETED, data);
+    broadcast(channel, events.MESSAGE_DELETED, data);
     return 'Message deleted';
   }
 

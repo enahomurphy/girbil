@@ -8,12 +8,9 @@ import {
   Args,
 } from 'type-graphql';
 import { getCustomRepository } from 'typeorm';
-import { plainToClass } from 'class-transformer';
 
 import { ConversationRepo } from '../../repo';
-import {
-  Conversation, User, ConversationType,
-} from '../../entity';
+import { Conversation, User } from '../../entity';
 import { ContextType } from '../../interfaces';
 import { CanView } from '../../middleware/permissions';
 import { ConversationIDArgs } from './conversation.args';
@@ -38,22 +35,11 @@ class ConversationResolver {
     @Args() { conversationId }: ConversationIDArgs,
       @Ctx() { user: { id, organization } }: ContextType,
   ): Promise<Conversation> {
-    const conversation = await this.conversationRepo.findOne({
-      where: {
-        id: conversationId,
-        organizationId: organization.id,
-      },
-      relations: ['receiver', 'channel', 'creator'],
-    });
-
-    if (conversation.receiverType !== ConversationType.CHANNEL) {
-      if (conversation.receiver.id === id) {
-        return plainToClass(Conversation, {
-          ...conversation,
-          receiver: conversation.creator,
-        });
-      }
-    }
+    const [conversation] = await this.conversationRepo.conversations(
+      id,
+      organization.id,
+      conversationId,
+    );
 
     return conversation;
   }
@@ -84,9 +70,8 @@ class ConversationResolver {
       userId,
     );
 
-    if (conversation.closed.includes(userId)) {
-      const closed = conversation.closed.filter((id) => userId === id);
-      this.conversationRepo.update({ id: conversation.id }, { closed });
+    if (conversation.closed.length) {
+      this.conversationRepo.update({ id: conversation.id }, { closed: [] });
     }
 
     conversation.receiver = user.user;

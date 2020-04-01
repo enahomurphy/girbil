@@ -32,7 +32,7 @@ interface Email {
 
 interface Redis {
   host: string;
-  port: string;
+  port: number;
 }
 
 interface Keys {
@@ -74,7 +74,7 @@ const keys: Keys = {
   },
   redis: {
     host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT,
+    port: parseInt(process.env.REDIS_PORT, 10),
   },
 };
 

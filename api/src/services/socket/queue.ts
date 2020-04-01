@@ -3,14 +3,14 @@ import { events } from './events';
 
 import { ConversationRepo } from '../../repo';
 import { ConversationType, ChannelUsers } from '../../entity';
-import { broadcast } from '.';
+import { broadcast } from './socket';
 
 
 export const initializeSocketQueue = (queue): void => {
   const conversationRepo = getCustomRepository(ConversationRepo);
   const channelUsersRepo = getRepository(ChannelUsers);
 
-  queue.on(events.MESSAGE_CREATED, async ({ channel, data }): void => {
+  queue.on(events.MESSAGE_CREATED, async ({ channel, data }): Promise<void> => {
     const conversation = await conversationRepo.findOne({ id: data.conversationId });
 
     if (!conversation) {
@@ -39,6 +39,7 @@ export const initializeSocketQueue = (queue): void => {
         message: data,
       });
     }
+
     return null;
   });
 };

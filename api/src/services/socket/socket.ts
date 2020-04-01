@@ -1,7 +1,7 @@
 
 import Pusher from 'pusher';
 import { keys } from '../../config';
-
+import { events } from './events';
 
 export const pusher = new Pusher({
   appId: keys.pusher.appId,

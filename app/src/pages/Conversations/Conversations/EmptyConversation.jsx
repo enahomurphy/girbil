@@ -24,7 +24,7 @@ const EmptyConversation = () => {
       </AddContainer>
       <InviteContainer>
         <span style={{ fontWeight: '600', fontSize: '18 ' }}>
-          <span role="img">🤜🏻🤛🏻</span>
+          <span aria-label="fist" role="img">🤜🏻🤛🏻</span>
           Add a few teammates
         </span>
         <span>Girbil is more valuable with friends</span>

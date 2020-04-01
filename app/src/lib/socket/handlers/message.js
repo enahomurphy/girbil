@@ -17,9 +17,9 @@ export const useOrgListener = () => {
     const channel = socket.subscribe(orgId);
     channel.bind(MESSAGE_CREATED, ({ data }) => {
       const { users = [], message } = data;
-
       const conversation = findOrPullConversation(message.conversationId);
 
+      console.log(data, conversation);
       if (users.includes(userId) && conversation) {
         addMessage(message);
       }

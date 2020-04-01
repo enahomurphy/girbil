@@ -1,6 +1,6 @@
 import { useQuery, useApolloClient, gql } from '@apollo/client';
 
-import { USER_CONVERSATIONS, CONVERSATION } from './query';
+import { USER_CONVERSATIONS } from './query';
 import { get } from '../../../lib';
 
 export const useGetUserConversations = () => {
@@ -29,17 +29,14 @@ export const useFindOrPullConversation = () => {
       fragment: gql`
         fragment ConversationParts on Conversation {
           id
-          userId
         }
       `,
     });
 
     if (!conversation) {
       client.query({
-        query: CONVERSATION,
+        query: USER_CONVERSATIONS,
         fetchPolicy: 'network-only',
-        variables: { conversationId: id },
-
       });
     }
 

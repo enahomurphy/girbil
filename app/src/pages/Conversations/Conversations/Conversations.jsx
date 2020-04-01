@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useLazyQuery } from '@apollo/client';
 import { useDebounce } from 'react-use';
+import { List } from 'framework7-react';
 
 import { storage, get } from '@shared/lib';
 import { query, mutation } from '@shared/graphql/conversations';
 import { query as orgQuery } from '@shared/graphql/organizations';
 import { mutation as channelMutations } from '@shared/graphql/channels';
-import ConversationList from '@/components/List/ConversationList';
 import ConversationHeader from './ConversationHeader';
 import EmptyConversation from './EmptyConversation';
+import ConversationItem from './ConversationItem';
 import { Page } from './style';
 
 const Conversations = () => {
@@ -48,11 +49,18 @@ const Conversations = () => {
       />
       {
         conversations && conversations.length ? (
-          <ConversationList
-            conversations={conversations}
-            leaveChannel={leaveChannel}
-            closeConversation={closeConversation}
-          />
+          <List style={{ margin: '32px 0 0 0' }}>
+            {
+              conversations.map((conversation) => (
+                <ConversationItem
+                  key={conversation.id}
+                  conversation={conversation}
+                  leaveChannel={leaveChannel}
+                  closeConversation={closeConversation}
+                />
+              ))
+            }
+          </List>
         ) : (
           <EmptyConversation />
         )

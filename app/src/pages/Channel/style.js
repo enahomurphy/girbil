@@ -47,4 +47,5 @@ export const StyledAvatar = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 16px;
+  cursor: pointer;
 `;

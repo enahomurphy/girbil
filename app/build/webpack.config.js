@@ -171,10 +171,6 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify(env),
       'process.env.TARGET': JSON.stringify(target),
     }),
-    new webpack.ProvidePlugin({
-      RecordRTC: 'recordrtc',
-    }),
-
     ...(env === 'production' ? [
       new OptimizeCSSPlugin({
         cssProcessorOptions: {

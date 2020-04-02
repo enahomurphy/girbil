@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useVideo } from 'react-use';
 import { useMachine } from '@xstate/react';
 import { useMutation, useLazyQuery, useQuery } from '@apollo/client';
@@ -18,6 +18,8 @@ import { get } from '@shared/lib';
 import { getParam } from '@/lib';
 import { NewMessageWrapper } from './style';
 
+const videoRecorder = new Video('video');
+
 const NewMessage = ({ isThread, conversationId }) => {
   const { data: conversationData } = useQuery(
     query.CONVERSATION,
@@ -28,7 +30,6 @@ const NewMessage = ({ isThread, conversationId }) => {
   const { params } = useVideoData(null, 'video');
   const id = isThread ? 'thread-video' : 'video';
   const [video] = useVideo({ ...params, id, muted: true });
-  const [videoRecorder] = useState(new Video(id));
 
   const [saveMessage] = mutation.useSaveMessage();
   const [addMessage, { data }] = useMutation(mutation.ADD_MESSAGE);
@@ -53,7 +54,7 @@ const NewMessage = ({ isThread, conversationId }) => {
       videoRecorder.stop();
       updateState({ state: 'done' });
     };
-  }, [videoRecorder, updateState]);
+  }, [updateState]);
 
   useEffect(() => {
     emitter.emitEvent('play_unread');

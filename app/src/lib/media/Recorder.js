@@ -1,6 +1,6 @@
+import RecordRTC, { getSeekableBlob } from 'recordrtc/RecordRTC';
 import { blobToFile } from './helpers';
 
-/* eslint-disable no-undef */
 class Recorder {
   constructor() {
     this.onMediaError = this.onMediaError.bind(this);
@@ -44,10 +44,14 @@ class Recorder {
       }
 
       if (this.media.state !== 'inactive') {
-        resolve(blobToFile(this.media.getBlob(), name));
+        getSeekableBlob(this.media.getBlob(), (blob) => {
+          resolve(blobToFile(blob, name));
+        });
       } else {
         this.media.stopRecording(() => {
-          resolve(blobToFile(this.media.getBlob(), name));
+          getSeekableBlob(this.media.getBlob(), (blob) => {
+            resolve(blobToFile(blob, name));
+          });
         });
       }
     });
@@ -55,8 +59,9 @@ class Recorder {
 
   startRecord() {
     this.media.setRecordingDuration(Recorder.videoDuration).onRecordingStopped(() => {
-      const blob = this.media.getBlob();
-      this.onDurationEnd(blob);
+      getSeekableBlob(this.media.getBlob(), (blob) => {
+        this.onDurationEnd(blob);
+      });
     });
 
 

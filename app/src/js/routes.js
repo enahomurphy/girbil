@@ -51,6 +51,7 @@ const routes = [
     path: '/conversations/:conversationId/thread/:threadId',
     component: Conversation,
     options: {
+      clearPreviousHistory: true,
       transition: 'f7-cover-v',
       props: {
         isThread: true,

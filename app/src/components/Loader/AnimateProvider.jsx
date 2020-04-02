@@ -7,7 +7,6 @@ const AnimationProvider = ({ easingFunction, duration, children }) => {
   return children(value);
 };
 
-
 AnimationProvider.defaultProps = {
   duration: 3000,
   easingFunction: 'linear',

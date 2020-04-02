@@ -11,7 +11,6 @@ export const getConversationMessages = (cache, variables) => {
       variables,
     });
 
-
     return [...messages];
   } catch (error) {
     return [];

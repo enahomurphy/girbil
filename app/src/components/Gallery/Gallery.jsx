@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { Swiper, Icon, f7 } from 'framework7-react';
 import PropTypes from 'prop-types';
 
+import RecordingItem from './RecordingItem';
+
 import {
   SliderWrapper, SliderNav, Right, SliderNavWrapper,
 } from './style';
@@ -53,19 +55,30 @@ const Gallery = ({ messages, onClick }) => {
             id, conversationId, thumbnail,
             state, sender, pullover, createdAt, replyCount, hasRead,
           }) => (
-            <ImageItem
-              onClick={onClick}
-              onReplyClicked={onReplyClicked(id, conversationId)}
-              key={id}
-              id={id}
-              thumbnail={thumbnail}
-              state={state}
-              pullover={pullover}
-              sender={sender}
-              createdAt={new Date(createdAt)}
-              replyCount={replyCount}
-              hasRead={hasRead}
-            />
+            <>
+              {
+                !['recording', 'complete'].includes(state) ? (
+                  <ImageItem
+                    onClick={onClick}
+                    onReplyClicked={onReplyClicked(id, conversationId)}
+                    key={id}
+                    id={id}
+                    thumbnail={thumbnail}
+                    state={state}
+                    pullover={pullover}
+                    sender={sender}
+                    createdAt={new Date(createdAt)}
+                    replyCount={replyCount}
+                    hasRead={hasRead}
+                  />
+                ) : (
+                  <RecordingItem
+                    state={state}
+                    sender={sender}
+                  />
+                )
+              }
+            </>
           ))
         }
       </Swiper>

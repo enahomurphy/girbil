@@ -9,7 +9,7 @@ const Buffer = ({ duration, played }) => (
       min={0}
       max={duration}
       value={played}
-      step={1}
+      step={0.0001}
     />
   </BufferWrapper>
 );

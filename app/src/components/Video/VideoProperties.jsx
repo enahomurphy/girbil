@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 
 import { Previous, Next } from '@/components/Icon';
 import Emoji from '@/components/Emoji';
+import Reactions from './Reactions';
 import Speed from './Speed';
 import Buffer from './Buffer';
-import { Reactions } from '@/components/Video';
 import {
   ControlContainer, ForwardControls, RewindControl, BottomControls,
 } from './style';
@@ -52,7 +52,7 @@ const VideoProperties = ({
     }
     <BottomControls>
       <Speed onClick={({ value }) => playBack(value)} />
-      <Reactions reactions={reactions} handleReact={handleReact}/>
+      <Reactions reactions={reactions} handleReact={handleReact} />
       <Emoji vertical reaction onClick={handleReact} />
     </BottomControls>
     {

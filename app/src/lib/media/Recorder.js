@@ -67,7 +67,7 @@ class Recorder {
 
     this.gif.setRecordingDuration(Recorder.thumbnailDuration).onRecordingStopped(() => {
       const blob = this.gif.getBlob();
-      this.onThumbnailStop(blob);
+      this.onThumbnailStop(blob, this.gif.toURL());
     });
 
     this.media.startRecording();

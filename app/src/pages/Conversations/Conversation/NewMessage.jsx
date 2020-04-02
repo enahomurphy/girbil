@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { useVideo } from 'react-use';
 import { useMachine } from '@xstate/react';
-import { useMutation, useLazyQuery, useQuery } from '@apollo/client';
+import {
+  useMutation, useLazyQuery, useQuery,
+} from '@apollo/client';
 import { f7 } from 'framework7-react';
 import PropTypes from 'prop-types';
 
@@ -34,7 +36,6 @@ const NewMessage = ({ isThread, conversationId }) => {
   const [saveMessage] = mutation.useSaveMessage();
   const [addMessage, { data }] = useMutation(mutation.ADD_MESSAGE);
   const [updateState] = mutation.useMessageState();
-
   const [{ matches }, send] = useMachine(RecordMachine, {
     context: {
       addMessage,
@@ -97,10 +98,10 @@ const NewMessage = ({ isThread, conversationId }) => {
     }
   };
 
-  videoRecorder.onThumbnailStop = async (blob) => {
+  videoRecorder.onThumbnailStop = async (blob, url) => {
     const messageId = get(data, 'addMessage.id');
     const thumbnail = blobToFile(blob, messageId);
-    send('UPLOAD_THUMBNAIL', { thumbnail, urls });
+    send('UPLOAD_THUMBNAIL', { thumbnail, urls, url });
   };
 
   videoRecorder.onDurationEnd = () => {

@@ -5,7 +5,7 @@ import { query, mutation } from '@shared/graphql/conversations';
 import { SocketContext } from '../socket';
 import { MESSAGE_CREATED } from '../events';
 
-export const useOrgListener = () => {
+export const useOrgUserListener = () => {
   const socket = useContext(SocketContext);
   const findOrPullConversation = query.useFindOrPullConversation();
   const addMessage = mutation.useMesageReceived();
@@ -14,14 +14,12 @@ export const useOrgListener = () => {
     const userId = get(storage, 'payload.id');
     const orgId = get(storage, 'payload.organization.id');
 
-    const channel = socket.subscribe(orgId);
+    const channel = socket.subscribe(`${orgId}-${userId}`);
     channel.bind(MESSAGE_CREATED, ({ data }) => {
-      const { users = [], message } = data;
-      const conversation = findOrPullConversation(message.conversationId);
+      const conversation = findOrPullConversation(data.conversationId);
 
-      console.log(data, conversation);
-      if (users.includes(userId) && conversation) {
-        addMessage(message);
+      if (conversation) {
+        addMessage(data);
       }
     });
 

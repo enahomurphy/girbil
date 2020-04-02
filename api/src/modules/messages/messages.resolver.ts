@@ -63,7 +63,7 @@ class MessageResolver {
     createdMessage.sender = user;
 
     const data = {
-      channel: organization.id,
+      organizationId: organization.id,
       data: createdMessage,
     };
 

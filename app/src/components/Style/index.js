@@ -110,11 +110,14 @@ Block.defaultProps = {
   margin: '0',
 };
 
-export const Page = styled(f7Page)`
+export const Page = styled(f7Page).attrs({
+  styles: { overflow: 'none' },
+})`
    .page-content {
     scrollbar-width: thin;
-    overflow-y: overlay;
-    -webkit-overflow-y: overlay;
+    overflow: ${({ overflow }) => overflow};
+    overflow-y: ${({ overlayX }) => overlayX};
+    overflow-y: ${({ overlayX }) => overlayX};
 
     &::-webkit-scrollbar {
       width: 4px;
@@ -132,6 +135,8 @@ export const Page = styled(f7Page)`
 `;
 
 Page.defaultProps = {
+  overflowX: 'auto',
+  overflowY: 'overlay',
   overflow: 'auto',
 };
 

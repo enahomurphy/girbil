@@ -35,7 +35,7 @@ CircularProgress.defaultProps = {
 
 CircularProgress.propTypes = {
   pathColor: PropTypes.string,
-  duration: PropTypes.string.isRequired,
+  duration: PropTypes.number.isRequired,
   onProgress: PropTypes.func,
 };
 

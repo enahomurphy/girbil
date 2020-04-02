@@ -14,9 +14,9 @@ AnimationProvider.defaultProps = {
 };
 
 AnimationProvider.propTypes = {
-  easingFunction: PropTypes.func,
+  easingFunction: PropTypes.string,
   duration: PropTypes.number.isRequired,
-  children: PropTypes.element.isRequired,
+  children: PropTypes.func.isRequired,
 };
 
 export default AnimationProvider;

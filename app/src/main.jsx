@@ -1,9 +1,9 @@
 import React from 'react';
 import { View } from 'framework7-react';
-import { useOrgListener } from '@/lib/socket';
+import { useOrgUserListener } from '@/lib/socket';
 
 const Main = () => {
-  useOrgListener();
+  useOrgUserListener();
 
   return (
     <View main url="/conversations" />

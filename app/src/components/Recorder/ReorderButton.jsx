@@ -74,7 +74,7 @@ Progress.propTypes = {
   duration: PropTypes.number.isRequired,
 };
 
-const ReorderButton = ({ recording, duration, onClick }) => (
+const RecorderButton = ({ recording, duration, onClick }) => (
   <ReorderButtonWrapper>
     {
       recording && (
@@ -89,14 +89,14 @@ const ReorderButton = ({ recording, duration, onClick }) => (
 );
 
 
-ReorderButton.defaultProps = {
+RecorderButton.defaultProps = {
   duration: 30000,
 };
 
-ReorderButton.propTypes = {
+RecorderButton.propTypes = {
   duration: PropTypes.number,
   recording: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
 };
 
-export default ReorderButton;
+export default RecorderButton;

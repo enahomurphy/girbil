@@ -13,8 +13,8 @@ export const VideoWrapper = styled.div`
 `;
 
 export const BackIcon = styled(Button)`
-  background: ${({ back }) => (back ? 'var(--gb-accent)' : 'transparent')};
-  border: ${({ back }) => (back ? '2px solid #FFFFFF' : 'none')};
+  background: ${({ isBack }) => (isBack ? 'var(--gb-accent)' : 'transparent')};
+  border: ${({ isBack }) => (isBack ? '2px solid #FFFFFF' : 'none')};
   box-sizing: border-box;
   border-radius: 24px;
   width: 32px;
@@ -28,7 +28,7 @@ export const BackIcon = styled(Button)`
   align-items: center;
   z-index: var(--gb-back-z-index);
   padding: 0px;
-  box-shadow: ${({ back }) => (back ? '0px 2px 8px rgba(0, 0, 0, 0.3)' : 'none')};
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
 
   &:hover,
   .aurora.device-desktop .button:not(.active-state):not(.no-hover):hover {

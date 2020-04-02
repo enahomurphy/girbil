@@ -40,7 +40,11 @@ export const StyledListItem = styled(ListItem)`
     justify-content: flex-start;
 
     &::before {
-      display: none;   
+      display: none;
+    }
+
+    &::after {
+      display: none;
     }
 
     .badge {

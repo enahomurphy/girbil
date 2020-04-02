@@ -110,6 +110,13 @@ Block.defaultProps = {
   margin: '0',
 };
 
+export const ListBlock = styled(Block)`
+  &:hover {
+    background: rgba(153, 153, 153, 0.25);
+    border-radius: 4px;
+  }
+`;
+
 export const Page = styled(f7Page).attrs({
   styles: { overflow: 'none' },
 })`

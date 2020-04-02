@@ -29,13 +29,29 @@ const useCustomVideo = ({
       if (triggerCb) onPause();
     },
     seek: (value, { skipToTime = false } = {}) => {
-      controls.seek(skipToTime ? value : state.time + value)
+      controls.seek(skipToTime ? value : state.time + value);
     },
     playbackRate: (playbackRate) => {
       ref.current.playbackRate = playbackRate;
     },
     stop: () => {
       controls.pause();
+    },
+    toggle: (changeState = '') => {
+      switch (changeState) {
+        case 'playing':
+          controls.play();
+          break;
+        case 'pause':
+          controls.pause();
+          break;
+        default:
+          if (state.paused) {
+            controls.play();
+          } else {
+            controls.pause();
+          }
+      }
     },
     mute: () => {
       controls.mute();

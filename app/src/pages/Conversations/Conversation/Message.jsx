@@ -16,9 +16,11 @@ import { usePlayerPlayPauseEvents } from './hooks/messages';
 const Message = ({
   isThread, conversationId, messageId,
 }) => {
+  const [reactToMessage] = mutation.useAddReaction();
+  const [updateState] = mutation.useMessageState();
   const [getMessage, { data }] = useLazyQuery(query.GET_MESSAGE, {
     onCompleted({ message }) {
-      emitter.emitEvent('play_message', { message, state: 'playing' });
+      updateState({ messageId: message.id, state: 'playing' });
     },
   });
 
@@ -49,9 +51,6 @@ const Message = ({
     { variables: { conversationId } },
   );
 
-  const [reactToMessage] = mutation.useAddReaction();
-  const [updateState] = mutation.useMessageState();
-
   const [showControls, setShowControls] = useState(false);
 
   const goBack = useGoBack({ message, isThread });
@@ -67,9 +66,9 @@ const Message = ({
     getMessage({ variables: { messageId } });
 
     return () => {
-      updateState({ variables: { state: 'done' } });
+      updateState({ state: 'done' });
     };
-  }, [getMessage, isThread, messageId, updateState]);
+  }, [getMessage, messageId, updateState]);
 
   const handleReact = ({ value }) => {
     reactToMessage({
@@ -79,7 +78,6 @@ const Message = ({
   };
 
   const handleNextMessage = (action) => () => {
-    controls.pause();
     emitter.emitEvent('next_message', { id: message.id, action });
   };
 

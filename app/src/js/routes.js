@@ -38,6 +38,7 @@ const routes = [
     options: {
       animate: true,
       transition: 'f7-parallax',
+      history: true,
     },
   },
   {
@@ -136,8 +137,6 @@ const routes = [
           reactComponent().then((rc) => {
             resolve({ component: rc.default });
           });
-        },
-        options: {
         },
       },
     ],

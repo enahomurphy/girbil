@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useLazyQuery } from '@apollo/client';
 import { useDebounce } from 'react-use';
+import { List } from 'framework7-react';
 
 import { storage, get } from '@shared/lib';
 import { query, mutation } from '@shared/graphql/conversations';
 import { query as orgQuery } from '@shared/graphql/organizations';
 import { mutation as channelMutations } from '@shared/graphql/channels';
-import { useOrgMessageListener } from '@/lib/socket';
-import ConversationList from '@/components/List/ConversationList';
+import { Page } from '@/components/Style';
 import ConversationHeader from './ConversationHeader';
 import EmptyConversation from './EmptyConversation';
-import { Page } from './style';
+import ConversationItem from './ConversationItem';
 
 const Conversations = () => {
   const { conversations, loading } = query.useGetUserConversations();
@@ -29,8 +29,6 @@ const Conversations = () => {
     if (!searchText) setSearchResult([]);
   }, [searchText, setSearchResult]);
 
-  useOrgMessageListener();
-
   useDebounce(() => {
     if (searchText) search({ variables: { text: searchText } });
   },
@@ -38,7 +36,7 @@ const Conversations = () => {
   500,
   [searchText]);
 
-  if(loading) return null;
+  if (loading) return null;
 
   return (
     <Page>
@@ -51,11 +49,18 @@ const Conversations = () => {
       />
       {
         conversations && conversations.length ? (
-          <ConversationList
-            conversations={conversations}
-            leaveChannel={leaveChannel}
-            closeConversation={closeConversation}
-          />
+          <List style={{ margin: '32px 0 0 0' }}>
+            {
+              conversations.map((conversation) => (
+                <ConversationItem
+                  key={conversation.id}
+                  conversation={conversation}
+                  leaveChannel={leaveChannel}
+                  closeConversation={closeConversation}
+                />
+              ))
+            }
+          </List>
         ) : (
           <EmptyConversation />
         )

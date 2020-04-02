@@ -110,13 +110,33 @@ Block.defaultProps = {
   margin: '0',
 };
 
-export const Page = styled(f7Page)`
-  .page-content  {
+export const Page = styled(f7Page).attrs({
+  styles: { overflow: 'none' },
+})`
+   .page-content {
+    scrollbar-width: thin;
     overflow: ${({ overflow }) => overflow};
+    overflow-y: ${({ overlayX }) => overlayX};
+    overflow-y: ${({ overlayX }) => overlayX};
+
+    &::-webkit-scrollbar {
+      width: 4px;
+      height: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 100px;
+    }
+
+    &:scrollbar[orient="horizontal"] {
+      color:green;
+    }
   }
 `;
 
 Page.defaultProps = {
+  overflowX: 'auto',
+  overflowY: 'overlay',
   overflow: 'auto',
 };
 

@@ -1,8 +1,7 @@
 import React from 'react';
-import {
-  Page, Tabs, Tab, Link,
-} from 'framework7-react';
+import { Tabs, Tab, Link } from 'framework7-react';
 
+import { Page } from '@/components/Style';
 import Header from '@/components/Header';
 import DirectMessages from './DirectMessages';
 import BrowseChannels from './BrowseChannels';

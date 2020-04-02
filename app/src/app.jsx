@@ -2,8 +2,6 @@ import { ApolloProvider } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Device } from 'framework7';
-import emitter from '@/lib/emitter';
-
 import {
   App,
   View,
@@ -13,7 +11,10 @@ import {
 
 import ApolloClient from '@shared/graphql/client';
 import { storage, get } from '@shared/lib';
+import emitter from '@/lib/emitter';
 import { SocketContext, socket } from '@/lib/socket';
+
+import Main from './main';
 
 import Error from './error';
 import cordovaApp from './js/cordova-app';
@@ -24,7 +25,7 @@ const MainApp = () => {
   const [isAuth, setIsAuth] = useState(
     Boolean(storage.payload && get(storage.payload, 'organization')),
   );
-  const [socketConnection, setSocket] = useState();
+  const [socketConnection, setSocket] = useState(socket(isAuth));
 
   const [client] = useState(ApolloClient({
     errorHandler: ({ networkError }) => {
@@ -56,8 +57,8 @@ const MainApp = () => {
   };
 
   useEffect(() => {
-    if (isAuth) {
-      setSocket(socket());
+    if (isAuth && !socket) {
+      setSocket(socket(isAuth));
     }
   }, [isAuth]);
 
@@ -86,12 +87,12 @@ const MainApp = () => {
         <SocketContext.Provider value={socketConnection}>
           <App params={f7params} themeDark>
             {
-            isAuth ? (
-              <View main url="/conversations" />
-            ) : (
-              <View main url="/" />
-            )
-          }
+              isAuth ? (
+                <Main />
+              ) : (
+                <View main url="/" />
+              )
+            }
           </App>
         </SocketContext.Provider>
       </ApolloProvider>

@@ -129,7 +129,7 @@ const NewMessage = ({ isThread, conversationId }) => {
   } = conversationMeta;
 
   return (
-    <Page overflow="hidden">
+    <Page overflowX="hidden">
       <NewMessageWrapper>
         <Header
           name={name}

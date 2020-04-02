@@ -16,9 +16,11 @@ import { usePlayerPlayPauseEvents } from './hooks/messages';
 const Message = ({
   isThread, conversationId, messageId,
 }) => {
+  const [reactToMessage] = mutation.useAddReaction();
+  const [updateState] = mutation.useMessageState();
   const [getMessage, { data }] = useLazyQuery(query.GET_MESSAGE, {
     onCompleted({ message }) {
-      emitter.emitEvent('play_message', { message, state: 'playing' });
+      updateState({ messageId: message.id, state: 'playing' });
     },
   });
 
@@ -49,9 +51,6 @@ const Message = ({
     { variables: { conversationId } },
   );
 
-  const [reactToMessage] = mutation.useAddReaction();
-  const [updateState] = mutation.useMessageState();
-
   const [showControls, setShowControls] = useState(false);
 
   const goBack = useGoBack({ message, isThread });
@@ -67,9 +66,9 @@ const Message = ({
     getMessage({ variables: { messageId } });
 
     return () => {
-      updateState({ variables: { state: 'done' } });
+      updateState({ state: 'done' });
     };
-  }, [getMessage, isThread, messageId, updateState]);
+  }, [getMessage, messageId, updateState]);
 
   const handleReact = ({ value }) => {
     reactToMessage({
@@ -79,12 +78,11 @@ const Message = ({
   };
 
   const handleNextMessage = (action) => () => {
-    controls.pause();
     emitter.emitEvent('next_message', { id: message.id, action });
   };
 
   return (
-    <Page>
+    <Page overflow="hidden">
       <Header
         name={name}
         isPrivate={isPrivate}
@@ -120,8 +118,12 @@ const Message = ({
   );
 };
 
+Message.defaultProps = {
+  isThread: false,
+};
+
 Message.propTypes = {
-  isThread: PropTypes.oneOfType([() => undefined, PropTypes.object]).isRequired,
+  isThread: PropTypes.oneOfType([() => undefined, PropTypes.bool]),
   conversationId: PropTypes.string.isRequired,
   messageId: PropTypes.string.isRequired,
 };

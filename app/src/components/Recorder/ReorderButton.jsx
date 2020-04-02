@@ -1,11 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Button } from 'framework7-react';
 import PropTypes from 'prop-types';
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
-import { useTween } from 'react-use';
+import { CircularProgress } from '@/components/Loader';
 
 const Idle = styled.div`
   height: 64px;
@@ -51,30 +49,23 @@ const ReorderButtonWrapper = styled.div`
 `;
 
 const Progress = ({ duration }) => {
-  const elapsed = useTween('linear', duration);
-  const value = 100 - (elapsed * 100);
+  const [color, setColor] = useState('#33AB77');
 
-  let color = '#33AB77';
+  const handleProgress = (value) => {
+    if (value <= 50) {
+      setColor('#FAFF00');
+    }
 
-  if (value <= 50) {
-    color = '#FAFF00';
-  }
-
-  if (value <= 25) {
-    color = '#FF4F44';
-  }
+    if (value <= 25) {
+      setColor('#FF4F44');
+    }
+  };
 
   return (
-    <CircularProgressbar
-      counterClockwise
-      maxValue={100}
-      value={value}
-      styles={buildStyles({
-        pathColor: color,
-        backgroundColor: 'transparent',
-        pathTransition: 'none',
-        trailColor: 'transparent',
-      })}
+    <CircularProgress
+      duration={duration}
+      onProgress={handleProgress}
+      pathColor={color}
     />
   );
 };
@@ -83,7 +74,7 @@ Progress.propTypes = {
   duration: PropTypes.number.isRequired,
 };
 
-const ReorderButton = ({ recording, duration, onClick }) => (
+const RecorderButton = ({ recording, duration, onClick }) => (
   <ReorderButtonWrapper>
     {
       recording && (
@@ -98,14 +89,14 @@ const ReorderButton = ({ recording, duration, onClick }) => (
 );
 
 
-ReorderButton.defaultProps = {
+RecorderButton.defaultProps = {
   duration: 30000,
 };
 
-ReorderButton.propTypes = {
+RecorderButton.propTypes = {
   duration: PropTypes.number,
   recording: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
 };
 
-export default ReorderButton;
+export default RecorderButton;

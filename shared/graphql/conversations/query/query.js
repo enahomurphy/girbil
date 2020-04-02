@@ -34,6 +34,7 @@ export const CONVERSATION = gql`
   query conversation($conversationId: String!) {
     conversation(conversationId: $conversationId) {
       ...ConversationParts
+      unread
       channel {
         ...ChannelParts
         isOwner

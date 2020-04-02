@@ -30,6 +30,11 @@ interface Email {
   sparkpost: string;
 }
 
+interface Redis {
+  host: string;
+  port: number;
+}
+
 interface Keys {
   port: number;
   authSecret: string;
@@ -40,6 +45,7 @@ interface Keys {
   environment: string;
   url: string;
   pusher: Pusher;
+  redis: Redis;
 }
 
 const keys: Keys = {
@@ -65,6 +71,10 @@ const keys: Keys = {
     key: process.env.PUSHER_KEY,
     secret: process.env.PUSHER_SECRET,
     cluster: process.env.PUSHER_CLUSTER,
+  },
+  redis: {
+    host: process.env.REDIS_HOST,
+    port: parseInt(process.env.REDIS_PORT, 10),
   },
 };
 

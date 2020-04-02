@@ -1,45 +1,32 @@
 import { useContext, useEffect } from 'react';
-import { useApolloClient } from '@apollo/client';
 
 import { storage, get } from '@shared/lib';
+import { query, mutation } from '@shared/graphql/conversations';
 import { SocketContext } from '../socket';
 import { MESSAGE_CREATED } from '../events';
 
-export const useOrgMessageListener = () => {
+export const useOrgUserListener = () => {
   const socket = useContext(SocketContext);
-  const client = useApolloClient();
-  const userId = get(storage, 'payload.id');
-  const orgId = get(storage, 'payload.organization.id');
+  const findOrPullConversation = query.useFindOrPullConversation();
+  const addMessage = mutation.useMesageReceived();
 
   useEffect(() => {
-    const channel = socket.subscribe(orgId);
+    const userId = get(storage, 'payload.id');
+    const orgId = get(storage, 'payload.organization.id');
+
+    const channel = socket.subscribe(`${orgId}-${userId}`);
     channel.bind(MESSAGE_CREATED, ({ data }) => {
-      const conversation = client.cache.identify({
-        __typename: 'Conversation',
-        id: data.conversationId,
-      });
+      const conversation = findOrPullConversation(data.conversationId);
 
-      if (conversation && data.sender.id !== userId) {
-        client.cache.modify('ROOT_QUERY', {
-          messages(items) {
-            return [...items, data];
-          },
-        });
-
-        client.cache.modify(
-          conversation, {
-            unread(value) {
-              return value ? value + 1 : 1;
-            },
-          },
-        );
+      if (conversation) {
+        addMessage(data);
       }
     });
 
     return () => {
       socket.unsubscribe(orgId);
     };
-  }, [client.cache, orgId, socket, userId]);
+  }, [addMessage, findOrPullConversation, socket]);
 };
 
 

@@ -8,10 +8,13 @@ import {
 class ConversationRepository extends Repository<Conversation> {
   private readonly userOrgRepo = getRepository(UserOrganization)
 
-  async conversations(userId: string, organizationId: string): Promise<Conversation[]> {
+  async conversations(
+    userId: string, organizationId: string, conversationId?: string,
+  ): Promise<Conversation[]> {
     const query = this.createQueryBuilder('conversation')
       .setParameter('userId', userId)
       .setParameter('organizationId', organizationId)
+      .setParameter('conversationId', conversationId)
       .leftJoinAndSelect('conversation.creator', 'creator')
       .leftJoinAndSelect('conversation.receiver', 'receiver')
       .leftJoinAndSelect('conversation.channel', 'channel')
@@ -21,31 +24,41 @@ class ConversationRepository extends Repository<Conversation> {
             WHERE NOT (:userId = ANY(coalesce(read, array[]::uuid[])))
             AND conversation_id = "conversation"."id"
         )
-      `, 'conversation_unread')
-      .where('conversation.organizationId = :organizationId')
-      .andWhere("conversation.receiver_type = 'channel'");
+      `, 'conversation_unread');
+
+    if (conversationId) {
+      query.where('conversation.id = :conversationId');
+    } else {
+      query.where('conversation.organizationId = :organizationId');
+    }
 
     query.andWhere(`
-      (
-        SELECT COUNT(channel_users.user_id)
-        FROM channel_users
-        WHERE user_id = :userId
-        AND channel_id = conversation.receiver_id
-        LIMIT 1
-      ) = 1
+        (
+          SELECT COUNT(channel_users.user_id)
+          FROM channel_users
+          WHERE user_id = :userId
+          AND channel_id = conversation.receiver_id
+          LIMIT 1
+        ) = 1
       
-      OR (
-        conversation.receiver_type = 'user'
-        AND (
-          conversation.creator_id = :userId
-          OR conversation.receiver_id = :userId
+        OR (
+          conversation.receiver_type = 'user'
+          AND (
+            conversation.creator_id = :userId
+            OR conversation.receiver_id = :userId
+          )
+          AND conversation.organizationId = :organizationId
+          AND NOT :userId = ANY(coalesce(closed, array[]::uuid[]))
         )
-        AND conversation.open = 'true'::boolean
-        AND conversation.organizationId = :organizationId
-      )
-    `);
+      `);
 
-    const conversations = await query.getMany();
+    let conversations = [];
+    if (conversationId) {
+      const result = await query.getOne();
+      conversations = [result];
+    } else {
+      conversations = await query.getMany();
+    }
 
     return conversations.map((conversation) => {
       if (conversation.receiverType !== ConversationType.CHANNEL) {
@@ -75,6 +88,7 @@ class ConversationRepository extends Repository<Conversation> {
 
   async hasUser(id: string, userId: string, organizationId: string): Promise<Conversation> {
     return this.createQueryBuilder('conversation')
+      .cache(true)
       .setParameter('id', id)
       .setParameter('userId', userId)
       .setParameter('organizationId', organizationId)
@@ -120,24 +134,27 @@ class ConversationRepository extends Repository<Conversation> {
 
     const result = await query.andWhere(`
       (
-        SELECT COUNT(id) = 0 as has_conversation
-          FROM conversations as conversation 
-        WHERE (
-          conversation.organization_id = :organizationId
-          AND conversation.receiver_type = :type
-          AND conversation.open != 'false'::boolean
-        )
+        SELECT
+          COUNT(id) = 0 as has_conversation
+        FROM
+          conversations as conversation
+        WHERE
+            organization_id = :organizationId
         AND (
           (
-            conversation.receiver_id = :userId
-            AND conversation.creator_id = org_user.user_id
+              conversation.receiver_id = :userId
+              AND conversation.creator_id = org_user.user_id
+              AND receiver_type = 'user'
           )
-          OR (
-              conversation.creator_id = :userId
-              AND conversation.receiver_id = org_user.user_id
+            OR (
+                conversation.creator_id = :userId
+                AND conversation.receiver_id = org_user.user_id
+                AND receiver_type = 'user'
             )
-          )  
-        LIMIT 1
+          )
+        AND NOT :userId = ANY(coalesce(conversation.closed, array[]::uuid[]))
+        LIMIT
+          1
       )
     `)
       .take(50)
@@ -182,6 +199,7 @@ class ConversationRepository extends Repository<Conversation> {
 
       await this.save(conversation);
     }
+
 
     return conversation;
   }

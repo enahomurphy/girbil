@@ -13,12 +13,14 @@ import { plainToClass } from 'class-transformer';
 import { MessageRepo } from '../../repo';
 import { Message } from '../../entity';
 import { CanView, CanEdit } from '../../middleware/permissions';
-import { MessagesArgs, MessageIDArgs, MessageReactionArgs } from './message.args';
+import {
+  MessagesArgs, MessageIDArgs, MessageReactionArgs, MessageDeleteArgs,
+} from './message.args';
 import { ValidateArgs } from '../../middleware/decorators';
 import { AddMessageInput } from './message.input';
 import { ContextType } from '../../interfaces';
 import { ConversationIDArgs } from '../conversations/conversation.args';
-import * as socket from '../../services/socket';
+import { broadcast, queue, events } from '../../services/socket';
 
 @Resolver(Message)
 class MessageResolver {
@@ -56,10 +58,16 @@ class MessageResolver {
     });
 
     const createdMessage = await this.messageRepo.save(message);
+
     createdMessage.state = 'done';
     createdMessage.sender = user;
 
-    socket.broadcast(organization.id, socket.events.MESSAGE_CREATED, message);
+    const data = {
+      organizationId: organization.id,
+      data: createdMessage,
+    };
+
+    queue.emit(events.MESSAGE_CREATED, data);
     return createdMessage;
   }
 
@@ -105,7 +113,7 @@ class MessageResolver {
   @CanView('conversation')
   @Mutation(() => Message, { nullable: true })
   async markAsUnRead(
-    @Args() { conversationId, messageId }: MessagesArgs,
+    @Args() { messageId }: MessagesArgs,
       @Ctx() { user }: ContextType,
   ): Promise<Message> {
     const message = await this.messageRepo.findOne({ id: messageId });
@@ -126,10 +134,7 @@ class MessageResolver {
 
     read = read.filter((id) => id !== user.id);
     await this.messageRepo.update(
-      {
-        id: messageId,
-        conversationId,
-      },
+      { id: messageId },
       {
         read: Array.from(new Set(read)),
       },
@@ -142,7 +147,7 @@ class MessageResolver {
   @CanEdit('message')
   @Mutation(() => String)
   async deleteMessage(
-    @Args() { messageId }: MessageIDArgs,
+    @Args() { messageId, conversationId }: MessageDeleteArgs,
       @Ctx() { user: { organization, user } }: ContextType,
   ): Promise<string> {
     const message = await this.messageRepo.findOne({ id: messageId });
@@ -150,8 +155,9 @@ class MessageResolver {
       this.messageRepo.delete({ id: message.id });
     }
 
-    message.sender = user;
-    socket.broadcast(organization.id, socket.events.MESSAGE_DELETED, { message });
+    const channel = `conversation_${conversationId}_${organization.id}`;
+    const data = { sender: user, id: messageId, conversationId };
+    broadcast(channel, events.MESSAGE_DELETED, data);
     return 'Message deleted';
   }
 

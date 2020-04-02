@@ -11,6 +11,7 @@ export const router = (threadId) => f7.views[threadId ? 'conversationThread' : '
 export const changeRoute = (message) => {
   const isThread = get(message, 'parentId', false);
   const options = {
+    reloadCurrent: true,
     props: {
       message,
       isThread,
@@ -20,6 +21,7 @@ export const changeRoute = (message) => {
   if (isThread) {
     f7.views.conversationThread.router.navigate(
       `/conversations/${message.conversationId}/thread/${message.parentId}/messages/${message.id}`,
+      { reloadCurrent: true },
     );
   } else {
     f7.views.conversation.router.navigate(
@@ -72,7 +74,7 @@ export const getPullOverLinks = ({
     options.push({
       type: 'delete',
       title: 'Delete video',
-      onClick: () => deleteMessage(id),
+      onClick: () => deleteMessage(),
     });
   }
 
@@ -93,7 +95,6 @@ export const useFormatMessages = (messages = []) => {
         deleteMessage({
           messageId: message.id,
           conversationId: message.conversationId,
-          threadId: message.parentId,
         });
       },
       markMessage: () => (message.hasRead ? markAsUnRead : markAsRead)({
@@ -113,24 +114,18 @@ export const useFormatMessages = (messages = []) => {
 };
 
 export const useMessageClicked = (messages) => {
-  const [updateState] = mutation.useMessageState();
-
   const handler = (id) => {
     const message = messages.find(({ id: mId }) => id === mId);
-    const stateMap = {
-      playing: 'pause',
-      pause: 'playing',
-      done: 'pause',
-    };
 
-    if (['playing', 'pause'].includes(message.state)) {
-      updateState({ messageId: message.id, state: 'toggle' });
-    }
-
-    emitter.emitEvent('play_message', { message, state: stateMap[message.state] });
-
-    if (message.state === 'done' && message) {
+    if (message.state === 'done') {
       changeRoute(message);
+    } else if (['playing', 'pause'].includes(message.state)) {
+      const stateMap = {
+        playing: 'pause',
+        pause: 'playing',
+        done: 'pause',
+      };
+      emitter.emitEvent('play_message', { message, state: stateMap[message.state] });
     }
   };
 
@@ -162,20 +157,16 @@ export const usePlayerPlayPauseEvents = (id, control) => {
 
   useEffect(() => {
     const handler = ({ message, state }) => {
-      if (state === 'playing' && message.state !== 'playing') {
-        if (control) control.play({ triggerCb: false });
-        updateState({ messageId: message.id, state: 'playing' });
-      }
+      updateState({ messageId: message.id, state });
 
-      if (state === 'pause' && message.state !== 'pause') {
-        if (control) control.pause({ triggerCb: false });
-        updateState({ messageId: message.id, state: 'pause' });
-      }
+      control.toggle(state);
     };
 
     emitter.onLastListenedEventEmitted('play_message', handler);
-    return () => emitter.removeListener('play_message', handler);
-  }, [id, updateState]);
+    return () => {
+      emitter.removeListener('play_message', handler);
+    };
+  }, [control, id, updateState]);
 };
 
 export const usePlayerPrevNextEvent = (messages) => {
@@ -210,7 +201,6 @@ export const usePlayerPrevNextEvent = (messages) => {
         if (parentId) {
           router(parentId).back(
             `/conversations/${conversationId}/thread/${parentId}/record`,
-            { reloadPrevious: true },
           );
         } else {
           router(parentId).back(
@@ -218,9 +208,7 @@ export const usePlayerPrevNextEvent = (messages) => {
             { force: true },
           );
         }
-      }
-
-      if (message) {
+      } else if (message) {
         changeRoute(message);
       }
     };

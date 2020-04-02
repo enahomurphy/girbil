@@ -15,6 +15,9 @@ export default ({
       Message: {
         keyFields: ['id'],
       },
+      Conversation: {
+        keyFields: ['id'],
+      },
     },
   });
 
@@ -25,7 +28,7 @@ export default ({
     },
     query: {
       fetchPolicy: 'cache-and-network',
-      errorPolicy: 'all',
+      errorPolicy: 'none',
     },
     mutate: {
       errorPolicy: 'all',
@@ -71,8 +74,10 @@ export default ({
     query: gql`{
       messages
       conversationMeta
+      messages(conversationId: $conversationId, messageId: $messageId) 
+      messages(conversationId: $conversationId) 
     }`,
-    data,
+    data: { ...data, messages: [] },
   });
 
   return client;

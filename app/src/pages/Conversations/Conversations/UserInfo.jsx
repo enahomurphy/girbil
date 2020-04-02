@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ListItem, Link, List } from 'framework7-react';
+import { ListItem, List } from 'framework7-react';
 
 import { BlankLink } from '@/components/Icon';
 import {

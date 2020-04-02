@@ -84,7 +84,7 @@ const Message = ({
   };
 
   return (
-    <Page>
+    <Page overflow="hidden">
       <Header
         name={name}
         isPrivate={isPrivate}

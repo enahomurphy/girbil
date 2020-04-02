@@ -94,7 +94,7 @@ const Header = ({
     </Popover>
     {
       showBack && (
-      <BackIcon back={back} onClick={goBack}>
+      <BackIcon isBack={back} onClick={goBack}>
         { back ? <Back /> : <Close /> }
       </BackIcon>
       )

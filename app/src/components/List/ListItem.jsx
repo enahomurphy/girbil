@@ -14,7 +14,7 @@ const ListItem = ({
 }) => (
   <Block
     margin="0"
-    padding="0 24px 16px"
+    padding="0 15px 24px 16px"
     type="flex"
     align="center"
     justify="space-between"

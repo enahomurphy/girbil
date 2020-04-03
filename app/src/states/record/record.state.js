@@ -4,7 +4,7 @@ import { f7 } from 'framework7-react';
 const updateslide = () => {
   const slide = f7.swiper.get('.swiper-container');
   if (slide) {
-    // slide.lazy.load();
+    slide.lazy.load();
   }
 };
 
@@ -14,13 +14,10 @@ const thumbnail = {
     idle: {
       on: {
         UPLOAD_THUMBNAIL: {
-          target: 'url',
+          target: 'idle',
           actions: assign((_, ctx) => ({ thumbnail: ctx.thumbnail })),
         },
       },
-    },
-    url: {
-      target: 'idle',
     },
   },
 };

@@ -17,12 +17,13 @@ class Recorder {
   }
 
   initRecorder(stream) {
-    this.media = new RecordRTC(stream, {
+    this.stream = stream;
+    this.media = new RecordRTC(this.stream, {
       type: 'video',
       timeSlice: 3000,
     });
 
-    this.gif = new RecordRTC(stream, {
+    this.gif = new RecordRTC(this.stream, {
       type: 'gif',
       frameRate: 150,
       quality: 1,
@@ -46,11 +47,13 @@ class Recorder {
       if (this.media.state !== 'inactive') {
         getSeekableBlob(this.media.getBlob(), (blob) => {
           resolve(blobToFile(blob, name));
+          this.media.reset();
         });
       } else {
         this.media.stopRecording(() => {
           getSeekableBlob(this.media.getBlob(), (blob) => {
             resolve(blobToFile(blob, name));
+            this.media.reset();
           });
         });
       }
@@ -58,9 +61,21 @@ class Recorder {
   }
 
   startRecord() {
+    this.media = new RecordRTC(this.stream, {
+      type: 'video',
+      timeSlice: 3000,
+    });
+
+    this.gif = new RecordRTC(this.stream, {
+      type: 'gif',
+      frameRate: 150,
+      quality: 1,
+    });
+
     this.media.setRecordingDuration(Recorder.videoDuration).onRecordingStopped(() => {
       getSeekableBlob(this.media.getBlob(), (blob) => {
         this.onDurationEnd(blob);
+        this.media.reset();
       });
     });
 
@@ -68,6 +83,7 @@ class Recorder {
     this.gif.setRecordingDuration(Recorder.thumbnailDuration).onRecordingStopped(() => {
       const blob = this.gif.getBlob();
       this.onThumbnailStop(blob, this.gif.toURL());
+      this.gif.reset();
     });
 
     this.media.startRecording();
@@ -80,6 +96,7 @@ class Recorder {
       this.gif.stopRecording((blob) => {
         resolve(blob);
         this.onThumbnailStop(this.gif.getBlob(), blob);
+        this.gif.reset();
       });
     });
   }

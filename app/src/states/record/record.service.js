@@ -38,7 +38,6 @@ export const uploadThumbnail = async (context, data) => {
   const { thumbnail } = data;
   const { urls } = context;
   const uploadURL = get(urls, 'postThumbnailURL');
-
   await upload(uploadURL, thumbnail);
 };
 

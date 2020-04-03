@@ -98,9 +98,8 @@ const NewMessage = ({ isThread, conversationId }) => {
 
   videoRecorder.onThumbnailStop = async (blob) => {
     const messageId = get(data, 'addMessage.id');
-    const thumbnail = blobToFile(blob, messageId);
+    const thumbnail = blobToFile(blob, messageId, 'image/gif');
     send('UPLOAD_THUMBNAIL', { thumbnail });
-    videoRecorder.gif.reset();
   };
 
   videoRecorder.onDurationEnd = () => {

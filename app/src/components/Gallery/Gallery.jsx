@@ -30,6 +30,7 @@ const Gallery = ({ messages, onClick }) => {
   };
 
   const params = {
+    preloadImages: false,
     lazy: {
       loadPrevNext: true,
       loadPrevNextAmount: 2,

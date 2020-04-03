@@ -1,7 +1,8 @@
 import { get } from '@shared/lib';
 import axios from 'axios';
+import { blobToFile } from '@/lib/media';
 
-const upload = async (uploadURL, file) => {
+const uploadHandler = async (uploadURL, file) => {
   await axios({
     method: 'put',
     url: uploadURL,
@@ -13,7 +14,7 @@ const upload = async (uploadURL, file) => {
 };
 
 const uploadAndSave = async ({
-  file, saveMessage, thumbnail, urls, message,
+  video, saveMessage, thumbnail, urls, message,
 }) => {
   const uploadURL = get(urls, 'postVideoURL', '');
   const videoURL = get(urls, 'getVideoURL');
@@ -21,8 +22,8 @@ const uploadAndSave = async ({
   const thumbnailPostURL = get(urls, 'postThumbnailURL');
 
   await Promise.all([
-    upload(uploadURL, file),
-    upload(thumbnailPostURL, thumbnail),
+    uploadHandler(uploadURL, video),
+    uploadHandler(thumbnailPostURL, thumbnail),
   ]);
 
   await saveMessage({
@@ -34,21 +35,19 @@ const uploadAndSave = async ({
   });
 };
 
-export const uploadThumbnail = async (context, data) => {
-  const { thumbnail } = data;
-  const { urls } = context;
-  const uploadURL = get(urls, 'postThumbnailURL');
-  await upload(uploadURL, thumbnail);
-};
-
-export const processing = async (context, data) => {
+export const upload = async (context) => {
   const {
-    saveMessage, urls, thumbnail, message,
+    saveMessage, message, videoBlob, thumbnailBlob,
   } = context;
-  const { file } = data;
+  const { data: { getUploadURL: urls } } = await context.getUploadURLS({
+    id: message.id, conversationId: message.conversationId,
+  });
+
+  const video = blobToFile([videoBlob], message.id);
+  const thumbnail = blobToFile([thumbnailBlob], message.id);
 
   await uploadAndSave({
-    file, saveMessage, thumbnail, urls, message,
+    video, thumbnail, saveMessage, urls, message,
   });
 };
 
@@ -60,25 +59,12 @@ export const getUploadUrls = async (_, { getUploadURLS, message, conversationId 
   };
 };
 
-
-export const retry = async (context) => {
-  const {
-    saveMessage, thumbnail, message, file,
-  } = context;
-  const { data } = await context.getUploadURLS({
-    id: message.id, conversationId: message.conversationId,
-  });
-
-  const urls = get(data, 'getUploadURL', {});
-
-  await uploadAndSave({
-    file, saveMessage, thumbnail, urls, message,
-  });
+export const deleteLocalMessageMessage = async (context) => {
+  const { deleteMessage, message } = context;
+  deleteMessage(message.id);
 };
 
 export default {
-  processing,
-  getUploadUrls,
-  uploadThumbnail,
-  retry,
+  upload,
+  deleteLocalMessageMessage,
 };

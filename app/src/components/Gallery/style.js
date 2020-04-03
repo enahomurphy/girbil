@@ -86,6 +86,7 @@ export const RecordingInfoContainer = styled.div`
   top: 0;
   box-sizing: border-box;
   height: 35px;
+  z-index: 2;
 `;
 
 export const RecordingInfo = styled.div`
@@ -168,6 +169,8 @@ export const PlayingItem = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: absolute;
+  z-index: 1;
 
   h1, p, svg, i {
     text-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
@@ -205,4 +208,12 @@ export const StyledComplete = styled.div`
   align-items: center;
   background-color: #636366;
   width: 100%;
+`;
+
+export const Video = styled.video`
+  object-fit: cover;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  max-width: 126px;
+  max-height: 136px;
 `;

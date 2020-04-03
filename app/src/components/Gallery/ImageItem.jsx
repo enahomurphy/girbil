@@ -4,7 +4,7 @@ import { SwiperSlide } from 'framework7-react';
 
 import ImageItemInfo from './ImageItemInfo';
 import ImageItemPlaying from './ImageItemPlaying';
-import { StyledSlide } from './style';
+import { StyledSlide, Video } from './style';
 
 const ImageItem = ({
   onClick, id, thumbnail, state, sender,
@@ -36,8 +36,8 @@ const ImageItem = ({
           onReplyClicked={onReplyClicked}
           messageId={id}
         />
+        <Video src={thumbnail} playbackRate={2} autoPlay loop muted playsinline />
       </StyledSlide>
-      <div className="swiper-lazy-preloader" />
     </SwiperSlide>
   );
 };

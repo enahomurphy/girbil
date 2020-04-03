@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useMutation } from '@apollo/client';
+import { useMutation, useApolloClient } from '@apollo/client';
 
 import {
   SAVE_MESSAGE,
@@ -125,6 +125,7 @@ export const useMessageState = () => {
   return [handler];
 };
 
+
 export const useDeleteMessage = () => {
   const [deleteMessage] = useMutation(DELETE_MESSAGE);
 
@@ -144,6 +145,22 @@ export const useDeleteMessage = () => {
     }),
     [deleteMessage],
   );
+
+  return [handler];
+};
+
+
+export const useDeleteLocalMessage = () => {
+  const client = useApolloClient();
+
+  const handler = (messageId) => {
+    client.cache.modify('ROOT_QUERY', {
+      messages(items, { readField }) {
+        return items.filter((item) => readField('id', item) !== messageId);
+      },
+    });
+    client.cache.modify.gc();
+  };
 
   return [handler];
 };

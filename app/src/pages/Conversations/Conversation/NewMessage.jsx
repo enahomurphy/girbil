@@ -32,6 +32,7 @@ const NewMessage = ({ isThread, conversationId }) => {
   const [video] = useVideo({ ...params, id, muted: true });
 
   const [saveMessage] = mutation.useSaveMessage();
+  const [deleteMessage] = mutation.useDeleteLocalMessage();
   const [addMessage, { data }] = useMutation(mutation.ADD_MESSAGE);
   const [updateState] = mutation.useMessageState();
   const { refetch: getUploadURLS } = useQuery(uploadQuery.UPLOAD_URLS, {
@@ -45,6 +46,7 @@ const NewMessage = ({ isThread, conversationId }) => {
       saveMessage,
       updateState,
       getUploadURLS,
+      deleteMessage,
     },
   });
 
@@ -64,7 +66,6 @@ const NewMessage = ({ isThread, conversationId }) => {
     const messageId = get(data, 'addMessage.id');
     if (matches('record.start')) {
       updateState({ messageId, state: 'complete' });
-      videoRecorder.stopRecording();
       send('STOP');
     }
   };
@@ -84,10 +85,12 @@ const NewMessage = ({ isThread, conversationId }) => {
 
     if (matches('record.start')) {
       stopRecord();
+      videoRecorder.stopRecording();
     }
   };
 
   videoRecorder.onStopRecorder = (recordData) => {
+    stopRecord();
     send('UPLOAD', recordData);
   };
 
@@ -132,7 +135,7 @@ const NewMessage = ({ isThread, conversationId }) => {
           matches('processing.error') ? (
             <ErrorState
               handleRetry={() => send('RETRY_PROCESSING')}
-              handleCancel={() => send('IDLE')}
+              handleCancel={() => send('DELETE')}
             />
           ) : (
             <>

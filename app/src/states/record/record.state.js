@@ -77,8 +77,21 @@ const processing = {
           actions: updateslide,
         },
         onError: {
-          target: 'idle',
+          target: 'error',
           actions: send('error'),
+        },
+      },
+    },
+    delete: {
+      invoke: {
+        src: 'deleteLocalMessageMessage',
+        onDone: {
+          target: 'idle',
+          actions: send('idle'),
+        },
+        onError: {
+          target: 'idle',
+          actions: send('idle'),
         },
       },
     },
@@ -86,6 +99,7 @@ const processing = {
       on: {
         RETRY_PROCESSING: 'retry',
         IDLE: 'idle',
+        DELETE: 'delete',
       },
     },
   },

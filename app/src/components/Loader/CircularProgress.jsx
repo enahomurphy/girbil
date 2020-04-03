@@ -15,6 +15,7 @@ const CircularProgress = ({ pathColor, duration, onProgress }) => (
       return (
         <CircularProgressbar
           value={value}
+          counterClockwise
           pathColor
           styles={buildStyles({
             pathColor,

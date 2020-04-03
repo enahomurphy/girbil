@@ -59,23 +59,12 @@ export const getUploadUrls = async (_, { getUploadURLS, message, conversationId 
   };
 };
 
-
-export const retry = async (context) => {
-  const {
-    saveMessage, thumbnail, message, file,
-  } = context;
-  const { data } = await context.getUploadURLS({
-    id: message.id, conversationId: message.conversationId,
-  });
-
-  const urls = get(data, 'getUploadURL', {});
-
-  await uploadAndSave({
-    file, saveMessage, thumbnail, urls, message,
-  });
+export const deleteLocalMessageMessage = async (context) => {
+  const { deleteMessage, message } = context;
+  deleteMessage(message.id);
 };
 
 export default {
   upload,
-  retry,
+  deleteLocalMessageMessage,
 };

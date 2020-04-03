@@ -62,7 +62,7 @@ const Gallery = ({ messages, onClick }) => {
                   <ImageItem
                     onClick={onClick}
                     onReplyClick
-                    ed={onReplyClicked(id, conversationId)}
+                    onReplyClicked={onReplyClicked(id, conversationId)}
                     key={id}
                     id={id}
                     thumbnail={thumbnail}

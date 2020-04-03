@@ -94,7 +94,6 @@ export const useFormatMessages = (messages = []) => {
       deleteMessage: () => {
         deleteMessage({
           messageId: message.id,
-          conversationId: message.conversationId,
         });
       },
       markMessage: () => (message.hasRead ? markAsUnRead : markAsRead)({

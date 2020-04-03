@@ -76,6 +76,7 @@ const Gallery = ({ messages, onClick }) => {
                 ) : (
                   <RecordingItem
                     key={id}
+                    id={id}
                     state={state}
                     sender={sender}
                   />

@@ -13,9 +13,7 @@ import { plainToClass } from 'class-transformer';
 import { MessageRepo } from '../../repo';
 import { Message } from '../../entity';
 import { CanView, CanEdit } from '../../middleware/permissions';
-import {
-  MessagesArgs, MessageIDArgs, MessageReactionArgs, MessageDeleteArgs,
-} from './message.args';
+import { MessagesArgs, MessageIDArgs, MessageReactionArgs } from './message.args';
 import { ValidateArgs } from '../../middleware/decorators';
 import { AddMessageInput } from './message.input';
 import { ContextType } from '../../interfaces';
@@ -147,17 +145,17 @@ class MessageResolver {
   @CanEdit('message')
   @Mutation(() => String)
   async deleteMessage(
-    @Args() { messageId, conversationId }: MessageDeleteArgs,
+    @Args() { messageId }: MessageIDArgs,
       @Ctx() { user: { organization, user } }: ContextType,
   ): Promise<string> {
     const message = await this.messageRepo.findOne({ id: messageId });
     if (message) {
-      this.messageRepo.delete({ id: message.id });
+      await this.messageRepo.delete({ id: message.id });
+      const channel = `conversation_${message.conversationId}_${organization.id}`;
+      const data = { sender: user, id: messageId, conversationId: message.conversationId };
+      broadcast(channel, events.MESSAGE_DELETED, data);
     }
 
-    const channel = `conversation_${conversationId}_${organization.id}`;
-    const data = { sender: user, id: messageId, conversationId };
-    broadcast(channel, events.MESSAGE_DELETED, data);
     return 'Message deleted';
   }
 

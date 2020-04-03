@@ -18,7 +18,7 @@ const ImageItem = ({
   };
 
   return (
-    <SwiperSlide key={id}>
+    <SwiperSlide style={{ overflow: 'hidden' }} key={id}>
       <ImageItemInfo
         hasRead={hasRead}
         replyCount={replyCount}

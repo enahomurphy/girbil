@@ -32,7 +32,7 @@ class ConversationRepository extends Repository<Conversation> {
       query.where('conversation.organizationId = :organizationId');
     }
     query.andWhere(`
-        (
+        ((
           (
 
             SELECT COUNT(channel_users.user_id)

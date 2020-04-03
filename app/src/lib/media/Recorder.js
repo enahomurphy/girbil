@@ -73,10 +73,7 @@ class Recorder {
     });
 
     this.media.setRecordingDuration(Recorder.videoDuration).onRecordingStopped(() => {
-      getSeekableBlob(this.media.getBlob(), (blob) => {
-        this.onDurationEnd(blob);
-        this.media.reset();
-      });
+      this.onDurationEnd();
     });
 
 

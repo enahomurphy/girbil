@@ -6,13 +6,13 @@ import { Previous, Next } from '@/components/Icon';
 import Emoji from '@/components/Emoji';
 import Reactions from './Reactions';
 import Speed from './Speed';
-import Buffer from './Buffer';
+
 import {
   ControlContainer, ForwardControls, RewindControl, BottomControls,
 } from './style';
 
 const VideoProperties = ({
-  playing, play, pause, played, duration, seek, playBack, handleReact, show, next, prev, reactions,
+  playing, play, pause, seek, playBack, handleReact, show, next, prev, reactions,
 }) => (
   <ControlContainer>
     {
@@ -55,16 +55,6 @@ const VideoProperties = ({
       <Reactions reactions={reactions} handleReact={handleReact} />
       <Emoji vertical reaction onClick={handleReact} />
     </BottomControls>
-    {
-      Boolean(duration && duration !== Infinity) && (
-        <Buffer
-          duration={duration}
-          played={played}
-          seek={seek}
-          playing={playing}
-        />
-      )
-    }
   </ControlContainer>
 );
 
@@ -79,8 +69,7 @@ VideoProperties.propTypes = {
   seek: PropTypes.func.isRequired,
   next: PropTypes.func.isRequired,
   prev: PropTypes.func.isRequired,
-  duration: PropTypes.number.isRequired,
-  played: PropTypes.number.isRequired,
+
   playBack: PropTypes.func.isRequired,
   handleReact: PropTypes.func.isRequired,
   show: PropTypes.bool.isRequired,

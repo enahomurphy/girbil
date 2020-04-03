@@ -140,10 +140,10 @@ const NewMessage = ({ isThread, conversationId }) => {
           ) : (
             <>
               <RecorderButton onClick={startRecord} recording={matches('record.start')} />
-              <VideoComponent video={video} />
             </>
           )
         }
+        <VideoComponent video={video} />
       </NewMessageWrapper>
     </Page>
   );

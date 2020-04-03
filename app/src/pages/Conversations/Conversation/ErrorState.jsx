@@ -9,10 +9,14 @@ import styled from 'styled-components';
 
 const ErrorStateWrapper = styled.div` 
   width: 100%;
-  margin-top: 140px;
+  height: 100%;
+  padding-top: 140px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: absolute;
+  z-index: 10;
+  background-color: var(--f7-page-bg-color);
 `;
 
 const ErrorState = ({ handleRetry, handleCancel }) => (

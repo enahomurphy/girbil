@@ -56,6 +56,12 @@ export const StyledListItem = styled(ListItem)`
       height: 16px;
     }
   }
+
+  .item-link {
+    &:hover:not(.active-state):not(.no-hover) {
+      background-color: inherit !important;
+    }
+  }
 `;
 
 export const StyledUserListItem = styled(StyledListItem)`

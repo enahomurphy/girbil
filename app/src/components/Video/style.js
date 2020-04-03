@@ -140,25 +140,6 @@ export const RewindControl = styled(Block)`
   }
 `;
 
-export const Range = styled(f7Range)`
-  .range-bar {
-    height: 5px;
-    z-index: 2;
-    background-color: rgba(199, 199, 199, 0.3);
-  }
-
-  .range-knob {
-    margin-top: 1px;
-    display: none;
-  }
-
-  &:hover {
-    .range-knob {
-      margin-top: 1px;
-      display: block;
-    }
-  }
-`;
 
 export const ProgressBarWrapper = styled.div`
   width: 100%;

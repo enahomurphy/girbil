@@ -7,7 +7,6 @@ class Video extends Recorder {
     super(duration);
 
     this.videoId = videoId;
-    this.stream = new MediaStream();
     this.height = window.screen.height - 125;
     this.width = window.screen.width;
 

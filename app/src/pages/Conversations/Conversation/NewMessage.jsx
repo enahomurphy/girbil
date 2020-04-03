@@ -139,7 +139,12 @@ const NewMessage = ({ isThread, conversationId }) => {
             />
           ) : (
             <>
-              <RecorderButton onClick={startRecord} recording={matches('record.start')} />
+              <RecorderButton
+                onClick={startRecord}
+                recording={
+                  matches('record.start') && videoRecorder.stream
+                }
+              />
             </>
           )
         }

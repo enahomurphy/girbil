@@ -149,7 +149,6 @@ export const useDeleteMessage = () => {
   return [handler];
 };
 
-
 export const useDeleteLocalMessage = () => {
   const client = useApolloClient();
 

@@ -4,6 +4,7 @@ import {
 } from 'framework7-react';
 import PropTypes from 'prop-types';
 
+import emitter from '@/lib/emitter';
 import GlobalSearch from '@/components/GlobalSearch';
 import { Title, Popover } from '@/components/Style';
 import {
@@ -68,7 +69,14 @@ const ConversationHeader = (props) => {
                 }}
                 title="Quit Girbil"
               />
-              <ListItem popoverClose onClick={() => window.close()} title="Sign out of Girbil" />
+              <ListItem
+                popoverClose
+                onClick={() => {
+                  f7.popover.close('.popover-settings');
+                  emitter.emitEvent('logout');
+                }}
+                title="Sign out of Girbil"
+              />
             </List>
           </Popover>
         </NavRight>

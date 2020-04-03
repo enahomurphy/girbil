@@ -75,7 +75,14 @@ const MainApp = () => {
       f7.views.main.router.navigate('/logout', {
         reloadAll: true,
         reloadCurrent: true,
+        reloadPrevious: true,
+        clearPreviousHistory: true,
       });
+
+      const popover = document.querySelectorAll('.popover');
+      if (popover) {
+        popover.forEach((pop) => pop.remove());
+      }
       setIsAuth(false);
     });
   },
@@ -90,7 +97,7 @@ const MainApp = () => {
               isAuth ? (
                 <Main />
               ) : (
-                <View main url="/" />
+                <View main url="/logout" />
               )
             }
           </App>

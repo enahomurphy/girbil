@@ -2,7 +2,7 @@ import { Conversation, Conversations } from '@/pages/Conversations';
 
 const routes = [
   {
-    path: '/',
+    path: '/logout',
     async(routeTo, routeFrom, resolve) {
       const reactComponent = () => import('@/pages/Auth/Logout');
       reactComponent().then((rc) => {

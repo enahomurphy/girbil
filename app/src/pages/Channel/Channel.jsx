@@ -9,7 +9,7 @@ import { Toolbar } from './style';
 
 const Channel = () => (
   <Page name="channel">
-    <Header title="Add Chat or Channel" />
+    <Header backURL="/conversations" title="Add Chat or Channel" />
     <Toolbar>
       <Link tabLink="#tab-1" tabLinkActive>Channels</Link>
       <div />

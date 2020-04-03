@@ -1,6 +1,6 @@
-export const blobToFile = (blob, name) => new File([blob], name, {
+export const blobToFile = (blob, name, type = 'video/webm') => new File([blob], name, {
   lastModified: (new Date()).getTime(),
-  type: 'video/webm',
+  type,
 });
 
 export default { blobToFile };

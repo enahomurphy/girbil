@@ -25,7 +25,7 @@ export const SliderTitle = styled(BlockTitle)`
 
 export const SliderText = styled(Block)`
   text-align: center;
-  font: normal 14px/20px Lato;
+  font: normal 14px/20px Source Sans Pro;
   margin: 0px auto;
   margin-bottom: 20px;
   width: 180px;
@@ -68,7 +68,7 @@ export const SocialBlock = styled(Block)`
   }
 
   p {
-    font: 300 14px/20px Lato;
+    font: 300 14px/20px Source Sans Pro;
     margin: 0 30px 0 0;
   }
 

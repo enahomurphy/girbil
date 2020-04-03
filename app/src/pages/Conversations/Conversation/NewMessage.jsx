@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useVideo } from 'react-use';
 import { useMachine } from '@xstate/react';
-import { useMutation, useLazyQuery, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { f7 } from 'framework7-react';
 import PropTypes from 'prop-types';
 
@@ -17,6 +17,9 @@ import { Page } from '@/components/Style';
 import { get } from '@shared/lib';
 import { getParam } from '@/lib';
 import { NewMessageWrapper } from './style';
+import ErrorState from './ErrorState';
+
+const videoRecorder = new Video('video');
 
 const NewMessage = ({ isThread, conversationId }) => {
   const { data: conversationData } = useQuery(
@@ -24,27 +27,24 @@ const NewMessage = ({ isThread, conversationId }) => {
     { variables: { conversationId } },
   );
   const conversationMeta = useConversationMeta(get(conversationData, 'conversation', {}));
-
   const { params } = useVideoData(null, 'video');
   const id = isThread ? 'thread-video' : 'video';
   const [video] = useVideo({ ...params, id, muted: true });
-  const [videoRecorder] = useState(new Video(id));
 
   const [saveMessage] = mutation.useSaveMessage();
   const [addMessage, { data }] = useMutation(mutation.ADD_MESSAGE);
   const [updateState] = mutation.useMessageState();
-
   const [{ matches }, send] = useMachine(RecordMachine, {
     context: {
       addMessage,
       saveMessage,
+      updateState,
     },
   });
 
-  const [getUploadURLS, { data: urls }] = useLazyQuery(uploadQuery.UPLOAD_URLS, {
-    onCompleted: ({ getUploadURL }) => {
-      send('UPLOAD_URL', { urls: getUploadURL });
-    },
+  const { refetch: getUploadURLS } = useQuery(uploadQuery.UPLOAD_URLS, {
+    skip: true,
+    fetchPolicy: 'network-only',
   });
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const NewMessage = ({ isThread, conversationId }) => {
       videoRecorder.stop();
       updateState({ state: 'done' });
     };
-  }, [videoRecorder, updateState]);
+  }, [updateState]);
 
   useEffect(() => {
     emitter.emitEvent('play_unread');
@@ -70,7 +70,7 @@ const NewMessage = ({ isThread, conversationId }) => {
     const file = await videoRecorder.stopRecordAndGetFile(messageId);
     send('STOP');
     send('PROCESS', {
-      file, urls, messageId, conversationId, parentId: threadId,
+      file, messageId, conversationId, parentId: threadId,
     });
   };
 
@@ -98,8 +98,8 @@ const NewMessage = ({ isThread, conversationId }) => {
 
   videoRecorder.onThumbnailStop = async (blob) => {
     const messageId = get(data, 'addMessage.id');
-    const thumbnail = blobToFile(blob, messageId);
-    send('UPLOAD_THUMBNAIL', { thumbnail, urls });
+    const thumbnail = blobToFile(blob, messageId, 'image/gif');
+    send('UPLOAD_THUMBNAIL', { thumbnail });
   };
 
   videoRecorder.onDurationEnd = () => {
@@ -143,8 +143,19 @@ const NewMessage = ({ isThread, conversationId }) => {
           isChannel={isChannel}
           typeId={typeId}
         />
-        <RecorderButton onClick={startRecord} recording={matches('record.start')} />
-        <VideoComponent video={video} />
+        {
+          matches('processing.error') ? (
+            <ErrorState
+              handleRetry={() => send('RETRY_PROCESSING')}
+              handleCancel={() => send('IDLE')}
+            />
+          ) : (
+            <>
+              <RecorderButton onClick={startRecord} recording={matches('record.start')} />
+              <VideoComponent video={video} />
+            </>
+          )
+        }
       </NewMessageWrapper>
     </Page>
   );

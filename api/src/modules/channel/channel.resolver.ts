@@ -170,7 +170,17 @@ class ChannelResolver implements ResolverInterface<Channel> {
       ({ userId }) => (plainToClass(ChannelUsers, { userId, channelId })),
     );
 
-    await this.channelUsersRepo.insert(formatUsersToSave);
+    if (formatUsersToSave.length) {
+      await this.channelUsersRepo.insert(formatUsersToSave);
+    }
+
+    const conversation = await this.conversationRepo.findOne({ receiverId: channelId });
+
+    if (conversation) {
+      const users = new Set(userIds);
+      const closed = conversation.closed.filter((id) => !users.has(id));
+      await this.conversationRepo.update({ id: conversation.id }, { closed });
+    }
 
     return 'user added';
   }

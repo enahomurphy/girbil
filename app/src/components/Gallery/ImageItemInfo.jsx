@@ -5,9 +5,7 @@ import { Popover, ListItem, f7 } from 'framework7-react';
 import { Icon, Link } from '@/components/Style';
 import { RecordingInfo, RecordingInfoContainer, ImageItemOption } from './style';
 
-const ImageItemInfo = ({
-  recording, pullover, hasRead, messageId,
-}) => !recording && (
+const ImageItemInfo = ({ pullover, hasRead, messageId }) => (
   <RecordingInfoContainer hasRead={hasRead}>
     {!hasRead && <RecordingInfo /> }
     <div>
@@ -44,7 +42,6 @@ const ImageItemInfo = ({
 );
 
 ImageItemInfo.propTypes = {
-  recording: PropTypes.bool.isRequired,
   pullover: PropTypes.array.isRequired,
   hasRead: PropTypes.bool.isRequired,
   messageId: PropTypes.string.isRequired,

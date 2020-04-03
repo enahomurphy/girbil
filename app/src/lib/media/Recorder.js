@@ -1,6 +1,6 @@
+import RecordRTC, { getSeekableBlob } from 'recordrtc/RecordRTC';
 import { blobToFile } from './helpers';
 
-/* eslint-disable no-undef */
 class Recorder {
   constructor() {
     this.onMediaError = this.onMediaError.bind(this);
@@ -17,12 +17,13 @@ class Recorder {
   }
 
   initRecorder(stream) {
-    this.media = new RecordRTC(stream, {
+    this.stream = stream;
+    this.media = new RecordRTC(this.stream, {
       type: 'video',
       timeSlice: 3000,
     });
 
-    this.gif = new RecordRTC(stream, {
+    this.gif = new RecordRTC(this.stream, {
       type: 'gif',
       frameRate: 150,
       quality: 1,
@@ -44,25 +45,42 @@ class Recorder {
       }
 
       if (this.media.state !== 'inactive') {
-        resolve(blobToFile(this.media.getBlob(), name));
+        getSeekableBlob(this.media.getBlob(), (blob) => {
+          resolve(blobToFile(blob, name));
+          this.media.reset();
+        });
       } else {
         this.media.stopRecording(() => {
-          resolve(blobToFile(this.media.getBlob(), name));
+          getSeekableBlob(this.media.getBlob(), (blob) => {
+            resolve(blobToFile(blob, name));
+            this.media.reset();
+          });
         });
       }
     });
   }
 
   startRecord() {
+    this.media = new RecordRTC(this.stream, {
+      type: 'video',
+      timeSlice: 3000,
+    });
+
+    this.gif = new RecordRTC(this.stream, {
+      type: 'gif',
+      frameRate: 150,
+      quality: 1,
+    });
+
     this.media.setRecordingDuration(Recorder.videoDuration).onRecordingStopped(() => {
-      const blob = this.media.getBlob();
-      this.onDurationEnd(blob);
+      this.onDurationEnd();
     });
 
 
     this.gif.setRecordingDuration(Recorder.thumbnailDuration).onRecordingStopped(() => {
       const blob = this.gif.getBlob();
-      this.onThumbnailStop(blob);
+      this.onThumbnailStop(blob, this.gif.toURL());
+      this.gif.reset();
     });
 
     this.media.startRecording();
@@ -75,6 +93,7 @@ class Recorder {
       this.gif.stopRecording((blob) => {
         resolve(blob);
         this.onThumbnailStop(this.gif.getBlob(), blob);
+        this.gif.reset();
       });
     });
   }

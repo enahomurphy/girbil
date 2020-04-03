@@ -1,34 +1,21 @@
 import { assign, send } from 'xstate';
+import { f7 } from 'framework7-react';
+
+const updateslide = () => {
+  const slide = f7.swiper.get('.swiper-container');
+  if (slide) {
+    slide.lazy.load();
+  }
+};
 
 const thumbnail = {
   initial: 'idle',
   states: {
     idle: {
       on: {
-        UPLOAD_URL: {
-          target: 'url',
-          actions: assign((_, { urls }) => ({ urls })),
-        },
-      },
-    },
-    url: {
-      on: {
-        UPLOAD_THUMBNAIL: 'upload',
-      },
-    },
-    upload: {
-      invoke: {
-        src: 'uploadThumbnail',
-        onDone: {
+        UPLOAD_THUMBNAIL: {
           target: 'idle',
-        },
-        onError: {
-          // @TODO handle thumbnail upload failure
-          // ideas, cache for retry
-          // or retry twice before failing completely
-        },
-        on: {
-          DONE: 'idle',
+          actions: assign((_, ctx) => ({ thumbnail: ctx.thumbnail })),
         },
       },
     },
@@ -63,17 +50,42 @@ const processing = {
       on: {
         GET_URLS: {
           target: 'urls',
-          actions: assign((_, { message }) => ({ message })),
+          actions: assign((_, { message, conversationId, getUploadURLS }) => ({
+            message,
+            conversationId,
+            getUploadURLS,
+          })),
         },
-        PROCESS: 'processing',
+        PROCESS: {
+          target: 'processing',
+          actions: assign((_, {
+            file, parentId, messageId,
+          }) => ({
+            file,
+            parentId,
+            messageId,
+          })),
+        },
       },
     },
     urls: {
       invoke: {
         src: 'getUploadUrls',
+        onDone: {
+          actions: assign((_, { data }) => ({ urls: data.urls })),
+        },
       },
       on: {
-        PROCESS: 'processing',
+        PROCESS: {
+          target: 'processing',
+          actions: assign((_, {
+            file, parentId, messageId,
+          }) => ({
+            file,
+            parentId,
+            messageId,
+          })),
+        },
       },
     },
     processing: {
@@ -81,15 +93,36 @@ const processing = {
         src: 'processing',
         onDone: {
           target: 'idle',
+          actions: () => {
+            // tiny hack to fix thumbnails not loading after upload
+            updateslide();
+          },
         },
         onError: {
-
-          target: 'idle',
-          actions: send('idle'),
-          // @TODO handle video upload failure
-          // ideas, cache for retry
-          // or retry twice before failing completely
+          target: 'error',
+          actions: ({ updateState, message }) => {
+            updateState({ messageId: message.id, state: 'error' });
+          },
         },
+      },
+    },
+    retry: {
+      invoke: {
+        src: 'retry',
+        onDone: {
+          target: 'idle',
+          actions: updateslide,
+        },
+        onError: {
+          target: 'idle',
+          actions: send('error'),
+        },
+      },
+    },
+    error: {
+      on: {
+        RETRY_PROCESSING: 'retry',
+        IDLE: 'idle',
       },
     },
   },

@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 
 import { BufferWrapper, Range } from './style';
 
-const Buffer = ({ duration, played }) => (
+const Buffer = ({ duration, played, seek }) => (
   <BufferWrapper>
     <Range
       min={0}
       max={duration}
       value={played}
-      step={1}
+      step={0.0001}
+      onRangeChange={(value) => seek(value)}
     />
   </BufferWrapper>
 );
@@ -17,6 +18,7 @@ const Buffer = ({ duration, played }) => (
 Buffer.propTypes = {
   duration: PropTypes.number.isRequired,
   played: PropTypes.number.isRequired,
+  seek: PropTypes.func.isRequired,
 };
 
 export default Buffer;

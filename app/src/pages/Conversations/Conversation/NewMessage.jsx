@@ -11,7 +11,7 @@ import { Video as VideoComponent, useVideoData, Header } from '@/components/Vide
 import { mutation, query } from '@shared/graphql/conversations';
 import { query as uploadQuery } from '@shared/graphql/upload';
 import { RecorderButton } from '@/components/Recorder';
-import { Video, blobToFile } from '@/lib/media';
+import { Video } from '@/lib/media';
 import { useConversationMeta } from '@/lib/hooks';
 import { Page } from '@/components/Style';
 import { get } from '@shared/lib';
@@ -34,23 +34,24 @@ const NewMessage = ({ isThread, conversationId }) => {
   const [saveMessage] = mutation.useSaveMessage();
   const [addMessage, { data }] = useMutation(mutation.ADD_MESSAGE);
   const [updateState] = mutation.useMessageState();
-  const [{ matches }, send] = useMachine(RecordMachine, {
-    context: {
-      addMessage,
-      saveMessage,
-      updateState,
-    },
-  });
-
   const { refetch: getUploadURLS } = useQuery(uploadQuery.UPLOAD_URLS, {
     skip: true,
     fetchPolicy: 'network-only',
   });
 
+  const [{ matches }, send] = useMachine(RecordMachine, {
+    context: {
+      addMessage,
+      saveMessage,
+      updateState,
+      getUploadURLS,
+    },
+  });
+
   useEffect(() => {
-    videoRecorder.initVideo();
+    videoRecorder.initializeStream();
     return () => {
-      videoRecorder.stop();
+      videoRecorder.stopStream();
       updateState({ state: 'done' });
     };
   }, [updateState]);
@@ -61,32 +62,22 @@ const NewMessage = ({ isThread, conversationId }) => {
 
   const stopRecord = async () => {
     const messageId = get(data, 'addMessage.id');
-    const threadId = getParam('threadId');
-
     if (matches('record.start')) {
       updateState({ messageId, state: 'complete' });
+      videoRecorder.stopRecording();
+      send('STOP');
     }
-
-    const file = await videoRecorder.stopRecordAndGetFile(messageId);
-    send('STOP');
-    send('PROCESS', {
-      file, messageId, conversationId, parentId: threadId,
-    });
   };
 
   const startRecord = async () => {
     const threadId = getParam('threadId');
     if (matches('record.idle') && matches('processing.idle')) {
-      videoRecorder.startRecord();
+      videoRecorder.startRecording();
       send('START');
       addMessage({
         variables: { conversationId, messageId: threadId },
         update: (_, { data: messageData }) => {
-          send('GET_URLS', {
-            message: messageData.addMessage,
-            conversationId,
-            getUploadURLS,
-          });
+          send('ADD_MESSAGE', { message: messageData.addMessage });
         },
       });
     }
@@ -96,14 +87,8 @@ const NewMessage = ({ isThread, conversationId }) => {
     }
   };
 
-  videoRecorder.onThumbnailStop = async (blob) => {
-    const messageId = get(data, 'addMessage.id');
-    const thumbnail = blobToFile(blob, messageId, 'image/gif');
-    send('UPLOAD_THUMBNAIL', { thumbnail });
-  };
-
-  videoRecorder.onDurationEnd = () => {
-    stopRecord();
+  videoRecorder.onStopRecorder = (recordData) => {
+    send('UPLOAD', recordData);
   };
 
   const goBack = () => {

@@ -8,20 +8,6 @@ const updateslide = () => {
   }
 };
 
-const thumbnail = {
-  initial: 'idle',
-  states: {
-    idle: {
-      on: {
-        UPLOAD_THUMBNAIL: {
-          target: 'idle',
-          actions: assign((_, ctx) => ({ thumbnail: ctx.thumbnail })),
-        },
-      },
-    },
-  },
-};
-
 const record = {
   initial: 'idle',
   states: {
@@ -48,49 +34,26 @@ const processing = {
   states: {
     idle: {
       on: {
-        GET_URLS: {
-          target: 'urls',
-          actions: assign((_, { message, conversationId, getUploadURLS }) => ({
-            message,
-            conversationId,
-            getUploadURLS,
-          })),
-        },
-        PROCESS: {
-          target: 'processing',
-          actions: assign((_, {
-            file, parentId, messageId,
-          }) => ({
-            file,
-            parentId,
-            messageId,
-          })),
+        ADD_MESSAGE: {
+          target: 'message_added',
+          actions: assign((_, { message }) => ({ message })),
         },
       },
     },
-    urls: {
-      invoke: {
-        src: 'getUploadUrls',
-        onDone: {
-          actions: assign((_, { data }) => ({ urls: data.urls })),
-        },
-      },
+    message_added: {
       on: {
-        PROCESS: {
-          target: 'processing',
-          actions: assign((_, {
-            file, parentId, messageId,
-          }) => ({
-            file,
-            parentId,
-            messageId,
+        UPLOAD: {
+          target: 'upload',
+          actions: assign((_, { videoBlob, thumbnailBlob }) => ({
+            videoBlob,
+            thumbnailBlob,
           })),
         },
       },
     },
-    processing: {
+    upload: {
       invoke: {
-        src: 'processing',
+        src: 'upload',
         onDone: {
           target: 'idle',
           actions: () => {
@@ -108,7 +71,7 @@ const processing = {
     },
     retry: {
       invoke: {
-        src: 'retry',
+        src: 'upload',
         onDone: {
           target: 'idle',
           actions: updateslide,
@@ -128,4 +91,4 @@ const processing = {
   },
 };
 
-export default { thumbnail, record, processing };
+export default { record, processing };

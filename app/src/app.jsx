@@ -72,7 +72,7 @@ const MainApp = () => {
 
   useEffect(() => {
     emitter.onLastListenedEventEmitted('logout', () => {
-      f7.views.main.router.navigate('/', {
+      f7.views.main.router.navigate('/logout', {
         reloadAll: true,
         reloadCurrent: true,
       });

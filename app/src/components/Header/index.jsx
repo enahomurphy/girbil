@@ -16,7 +16,7 @@ const Header = ({ title, backURL }) => (
       <Link onClick={
         () => {
           if (backURL) {
-            return f7.view.main.router.navigate(backURL);
+            return f7.views.main.router.navigate(backURL, { force: true });
           }
 
           return f7.view.main.router.back();

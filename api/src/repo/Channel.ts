@@ -118,9 +118,9 @@ class ChannelRepository extends Repository<Channel> {
       .setParameter('organizationId', organizationId)
       .setParameter('userId', userId)
       .setParameter('text', `${text}%`)
+      .addSelect('( SELECT COUNT(*) FROM channel_users WHERE channel_id = channel.id )', 'channel_members')
       .leftJoinAndSelect('channel.conversation', 'conversation')
-      .where("channel.organizationId = :organizationId AND channel.isPrivate = 'false'::boolean")
-      .addSelect('( SELECT COUNT(*) FROM channel_users WHERE channel_id = channel.id )', 'channel_members');
+      .where("channel.organizationId = :organizationId AND channel.isPrivate = 'false'::boolean");
 
     if (text) {
       query.andWhere('channel.name ILIKE :text');
@@ -136,8 +136,10 @@ class ChannelRepository extends Repository<Channel> {
           channel_users.user_id = :userId 
           AND 
             channel_users.channel_id = channel.id
+          AND NOT channel_users.user_id = ANY(coalesce(conversation.closed, array[]::uuid[]))  
           LIMIT 1
-        )`,
+        )
+      `,
     )
       .limit(50)
       .getMany();

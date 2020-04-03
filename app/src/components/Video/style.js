@@ -103,7 +103,7 @@ export const BottomControls = styled(Block)`
   justify-content: space-between;
   position: absolute;
   flex-direction: column;
-  bottom: 0px;
+  bottom: 12px;
   height: 80px;
   padding: 0;
   width: 100%;
@@ -191,7 +191,7 @@ export const Progress = styled.div`
   background: #ffffff;
   width: ${({ progress }) => `${progress || 0}%`};
   z-index: 1000;
-  transition: width 0.4s linear;
+  transition: width 0.2s linear;
 `;
 
 export const ProgressControl = styled.div`

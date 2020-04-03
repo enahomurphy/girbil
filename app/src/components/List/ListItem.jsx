@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  Title, Text, Block, ShortTitle,
+  Title, Text, Block, ShortTitle, ListBlock
 } from '@/components/Style';
 import { Lock } from '@/components/Icon';
 import { SimpleProfileImage } from '@/components/ProfileImage';
@@ -12,12 +12,13 @@ import ListInfo from './ListInfo';
 const ListItem = ({
   unreadCount, onClick, user, isChannel, isPrivate, isActive, subText, getLink, options, id,
 }) => (
-  <Block
-    margin="0"
-    padding="0 24px 16px"
+  <ListBlock
+    margin="0 10px"
+    padding="8px 3px 8px 8px"
     type="flex"
     align="center"
     justify="space-between"
+    className="list-item"
   >
     <StyledListItem link={getLink(user)} onClick={onClick}>
       <div style={{ marginRight: '16px' }}>
@@ -69,7 +70,7 @@ const ListItem = ({
       </Block>
     </StyledListItem>
     <ListInfo id={id} options={options} unreadCount={unreadCount} />
-  </Block>
+  </ListBlock>
 );
 
 ListItem.defaultProps = {

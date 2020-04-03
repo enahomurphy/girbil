@@ -20,7 +20,7 @@ class ConversationRepository extends Repository<Conversation> {
       .leftJoinAndSelect('conversation.channel', 'channel')
       .addSelect(`
         (
-          SELECT COUNT(id) FROM messages 
+          SELECT COUNT(id) FROM messages
             WHERE conversation_id = "conversation"."id"
             AND NOT (:userId = ANY(coalesce(read, array[]::uuid[])))
         )
@@ -32,9 +32,9 @@ class ConversationRepository extends Repository<Conversation> {
       query.where('conversation.organizationId = :organizationId');
     }
     query.andWhere(`
-        (
+        ((
           (
-            
+
             SELECT COUNT(channel_users.user_id)
             FROM channel_users
             WHERE user_id = :userId
@@ -43,7 +43,7 @@ class ConversationRepository extends Repository<Conversation> {
           ) = 1
           AND NOT :userId = ANY(coalesce(closed, array[]::uuid[]))
         )
-      
+
         OR (
           conversation.receiver_type = 'user'
           AND (
@@ -52,7 +52,7 @@ class ConversationRepository extends Repository<Conversation> {
           )
           AND conversation.organizationId = :organizationId
           AND NOT :userId = ANY(coalesce(closed, array[]::uuid[]))
-        )
+        ))
       `);
 
     let conversations = [];
@@ -108,7 +108,7 @@ class ConversationRepository extends Repository<Conversation> {
               AND user_id = :userId
               LIMIT 1
           )
-  
+
           OR (
               creator_id = :userId
               OR receiver_id = :userId

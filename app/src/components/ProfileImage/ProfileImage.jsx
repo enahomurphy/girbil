@@ -11,7 +11,7 @@ const nameToInitials = (name) => {
 const StyledBlock = styled.div`
   width: ${({ width }) => width};
   height: ${({ height }) => height};
-  background: #ffffff;
+  background: #636366;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -21,7 +21,6 @@ const StyledBlock = styled.div`
 const StyledInitialsBlock = styled.div`
   width: ${({ width }) => width};
   height: ${({ height }) => height};
-  background: ${({ url }) => (url ? 'rgba(34, 34, 34, 0.66)' : '#ffffff')};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,7 +36,7 @@ export const SimpleProfileImage = ({
     {!url && (
     <StyledInitialsBlock url={url} width={width} height={width}>
       <Title
-        color="var(--gb-accent)"
+        color="#FFFFFF"
         size="18px"
         transform="capitalize"
       >

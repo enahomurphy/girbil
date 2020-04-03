@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-
+import { useQuery } from '@apollo/client';
+import { get } from '@shared/lib';
 import { query } from '@shared/graphql/conversations';
 import Gallery from '@/components/Gallery';
 
@@ -18,6 +19,20 @@ const Messages = ({
   const [loadMessage, { messages, loading }] = query.useMessages(conversationId, threadId);
   const updatedMessages = useFormatMessages(messages);
   const onClick = useMessageClicked(messages);
+
+  const { data: conversationData } = useQuery(
+    query.CONVERSATION,
+    { variables: { conversationId } },
+  );
+
+  const { receiverType } = get(conversationData, 'conversation', {});
+
+  const typeMap = {
+    channel: 'Channel',
+    user: 'DM',
+  };
+
+  const messageType = isThread ? 'Thread' : typeMap[receiverType];
 
   usePlayerPrevNextEvent(messages, isThread, threadId);
   useReadEvent();
@@ -45,7 +60,7 @@ const Messages = ({
     messages.length ? (
       <Gallery messages={updatedMessages} onClick={onClick} />
     ) : (
-      <EmptyState isThread={isThread} />
+      <EmptyState messageType={messageType}/>
     )
   );
 };

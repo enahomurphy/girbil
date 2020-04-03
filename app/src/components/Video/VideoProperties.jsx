@@ -53,7 +53,7 @@ const VideoProperties = ({
     }
     <BottomControls>
       <div style={{
-        display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-around',
+        display: 'flex', flexDirection: 'row', width: '95%', justifyContent: 'space-between', padding: '0 10px'
       }}
       >
         <Speed onClick={({ value }) => playBack(value)} />

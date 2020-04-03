@@ -14,15 +14,20 @@ const ProgressBar = ({ duration, played, seek }) => {
   }, [wrapperEl.current]);
 
   useEffect(() => {
-    let position = (played / duration) * 100;
-    if (dragPosition !== 0) {
-      position = ((dragPosition / wrapperWidth) * 100) - 3;
-      const seekPosition = position / (100 / duration);
-      seek(seekPosition, { skipToTime: true });
-      setDragPosition(0);
-    }
+    const position = (played / duration) * 100;
     setProgress(position);
-  }, [played, dragPosition, duration, seek, wrapperWidth]);
+  }, [played, duration]);
+
+  useEffect(() => {
+    if (dragPosition !== 0) {
+      const position = ((dragPosition / wrapperWidth) * 100) - 3;
+      const seekPosition = position / (100 / duration);
+      setProgress(position);
+      setDragPosition(0);
+      setProgress(position);
+      seek(seekPosition, { skipToTime: true });
+    }
+  }, [dragPosition, duration, seek, wrapperWidth]);
 
   return (
     <ProgressBarWrapper
@@ -32,7 +37,8 @@ const ProgressBar = ({ duration, played, seek }) => {
       onTouchMove={(event) => setDragPosition(event.touches[0].clientX)}
       onMouseMove={(event) => isDragging && setDragPosition(event.clientX)}
       onClick={(event) => setDragPosition(event.clientX)}
-      ref={wrapperEl}>
+      ref={wrapperEl}
+    >
       <Progress
         progress={progress}
         className="progress"

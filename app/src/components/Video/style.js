@@ -165,6 +165,7 @@ export const ProgressBarWrapper = styled.div`
   align-items: flex-end;
   display: flex;
   padding: 0;
+  cursor: pointer;
 
   .progress-control {
     display: none

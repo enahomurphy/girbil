@@ -44,7 +44,7 @@ export const Header = styled.div`
   }
 
   p {
-    font: normal 14px/20px Lato;
+    font: normal 14px/20px Source Sans Pro;
     margin: 0;
   }
 `;

@@ -57,7 +57,7 @@ const Gallery = ({ messages, onClick }) => {
           }) => (
             <>
               {
-                !['recording', 'complete'].includes(state) ? (
+                !['recording', 'complete', 'error'].includes(state) ? (
                   <ImageItem
                     onClick={onClick}
                     onReplyClicked={onReplyClicked(id, conversationId)}
@@ -73,6 +73,7 @@ const Gallery = ({ messages, onClick }) => {
                   />
                 ) : (
                   <RecordingItem
+                    key={id}
                     state={state}
                     sender={sender}
                   />

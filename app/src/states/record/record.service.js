@@ -12,46 +12,74 @@ const upload = async (uploadURL, file) => {
   return 'done';
 };
 
+const uploadAndSave = async ({
+  file, saveMessage, thumbnail, urls, message,
+}) => {
+  const uploadURL = get(urls, 'postVideoURL', '');
+  const videoURL = get(urls, 'getVideoURL');
+  const thumbnailURL = get(urls, 'getThumbnailURL');
+  const thumbnailPostURL = get(urls, 'postThumbnailURL');
+
+  await Promise.all([
+    upload(uploadURL, file),
+    upload(thumbnailPostURL, thumbnail),
+  ]);
+
+  await saveMessage({
+    id: message.id,
+    conversationId: message.conversationId,
+    video: videoURL,
+    thumbnail: thumbnailURL,
+    parentId: message.parentId,
+  });
+};
+
 export const uploadThumbnail = async (context, data) => {
   const { thumbnail } = data;
-  const { message, urls } = context;
+  const { urls } = context;
   const uploadURL = get(urls, 'postThumbnailURL');
-  const file = new File([thumbnail], message.id, {
-    lastModified: (new Date()).getTime(),
-    type: 'image/gif',
-  });
 
-  await upload(uploadURL, file);
+  await upload(uploadURL, thumbnail);
 };
 
 export const processing = async (context, data) => {
-  const { saveMessage } = context;
   const {
-    file, urls, conversationId, messageId, parentId,
-  } = data;
-  const uploadURL = get(urls, 'getUploadURL.postVideoURL', '');
-  const videoURL = get(urls, 'getUploadURL.getVideoURL');
-  const thumbnailURL = get(urls, 'getUploadURL.getThumbnailURL');
+    saveMessage, urls, thumbnail, message,
+  } = context;
+  const { file } = data;
 
-  await upload(uploadURL, file);
-
-  await saveMessage({
-    id: messageId,
-    conversationId,
-    video: videoURL,
-    thumbnail: thumbnailURL,
-    parentId,
+  await uploadAndSave({
+    file, saveMessage, thumbnail, urls, message,
   });
 };
 
-export const getUploadUrls = async (_, { getUploadURLS, message, conversationId }) => (
-  getUploadURLS({
-    variables: { id: message.id, conversationId },
-  })
-);
+export const getUploadUrls = async (_, { getUploadURLS, message, conversationId }) => {
+  const { data } = await getUploadURLS({ id: message.id, conversationId });
+
+  return {
+    urls: get(data, 'getUploadURL', {}),
+  };
+};
+
+
+export const retry = async (context) => {
+  const {
+    saveMessage, thumbnail, message, file,
+  } = context;
+  const { data } = await context.getUploadURLS({
+    id: message.id, conversationId: message.conversationId,
+  });
+
+  const urls = get(data, 'getUploadURL', {});
+
+  await uploadAndSave({
+    file, saveMessage, thumbnail, urls, message,
+  });
+};
 
 export default {
   processing,
   getUploadUrls,
   uploadThumbnail,
+  retry,
 };

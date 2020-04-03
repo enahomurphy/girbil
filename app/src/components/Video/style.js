@@ -102,8 +102,12 @@ export const BottomControls = styled(Block)`
   display: flex;
   justify-content: space-between;
   position: absolute;
-  bottom: 43px;
+  flex-direction: column;
+  bottom: 0px;
+  height: 80px;
+  padding: 0;
   width: 100%;
+  margin-bottom: 0;
 `;
 
 export const ForwardControls = styled(Block)`
@@ -156,8 +160,44 @@ export const Range = styled(f7Range)`
   }
 `;
 
-export const BufferWrapper = styled(Block)`
+export const ProgressBarWrapper = styled.div`
   width: 100%;
-  position: absolute;
-  bottom: 0px;
+  align-items: flex-end;
+  display: flex;
+  padding: 0;
+
+  .progress-control {
+    display: none
+  }
+
+  .progress {
+    background: #ffffff;
+  }
+
+
+  &:hover {
+    .progress-control {
+      display: flex
+    }
+
+    .progress {
+      background: #0A84FF;
+    }
+  }
+`;
+
+export const Progress = styled.div`
+  height: 5px;
+  background: #ffffff;
+  width: ${({ progress }) => `${progress || 0}%`};
+  z-index: 1000;
+  transition: width 0.4s linear;
+`;
+
+export const ProgressControl = styled.div`
+  height: 16px;
+  background: #0A84FF;
+  width: 16px;
+  border-radius: 34px;
+  margin-bottom: -5px;
 `;

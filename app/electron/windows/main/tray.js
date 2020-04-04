@@ -6,5 +6,5 @@ module.exports = (window, icon) => {
     window.show();
   });
 
-  tray.setToolTip('giribl');
+  tray.setToolTip('girbli');
 };

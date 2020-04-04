@@ -22,6 +22,21 @@ import routes from './js/routes';
 import '@/css/theme.css';
 
 const MainApp = () => {
+  const f7params = {
+    id: 'com.girbil.app',
+    name: 'girbil',
+    theme: 'aurora',
+    routes,
+    input: {
+      scrollIntoViewOnFocus: Device.cordova && !Device.electron,
+      scrollIntoViewCentered: Device.cordova && !Device.electron,
+    },
+    statusbar: {
+      iosOverlaysWebView: true,
+      androidOverlaysWebView: false,
+    },
+  };
+
   const [isAuth] = useState(
     Boolean(storage.payload && get(storage.payload, 'organization')),
   );
@@ -41,21 +56,6 @@ const MainApp = () => {
     },
   }));
 
-  const f7params = {
-    id: 'com.girbil.app',
-    name: 'girbil',
-    theme: 'aurora',
-    routes,
-    input: {
-      scrollIntoViewOnFocus: Device.cordova && !Device.electron,
-      scrollIntoViewCentered: Device.cordova && !Device.electron,
-    },
-    statusbar: {
-      iosOverlaysWebView: true,
-      androidOverlaysWebView: false,
-    },
-  };
-
   useEffect(() => {
     if (isAuth && !socket) {
       setSocket(socket(isAuth));
@@ -66,6 +66,10 @@ const MainApp = () => {
     f7ready((readyF7) => {
       if (Device.cordova) {
         cordovaApp.init(readyF7);
+      }
+
+      if (Device.electron) {
+        window.ipcRenderer.send('dom-loaded');
       }
     });
   }, []);

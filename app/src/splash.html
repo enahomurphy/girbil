@@ -1,16 +1,8 @@
 <!DOCTYPE html>
-<html style="border-radius: 20px;">
+<html style="border-radius: 20px; background-color: #222222;">
 <head>
   <meta charset="utf-8">
-  <!--
-  Customize this policy to fit your own app's needs. For more guidance, see:
-      https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
-  Some notes:
-    * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
-    * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
-    * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
-      * Enable inline JS: add 'unsafe-inline' to default-src
-  -->
+  
   <meta http-equiv="Content-Security-Policy" content="default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
 
@@ -18,21 +10,14 @@
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
   <title>girbil</title>
-
-  <% if (process.env.TARGET === 'cordova') { %>
-    <script src="static/js/ebml.js"></script>
-  <% } else { %>
-    <script src="/static/js/ebml.js"></script>
-  <% } %>
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700;900&display=swap" rel="stylesheet">  
   
   <!-- built styles file will be auto injected -->
 </head>
-<body style="border-radius: 20px; background-color: transparent;">
-  <div id="app"></div>
-  <% if (process.env.TARGET === 'cordova') { %>
+<body style="border-radius: 20px; background-color: #222222;">
   <script src="cordova.js"></script>
-  <% } %>
-  <!-- built script files will be auto injected -->
+  <div>
+    <h1 style="color: #ffffff;">Hello world</h1>
+  </div>
 </body>
 </html>

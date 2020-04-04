@@ -216,6 +216,10 @@ module.exports = {
               from: resolvePath('electron/build.json'),
               to: resolvePath('cordova/platforms/electron/'),
             },
+            {
+              from: resolvePath('src/splash.html'),
+              to: resolvePath('cordova/www/'),
+            },
           ]
           : []
       ),

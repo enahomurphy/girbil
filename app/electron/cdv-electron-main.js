@@ -1,13 +1,13 @@
 const { app, ipcMain } = require('electron');
 
 const { logger, setToken } = require('./utils');
-const mainWindowCreator = require('./windows/main');
+const createMainWindow = require('./windows/main');
 
 let mainWindow;
 let deeplinkingUrl;
 
 const createWindow = () => {
-  mainWindow = mainWindowCreator();
+  mainWindow = createMainWindow();
 
   if (process.platform === 'win32') {
     if (deeplinkingUrl && deeplinkingUrl.match('token=')) {

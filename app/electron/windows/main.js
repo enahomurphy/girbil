@@ -2,7 +2,7 @@ const { join } = require('path');
 const { app, BrowserWindow } = require('electron');
 
 const { logger } = require('../utils');
-const { browserWindow: options } = require('../config');
+const getConfig = require('../config');
 
 // we use this method to allow users open the app from the web
 // only tested on safari and chrome
@@ -24,8 +24,7 @@ const browserLink = (window) => {
       // Keep only command line / deep linked arguments
       const link = argv.slice(1);
       logger(window, link);
-      // @TODO
-      // handle link for windows
+      // @TODO handle link for windows
     }
 
     if (window && window.isMinimized()) {
@@ -38,7 +37,8 @@ const browserLink = (window) => {
 };
 
 module.exports = () => {
-  let window = new BrowserWindow(options);
+  const { browserWindow: config } = getConfig();
+  let window = new BrowserWindow(config);
 
   window.loadURL(join(`file://${__dirname}`, '../index.html'));
 
@@ -52,8 +52,7 @@ module.exports = () => {
 
   browserLink(window);
 
-  // Open the DevTools.
-  if (options.webPreferences.devTools) {
+  if (config.webPreferences.devTools) {
     window.webContents.openDevTools();
   }
 

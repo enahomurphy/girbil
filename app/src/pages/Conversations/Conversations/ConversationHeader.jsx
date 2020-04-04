@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Navbar, Link, NavRight, List, ListItem, f7,
 } from 'framework7-react';
@@ -11,14 +11,35 @@ import {
 } from '@/components/Icon';
 import { storage, get } from '@shared/lib';
 import { NavbarWrapper } from '@/components/Header/style';
+import { minimizeApp, quitApp } from '@/lib';
+import { SocketContext } from '@/lib/socket';
+import emitter from '@/lib/emitter';
 import UserInfo from './UserInfo';
 import { Logo, UserOrgDetails } from './style';
 
 const ConversationHeader = (props) => {
   const [isOpen, setOpenSearch] = useState(false);
+  const socket = useContext(SocketContext);
+
   const {
     searchResult, handleSearch, closeConversation, leaveChannel, userData,
   } = props;
+
+  const quit = () => {
+    socket.disconnect();
+    f7.popover.close();
+    quitApp();
+  };
+
+  const logout = () => {
+    emitter.emitEvent('logout');
+    f7.popover.close();
+  };
+
+  const minimize = () => {
+    f7.popover.close();
+    minimizeApp();
+  };
 
   return (
     <NavbarWrapper>
@@ -62,13 +83,19 @@ const ConversationHeader = (props) => {
               <ListItem popoverClose href="/preferences" title="System Preferences" />
               <ListItem
                 popoverClose
-                onClick={() => {
-                  window.close();
-                  f7.popover.close('.popover-settings');
-                }}
+                onClick={logout}
+                title="Sign out of Girbil"
+              />
+              <ListItem
+                popoverClose
+                onClick={quit}
                 title="Quit Girbil"
               />
-              <ListItem popoverClose onClick={() => window.close()} title="Sign out of Girbil" />
+              <ListItem
+                popoverClose
+                onClick={minimize}
+                title="Minimize Girbil"
+              />
             </List>
           </Popover>
         </NavRight>

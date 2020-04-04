@@ -22,7 +22,7 @@ import routes from './js/routes';
 import '@/css/theme.css';
 
 const MainApp = () => {
-  const [isAuth, setIsAuth] = useState(
+  const [isAuth] = useState(
     Boolean(storage.payload && get(storage.payload, 'organization')),
   );
   const [socketConnection, setSocket] = useState(socket(isAuth));
@@ -76,7 +76,6 @@ const MainApp = () => {
         reloadAll: true,
         reloadCurrent: true,
       });
-      setIsAuth(false);
     });
   },
   []);
@@ -90,7 +89,7 @@ const MainApp = () => {
               isAuth ? (
                 <Main />
               ) : (
-                <View main url="/" />
+                <View main url="/logout" />
               )
             }
           </App>

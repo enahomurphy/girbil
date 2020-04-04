@@ -4,7 +4,7 @@ import { Page } from 'framework7-react';
 import {
   Title, Text, Block, Button,
 } from '@/components/Style';
-import { openHome } from '@/lib/opener';
+import { openHome, quitApp } from '@/lib/opener';
 import { storage } from '@shared/lib';
 import { SocketContext } from '@/lib/socket';
 
@@ -12,7 +12,7 @@ const Logout = () => {
   const socket = useContext(SocketContext);
   useEffect(() => {
     if (socket) {
-      socket.unsubscribe();
+      socket.disconnect();
     }
     storage.clear();
   }, [socket]);
@@ -48,7 +48,7 @@ const Logout = () => {
           Sign Back In
         </Button>
         <Button
-          onClick={() => window.close()}
+          onClick={quitApp}
           weight="normal"
           color="#C9C9C9"
           borderColor="none"

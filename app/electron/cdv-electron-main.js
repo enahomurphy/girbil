@@ -1,4 +1,4 @@
-const { app } = require('electron');
+const { app, ipcMain } = require('electron');
 
 const { logger, setToken } = require('./utils');
 const mainWindowCreator = require('./windows/main');
@@ -24,6 +24,7 @@ app.on('window-all-closed', () => {
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
     app.quit();
+    mainWindow.close();
   }
 });
 
@@ -50,4 +51,12 @@ app.on('will-finish-launching', () => {
       setToken(deeplinkingUrl.split('token=')[1]);
     }
   });
+});
+
+ipcMain.on('quit', () => {
+  app.exit();
+});
+
+ipcMain.on('minimize', () => {
+  mainWindow.minimize();
 });

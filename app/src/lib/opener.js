@@ -24,4 +24,21 @@ export const openHome = () => {
   openURL(url);
 };
 
+
+export const quitApp = () => {
+  if (Device.electron) {
+    window.ipcRenderer.send('quit');
+  } else {
+    window.close();
+  }
+};
+
+export const minimizeApp = () => {
+  if (Device.electron) {
+    window.ipcRenderer.send('minimize');
+  } else {
+    window.close();
+  }
+};
+
 export default openURL;

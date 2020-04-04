@@ -6,7 +6,7 @@ const { browserWindow: options } = require('../config');
 
 // we use this method to allow users open the app from the web
 // only tested on safari and chrome
-// most of the code and inspiration was gooten form
+// most of the code and inspiration was gotten from
 // https://github.com/oikonomopo/electron-deep-linking-mac-win
 const browserLink = (window) => {
   const lock = app.requestSingleInstanceLock();

@@ -1,9 +1,9 @@
 const { join } = require('path');
 const { app, BrowserWindow } = require('electron');
 
-const { logger } = require('../utils');
-const getConfig = require('../config');
-
+const { logger } = require('../../utils');
+const getConfig = require('../../config');
+const tray = require('./tray');
 // we use this method to allow users open the app from the web
 // only tested on safari and chrome
 // most of the code and inspiration was gotten from
@@ -37,10 +37,10 @@ const browserLink = (window) => {
 };
 
 module.exports = () => {
-  const { browserWindow: config } = getConfig();
+  const { browserWindow: config, tray: trayConfig } = getConfig();
   let window = new BrowserWindow(config);
 
-  window.loadURL(join(`file://${__dirname}`, '../index.html'));
+  window.loadURL(join(`file://${__dirname}`, '../../index.html'));
 
   window.webContents.on('did-finish-load', () => {
     window.webContents.send('window-id', window.id);
@@ -50,7 +50,9 @@ module.exports = () => {
     window = null;
   });
 
+  tray(window, trayConfig.icon);
   browserLink(window);
+
 
   if (config.webPreferences.devTools) {
     window.webContents.openDevTools();

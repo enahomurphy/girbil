@@ -1,6 +1,6 @@
 const electron = require('electron');
 
-const { getAppIcon } = require('./utils');
+const { icons } = require('./utils');
 
 
 module.exports = () => {
@@ -9,8 +9,11 @@ module.exports = () => {
   const height = 812;
 
   return {
+    tray: {
+      icon: icons.getTrayIcon(),
+    },
     browserWindow: {
-      icon: getAppIcon(),
+      icon: icons.getAppIcon(),
       width,
       height,
       x: bounds.width - width,

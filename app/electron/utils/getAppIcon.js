@@ -1,15 +1,23 @@
 const fs = require('fs');
+const { join } = require('path');
 
-module.exports = () => {
+const getAppIcon = () => {
   let appIcon;
 
-  if (fs.existsSync(`${__dirname}/img/app.png`)) {
-    appIcon = `${__dirname}/img/app.png`;
-  } else if (fs.existsSync(`${__dirname}/img/icon.png`)) {
-    appIcon = `${__dirname}/img/icon.png`;
+  if (fs.existsSync(join(__dirname, '../img/app.png'))) {
+    appIcon = join(__dirname, '../img/app.png');
+  } else if (fs.existsSync(join(__dirname, '../img/icon.png'))) {
+    appIcon = join(__dirname, '../img/icon.png');
   } else {
-    appIcon = `${__dirname}/img/logo.png`;
+    appIcon = join(__dirname, '../img/logo.png');
   }
 
   return appIcon;
+};
+
+const getTrayIcon = () => join(__dirname, '../assets/images/tray.png');
+
+module.exports = {
+  getAppIcon,
+  getTrayIcon,
 };

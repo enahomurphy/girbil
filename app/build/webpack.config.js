@@ -205,6 +205,20 @@ module.exports = {
         from: resolvePath('src/static'),
         to: resolvePath(isCordova ? 'cordova/www/static' : 'www/static'),
       },
+      ...(
+        isCordova
+          ? [
+            {
+              from: resolvePath('electron'),
+              to: resolvePath('cordova/platforms/electron/platform_www/'),
+            },
+            {
+              from: resolvePath('electron/build.json'),
+              to: resolvePath('cordova/platforms/electron/'),
+            },
+          ]
+          : []
+      ),
     ]),
   ],
 };

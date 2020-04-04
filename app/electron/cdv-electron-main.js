@@ -1,0 +1,62 @@
+const { app, ipcMain } = require('electron');
+
+const { logger, setToken } = require('./utils');
+const mainWindowCreator = require('./windows/main');
+
+let mainWindow;
+let deeplinkingUrl;
+
+const createWindow = () => {
+  mainWindow = mainWindowCreator();
+
+  if (process.platform === 'win32') {
+    if (deeplinkingUrl && deeplinkingUrl.match('token=')) {
+      setToken(mainWindow, deeplinkingUrl.split('token=')[1]);
+    }
+  }
+};
+
+app.on('ready', createWindow);
+
+// Quit when all windows are closed.
+app.on('window-all-closed', () => {
+  // On OS X it is common for applications and their menu bar
+  // to stay active until the user quits explicitly with Cmd + Q
+  if (process.platform !== 'darwin') {
+    app.quit();
+    mainWindow.close();
+  }
+});
+
+app.on('activate', () => {
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (mainWindow === null) {
+    createWindow();
+  }
+});
+
+if (!app.isDefaultProtocolClient('girbil')) {
+  app.setAsDefaultProtocolClient('girbil');
+}
+
+app.on('will-finish-launching', () => {
+  // Protocol handler for osx
+  app.on('open-url', (event, url) => {
+    event.preventDefault();
+    deeplinkingUrl = url;
+    logger(mainWindow, `open-url# ${deeplinkingUrl}`);
+
+    if (deeplinkingUrl && deeplinkingUrl.match('token=')) {
+      setToken(deeplinkingUrl.split('token=')[1]);
+    }
+  });
+});
+
+ipcMain.on('quit', () => {
+  app.exit();
+});
+
+ipcMain.on('minimize', () => {
+  mainWindow.minimize();
+});

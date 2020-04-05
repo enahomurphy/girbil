@@ -1,7 +1,7 @@
 import { useApolloClient } from '@apollo/client';
 
 import { CONVERSATION_MESSAGES, USER_CONVERSATIONS, MESSAGE_FRAGMENT } from '../../query';
-import { pick } from '../../../../lib';
+import { pick, storage, get } from '../../../../lib';
 
 
 export const getConversationMessages = (cache, variables) => {
@@ -22,6 +22,7 @@ export const useMesageReceived = () => {
 
   return (message) => {
     const variables = pick(message, ['conversationId', 'parentId:messageId']);
+    const userId = get(storage, 'payload.id', null);
     const conversation = client.cache.identify({
       __typename: 'Conversation',
       id: variables.conversationId,
@@ -35,7 +36,7 @@ export const useMesageReceived = () => {
     messages.push({
       ...message,
       __typename: 'Message',
-      hasRead: false,
+      hasRead: message.sender.id === userId,
     });
 
     client.writeQuery({

@@ -1,9 +1,10 @@
 import { Device } from 'framework7';
 import { storage } from '@shared/lib';
+import { getRenderer, getShell } from '@/lib/electron';
 
 export const openURL = (url) => {
   if (Device.electron) {
-    window.shell.openExternal(url);
+    getShell().openExternal(url);
   } else {
     window.open(url);
   }
@@ -27,7 +28,7 @@ export const openHome = () => {
 
 export const quitApp = () => {
   if (Device.electron) {
-    window.ipcRenderer.send('quit');
+    getRenderer().send('quit');
   } else {
     window.close();
   }
@@ -35,7 +36,7 @@ export const quitApp = () => {
 
 export const minimizeApp = () => {
   if (Device.electron) {
-    window.ipcRenderer.send('minimize');
+    getRenderer().send('minimize');
   } else {
     window.close();
   }

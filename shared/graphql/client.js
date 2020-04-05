@@ -1,26 +1,16 @@
 import {
-  from, ApolloClient, HttpLink, InMemoryCache, gql,
+  from, ApolloClient, HttpLink, gql,
 } from '@apollo/client';
 import { onError } from '@apollo/link-error';
 import { setContext } from '@apollo/link-context';
 
 import { data, resolvers } from '.';
 import { storage } from '../lib';
+import cache from './cache';
 
 export default ({
   errorHandler = () => {},
 }) => {
-  const cache = new InMemoryCache({
-    typePolicies: {
-      Message: {
-        keyFields: ['id'],
-      },
-      Conversation: {
-        keyFields: ['id'],
-      },
-    },
-  });
-
   const defaultOptions = {
     watchQuery: {
       fetchPolicy: 'cache',

@@ -23,9 +23,12 @@ const ImageItemInfo = ({ pullover, hasRead, messageId }) => (
                   if (onClick) onClick();
                   // hack to fix popover not been completely removed
                   f7.popover.close(`.popover-menu-${messageId}`);
-
                   if (type === 'delete') {
-                    document.querySelector(`.popover-menu-${messageId}`).remove();
+                    document
+                      .querySelectorAll(`.popover-menu-${messageId}`)
+                      .forEach((element) => {
+                        element.remove();
+                      });
                   }
                 }}
                 key={type}

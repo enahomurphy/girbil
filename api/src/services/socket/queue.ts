@@ -11,7 +11,6 @@ export const initializeSocketQueue = (queue): void => {
   const channelUsersRepo = getRepository(ChannelUsers);
 
   queue.on(events.MESSAGE_CREATED, async ({ organizationId, data }): Promise<void> => {
-    const { sender } = data;
     const conversation = await conversationRepo.findOne({ id: data.conversationId });
 
     if (!conversation) {
@@ -28,18 +27,15 @@ export const initializeSocketQueue = (queue): void => {
       );
 
       channelUsers
-        .map(({ userId }) => userId)
-        .filter((id) => id !== sender.id)
-        .forEach((user) => {
-          broadcast(`${organizationId}-${user}`, events.MESSAGE_CREATED, data);
+        .forEach(({ userId }) => {
+          broadcast(`${userId}-${organizationId}`, events.MESSAGE_CREATED, data);
         });
     }
 
     if (conversation.receiverType === ConversationType.USER) {
-      const userId = conversation.receiverId === data.sender.id
-        ? conversation.creatorId
-        : conversation.receiverId;
-      broadcast(`${organizationId}-${userId}`, events.MESSAGE_CREATED, data);
+      [conversation.receiverId, conversation.creatorId].forEach((userId) => {
+        broadcast(`${userId}-${organizationId}`, events.MESSAGE_CREATED, data);
+      });
     }
 
     return null;

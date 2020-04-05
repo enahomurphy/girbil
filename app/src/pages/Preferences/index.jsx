@@ -1,16 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { Page, Toggle } from 'framework7-react';
 import { useLocalStorage } from 'react-use';
+import { Device } from 'framework7';
 
 import Header from '@/components/Header';
 import { Title, Block } from '@/components/Style';
 import { Video } from '@/lib/media';
+import { getRenderer, triggerDock, getStartUpState } from '@/lib/electron';
 
 import Select from './Select';
 
 const Preferences = () => {
   const [devices, setDevices] = useState({});
   const [device, setDevice] = useLocalStorage('gb-device', {});
+  const [showDock, setShowDock] = useLocalStorage('gb-dock', true);
+  const [openAtLogin, setOpenAtLogin] = useState(false);
+
+  useEffect(() => {
+    if (Device.electron) {
+      triggerDock(showDock);
+      setOpenAtLogin(getStartUpState());
+    }
+  }, [showDock]);
 
   useEffect(() => {
     Video.getMediaDevices().then((deviceInfo) => {
@@ -47,7 +58,8 @@ const Preferences = () => {
             Show dock icon
           </Title>
           <Toggle
-            checked
+            onToggleChange={() => setShowDock(!showDock)}
+            checked={showDock}
           />
         </Block>
         <Block
@@ -59,7 +71,13 @@ const Preferences = () => {
           <Title size="14px" margin="0" width="70%">
             Launch Girbil app on startup
           </Title>
-          <Toggle checked />
+          <Toggle
+            onToggleChange={(state) => {
+              setOpenAtLogin(!state);
+              getRenderer().send('open-on-login', !state);
+            }}
+            checked={openAtLogin}
+          />
         </Block>
         {
           Object.keys(devices).map((key) => (

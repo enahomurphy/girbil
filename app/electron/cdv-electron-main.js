@@ -53,10 +53,21 @@ app.on('will-finish-launching', () => {
   });
 });
 
+app.setLoginItemSettings({
+  openAtLogin: true,
+});
+
+// IPC events
 ipcMain.on('quit', () => {
   app.exit();
 });
 
 ipcMain.on('minimize', () => {
   mainWindow.minimize();
+});
+
+ipcMain.on('open-on-login', (_, state) => {
+  app.setLoginItemSettings({
+    openAtLogin: state,
+  });
 });

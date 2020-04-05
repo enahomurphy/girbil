@@ -2,6 +2,7 @@ import { ApolloProvider } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Device } from 'framework7';
+import { useLocalStorage } from 'react-use';
 import {
   App,
   View,
@@ -13,6 +14,7 @@ import ApolloClient from '@shared/graphql/client';
 import { storage, get } from '@shared/lib';
 import emitter from '@/lib/emitter';
 import { SocketContext, socket } from '@/lib/socket';
+import { triggerDock } from '@/lib/electron';
 
 import Main from './main';
 
@@ -41,6 +43,7 @@ const MainApp = () => {
     Boolean(storage.payload && get(storage.payload, 'organization')),
   );
   const [socketConnection, setSocket] = useState(socket(isAuth));
+  const [showDock] = useLocalStorage('gb-dock');
 
   const [client] = useState(ApolloClient({
     errorHandler: ({ networkError }) => {
@@ -68,11 +71,9 @@ const MainApp = () => {
         cordovaApp.init(readyF7);
       }
 
-      if (Device.electron) {
-        window.ipcRenderer.send('dom-loaded');
-      }
+      triggerDock(showDock);
     });
-  }, []);
+  }, [showDock]);
 
   useEffect(() => {
     emitter.onLastListenedEventEmitted('logout', () => {

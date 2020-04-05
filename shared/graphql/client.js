@@ -64,8 +64,7 @@ export default ({
     query: gql`{
       messages
       conversationMeta
-      messages(conversationId: $conversationId, messageId: $messageId) 
-      messages(conversationId: $conversationId) 
+      conversations
     }`,
     data: { ...data, messages: [] },
   });

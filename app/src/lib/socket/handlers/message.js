@@ -20,8 +20,9 @@ export const useOrgUserListener = () => {
     if (!subscribed) {
       const channel = socket.subscribe(channelId);
 
-      channel.bind(MESSAGE_CREATED, ({ data }) => {
-        const conversation = findOrPullConversation(data.conversationId);
+      channel.bind(MESSAGE_CREATED, async ({ data }) => {
+        const conversation = await findOrPullConversation(data.conversationId);
+
         if (conversation) {
           addMessage(data);
         }

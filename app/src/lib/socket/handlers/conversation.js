@@ -11,7 +11,6 @@ export const useConversationListener = (conversationId) => {
   const deleteMessage = mutation.useMessageDeleted();
 
   const orgId = get(storage, 'payload.organization.id');
-  const userId = get(storage, 'payload.id');
 
   const channelId = `conversation_${conversationId}_${orgId}`;
 
@@ -21,8 +20,7 @@ export const useConversationListener = (conversationId) => {
     const channel = socket.subscribe(channelId);
 
     channel.bind(MESSAGE_DELETED, ({ data }) => {
-      const { sender } = data;
-      if (sender.id !== userId && conversationId === data.conversationId) {
+      if (conversationId === data.conversationId) {
         deleteMessage(data);
       }
     });

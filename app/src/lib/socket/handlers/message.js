@@ -14,14 +14,19 @@ export const useOrgUserListener = () => {
     const userId = get(storage, 'payload.id');
     const orgId = get(storage, 'payload.organization.id');
 
-    const channel = socket.subscribe(`${orgId}-${userId}`);
-    channel.bind(MESSAGE_CREATED, ({ data }) => {
-      const conversation = findOrPullConversation(data.conversationId);
+    const channelId = `${userId}-${orgId}`;
+    const subscribed = socket.channels.channels[channelId];
 
-      if (conversation) {
-        addMessage(data);
-      }
-    });
+    if (!subscribed) {
+      const channel = socket.subscribe(channelId);
+
+      channel.bind(MESSAGE_CREATED, ({ data }) => {
+        const conversation = findOrPullConversation(data.conversationId);
+        if (conversation) {
+          addMessage(data);
+        }
+      });
+    }
 
     return () => {
       socket.unsubscribe(orgId);

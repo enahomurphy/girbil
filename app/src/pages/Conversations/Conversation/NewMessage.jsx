@@ -142,7 +142,7 @@ const NewMessage = ({ isThread, conversationId }) => {
               <RecorderButton
                 onClick={startRecord}
                 recording={
-                  matches('record.start') && videoRecorder.stream
+                  matches('record.start') && Boolean(videoRecorder.stream)
                 }
               />
             </>

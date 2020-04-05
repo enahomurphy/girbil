@@ -48,7 +48,7 @@ app.on('will-finish-launching', () => {
     logger(mainWindow, `open-url# ${deeplinkingUrl}`);
 
     if (deeplinkingUrl && deeplinkingUrl.match('token=')) {
-      setToken(deeplinkingUrl.split('token=')[1]);
+      setToken(mainWindow, deeplinkingUrl.split('token=')[1]);
     }
   });
 });

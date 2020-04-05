@@ -27,7 +27,7 @@ module.exports = () => {
       backgroundColor: '#00222222',
       webPreferences: {
         nodeIntegration: false,
-        devTools: false,
+        devTools: true,
         preload: `${__dirname}/preload.js`,
       },
     },

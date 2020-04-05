@@ -1,7 +1,8 @@
-import { useQuery, useApolloClient, gql } from '@apollo/client';
+import { useQuery, useApolloClient } from '@apollo/client';
 
 import { USER_CONVERSATIONS } from './query';
 import { get } from '../../../lib';
+import { CONVERSATION_FRAGMENT } from './fragments';
 
 export const useGetUserConversations = () => {
   const { data, loading } = useQuery(USER_CONVERSATIONS);
@@ -26,11 +27,7 @@ export const useFindOrPullConversation = () => {
 
     const conversation = client.cache.readFragment({
       id: conversationId,
-      fragment: gql`
-        fragment ConversationParts on Conversation {
-          id
-        }
-      `,
+      fragment: CONVERSATION_FRAGMENT,
     });
 
     if (!conversation) {

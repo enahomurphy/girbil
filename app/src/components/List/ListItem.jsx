@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  Title, Text, Block, ShortTitle, ListBlock
+  Title, Text, Block, ShortTitle, ListBlock,
 } from '@/components/Style';
 import { Lock } from '@/components/Icon';
 import { SimpleProfileImage } from '@/components/ProfileImage';
@@ -10,7 +10,7 @@ import { StyledListItem, Active } from './style';
 import ListInfo from './ListInfo';
 
 const ListItem = ({
-  unreadCount, onClick, user, isChannel, isPrivate, isActive, subText, getLink, options, id,
+  unreadCount, onClick, user, isChannel, isPrivate, subText, getLink, options, id,
 }) => (
   <ListBlock
     margin="0 10px"
@@ -47,7 +47,7 @@ const ListItem = ({
           {
           !isChannel && (
             <Active
-              active={isActive}
+              active={user.isActive}
               width="8px"
               height="8px"
               style={{ alignSelf: 'center' }}
@@ -86,7 +86,6 @@ ListItem.propTypes = {
   subText: PropTypes.string,
   isChannel: PropTypes.bool.isRequired,
   isPrivate: PropTypes.bool.isRequired,
-  isActive: PropTypes.bool.isRequired,
   user: PropTypes.object.isRequired,
   getLink: PropTypes.func.isRequired,
   onClick: PropTypes.func,

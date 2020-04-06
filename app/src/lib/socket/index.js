@@ -1,5 +1,4 @@
 export * from './events';
 export * from './socket';
 
-export * from './handlers/message';
-export * from './handlers/conversation';
+export * from './handlers';

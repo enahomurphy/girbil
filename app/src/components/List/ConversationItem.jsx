@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { format } from 'timeago.js';
 
 import ListItem from '@/components/List/ListItem';
 
@@ -28,13 +29,13 @@ const ConversationItem = ({ conversation, leaveChannel, closeConversation }) => 
            key={id}
            id={id}
            isChannel={false}
-           isActive={false}
            isPrivate={false}
            unreadCount={unread}
            user={{
              id: receiver.id,
              name: receiver.name,
-             lastActive: 'Active 17h ago',
+             lastActive: format(receiver.lastActive),
+             isActive: receiver.isActive,
              avatar: receiver.avatar,
            }}
          />

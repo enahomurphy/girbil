@@ -37,6 +37,20 @@ export class User {
   })
   isVerified?: boolean;
 
+  @Field({ nullable: true })
+  @Column({
+    name: 'last_active',
+    type: 'date',
+  })
+  lastActive?: Date;
+
+  @Field({ nullable: true })
+  @Column({
+    name: 'is_active',
+    type: 'boolean',
+  })
+  isActive?: Date;
+
   @Column({
     nullable: true,
   })

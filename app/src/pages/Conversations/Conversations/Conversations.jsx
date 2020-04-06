@@ -42,7 +42,7 @@ const Conversations = () => {
   if (loading) return null;
 
   return (
-    <Page>
+    <Page name="conversations">
       <ConversationHeader
         userData={get(storage, 'payload') || {}}
         searchResult={searchResult}

@@ -300,3 +300,11 @@ export const BorderedInput = styled(Block)`
     }
   }
 `;
+
+export const Video = styled.video`
+  object-fit: cover;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  max-width: 126px;
+  max-height: 136px;
+`;

@@ -53,9 +53,7 @@ const NewMessage = ({ isThread, conversationId }) => {
   useEffect(() => {
     videoRecorder.initializeStream();
     return () => {
-      if (videoRecorder.stream) {
-        videoRecorder.stopStream();
-      }
+      videoRecorder.stopStream();
       updateState({ state: 'done' });
     };
   }, [updateState]);

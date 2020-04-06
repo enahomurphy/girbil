@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/media-has-caption */
 import React from 'react';
 import { View } from 'framework7-react';
 import { useOrgUserListener } from '@/lib/socket';

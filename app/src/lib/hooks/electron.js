@@ -5,7 +5,6 @@ import { query } from '@shared/graphql/conversations';
 import { setIconBadge } from '@/lib/electron';
 import emitter from '@/lib/emitter';
 
-
 export const useBadgeUpdate = () => {
   const { refetch } = useQuery(
     query.GET_UNREAD_COUNT,

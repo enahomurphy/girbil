@@ -64,7 +64,7 @@ const ListItem = ({
         }
         <Text margin="0" align="left">
           { Boolean(!isChannel && unreadCount) && `${unreadCount} new ${unreadCount === 1 ? 'chat' : 'chats'}`}
-          { Boolean(!isChannel && !unreadCount) && user.lastActive}
+          { Boolean(!isChannel && !unreadCount) && (user.isActive ? 'Active' : user.lastActive)}
           { Boolean(isChannel) && `${user.members} members`}
         </Text>
       </Block>

@@ -68,7 +68,6 @@ const ConversationItem = ({ conversation, leaveChannel, closeConversation }) => 
            user={{
              id: channel.id,
              name: channel.name,
-             lastActive: 'Active 17h ago',
              avatar: channel.avatar,
              isPrivate: true,
              members: channel.members,

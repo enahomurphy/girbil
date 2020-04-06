@@ -46,3 +46,11 @@ export const conversationMeta = (_, { conversationId }, { cache }) => {
 
   return data;
 };
+
+export const unreadCount = (_, args, { cache }) => {
+  const { conversations } = cache.readQuery({
+    query: USER_CONVERSATIONS,
+  });
+
+  return conversations.reduce((acc, value) => acc + value.unread, 0);
+};

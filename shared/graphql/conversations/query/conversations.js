@@ -3,8 +3,10 @@ import { useQuery, useApolloClient } from '@apollo/client';
 import { USER_CONVERSATIONS, CONVERSATION } from './query';
 import { get } from '../../../lib';
 
-export const useGetUserConversations = () => {
-  const { data, loading } = useQuery(USER_CONVERSATIONS);
+export const useGetUserConversations = (callback = () => {}) => {
+  const { data, loading } = useQuery(USER_CONVERSATIONS, {
+    onCompleted: callback,
+  });
 
   return { conversations: get(data, 'conversations', []), loading };
 };

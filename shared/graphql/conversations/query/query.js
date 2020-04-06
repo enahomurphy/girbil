@@ -105,6 +105,12 @@ export const GET_USERS_WITHOUT_CONVERSATION = gql`
   }
 `;
 
+export const GET_UNREAD_COUNT = gql`
+  query unreadCount{
+    unreadCount @client
+  }
+`;
+
 
 export default {
   MESSAGES,

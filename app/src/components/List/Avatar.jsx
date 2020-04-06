@@ -10,7 +10,7 @@ const Avatar = ({ avatar, name }) => {
   return (
     <StyledAvatar>
       {
-       RegExp(ext).test('.webm') ? (
+       RegExp(ext).test('webm') ? (
          <Video src={avatar} autoPlay loop muted playsinline />
        ) : (
          <SimpleProfileImage name={name} url={avatar} width="64px" height="80px" />

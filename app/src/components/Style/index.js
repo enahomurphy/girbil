@@ -305,6 +305,13 @@ export const Video = styled.video`
   object-fit: cover;
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
-  max-width: 126px;
-  max-height: 136px;
+  width: ${({ width }) => width};
+  height: ${({ height }) => height};
+  max-width: ${({ width }) => width};
+  max-height: ${({ height }) => height};
 `;
+
+Video.defaultProps = {
+  height: '136px',
+  width: '126px',
+};

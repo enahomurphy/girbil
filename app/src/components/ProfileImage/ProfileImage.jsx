@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Image, Title, Button } from '@/components/Style';
+import {
+  Image, Title, Button, Video,
+} from '@/components/Style';
 import styled from 'styled-components';
 
 const nameToInitials = (name) => {
@@ -59,58 +61,74 @@ SimpleProfileImage.propTypes = {
   name: PropTypes.string,
 };
 
-
 const Profile = ({
   url, edit, width, height, changeProfile, removeProfile, name,
-}) => (
-  <StyledBlock width={width} height={width}>
-    {url && <Image src={url} width={width} height={height} />}
-    {edit && (
-      <StyledInitialsBlock url={url} width={width} height={width}>
-        {
-          Boolean(!url && edit) && (
-            <Title
-              color="var(--gb-dark-grey)"
-              size="96px"
-            >
-              {nameToInitials(name)}
-            </Title>
-          )
-        }
-        <div>
+}) => {
+  const parts = url.split('.');
+  const ext = parts[parts.length - 1];
+  const isNotImage = RegExp(ext).test('webm') || parts.length <= 1;
+
+  return (
+    <StyledBlock width={width} height={width}>
+      {(url && !isNotImage) && <Image src={url} width={width} height={height} />}
+      {(url && isNotImage) && (
+        <Video
+          width={width}
+          height={height}
+          src={url}
+          autoPlay
+          loop
+          muted
+          playsinline
+        />
+      )}
+      {edit && (
+        <StyledInitialsBlock url={url} width={width} height={width}>
           {
-            Boolean(url && edit) && (
-              <Button
-                onClick={changeProfile}
-                margin="120px 0 0 0"
-                weight="bold"
-                size="18px"
-                align="center"
-                color="var(--gb-accent)"
-              >
-                Set profile title
-              </Button>
-            )
-          }
-          {
-            Boolean(false && edit) && (
+            Boolean(!url && edit) && (
               <Title
-                onClick={removeProfile}
-                margin="8px 0 0 0"
-                weight="bold"
-                size="14px"
-                align="center"
-                color="#ffffff"
+                color="var(--gb-dark-grey)"
+                size="96px"
               >
-                Remove title
+                {nameToInitials(name)}
               </Title>
             )
           }
-        </div>
-      </StyledInitialsBlock>
-    )}
-  </StyledBlock>
-);
+          <div>
+            {
+              Boolean(url && edit) && (
+                <Button
+                  onClick={changeProfile}
+                  margin="120px 0 0 0"
+                  weight="bold"
+                  size="18px"
+                  align="center"
+                  color="var(--gb-accent)"
+                >
+                  Set profile title
+                </Button>
+              )
+            }
+            {
+              Boolean(false && edit) && (
+                <Title
+                  onClick={removeProfile}
+                  margin="8px 0 0 0"
+                  weight="bold"
+                  size="14px"
+                  align="center"
+                  color="#ffffff"
+                >
+                  Remove title
+                </Title>
+              )
+            }
+          </div>
+        </StyledInitialsBlock>
+      )}
+    </StyledBlock>
+  );
+};
 
 Profile.defaultProps = {
   url: '',

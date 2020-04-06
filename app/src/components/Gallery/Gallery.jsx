@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import { Swiper, Icon, f7 } from 'framework7-react';
 import PropTypes from 'prop-types';
 
@@ -56,7 +56,7 @@ const Gallery = ({ messages, onClick }) => {
             id, conversationId, thumbnail,
             state, sender, pullover, createdAt, replyCount, hasRead,
           }) => (
-            <>
+            <Fragment key={id}>
               {
                 !['recording', 'complete', 'error'].includes(state) ? (
                   <ImageItem
@@ -82,7 +82,7 @@ const Gallery = ({ messages, onClick }) => {
                   />
                 )
               }
-            </>
+            </Fragment>
           ))
         }
       </Swiper>

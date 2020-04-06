@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { Previous, Next } from '@/components/Icon';
 import Emoji from '@/components/Emoji';
 import Reactions from './Reactions';
+import ProgressBar from './ProgressBar';
 import Speed from './Speed';
 
 import {
@@ -12,7 +13,7 @@ import {
 } from './style';
 
 const VideoProperties = ({
-  playing, play, pause, seek, playBack, handleReact, show, next, prev, reactions,
+  playing, play, pause, seek, playBack, played, duration, handleReact, show, next, prev, reactions,
 }) => (
   <ControlContainer>
     {
@@ -51,9 +52,23 @@ const VideoProperties = ({
       )
     }
     <BottomControls>
-      <Speed onClick={({ value }) => playBack(value)} />
-      <Reactions reactions={reactions} handleReact={handleReact} />
-      <Emoji vertical reaction onClick={handleReact} />
+      <div style={{
+        display: 'flex', flexDirection: 'row', width: '95%', justifyContent: 'space-between', padding: '0 10px'
+      }}
+      >
+        <Speed onClick={({ value }) => playBack(value)} />
+        <Reactions reactions={reactions} handleReact={handleReact} />
+        <Emoji vertical reaction onClick={handleReact} />
+      </div>
+      {
+        Boolean(duration && duration !== Infinity) && (
+          <ProgressBar
+            duration={duration}
+            played={played}
+            seek={seek}
+          />
+        )
+      }
     </BottomControls>
   </ControlContainer>
 );
@@ -69,7 +84,8 @@ VideoProperties.propTypes = {
   seek: PropTypes.func.isRequired,
   next: PropTypes.func.isRequired,
   prev: PropTypes.func.isRequired,
-
+  duration: PropTypes.number.isRequired,
+  played: PropTypes.number.isRequired,
   playBack: PropTypes.func.isRequired,
   handleReact: PropTypes.func.isRequired,
   show: PropTypes.bool.isRequired,

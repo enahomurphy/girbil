@@ -6,7 +6,7 @@ import { Popup } from 'framework7-react';
 
 import { BackIcon } from '@/components/Video/style';
 import { Video as VideoComponent } from '@/components/Video';
-import { Gif } from '@/lib/media';
+import { Video } from '@/lib/media';
 import { Title } from '@/components/Style';
 
 import RecorderButton from './ReorderButton';
@@ -21,27 +21,26 @@ export const NewMessageWrapper = styled.div`
   justify-content: center;
 `;
 
+const id = 'gif-recorder';
+const gifRecorder = new Video(id, 3000);
+
 const Recorder = ({ opened, onFile, onClose }) => {
-  const id = 'gif-recorder';
   const [isOpen, setOpened] = useState(opened);
   const [counter, setCounter] = useState(0);
 
   const [video] = useVideo({
     id, width: '376px', height: '676px', muted: true,
   });
-  const [gifRecorder] = useState(new Gif(id));
 
   useEffect(() => {
     setOpened(opened);
     if (opened) {
-      gifRecorder.init();
+      gifRecorder.initializeStream();
     }
     return () => {
-      if (gifRecorder.file) {
-        gifRecorder.reset();
-      }
+      gifRecorder.stopStream();
     };
-  }, [gifRecorder, opened]);
+  }, [opened]);
 
   useEffect(() => {
     if (counter > 0) {
@@ -53,10 +52,10 @@ const Recorder = ({ opened, onFile, onClose }) => {
         }
       }, 1000);
     }
-  }, [counter, gifRecorder]);
+  }, [counter]);
 
-  gifRecorder.onStop = (blob, url) => {
-    onFile(blob, url);
+  gifRecorder.onStopRecorder = ({ videoBlob, url }) => {
+    onFile(videoBlob, url);
   };
 
   const handleRecording = async () => {
@@ -64,13 +63,8 @@ const Recorder = ({ opened, onFile, onClose }) => {
       setCounter(3);
       gifRecorder.startRecording();
     } else if (gifRecorder.playing && counter === 0) {
-      try {
-        await gifRecorder.stopRecording();
-      } catch (error) {
-        // @TODO log to bug snag
-      } finally {
-        setCounter(0);
-      }
+      gifRecorder.stopRecording();
+      setCounter(0);
     }
   };
 

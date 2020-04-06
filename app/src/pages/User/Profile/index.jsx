@@ -8,7 +8,7 @@ import { useQuery, useMutation, useApolloClient } from '@apollo/client';
 import ProfileImage from '@/components/ProfileImage';
 import Header from '@/components/Header';
 import Recorder from '@/components/Recorder/GifRecorder';
-import { Gif } from '@/lib/media';
+import { blobToFile } from '@/lib/media';
 import { Title, Block } from '@/components/Style';
 import { get, storage } from '@shared/lib';
 import { query as conversationQuery, mutation as conversationMutation } from '@shared/graphql/conversations';
@@ -64,7 +64,7 @@ const Profile = ({ userId, $f7router }) => {
       f7.dialog.preloader('Updating profile picture');
       const result = await refetchURL();
       const { postURL, getURL } = get(result, 'data.getUserUploadURL', {});
-      const file = Gif.blobToFile(blob, user.id);
+      const file = blobToFile([blob], user.id);
 
       await axios({
         method: 'put',
@@ -90,6 +90,7 @@ const Profile = ({ userId, $f7router }) => {
       );
       f7.dialog.close();
     } catch (error) {
+      // @TODO log error to bugsnag
       f7.dialog.alert('Unable to update profile picture');
       f7.dialog.close();
     }

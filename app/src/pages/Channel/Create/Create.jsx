@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import { Toggle } from 'framework7-react';
 
 import {
-  Text, Title, Button, Block, BorderedInput,
+  Text, Title, Button, Block, BorderedInput, Video,
 } from '@/components/Style';
-import { SimpleProfileImage } from '@/components/ProfileImage';
 import { StyledButton, StyledAvatar } from '../style';
 
 const Create = ({
@@ -22,7 +21,6 @@ const Create = ({
       name, about, isPrivate,
     });
   }, [name, about, isPrivate]);
-
 
   return (
     <>
@@ -64,7 +62,7 @@ const Create = ({
             <StyledAvatar onClick={onImageClick}>
               {
                 avatar ? (
-                  <SimpleProfileImage url={avatar} width="64px" height="80px" />
+                  <Video src={avatar} autoPlay loop muted playsinline />
                 ) : (
                   <span aria-label="cat" role="img">🐭</span>
                 )

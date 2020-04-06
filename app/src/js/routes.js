@@ -2,6 +2,7 @@ import { Conversation, Conversations } from '@/pages/Conversations';
 
 const routes = [
   {
+    name: 'logout',
     path: '/logout',
     async(routeTo, routeFrom, resolve) {
       const reactComponent = () => import('@/pages/Auth/Logout');
@@ -11,6 +12,7 @@ const routes = [
     },
   },
   {
+    name: 'error',
     path: '/error',
     async(routeTo, routeFrom, resolve) {
       const reactComponent = () => import('@/pages/Error');
@@ -23,6 +25,7 @@ const routes = [
     },
   },
   {
+    name: 'preferences',
     path: '/preferences',
     async(routeTo, routeFrom, resolve) {
       const reactComponent = () => import('@/pages/Preferences');
@@ -38,7 +41,6 @@ const routes = [
     options: {
       animate: true,
       transition: 'f7-parallax',
-      history: true,
     },
   },
   {

@@ -38,6 +38,8 @@ export const USER_FRAGMENT = gql`
     name
     email
     avatar
+    lastActive
+    isActive
   }
 `;
 

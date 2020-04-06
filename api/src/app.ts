@@ -20,7 +20,6 @@ const resolvers = keys.environment === 'development'
   ? [`${__dirname}/modules/**/*.resolver.ts`]
   : [`${__dirname}/modules/**/*.resolver.js`];
 
-
 const App = async (): Promise<string | undefined> => {
   try {
     const schema = await buildSchema({

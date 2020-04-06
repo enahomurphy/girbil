@@ -95,3 +95,10 @@ export const StyledTitle = styled(Title)`
   width: initial;
   max-width: 140px;
 `;
+
+export const StyledAvatar = styled.div`
+  width: 64px;
+  height: 80px;
+  overflow: hidden;
+  border-radius: 6px;
+`;

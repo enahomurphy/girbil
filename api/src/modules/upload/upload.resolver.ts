@@ -34,8 +34,8 @@ class UploadResolver {
   async getUserUploadURL(
     @Ctx() { user: { id } }: ContextType,
   ): Promise<UploadURLType> {
-    const path = `${keys.environment}/users/${id}/avatar.gif`;
-    return this.aws.createSignedURL(path, 'image/gif');
+    const path = `${keys.environment}/users/${id}/avatar.webm`;
+    return this.aws.createSignedURL(path, 'video/webm');
   }
 
   @Authorized()
@@ -44,8 +44,8 @@ class UploadResolver {
     @Args() { channelId }: ChannelIDArgs,
       @Ctx() { user: { organization } }: ContextType,
   ): Promise<UploadURLType> {
-    const path = `${keys.environment}/${organization.id}/channels/${channelId}/avatar.gif`;
-    return this.aws.createSignedURL(path, 'image/gif');
+    const path = `${keys.environment}/${organization.id}/channels/${channelId}/avatar.webm`;
+    return this.aws.createSignedURL(path, 'video/webm');
   }
 }
 

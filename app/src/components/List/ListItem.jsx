@@ -2,15 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  Title, Text, Block, ShortTitle, ListBlock
+  Title, Text, Block, ShortTitle, ListBlock,
 } from '@/components/Style';
 import { Lock } from '@/components/Icon';
-import { SimpleProfileImage } from '@/components/ProfileImage';
 import { StyledListItem, Active } from './style';
 import ListInfo from './ListInfo';
+import Avatar from './Avatar';
 
 const ListItem = ({
-  unreadCount, onClick, user, isChannel, isPrivate, isActive, subText, getLink, options, id,
+  unreadCount, onClick, user, isChannel, isPrivate, subText, getLink, options, id,
 }) => (
   <ListBlock
     margin="0 10px"
@@ -22,7 +22,7 @@ const ListItem = ({
   >
     <StyledListItem link={getLink(user)} onClick={onClick}>
       <div style={{ marginRight: '16px' }}>
-        <SimpleProfileImage name={user.name} url={user.avatar} width="64px" height="80px" />
+        <Avatar name={user.name} avatar={user.avatar} />
       </div>
       <Block>
         <Block
@@ -47,7 +47,7 @@ const ListItem = ({
           {
           !isChannel && (
             <Active
-              active={isActive}
+              active={user.isActive}
               width="8px"
               height="8px"
               style={{ alignSelf: 'center' }}
@@ -64,7 +64,7 @@ const ListItem = ({
         }
         <Text margin="0" align="left">
           { Boolean(!isChannel && unreadCount) && `${unreadCount} new ${unreadCount === 1 ? 'chat' : 'chats'}`}
-          { Boolean(!isChannel && !unreadCount) && user.lastActive}
+          { Boolean(!isChannel && !unreadCount) && (user.isActive ? 'Active' : user.lastActive)}
           { Boolean(isChannel) && `${user.members} members`}
         </Text>
       </Block>
@@ -86,7 +86,6 @@ ListItem.propTypes = {
   subText: PropTypes.string,
   isChannel: PropTypes.bool.isRequired,
   isPrivate: PropTypes.bool.isRequired,
-  isActive: PropTypes.bool.isRequired,
   user: PropTypes.object.isRequired,
   getLink: PropTypes.func.isRequired,
   onClick: PropTypes.func,

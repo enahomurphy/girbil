@@ -60,10 +60,16 @@ const MainApp = () => {
   }));
 
   useEffect(() => {
-    if (isAuth && !socket) {
+    window.onbeforeunload = () => {
+      if (socketConnection) {
+        socketConnection.disconnect();
+      }
+    };
+
+    if (isAuth && !socketConnection) {
       setSocket(socket(isAuth));
     }
-  }, [isAuth]);
+  }, [isAuth, socketConnection]);
 
   useEffect(() => {
     f7ready((readyF7) => {

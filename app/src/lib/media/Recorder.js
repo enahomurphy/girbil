@@ -5,6 +5,7 @@ class Recorder {
     this.onStopRecorder = () => {};
     this.duration = duration;
     this.preview = [];
+    this.playing = false;
 
     this.stopRecording = this.stopRecording.bind(this);
     this.recorderStopHandler = this.recorderStopHandler.bind(this);
@@ -14,6 +15,7 @@ class Recorder {
   }
 
   recorderStopHandler() {
+    this.playing = false;
     getSeekableBlob(this.recorder.getBlob(), (videoBlob) => {
       const url = this.recorder.toURL();
       const thumbnailBlob = new Blob(this.preview, { type: this.videoType });
@@ -38,6 +40,7 @@ class Recorder {
       .onRecordingStopped(this.recorderStopHandler);
 
     this.recorder.startRecording();
+    this.playing = true;
   }
 
   stopRecording() {

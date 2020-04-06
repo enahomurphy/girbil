@@ -43,9 +43,11 @@ class Video extends Recorder {
   }
 
   stopStream() {
-    this.stream.getTracks().forEach((track) => {
-      track.stop();
-    });
+    if (this.stream) {
+      this.stream.getTracks().forEach((track) => {
+        track.stop();
+      });
+    }
   }
 
   get video() {

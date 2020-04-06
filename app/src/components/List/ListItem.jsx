@@ -5,9 +5,9 @@ import {
   Title, Text, Block, ShortTitle, ListBlock,
 } from '@/components/Style';
 import { Lock } from '@/components/Icon';
-import { SimpleProfileImage } from '@/components/ProfileImage';
 import { StyledListItem, Active } from './style';
 import ListInfo from './ListInfo';
+import Avatar from './Avatar';
 
 const ListItem = ({
   unreadCount, onClick, user, isChannel, isPrivate, subText, getLink, options, id,
@@ -22,7 +22,7 @@ const ListItem = ({
   >
     <StyledListItem link={getLink(user)} onClick={onClick}>
       <div style={{ marginRight: '16px' }}>
-        <SimpleProfileImage name={user.name} url={user.avatar} width="64px" height="80px" />
+        <Avatar name={user.name} avatar={user.avatar} />
       </div>
       <Block>
         <Block

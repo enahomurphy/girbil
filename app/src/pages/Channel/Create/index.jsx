@@ -12,7 +12,7 @@ import { mutation, query } from '@shared/graphql/channels';
 import { query as conversationQuery } from '@shared/graphql/conversations';
 import { query as uploadQuery } from '@shared/graphql/upload';
 import { get, storage, pick } from '@shared/lib';
-import { Gif } from '@/lib/media';
+import { blobToFile } from '@/lib/media';
 import Create from './Create';
 
 const CreateChannel = ({ $f7router, title, channelId }) => {
@@ -53,7 +53,7 @@ const CreateChannel = ({ $f7router, title, channelId }) => {
     try {
       const result = await refetchURL({ channelId: uploadId });
       const { postURL, getURL } = get(result, 'data.getChannelUploadURL', {});
-      const file = Gif.blobToFile(blob, uploadId);
+      const file = blobToFile([blob], uploadId);
 
       await axios({
         method: 'put',

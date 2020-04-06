@@ -22,7 +22,6 @@ const Create = ({
     });
   }, [name, about, isPrivate]);
 
-
   return (
     <>
       <Block padding="24px 24px">

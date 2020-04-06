@@ -142,7 +142,9 @@ export const useReadEvent = (getMessage) => {
       };
 
       if (!args.message.hasRead) {
-        markAsRead(variables);
+        markAsRead(variables, () => {
+          emitter.emitEvent('update-badge');
+        });
       }
     };
 

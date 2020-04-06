@@ -9,10 +9,7 @@ const Main = () => {
   useBadgeUpdate();
 
   return (
-    <>
-      <View main url="/conversations" />
-      <audio id="notification-sound" preload="auto" src="static/audio/notification.mp3" />
-    </>
+    <View main url="/conversations" />
   );
 };
 

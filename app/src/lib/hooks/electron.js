@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useLazyQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
 import { query } from '@shared/graphql/conversations';
 import { setIconBadge } from '@/lib/electron';
@@ -7,19 +7,20 @@ import emitter from '@/lib/emitter';
 
 
 export const useBadgeUpdate = () => {
-  const [getUnreadCount] = useLazyQuery(
+  const { refetch } = useQuery(
     query.GET_UNREAD_COUNT,
-    { onCompleted: ({ unreadCount }) => setIconBadge(unreadCount) },
+    { skip: true },
   );
 
   useEffect(() => {
-    const handler = () => {
-      getUnreadCount();
+    const handler = async () => {
+      const { data: { unreadCount } } = await refetch();
+      setIconBadge(unreadCount);
     };
 
     emitter.onLastListenedEventEmitted('update-badge', handler);
     return () => emitter.removeListener();
-  }, [getUnreadCount]);
+  }, [refetch]);
 };
 
 

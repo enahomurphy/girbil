@@ -60,7 +60,7 @@ export const useMarkMessage = (state = 'read') => {
   );
 
   const handler = useCallback(
-    (variables) => markMessage({
+    (variables, callback = () => {}) => markMessage({
       variables,
       update: (store, { data: { markAsUnRead, markAsRead } }) => {
         if (state === 'read') {
@@ -99,6 +99,8 @@ export const useMarkMessage = (state = 'read') => {
             },
           );
         }
+
+        callback();
       },
       refetchQueries: ['conversations'],
     }),

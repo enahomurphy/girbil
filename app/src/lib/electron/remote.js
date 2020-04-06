@@ -16,11 +16,23 @@ export const triggerDock = (state) => {
 
 export const getStartUpState = () => {
   if (Device.electron) {
-    const remote = getApp();
-    return remote.getLoginItemSettings().openAtLogin;
+    const app = getApp();
+    return app.getLoginItemSettings().openAtLogin;
   }
 
   return false;
 };
 
-export default { triggerDock, getStartUpState };
+
+export const setIconBadge = (value) => {
+  if (Device.electron) {
+    const app = getApp();
+    if (value) {
+      app.dock.setBadge(value.toString());
+    } else {
+      app.dock.setBadge('');
+    }
+  }
+};
+
+export default { triggerDock, getStartUpState, setIconBadge };

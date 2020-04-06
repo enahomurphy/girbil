@@ -1,6 +1,8 @@
 import { useContext, useEffect } from 'react';
 
+import notify from '@/lib/notify';
 import { storage, get } from '@shared/lib';
+import emitter from '@/lib/emitter';
 import { query, mutation } from '@shared/graphql/conversations';
 import { SocketContext } from '../socket';
 import { MESSAGE_CREATED } from '../events';
@@ -25,6 +27,18 @@ export const useOrgUserListener = () => {
 
         if (conversation) {
           addMessage(data);
+        }
+
+        const { sender } = data;
+        if (sender.id !== userId) {
+          if (conversation.receiverType === 'user') {
+            notify(`${sender.name} is talking to you`);
+          } else if (conversation.receiverType === 'channel') {
+            const { channel: conversationChannel } = conversation;
+            notify(`1 new Girbil in ${conversationChannel.name}`);
+          }
+
+          emitter.emitEvent('update-badge');
         }
       });
     }

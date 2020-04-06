@@ -4,6 +4,7 @@ import {
   Image, Title, Button, Video,
 } from '@/components/Style';
 import styled from 'styled-components';
+import { isImage } from '@/lib';
 
 const nameToInitials = (name) => {
   const [first, second = ''] = name.split(' ');
@@ -63,28 +64,25 @@ SimpleProfileImage.propTypes = {
 
 const Profile = ({
   url, edit, width, height, changeProfile, removeProfile, name,
-}) => {
-  const parts = url.split('.');
-  const ext = parts[parts.length - 1];
-  const isNotImage = RegExp(ext).test('webm') || parts.length <= 1;
-
-  return (
-    <StyledBlock width={width} height={width}>
-      {(url && !isNotImage) && <Image src={url} width={width} height={height} />}
-      {(url && isNotImage) && (
-        <Video
-          width={width}
-          height={height}
-          src={url}
-          autoPlay
-          loop
-          muted
-          playsinline
-        />
-      )}
-      {edit && (
-        <StyledInitialsBlock url={url} width={width} height={width}>
-          {
+}) => (
+  <StyledBlock width={width} height={width}>
+    {(url && isImage(url)) && <Image src={url} width={width} height={height} />}
+    {
+      (url && !isImage(url)) && (
+      <Video
+        width={width}
+        height={height}
+        src={url}
+        autoPlay
+        loop
+        muted
+        playsinline
+      />
+      )
+    }
+    {edit && (
+    <StyledInitialsBlock url={url} width={width} height={width}>
+      {
             Boolean(!url && edit) && (
               <Title
                 color="var(--gb-dark-grey)"
@@ -94,8 +92,8 @@ const Profile = ({
               </Title>
             )
           }
-          <div>
-            {
+      <div>
+        {
               Boolean(url && edit) && (
                 <Button
                   onClick={changeProfile}
@@ -109,7 +107,7 @@ const Profile = ({
                 </Button>
               )
             }
-            {
+        {
               Boolean(false && edit) && (
                 <Title
                   onClick={removeProfile}
@@ -123,12 +121,11 @@ const Profile = ({
                 </Title>
               )
             }
-          </div>
-        </StyledInitialsBlock>
-      )}
-    </StyledBlock>
-  );
-};
+      </div>
+    </StyledInitialsBlock>
+    )}
+  </StyledBlock>
+);
 
 Profile.defaultProps = {
   url: '',

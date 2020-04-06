@@ -1,42 +1,60 @@
 import { useQuery, useApolloClient } from '@apollo/client';
 
-import { USER_CONVERSATIONS } from './query';
+import { USER_CONVERSATIONS, CONVERSATION } from './query';
 import { get } from '../../../lib';
-import { CONVERSATION_FRAGMENT } from './fragments';
 
-export const useGetUserConversations = () => {
+export const useGetUserConversations = (callback = () => {}) => {
+  const { data, loading } = useQuery(USER_CONVERSATIONS, {
+    onCompleted: callback,
+  });
+
+  return { conversations: get(data, 'conversations', []), loading };
+};
+
+export const useConversations = () => {
   const { data, loading } = useQuery(USER_CONVERSATIONS);
 
   return { conversations: get(data, 'conversations', []), loading };
 };
 
-export const useConversation = () => {
-  const { data, loading } = useQuery(USER_CONVERSATIONS);
+export const useConversation = (conversationId) => {
+  const client = useApolloClient();
+  const { conversations } = client.cache.readQuery({
+    query: USER_CONVERSATIONS,
+  });
 
-  return { conversations: get(data, 'conversations', []), loading };
+  return conversations.find(({ id }) => conversationId === id);
 };
 
 export const useFindOrPullConversation = () => {
   const client = useApolloClient();
 
-  return (id) => {
-    const conversationId = client.cache.identify({
-      __typename: 'Conversation',
-      id,
+  return async (conversationId) => {
+    const { conversations } = client.cache.readQuery({
+      query: USER_CONVERSATIONS,
     });
 
-    const conversation = client.cache.readFragment({
-      id: conversationId,
-      fragment: CONVERSATION_FRAGMENT,
+    const conversation = conversations.find(({ id }) => conversationId === id);
+
+    if (conversation) {
+      return conversation;
+    }
+
+    const { data } = await client.query({
+      query: CONVERSATION,
+      variables: { conversationId },
+      fetchPolicy: 'network-only',
     });
 
-    if (!conversation) {
-      client.query({
+    const serverConversation = get(data, 'conversation', null);
+
+    if (serverConversation) {
+      client.writeQuery({
         query: USER_CONVERSATIONS,
-        fetchPolicy: 'network-only',
+        data: { conversations: [...conversations, serverConversation] },
       });
     }
 
-    return conversation;
+    return serverConversation;
   };
 };

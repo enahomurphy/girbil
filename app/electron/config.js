@@ -2,7 +2,6 @@ const electron = require('electron');
 
 const { icons } = require('./utils');
 
-
 module.exports = () => {
   const { bounds } = electron.screen.getPrimaryDisplay();
   const width = 376;

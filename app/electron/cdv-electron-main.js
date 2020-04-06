@@ -66,6 +66,10 @@ ipcMain.on('minimize', () => {
   mainWindow.minimize();
 });
 
+ipcMain.on('show', () => {
+  mainWindow.show();
+});
+
 ipcMain.on('open-on-login', (_, state) => {
   app.setLoginItemSettings({
     openAtLogin: state,

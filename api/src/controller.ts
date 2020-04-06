@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/camelcase */
+import { getCustomRepository } from 'typeorm';
+
 import { decode } from './utils/jwt';
 import { upload } from './services/aws';
 import socket from './services/socket';
+import UserRepository from './repo/User';
 
 
 export default (app): void => {
@@ -25,6 +28,9 @@ export default (app): void => {
     if (!user) {
       return res.status(403).send();
     }
+
+    const userRepo = getCustomRepository(UserRepository);
+    userRepo.update({ id: user.id }, { lastActive: new Date() });
 
     const presenceData = {
       user_id: user.id,

@@ -53,7 +53,6 @@ module.exports = () => {
   tray(window, trayConfig.icon);
   browserLink(window);
 
-
   if (config.webPreferences.devTools) {
     window.webContents.openDevTools();
   }

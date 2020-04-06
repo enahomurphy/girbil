@@ -103,7 +103,7 @@ export const BottomControls = styled(Block)`
   justify-content: space-between;
   position: absolute;
   flex-direction: column;
-  bottom: 12px;
+  bottom: 28px;
   height: 80px;
   padding: 0;
   width: 100%;

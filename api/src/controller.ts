@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/camelcase */
+import { decode } from './utils/jwt';
 import { upload } from './services/aws';
+import socket from './services/socket';
 
 
 export default (app): void => {
@@ -11,5 +14,31 @@ export default (app): void => {
     } catch (error) {
       return res.json({ gotit: false });
     }
+  });
+
+  app.post('/socket/auth', (req, res): void => {
+    const { socket_id: socketId, channel_name: channel } = req.body;
+    const tokenWithBearer = req.headers.authorization || '';
+    const token = tokenWithBearer.split(' ')[1];
+    const user = decode(token);
+
+    if (!user) {
+      return res.status(403).send();
+    }
+
+    const presenceData = {
+      user_id: user.id,
+      user_info: {
+        email: user.email,
+      },
+    };
+
+    const auth = socket.authenticate(
+      socketId,
+      channel,
+      presenceData,
+    );
+
+    return res.send(auth);
   });
 };

@@ -16,7 +16,6 @@ const hasOrRequestPermission = async () => {
   return false;
 };
 
-
 const notify = async (message) => {
   const permission = hasOrRequestPermission();
 

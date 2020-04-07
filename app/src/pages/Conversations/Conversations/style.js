@@ -89,6 +89,16 @@ export const Logo = styled.div`
 export const UserOrgDetails = styled.div`
   display: flex;
   flex-direction: column;
+  width: 224px;
+  height: 64px;
+  border-radius: 4px;
+  margin-top: 24px;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: rgba(153, 153, 153, 0.25);
+  }
+
 `;
 
 export const EmptyConversationContainer = styled.div`

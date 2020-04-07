@@ -5,7 +5,7 @@ export const isImage = (url) => {
 
   const parts = url.split('.');
   const ext = parts[parts.length - 1];
-  const isWebm = ext === 'webm' || parts === 1;
+  const isWebm = ext === 'webm' || parts.length === 1;
 
   return !isWebm;
 };

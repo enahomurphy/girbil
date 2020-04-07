@@ -98,6 +98,10 @@ export const Block = styled(F7Block)`
   padding: ${(props) => props.padding};
   width: ${(props) => props.width};
   margin: ${(props) => props.margin};
+
+  .icon-checkbox, .checkbox i {
+    border-radius: 10px;
+  }
 `;
 
 Block.defaultProps = {
@@ -321,4 +325,16 @@ export const ErrorText = styled.span`
   align-items: center;
   margin-top: 8px;
   color: rgb(255, 79, 68);
+`;
+
+export const SearchBar = styled.div`
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .global-input {
+    min-width: 296px;
+    margin-right: 16px;
+  }
 `;

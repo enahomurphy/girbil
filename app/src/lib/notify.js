@@ -22,7 +22,6 @@ const notify = async (message) => {
   if (permission) {
     const notification = new Notification(message, {
       body: 'Now',
-      silent: true,
     });
 
     notification.onclick = () => {

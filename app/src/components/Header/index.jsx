@@ -16,7 +16,16 @@ const Header = ({ title, backURL }) => (
       <Link onClick={
         () => {
           if (backURL) {
-            return f7.views.main.router.navigate(backURL, {
+            return f7.views.main.router.back(backURL, {
+              force: true,
+              reloadAll: true,
+            });
+          }
+
+          const noPrevious = f7.view.main.history.length === 1;
+
+          if (noPrevious) {
+            return f7.views.main.router.back('/conversations', {
               force: true,
               reloadAll: true,
             });

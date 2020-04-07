@@ -23,8 +23,9 @@ const speeds = [
   },
 ];
 
-const Speed = ({ onClick }) => {
-  const [speed, setSpeed] = useState(speeds[3]);
+const Speed = ({ onClick, value }) => {
+  const selectedSpeed = speeds.find(speed => speed.value === value);
+  const [speed, setSpeed] = useState(selectedSpeed);
 
   const onSpeedClick = (value) => {
     onClick(value);
@@ -48,6 +49,7 @@ const Speed = ({ onClick }) => {
 
 Speed.propTypes = {
   onClick: PropTypes.func.isRequired,
+  value: PropTypes.number.isRequired,
 };
 
 export default Speed;

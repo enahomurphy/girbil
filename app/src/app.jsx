@@ -43,7 +43,7 @@ const MainApp = () => {
     Boolean(storage.payload && get(storage.payload, 'organization')),
   );
   const [socketConnection, setSocket] = useState(socket(isAuth));
-  const [showDock] = useLocalStorage('gb-dock');
+  const [showDock] = useLocalStorage('gb-dock', true);
 
   const [client] = useState(ApolloClient({
     errorHandler: ({ networkError }) => {

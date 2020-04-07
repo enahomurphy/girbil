@@ -19,7 +19,7 @@ import { getParam } from '@/lib';
 import { NewMessageWrapper } from './style';
 import ErrorState from './ErrorState';
 
-const videoRecorder = new Video('video');
+const videoRecorder = new Video();
 
 const NewMessage = ({ isThread, conversationId }) => {
   const { data: conversationData } = useQuery(
@@ -51,12 +51,13 @@ const NewMessage = ({ isThread, conversationId }) => {
   });
 
   useEffect(() => {
+    videoRecorder.videoId = id;
     videoRecorder.initializeStream();
     return () => {
       videoRecorder.stopStream();
       updateState({ state: 'done' });
     };
-  }, [updateState]);
+  }, [id, updateState]);
 
   useEffect(() => {
     emitter.emitEvent('play_unread');

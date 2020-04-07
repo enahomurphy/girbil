@@ -120,11 +120,12 @@ export const ListBlock = styled(Block)`
 export const Page = styled(f7Page).attrs({
   styles: { overflow: 'none' },
 })`
-   .page-content {
+  .page-content {
     scrollbar-width: thin;
     overflow: ${({ overflow }) => overflow};
     overflow-y: ${({ overlayX }) => overlayX};
     overflow-y: ${({ overlayX }) => overlayX};
+    scrollbar-color: red;
 
     &::-webkit-scrollbar {
       width: 4px;
@@ -146,6 +147,24 @@ Page.defaultProps = {
   overflowY: 'overlay',
   overflow: 'auto',
 };
+
+export const PageWithScroll = styled(Page)`
+  .page-content {  
+    scrollbar-width: thin;
+ 
+    &::-webkit-scrollbar-thumb {
+      border-radius: 100px;
+      max-height: 129px;
+      background: #636366;
+    }
+
+    &::-webkit-scrollbar {
+      width: 6px;
+      padding: 0px 2px;
+      background-color: transparent;
+    }
+  }
+`;
 
 export const Icon = styled(f7Icon)`
   &.icon[class*="color-"] {

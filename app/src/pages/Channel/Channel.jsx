@@ -1,14 +1,14 @@
 import React from 'react';
 import { Tabs, Tab, Link } from 'framework7-react';
 
-import { Page } from '@/components/Style';
+import { PageWithScroll } from '@/components/Style';
 import Header from '@/components/Header';
 import DirectMessages from './DirectMessages';
 import BrowseChannels from './BrowseChannels';
 import { Toolbar } from './style';
 
 const Channel = () => (
-  <Page name="channel">
+  <PageWithScroll name="channel">
     <Header backURL="/conversations" title="Add Chat or Channel" />
     <Toolbar>
       <Link tabLink="#tab-1" tabLinkActive>Channels</Link>
@@ -23,7 +23,7 @@ const Channel = () => (
         <DirectMessages />
       </Tab>
     </Tabs>
-  </Page>
+  </PageWithScroll>
 );
 
 export default Channel;

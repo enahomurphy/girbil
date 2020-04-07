@@ -32,11 +32,12 @@ export const useMesageReceived = () => {
       return null;
     }
 
+    const isUser = message.sender.id === userId;
     const messages = getConversationMessages(client, variables);
     messages.push({
       ...message,
       __typename: 'Message',
-      hasRead: message.sender.id === userId,
+      hasRead: isUser,
     });
 
     client.writeQuery({
@@ -49,6 +50,10 @@ export const useMesageReceived = () => {
       client.cache.modify(
         conversation, {
           unread(value = 0) {
+            if (isUser) {
+              return value;
+            }
+
             return value + 1;
           },
         },

@@ -4,9 +4,9 @@ import { ListItem, List } from 'framework7-react';
 
 import { BlankLink } from '@/components/Icon';
 import {
-  Block, Image, Title, Text, Popover, Active,
+  Block, Image, Title, Text, Popover, Active, Video,
 } from '@/components/Style';
-import { settingsOpener, invitePeopleOpener } from '@/lib';
+import { settingsOpener, invitePeopleOpener, isImage } from '@/lib';
 
 import { StyledUser } from './style';
 
@@ -19,7 +19,13 @@ const UserInfo = ({ user }) => (
     <Popover width="330px" className="user-popover">
       <Block>
         <Block padding="16px 16px 8px 16px" type="flex">
-          <Image src={user.avatar} width="32px" height="40px" />
+          {
+          isImage(user.avatar) ? (
+            <Image src={user.avatar} width="32px" height="40px" />
+          ) : (
+            <Video src={user.avatar} autoPlay loop muted playsinline />
+          )
+          }
           <Block margin="0 0 0 12px">
             <Title
               size="14px"

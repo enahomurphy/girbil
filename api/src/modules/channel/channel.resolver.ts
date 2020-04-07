@@ -62,6 +62,20 @@ class ChannelResolver implements ResolverInterface<Channel> {
   }
 
   @Authorized('user', 'admin', 'owner')
+  @Query(() => Channel, { nullable: true })
+  async channelByName(
+    @Args() { name }: ChannelArgs,
+      @Ctx() { user: { organization } }: ContextType,
+  ): Promise<Channel> {
+    return this.channelRepo.findOne({
+      where: {
+        organizationId: organization.id,
+        name,
+      },
+    });
+  }
+
+  @Authorized('user', 'admin', 'owner')
   @Query(() => ChannelMembers, { nullable: true })
   async channelMembers(
     @Args() { channelId }: ChannelIDArgs,

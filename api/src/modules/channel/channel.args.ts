@@ -6,6 +6,11 @@ export class ChannelArgs {
   @Field({ nullable: true })
   @IsString()
   text?: string
+
+
+  @Field({ nullable: true })
+  @IsString()
+  name?: string
 }
 
 @ArgsType()

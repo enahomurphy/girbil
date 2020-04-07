@@ -315,3 +315,10 @@ Video.defaultProps = {
   height: '136px',
   width: '126px',
 };
+
+export const ErrorText = styled.span`
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  color: rgb(255, 79, 68);
+`;

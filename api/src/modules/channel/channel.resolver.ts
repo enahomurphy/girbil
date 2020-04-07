@@ -68,10 +68,7 @@ class ChannelResolver implements ResolverInterface<Channel> {
       @Ctx() { user: { organization } }: ContextType,
   ): Promise<Channel> {
     return this.channelRepo.findOne({
-      where: {
-        organizationId: organization.id,
-        name,
-      },
+      where: `"organization_id" = '${organization.id}' AND "name" ILIKE '${name}'`
     });
   }
 

@@ -6,13 +6,14 @@ import { Block, Image } from '@/components/Style';
 import { StyledUserListItem, Active, StyledTitle } from './style';
 
 const UserListItem = ({
-  user, link, isActive, checkbox, checked, onChange,
+  user, link, isActive, checkbox, checked, onChange, style,
 }) => (
   <Block
     margin="0"
     type="flex"
     align="center"
     justify="space-between"
+    style={style}
   >
     <StyledUserListItem link={link}>
       <Image radius="2px" src={user.avatar} width="32px" height="40px" />
@@ -40,6 +41,7 @@ UserListItem.defaultProps = {
   checkbox: false,
   checked: false,
   onChange: () => {},
+  style: {},
 };
 
 UserListItem.propTypes = {
@@ -49,6 +51,7 @@ UserListItem.propTypes = {
   checkbox: PropTypes.bool,
   checked: PropTypes.bool,
   onChange: PropTypes.func,
+  style: PropTypes.object,
 };
 
 export default UserListItem;

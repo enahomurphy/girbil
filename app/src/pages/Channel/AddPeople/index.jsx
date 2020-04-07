@@ -35,6 +35,17 @@ const AddPeople = ({ channelId, $f7router }) => {
 
   const members = get(data, 'usersNotInChannel.members', []);
   const [users, setUsers] = useState(updateData(members));
+  const [filteredUsers, setFilteredUsers] = useState(users);
+  const [filterText, setFilterText] = useState('');
+
+  useEffect(() => {
+    const newUsers = users.filter((user) => user.name.indexOf(filterText) > -1);
+    setFilteredUsers(newUsers);
+  }, [filterText, users]);
+
+  useEffect(() => {
+    setFilteredUsers(users);
+  }, [users]);
 
   useEffect(() => {
     if (members && members.length) {
@@ -86,8 +97,9 @@ const AddPeople = ({ channelId, $f7router }) => {
       <Page>
         <Header title="Add People" />
         <AddPeopleList
-          users={users}
+          users={filteredUsers}
           isValid={hasSelected()}
+          onFilter={setFilterText}
           onUserSelected={onUserSelected}
           onSubmit={onSubmit}
         />

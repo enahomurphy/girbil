@@ -13,7 +13,7 @@ import {
 } from './style';
 
 const VideoProperties = ({
-  playing, play, pause, seek, playBack, played, duration, handleReact, show, next, prev, reactions,
+  playing, play, pause, seek, playBack, played, duration, handleReact, show, next, prev, reactions, playbackRate,
 }) => (
   <ControlContainer>
     {
@@ -56,7 +56,7 @@ const VideoProperties = ({
         display: 'flex', flexDirection: 'row', width: '95%', justifyContent: 'space-between', padding: '0 10px'
       }}
       >
-        <Speed onClick={({ value }) => playBack(value)} />
+        <Speed value={playbackRate} onClick={({ value }) => playBack(value)} />
         <Reactions reactions={reactions} handleReact={handleReact} />
         <Emoji vertical reaction onClick={handleReact} />
       </div>
@@ -90,6 +90,7 @@ VideoProperties.propTypes = {
   handleReact: PropTypes.func.isRequired,
   show: PropTypes.bool.isRequired,
   reactions: PropTypes.array,
+  playbackRate: PropTypes.number.isRequired,
 };
 
 export default VideoProperties;

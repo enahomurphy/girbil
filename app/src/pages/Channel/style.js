@@ -36,6 +36,10 @@ export const StyledButton = styled(Block)`
   position: absolute;
   bottom: 24px;
   right: 24px;
+
+  &.floating {
+    position: fixed;
+  }
 `;
 
 export const StyledAvatar = styled.div`

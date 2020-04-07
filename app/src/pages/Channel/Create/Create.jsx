@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Toggle } from 'framework7-react';
-
+import { useLazyQuery } from '@apollo/client';
+import { useDebounce } from 'react-use';
+import { get } from '@shared/lib';
+import Error from '@/components/Icon/Error';
 import {
-  Text, Title, Button, Block, BorderedInput, Video,
+  Text, Title, Button, Block, BorderedInput, Video, ErrorText,
 } from '@/components/Style';
+import { query } from '@shared/graphql/channels';
 import { StyledButton, StyledAvatar } from '../style';
 
 const Create = ({
@@ -16,11 +20,28 @@ const Create = ({
     isPrivate,
   });
 
+  const [channelExists, setChannelExists] = useState(false);
+
+  const [search, { data }] = useLazyQuery(query.CHANNEL_BY_NAME);
+
   useEffect(() => {
     setForm({
       name, about, isPrivate,
     });
   }, [name, about, isPrivate]);
+
+  useEffect(() => {
+    const channelData = get(data, 'channelByName');
+    setChannelExists(Boolean(channelData && channelData.id));
+  }, [data]);
+
+
+  useDebounce(() => {
+    if (form.name) search({ variables: { name: form.name } });
+  },
+
+  500,
+  [form.name]);
 
   return (
     <>
@@ -34,10 +55,20 @@ const Create = ({
             <Title>Name</Title>
             <input
               name="name"
+              style={{ borderColor: channelExists ? '#FF4F44' : '#FFFFFF' }}
               value={form.name}
               onChange={({ target }) => setForm({ ...form, name: target.value })}
               placeholder="e.g., introductions"
             />
+            {
+              channelExists && (
+                <ErrorText>
+                  <Error />
+                  {' '}
+                  That channel name already exists. Try another.
+                </ErrorText>
+              )
+            }
           </BorderedInput>
           <BorderedInput>
             <Title>Description (optional)</Title>
@@ -97,7 +128,7 @@ const Create = ({
           height="40px"
           inverse
           onClick={() => createChannel(form)}
-          disabled={Boolean(!form.name)}
+          disabled={Boolean(!form.name || channelExists)}
         >
           {isEdit ? 'Update' : 'Create'}
         </Button>

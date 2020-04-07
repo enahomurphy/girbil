@@ -31,7 +31,7 @@ export const StyledListItem = styled(ListItem)`
 
   .item-content {
     display: flex;
-    padding: 0px;    
+    padding: 0px;
   }
 
   .item-link .item-inner {

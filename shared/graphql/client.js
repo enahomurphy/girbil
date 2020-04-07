@@ -48,6 +48,7 @@ export default ({
 
   const httpLink = new HttpLink({ uri: `${process.env.API_URL}/graphql` });
 
+
   const link = from([
     errrorLink,
     authLink.concat(httpLink),

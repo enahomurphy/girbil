@@ -30,6 +30,14 @@ export const CHANNEL = gql`
   }
 `;
 
+export const CHANNEL_BY_NAME = gql`
+ query channelByName($name: String!) {
+    channelByName(name: $name) {
+      id
+    }
+  }
+`;
+
 export const GET_CHANNEL_MEMBERS = gql`
  query channelMembers($channelId: String!) {
     channel(channelId: $channelId) {
@@ -82,4 +90,5 @@ export default {
   SEARCH_CHANNELS,
   GET_CHANNEL_MEMBERS,
   GET_USERS_NOT_IN_CHANNEL,
+  CHANNEL_BY_NAME,
 };

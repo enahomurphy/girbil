@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import { Page } from 'framework7-react';
 import PropTypes from 'prop-types';
+import { useLocalStorage } from 'react-use';
 
 import { useVideo, useConversationMeta } from '@/lib/hooks';
 import { query, mutation } from '@shared/graphql/conversations';
@@ -25,6 +26,9 @@ const Message = ({
   });
 
   const message = get(data, 'message', {});
+  const PLAYBACK_KEY = 'gb-playbackrate';
+
+  const [playbackRate, setPlaybackrate] = useLocalStorage(PLAYBACK_KEY, 1);
 
   const { params } = useVideoData(message, 'video');
   const [video, state, controls] = useVideo({
@@ -44,7 +48,16 @@ const Message = ({
     },
   });
 
+  const handlePlayback = (value) => {
+    setPlaybackrate(value);
+    controls.playbackRate(value);
+  };
+
   usePlayerPlayPauseEvents(messageId, controls);
+
+  useEffect(() => {
+    controls.playbackRate(playbackRate);
+  }, [controls, playbackRate]);
 
   const { data: conversationData } = useQuery(
     query.CONVERSATION,
@@ -106,7 +119,8 @@ const Message = ({
           playing={state.playing}
           duration={state.duration || 0}
           played={state.played}
-          playBack={controls.playbackRate}
+          playBack={handlePlayback}
+          playbackRate={playbackRate}
           handleReact={handleReact}
           reactions={message.reactions}
           next={handleNextMessage('next')}

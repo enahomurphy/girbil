@@ -1,24 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Popup, Icon, List } from 'framework7-react';
 
-import { Search } from '@/components/Style';
+import { SearchBar, Search } from '@/components/Style';
 import Close from '@/components/Icon/Close';
 import ConversationListItem from '@/components/List/ListItem';
 import DefaultSearchList from '@/components/List/DefaultSearchList';
-
-const SearchBar = styled.div`
-  height: 88px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .global-input {
-    min-width: 296px;
-    margin-right: 16px;
-  }
-`;
 
 const GlobalSearch = (props) => {
   const {
@@ -100,7 +87,7 @@ const GlobalSearch = (props) => {
                     handleClose();
                     closeConversation(conversationId);
                   },
-                }
+                },
               ]}
               getLink={() => `/conversations/${conversationId}/`}
               key={id}
@@ -137,7 +124,7 @@ const GlobalSearch = (props) => {
                   onClick: handleClose,
                   shouldHide: isMember,
                   getLink: () => `/conversations/${conversationId}/`,
-                }
+                },
               ]}
               getLink={() => `/conversations/${conversationId}/`}
               key={id}

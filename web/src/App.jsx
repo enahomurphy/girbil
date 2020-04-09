@@ -49,7 +49,7 @@ const App = () => (
           <Authenticated exact path="/signup" component={Home} />
           <Authenticated exact path="/organizations" component={Organizations} />
           <Authenticated exact path="/organizations/create" component={Create} />
-          <OrgRoute exact path="/invite" component={Invite} />
+          <Route exact path="/invite" component={Invite} />
           <OrgRoute exact path="/share" component={Share} />
           <OrgRoute path="/settings" component={Settings} />
           <Route

@@ -1,7 +1,9 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 const { Tray } = require('electron');
 
+let tray;
 module.exports = (window, icon) => {
-  const tray = new Tray(icon);
+  tray = new Tray(icon);
   tray.on('click', () => {
     window.show();
   });

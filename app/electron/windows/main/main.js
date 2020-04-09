@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 const { join } = require('path');
 const { app, BrowserWindow } = require('electron');
 
@@ -40,7 +39,6 @@ const browserLink = (window) => {
 module.exports = () => {
   const { browserWindow: config, tray: trayConfig } = getConfig();
   let window = new BrowserWindow(config);
-  logger(window, config.icon);
 
   window.loadURL(join(`file://${__dirname}`, '../../index.html'));
 

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery, useLazyQuery } from '@apollo/client';
+import { useQuery, useLazyQuery, useMutation } from '@apollo/client';
 import { Page } from 'framework7-react';
 import PropTypes from 'prop-types';
 import { useLocalStorage } from 'react-use';
 
 import { useVideo, useConversationMeta } from '@/lib/hooks';
 import { query, mutation } from '@shared/graphql/conversations';
+import { query as userQuery, mutation as userMutation } from '@shared/graphql/user';
 import {
   Video, Header, useVideoData, VideoProperties,
 } from '@/components/Video';
@@ -19,6 +20,7 @@ const Message = ({
 }) => {
   const [reactToMessage] = mutation.useAddReaction();
   const [updateState] = mutation.useMessageState();
+
   const [getMessage, { data }] = useLazyQuery(query.GET_MESSAGE, {
     onCompleted({ message }) {
       updateState({ messageId: message.id, state: 'playing' });
@@ -28,7 +30,14 @@ const Message = ({
   const message = get(data, 'message', {});
   const PLAYBACK_KEY = 'gb-playbackrate';
 
-  const [playbackRate, setPlaybackrate] = useLocalStorage(PLAYBACK_KEY, 1);
+  const [playbackRate, setPlaybackrate] = useState(1);
+  const { data: userSettingData } = useQuery(userQuery.USER_SETTINGS);
+  const [updatePlaybackSpeed] = useMutation(userMutation.UPDATE_USER_SETTINGS);
+
+  useEffect(() => {
+    console.log('userSettingData', userSettingData);
+    setPlaybackrate(get(userSettingData, 'settings.settings.playbackSpeed', 1));
+  }, [userSettingData]);
 
   const { params } = useVideoData(message, 'video');
   const [video, state, controls] = useVideo({
@@ -48,9 +57,12 @@ const Message = ({
     },
   });
 
-  const handlePlayback = (value) => {
+  const handlePlayback = async (value) => {
     setPlaybackrate(value);
     controls.playbackRate(value);
+    await updatePlaybackSpeed({
+      variables: { playbackSpeed: value },
+    });
   };
 
   usePlayerPlayPauseEvents(messageId, controls);

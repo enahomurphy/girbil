@@ -150,3 +150,10 @@ export const InviteButton = styled.button`
   width: 67px;
   color: #FFFFFF;
 `;
+
+export const CloseContainer = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: 100%;
+`;

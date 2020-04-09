@@ -1,11 +1,14 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, Repository, getRepository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { User } from '../entity';
+import { User, UserSetting } from '../entity';
 import { hashPassword } from '../utils/password';
+import { UserSettingInterface } from '../interfaces';
 
 @EntityRepository(User)
 class UserRepository extends Repository<User> {
+  private readonly userSettingRepo = getRepository(UserSetting)
+
   findByEmail(email): Promise<User> {
     return this.findOne({ email });
   }
@@ -63,6 +66,21 @@ class UserRepository extends Repository<User> {
 
   async user(userId: string): Promise<User> {
     return this.findOne(userId);
+  }
+
+  async upsertSettings(userId: string, organizationId: string, playbackSpeed: number, hideInviteWidget: boolean) {
+    const settings: UserSettingInterface = { playbackSpeed, hideInviteWidget };
+
+    await this.userSettingRepo.createQueryBuilder()
+      .setParameter('settings', settings)
+      .insert()
+      .values({
+        userId,
+        organizationId,
+        settings
+      })
+      .onConflict(`("user_id", "organization_id") DO UPDATE SET "settings" = coalesce(user_settings.settings, '{}') || :settings`)
+      .execute();
   }
 }
 

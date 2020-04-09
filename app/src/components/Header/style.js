@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 export const NavbarWrapper = styled.div`
   padding-top: 24px;
+  height: 55px;
 
   &:not(input) {
     -webkit-app-region: drag;

@@ -18,4 +18,18 @@ export const UPDATE_USER = gql`
   }
 `;
 
+export const UPDATE_USER_SETTINGS = gql`
+  mutation updateSettings(
+    $playbackSpeed: Float
+    $hideInviteWidget: Boolean
+  ) {
+    updateSettings(
+      input: {
+        playbackSpeed: $playbackSpeed
+        hideInviteWidget: $hideInviteWidget
+      },
+    )
+  }
+`;
+
 export default {};

@@ -104,7 +104,7 @@ const NewMessage = ({ isThread, conversationId }) => {
     } else {
       f7.views.main.router.back(
         '/conversations',
-        { force: true, reloadPrevious: true },
+        { force: true, clearPreviousHistory: true },
       );
     }
   };

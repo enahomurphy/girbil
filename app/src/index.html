@@ -19,7 +19,7 @@
   <meta name="msapplication-tap-highlight" content="no">
   <title>girbil</title>
 
-  <% if (process.env.TARGET === 'cordova') { %>
+  <% if (process.env.TARGET === 'cordova' || process.env.TARGET === 'electron') { %>
     <script src="static/js/ebml.js"></script>
   <% } else { %>
     <script src="/static/js/ebml.js"></script>

@@ -25,8 +25,8 @@ module.exports = () => {
       transparent: true,
       backgroundColor: '#00222222',
       webPreferences: {
-        nodeIntegration: false,
-        devTools: true,
+        nodeIntegration: process.env.NODE_ENV !== 'production',
+        devTools: process.env.NODE_ENV !== 'production',
         preload: `${__dirname}/preload.js`,
       },
     },

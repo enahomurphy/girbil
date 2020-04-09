@@ -1,4 +1,6 @@
-const { app, ipcMain } = require('electron');
+/* eslint-disable import/no-extraneous-dependencies */
+const { app, ipcMain, Notification } = require('electron');
+const { existsSync } = require('fs');
 
 const { logger, setToken } = require('./utils');
 const createMainWindow = require('./windows/main/main');
@@ -8,6 +10,7 @@ let deeplinkingUrl;
 
 const createWindow = () => {
   mainWindow = createMainWindow();
+  logger(mainWindow, process.env.NODE_ENV);
 
   if (process.platform === 'win32') {
     if (deeplinkingUrl && deeplinkingUrl.match('token=')) {
@@ -74,4 +77,16 @@ ipcMain.on('open-on-login', (_, state) => {
   app.setLoginItemSettings({
     openAtLogin: state,
   });
+});
+
+ipcMain.on('notify', () => {
+  if (process.platform === 'darwin') {
+    const hasSound = existsSync('~/Library/Sounds/Girbil.aiff');
+    logger(mainWindow, hasSound);
+  }
+
+  new Notification({
+    body: 'asdsdasdadsada',
+    sound: 'Girbil',
+  }).show();
 });

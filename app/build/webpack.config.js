@@ -17,6 +17,7 @@ function resolvePath(dir) {
 const env = process.env.NODE_ENV || 'development';
 const target = process.env.TARGET || 'web';
 const isCordova = target === 'cordova';
+const isElectron = target === 'electron';
 const isElectronWatch = process.env.ELECTRON_WATCH || false;
 
 module.exports = {
@@ -206,19 +207,11 @@ module.exports = {
         to: resolvePath(isCordova ? 'cordova/www/static' : 'www/static'),
       },
       ...(
-        isCordova
+        isElectron
           ? [
             {
               from: resolvePath('electron'),
-              to: resolvePath('cordova/platforms/electron/platform_www/'),
-            },
-            {
-              from: resolvePath('electron/build.json'),
-              to: resolvePath('cordova/'),
-            },
-            {
-              from: resolvePath('src/splash.html'),
-              to: resolvePath('cordova/www/'),
+              to: resolvePath('www/'),
             },
           ]
           : []

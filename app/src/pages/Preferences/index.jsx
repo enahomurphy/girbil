@@ -46,7 +46,7 @@ const Preferences = () => {
 
   return (
     <Page name="settings">
-      <Header backURL="/conversations" title="System Preferences" />
+      <Header title="System Preferences" />
       <Block padding="32px 24px 0 24px">
         <Block
           margin="0 0 24px 0"

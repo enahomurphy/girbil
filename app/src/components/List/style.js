@@ -61,6 +61,10 @@ export const StyledListItem = styled(ListItem)`
     &:hover:not(.active-state):not(.no-hover) {
       background-color: inherit !important;
     }
+
+    &.active-state {
+      background: none;
+    }
   }
 `;
 

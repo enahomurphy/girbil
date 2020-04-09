@@ -107,7 +107,7 @@ export const EmptyConversationContainer = styled.div`
   padding: 0 24px 16px;
   flex-direction: column;
   justify-content: space-between;
-  height: 80%;
+  height: 65%;
 `;
 
 export const AddContainer = styled.div`
@@ -123,6 +123,7 @@ export const InviteContainer = styled.div`
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
   padding: 10px;
+  margin: 0 20px 90px;
   font-size: 12px;
 `;
 

@@ -14,7 +14,7 @@ import EmptyConversation from './EmptyConversation';
 import ConversationItem from './ConversationItem';
 
 const Conversations = () => {
-  const { conversations, loading } = query.useGetUserConversations(() => {
+  const { conversations } = query.useGetUserConversations(() => {
     emitter.emitEvent('update-badge');
   });
   const [closeConversation] = mutation.useCloseConversation();
@@ -38,8 +38,6 @@ const Conversations = () => {
 
   500,
   [searchText]);
-
-  if (loading) return null;
 
   return (
     <Page name="conversations">

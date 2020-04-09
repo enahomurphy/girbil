@@ -1,4 +1,4 @@
-import { Conversation, Conversations } from '@/pages/Conversations';
+import { Conversation } from '@/pages/Conversations';
 
 const routes = [
   {
@@ -37,10 +37,11 @@ const routes = [
   {
     name: 'conversations',
     path: '/conversations',
-    component: Conversations,
-    options: {
-      animate: true,
-      transition: 'f7-parallax',
+    async(routeTo, routeFrom, resolve) {
+      const reactComponent = () => import('@/pages/Conversations/Conversations');
+      reactComponent().then((rc) => {
+        resolve({ component: rc.default });
+      });
     },
   },
   {

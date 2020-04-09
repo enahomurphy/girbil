@@ -60,7 +60,7 @@ const Messages = ({
     messages.length ? (
       <Gallery messages={updatedMessages} onClick={onClick} />
     ) : (
-      <EmptyState messageType={messageType}/>
+      <EmptyState messageType={messageType} />
     )
   );
 };

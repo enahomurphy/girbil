@@ -9,7 +9,7 @@ import { Toolbar } from './style';
 
 const Channel = () => (
   <PageWithScroll name="channel">
-    <Header backURL="/conversations" title="Add Chat or Channel" />
+    <Header title="Add Chat or Channel" />
     <Toolbar>
       <Link tabLink="#tab-1" tabLinkActive>Channels</Link>
       <div />

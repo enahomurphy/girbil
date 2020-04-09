@@ -4,8 +4,8 @@ const { join } = require('path');
 const getAppIcon = () => {
   let appIcon;
 
-  if (fs.existsSync(join(__dirname, '../img/app.png'))) {
-    appIcon = join(__dirname, '../img/app.png');
+  if (fs.existsSync(join(__dirname, '/resources/app.png'))) {
+    appIcon = join(__dirname, '../resources/app.png');
   } else if (fs.existsSync(join(__dirname, '../img/icon.png'))) {
     appIcon = join(__dirname, '../img/icon.png');
   } else {

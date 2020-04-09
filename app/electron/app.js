@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const { app, ipcMain } = require('electron');
 
 const { logger, setToken } = require('./utils');

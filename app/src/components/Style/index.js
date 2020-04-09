@@ -332,11 +332,13 @@ export const Video = styled.video`
   height: ${({ height }) => height};
   max-width: ${({ width }) => width};
   max-height: ${({ height }) => height};
+  border-radius: ${({ borderRadius }) => borderRadius};
 `;
 
 Video.defaultProps = {
   height: '136px',
   width: '126px',
+  borderRadius: '0px',
 };
 
 export const ErrorText = styled.span`

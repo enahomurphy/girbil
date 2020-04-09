@@ -8,13 +8,13 @@ import { storage, get } from '@shared/lib';
 import { query, mutation } from '@shared/graphql/conversations';
 import { query as orgQuery } from '@shared/graphql/organizations';
 import { mutation as channelMutations } from '@shared/graphql/channels';
-import { Page } from '@/components/Style';
+import { PageWithScroll } from '@/components/Style';
 import ConversationHeader from './ConversationHeader';
 import EmptyConversation from './EmptyConversation';
 import ConversationItem from './ConversationItem';
 
 const Conversations = () => {
-  const { conversations, loading } = query.useGetUserConversations(() => {
+  const { conversations } = query.useGetUserConversations(() => {
     emitter.emitEvent('update-badge');
   });
   const [closeConversation] = mutation.useCloseConversation();
@@ -39,10 +39,8 @@ const Conversations = () => {
   500,
   [searchText]);
 
-  if (loading) return null;
-
   return (
-    <Page name="conversations">
+    <PageWithScroll name="conversations">
       <ConversationHeader
         userData={get(storage, 'payload') || {}}
         searchResult={searchResult}
@@ -68,7 +66,7 @@ const Conversations = () => {
           <EmptyConversation />
         )
       }
-    </Page>
+    </PageWithScroll>
   );
 };
 

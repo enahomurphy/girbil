@@ -11,7 +11,7 @@ const Avatar = ({ avatar, name }) => (
       isImage(avatar) ? (
         <SimpleProfileImage name={name} url={avatar} width="64px" height="80px" />
       ) : (
-        <Video src={avatar} autoPlay loop muted playsinline />
+        <Video width="64px" height="80px" src={avatar} autoPlay loop muted playsinline />
       )
     }
   </StyledAvatar>

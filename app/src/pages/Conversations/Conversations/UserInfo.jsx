@@ -18,12 +18,21 @@ const UserInfo = ({ user }) => (
     </StyledUser>
     <Popover width="330px" className="user-popover">
       <Block>
-        <Block padding="16px 16px 8px 16px" type="flex">
+        <Block borderRadius="20px" padding="16px 16px 8px 16px" type="flex">
           {
           isImage(user.avatar) ? (
             <Image src={user.avatar} width="32px" height="40px" />
           ) : (
-            <Video src={user.avatar} autoPlay loop muted playsinline />
+            <Video
+              width="32px"
+              height="40px"
+              borderRadius="2px"
+              src={user.avatar}
+              autoPlay
+              loop
+              muted
+              playsinline
+            />
           )
           }
           <Block margin="0 0 0 12px">

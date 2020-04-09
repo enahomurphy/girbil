@@ -4,7 +4,7 @@ export const useGoBack = ({ message, isThread }) => {
   const handler = () => {
     if (isThread) {
       f7.views.conversationThread.router.back(
-        `/conversations/${message.conversationId}/thread/record`,
+        `/conversations/${message.conversationId}/thread/${message.parentId}/record`,
         { force: true },
       );
     } else {

@@ -1,8 +1,15 @@
 {
   "electron": {
+    "buildOptions": true,
     "mac": {
       "package": [ "pkg" ],
-      "arch": [ "x64" ]
+      "arch": [ "x64" ],
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "signing": {
+        "hardenedRuntime": true,
+        "gatekeeperAssess": false
+      }
     }
   }
 }

@@ -1,0 +1,12 @@
+{
+  "main": "app.js",
+  "name": "com.girbil.app",
+  "displayName": "girbil",
+  "version": "0.0.4",
+  "description": "Girbil is a productivity app",
+  "homepage": "http://giribl.com",
+  "author": {
+    "name": "Girbil",
+    "email": "hello@girbil.com"
+  }
+}

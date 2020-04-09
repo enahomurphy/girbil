@@ -1,0 +1,49 @@
+{
+  "appId": "com.girbil.app",
+  "productName": "girbil",
+  "forceCodeSigning": false,
+  "extraResources": [
+    "www/static/**"
+  ],
+  "directories": {
+    "buildResources": "www/resources",
+    "app": "www",
+    "output": "dist"
+  },
+  "protocols": [
+    {
+      "name": "Girbil",
+      "schemes": [
+        "girbil"
+      ]
+    }
+  ],
+  "mac": {
+    "category": "public.app-category.productivity",
+    "target": [
+      "dmg"
+    ],
+    "hardenedRuntime": false,
+    "gatekeeperAssess": false,
+    "entitlements": "electron/build/entitlements.mac.plist",
+    "entitlementsInherit": "electron/build/entitlements.mac.plist",
+    "type": "distribution",
+    "icon": "app.png"
+  },
+  "dmg": {
+    "contents": [
+      {
+        "x": 152,
+        "y": 201
+      },
+      {
+        "x": 445,
+        "y": 201,
+        "type": "link",
+        "path": "/Applications"
+      }
+    ],
+    "iconSize": 110,
+    "iconTextSize": 13
+  }
+}

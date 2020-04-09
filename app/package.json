@@ -62,7 +62,7 @@
     "build-prod-cordova-osx": "cross-env TARGET=cordova cross-env NODE_ENV=production node ./build/build.js && cd cordova && cordova build osx",
     "build-dev-cordova-electron": "cross-env TARGET=cordova cross-env NODE_ENV=development node ./build/build.js && cd cordova && cordova build electron",
     "build-prod-cordova-electron": "cross-env TARGET=cordova cross-env NODE_ENV=production node ./build/build.js && cd cordova && cordova build electron",
-    "electron-dev": "cross-env TARGET=electron cross-env NODE_ENV=development node ./build/build.js && concurrently --kill-others \"cross-env TARGET=cordova cross-env ELECTRON_WATCH=true cross-env NODE_ENV=development cross-env webpack --progress --config ./build/webpack.config.js --watch\" \"electron www/app.js --nobuild\"",
+    "electron-dev": "cross-env TARGET=electron cross-env NODE_ENV=development node ./build/build.js && concurrently --kill-others \"cross-env TARGET=electron cross-env NODE_ENV=development cross-env webpack --progress --config ./build/webpack.config.js --watch\" \"electron www/app.js --nobuild\"",
     "electron-prod": "cross-env TARGET=electron cross-env NODE_ENV=production node ./build/build.js && node_modules/.bin/electron-builder",
     "postinstall": "cpy ./node_modules/framework7-icons/fonts/*.* ./src/fonts/",
     "lint": "node_modules/.bin/eslint  --ext .jsx --ext .js src/**/**/*.jsx"

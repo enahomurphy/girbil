@@ -21,7 +21,7 @@ const Error = () => (
     <Block type="flex" justify="center" margin="0 0 40px 0">
       <img
         alt="error page"
-        src="https://girbil.s3-us-west-2.amazonaws.com/app/assets/images/error.png"
+        src="static/images/error.png"
       />
     </Block>
     <Title align="center" size="30px">Somethings not right.</Title>

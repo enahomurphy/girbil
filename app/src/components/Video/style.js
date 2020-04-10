@@ -140,40 +140,44 @@ export const RewindControl = styled(Block)`
   }
 `;
 
-
 export const ProgressBarWrapper = styled.div`
   width: 100%;
   align-items: flex-end;
   display: flex;
   padding: 0;
   cursor: pointer;
+  background: rgba(153, 153, 153, 0.25);;
+  height: 5px;
+  transition: height 0.1s linear;
+  -webkit-user-select: none;
 
   .progress-control {
-    display: none
+    display: ${({ isDragging }) => isDragging ? 'flex' : 'none'};
   }
 
   .progress {
-    background: #ffffff;
+    background: ${({ isDragging }) => isDragging ? '#0A84FF' : '#ffffff'};
   }
 
 
   &:hover {
+    height: 7px;
     .progress-control {
       display: flex
     }
 
     .progress {
       background: #0A84FF;
+      height: 7px;
     }
   }
 `;
 
 export const Progress = styled.div`
   height: 5px;
-  background: #ffffff;
   width: ${({ progress }) => `${progress || 0}%`};
   z-index: 1000;
-  transition: width 0.2s linear;
+  transition: none;
 `;
 
 export const ProgressControl = styled.div`
@@ -182,4 +186,5 @@ export const ProgressControl = styled.div`
   width: 16px;
   border-radius: 34px;
   margin-bottom: -5px;
+  transition: display 0.1s linear;
 `;

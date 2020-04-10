@@ -13,6 +13,23 @@ const ProgressBar = ({ duration, played, seek }) => {
     if (wrapperEl.current) setWrapperWidth(wrapperEl.current.offsetWidth);
   }, [wrapperEl.current]);
 
+  const updateDrag = (event) => {
+    setDragPosition(event.clientX);
+  };
+
+  const removeListeners = () => {
+    setIsDragging(false);
+    document.removeEventListener('mousemove', updateDrag);
+    document.removeEventListener('mouseup', removeListeners);
+  };
+
+  const addEventListeners = () => {
+    removeListeners();
+    setIsDragging(true);
+    document.addEventListener('mousemove', updateDrag);
+    document.addEventListener('mouseup', removeListeners);
+  };
+
   useEffect(() => {
     const position = (played / duration) * 100;
     setProgress(position);
@@ -32,18 +49,20 @@ const ProgressBar = ({ duration, played, seek }) => {
   return (
     <ProgressBarWrapper
       draggable="false"
-      onMouseUp={() => setIsDragging(false)}
-      onMouseDown={() => setIsDragging(true)}
-      onTouchMove={(event) => setDragPosition(event.touches[0].clientX)}
-      onMouseMove={(event) => isDragging && setDragPosition(event.clientX)}
-      onClick={(event) => setDragPosition(event.clientX)}
+      onMouseUp={removeListeners}
+      onMouseDown={addEventListeners}
+      onTouchMove={(event) => updateDrag(event.touches[0])}
+      isDragging={isDragging}
+      onClick={updateDrag}
       ref={wrapperEl}
     >
       <Progress
+        draggable="false"
         progress={progress}
         className="progress"
       />
       <ProgressControl
+        draggable="false"
         className="progress-control"
       />
     </ProgressBarWrapper>

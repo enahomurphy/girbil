@@ -64,13 +64,12 @@ class UserResolver {
   @Authorized('user', 'admin', 'owner')
   @Mutation(() => String)
   async updateSettings(
-    @Arg('input') { playbackSpeed, hideInviteWidget }: UserSettingInput,
+    @Arg('input') { hideInviteWidget }: UserSettingInput,
       @Ctx() { user: { id, organization } }: ContextType,
   ): Promise<string> {
     await this.userRepo.upsertSettings(
       id,
       organization.id,
-      playbackSpeed,
       hideInviteWidget
     );
     return "user setting updated";

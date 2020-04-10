@@ -6,9 +6,6 @@ import { Field, ObjectType } from 'type-graphql';
 @ObjectType()
 class Setting {
   @Field({ nullable: true })
-  playbackSpeed: number
-
-  @Field({ nullable: true })
   hideInviteWidget: boolean
 }
 

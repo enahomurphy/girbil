@@ -33,8 +33,5 @@ export class UserUpdateInput {
 @InputType()
 export class UserSettingInput {
   @Field({ nullable: true })
-  playbackSpeed?: number
-
-  @Field({ nullable: true })
   hideInviteWidget?: boolean
 }

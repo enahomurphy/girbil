@@ -20,7 +20,6 @@ export const USER_SETTINGS = gql`
  query settings {
     settings {
       settings {
-        playbackSpeed
         hideInviteWidget
       }
     }

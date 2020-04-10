@@ -16,7 +16,7 @@ export class UserSetting15823813000022 implements MigrationInterface {
     `);
 
     await queryRunner.query(`
-      CREATE INDEX ON "user_settings" ("user_id", "organization_id");
+      ALTER TABLE "user_settings" ADD UNIQUE ("user_id", "organization_id")
     `);
   }
 

@@ -68,8 +68,8 @@ class UserRepository extends Repository<User> {
     return this.findOne(userId);
   }
 
-  async upsertSettings(userId: string, organizationId: string, playbackSpeed: number, hideInviteWidget: boolean) {
-    const settings: UserSettingInterface = { playbackSpeed, hideInviteWidget };
+  async upsertSettings(userId: string, organizationId: string, hideInviteWidget: boolean) {
+    const settings: UserSettingInterface = { hideInviteWidget };
 
     await this.userSettingRepo.createQueryBuilder()
       .setParameter('settings', settings)

@@ -178,6 +178,18 @@ export const ScrollableList = styled.div`
   overflow: hidden;
   overflow-y: scroll;
   height: ${({ height }) => height};
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 100px;
+    max-height: 129px;
+    background: #636366;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    padding: 0px 2px;
+    background-color: transparent;
+  }
 `;
 
 ScrollableList.defaultProps = {

@@ -10,7 +10,7 @@ import { query, mutation } from '@shared/graphql/conversations';
 import { query as orgQuery } from '@shared/graphql/organizations';
 import { query as userQuery, mutation as userMutation } from '@shared/graphql/user';
 import { mutation as channelMutations } from '@shared/graphql/channels';
-import { PageWithScroll } from '@/components/Style';
+import { PageWithScroll, ScrollableList } from '@/components/Style';
 import ConversationHeader from './ConversationHeader';
 import EmptyConversation from './EmptyConversation';
 import ConversationItem from './ConversationItem';
@@ -69,24 +69,31 @@ const Conversations = () => {
         leaveChannel={leaveChannel}
         handleSearch={setSearchText}
       />
-      {
-        conversations && conversations.length ? (
-          <List style={{ margin: '32px 0 0 0' }}>
-            {
-              conversations.map((conversation) => (
-                <ConversationItem
-                  key={conversation.id}
-                  conversation={conversation}
-                  leaveChannel={leaveChannel}
-                  closeConversation={closeConversation}
-                />
-              ))
-            }
-          </List>
-        ) : (
-          <EmptyConversation />
-        )
-      }
+      <ScrollableList>
+        {
+          conversations && conversations.length ? (
+            <List style={{ margin: '32px 0 0 0', marginBottom: isWidgetHidden ? '90px' : '10px' }}>
+              {
+                conversations.map((conversation) => (
+                  <ConversationItem
+                    key={conversation.id}
+                    conversation={conversation}
+                    leaveChannel={leaveChannel}
+                    closeConversation={closeConversation}
+                  />
+                ))
+              }
+            </List>
+          ) : (
+            <EmptyConversation />
+          )
+        }
+        {
+          isWidgetHidden
+            ? null
+            : <InviteWidget hideWidget={hideInviteWidget} />
+        }
+      </ScrollableList>
     </PageWithScroll>
   );
 };

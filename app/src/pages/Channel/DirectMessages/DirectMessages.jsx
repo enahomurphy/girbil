@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import ListItem from '@/components/List/ListItem';
 import { invitePeopleOpener } from '@/lib';
 import {
-  Title, Text, Block, Search, Button,
+  Title, Text, Block, Search, Button, ScrollableList,
 } from '@/components/Style';
 
 import EmptyState from '../EmptyState';
@@ -52,22 +52,24 @@ const DirectMessage = ({
           People you haven’t added
         </Text>
       </Block>
-      <List style={{ margin: '32px 0 0 0' }}>
-        {
-          users.map((user) => (
-            <ListItem
-              getLink={() => '#'}
-              onClick={() => handleUserClick(user.id)}
-              key={user.id}
-              id={user.id}
-              isChannel={false}
-              isActive={false}
-              isPrivate={false}
-              user={user}
-            />
-          ))
-        }
-      </List>
+      <ScrollableList height="560px">
+        <List style={{ margin: '32px 0 0 0' }}>
+          {
+            users.map((user) => (
+              <ListItem
+                getLink={() => '#'}
+                onClick={() => handleUserClick(user.id)}
+                key={user.id}
+                id={user.id}
+                isChannel={false}
+                isActive={false}
+                isPrivate={false}
+                user={user}
+              />
+            ))
+          }
+        </List>
+      </ScrollableList>
     </Block>
   );
 };

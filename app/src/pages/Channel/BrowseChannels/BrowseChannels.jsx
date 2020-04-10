@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import ListItem from '@/components/List/ListItem';
 import {
-  Title, Text, Block, Search, Button,
+  Title, Text, Block, Search, Button, ScrollableList,
 } from '@/components/Style';
 
 const BrowseChannels = ({
@@ -43,22 +43,24 @@ const BrowseChannels = ({
         Organization channels you haven’t added
       </Text>
     </Block>
-    <List simple-list style={{ margin: '32px 0 0 0' }}>
-      {
-        channels.map((channel) => (
-          <ListItem
-            id={channel.id}
-            onClick={() => joinChannel(channel)}
-            getLink={() => '#'}
-            key={channel.id}
-            isChannel
-            isActive={false}
-            isPrivate={false}
-            user={channel}
-          />
-        ))
-      }
-    </List>
+    <ScrollableList height="560px">
+      <List simple-list style={{ margin: '32px 0 0 0' }}>
+        {
+          channels.map((channel) => (
+            <ListItem
+              id={channel.id}
+              onClick={() => joinChannel(channel)}
+              getLink={() => '#'}
+              key={channel.id}
+              isChannel
+              isActive={false}
+              isPrivate={false}
+              user={channel}
+            />
+          ))
+        }
+      </List>
+    </ScrollableList>
   </Block>
 );
 

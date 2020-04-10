@@ -174,6 +174,16 @@ export const PageWithScroll = styled(Page)`
   }
 `;
 
+export const ScrollableList = styled.div`
+  overflow: hidden;
+  overflow-y: scroll;
+  height: ${({ height }) => height};
+`;
+
+ScrollableList.defaultProps = {
+  height: '100%',
+};
+
 export const Icon = styled(f7Icon)`
   &.icon[class*="color-"] {
     color: ${(({ color }) => color)};

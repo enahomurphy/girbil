@@ -52,7 +52,7 @@ const DirectMessage = ({
           People you haven’t added
         </Text>
       </Block>
-      <ScrollableList height="560px">
+      <ScrollableList height="475px">
         <List style={{ margin: '32px 0 0 0' }}>
           {
             users.map((user) => (

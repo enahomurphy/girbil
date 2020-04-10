@@ -146,3 +146,14 @@ workflows:
           filters:
             branches:
               only: master
+  
+  deploy_production_api:
+    jobs:
+      - deploy-staging-api:
+          application-name: girbil
+          bundle-bucket: girbil-server
+          bundle-key: girbil-production
+          deployment-group: girbil-production
+          # filters:
+          #   branches:
+          #     only: master

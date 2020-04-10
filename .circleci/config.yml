@@ -6,24 +6,41 @@ orbs:
 
 jobs:
   # STAGING FRONTEND
-  deploy-staging-web:
+  deploy-web:
     working_directory: ~/giribil-web
     docker:
       - image: circleci/node:12.16.1 
     executor: aws-cli/default
+    parameters:
+      google-clientId:
+        type: string
+      api-url:
+        type: string
+      web-url:
+        type: string
+      pusher-key:
+        type: string
+      pusher-cluster:
+        default: us3
+        type: string
+      s3-bucket:
+        type: string
+      cloud-confrontId:
+        type: string
     steps:
       - checkout
       - aws-cli/setup
       - run:
           name: Setup Environment Variables
           command: |
-            echo "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> web/.env
-            echo "API_URL=https://staging-api.girbil.com" >> web/.env
-            echo "WEB_URL=https://staging.girbil.com" >> web/.env
-            echo "PUSHER_KEY=$PUSHER_KEY_STAGING" >> web/.env
-            echo "PUSHER_CLUSTER=$PUSHER_CLUSTER_STAGING" >> web/.env
-            echo "export GIRBIL_WEB_STAGING_S3_CLIENT=$GIRBIL_WEB_STAGING_S3_CLIENT" >> $BASH_ENV
-            echo "export GIRBIL_WEB_STAGING_CLOUNDFRONT_ID=$GIRBIL_WEB_STAGING_CLOUNDFRONT_ID" >> $BASH_ENV
+            echo "GOOGLE_CLIENT_ID=<< parameters.google-clientId >>" >> web/.env
+            echo "API_URL=<< parameters.api-url >>" >> web/.env
+            echo "WEB_URL=<< parameters.web-url >>" >> web/.env
+            echo "PUSHER_KEY=<< parameters.pusher-key >>" >> web/.env
+            echo "PUSHER_CLUSTER=<< parameters.pusher-cluster >>" >> web/.env
+            echo "export GIRBIL_WEB_STAGING_S3_CLIENT=<< parameters.s3-bucket >>" >> $BASH_ENV
+            echo "export GIRBIL_WEB_STAGING_CLOUNDFRONT_ID=<< parameters.cloud-confrontId >>" >> $BASH_ENV
+
       - restore_cache:
           key: dependency-cache-{{ checksum "web/package.json" }}
       - restore_cache:
@@ -47,7 +64,7 @@ jobs:
           command: |
             cd web && sh scripts/deploy-web.sh
 
-  deploy-staging-api:
+  deploy-api:
     docker:
       - image: circleci/node:12.16.1 
     executor: aws-cli/default
@@ -131,14 +148,21 @@ jobs:
 workflows:
   deploy_staging_web:
     jobs:
-      - deploy-staging-web:
+      - deploy-web:
+          google-clientId: 57578836164-u0uvecq4ciem9ql5om2uv9csl8j24lvj.apps.googleusercontent.com
+          api-url: staging-api.girbil.com
+          web-url: staging.girbil.com
+          pusher-key: 86c4fa5fdd1abe394452
+          pusher-cluster: us3
+          s3-bucket: girbil-app
+          cloud-confrontId: girbil-app
           filters:
             branches:
               only: master
 
   deploy_staging_api:
     jobs:
-      - deploy-staging-api:
+      - deploy-api:
           application-name: girbil
           bundle-bucket: girbil-server
           bundle-key: girbil-staging
@@ -149,7 +173,7 @@ workflows:
   
   deploy_production_api:
     jobs:
-      - deploy-staging-api:
+      - deploy-api:
           application-name: girbil
           bundle-bucket: girbil-server
           bundle-key: girbil-production
@@ -157,3 +181,18 @@ workflows:
           # filters:
           #   branches:
           #     only: master
+  
+  deploy_production_web:
+    jobs:
+      - deploy-web:
+          google-clientId: 57578836164-u0uvecq4ciem9ql5om2uv9csl8j24lvj.apps.googleusercontent.com
+          api-url: api.girbil.com
+          web-url: app.girbil.com
+          pusher-key: aa61956c9bfc93fe5e46
+          pusher-cluster: us3
+          s3-bucket: girbil-app
+          cloud-confrontId: E2LU4OKHP48DVB
+          # filters:
+          #   branches:
+          #     only: master
+          

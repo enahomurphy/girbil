@@ -103,7 +103,7 @@ export const UserOrgDetails = styled.div`
 
 export const EmptyConversationContainer = styled.div`
   display: flex;
-  margin: 32px 0 0 0;
+  margin: 40px 0 0;
   padding: 0 24px 16px;
   flex-direction: column;
   justify-content: space-between;

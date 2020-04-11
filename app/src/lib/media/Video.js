@@ -60,8 +60,23 @@ class Video extends Recorder {
     const videoSource = get(device, 'video.deviceId', undefined);
 
     return {
-      audio: { deviceId: audioSource },
-      video: { deviceId: videoSource },
+      audio: {
+        deviceId: audioSource,
+        noiseSuppression: true,
+      },
+      video: { 
+        deviceId: videoSource,
+        width: {
+          min: 640,
+          ideal: 640,
+          max: 640,
+        }, 
+        height: {
+          min: 640,
+          ideal: 640,
+          max: 640
+        },
+      },
     };
   }
 

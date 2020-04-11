@@ -2,7 +2,7 @@
   "main": "app.js",
   "name": "com.girbil.app",
   "displayName": "girbil",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Girbil is a productivity app",
   "homepage": "http://giribl.com",
   "author": {

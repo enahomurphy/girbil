@@ -1,4 +1,4 @@
-import RecordRTC, { getSeekableBlob } from 'recordrtc/RecordRTC';
+import { getSeekableBlob } from './helpers';
 
 class Recorder {
   constructor(duration) {
@@ -6,6 +6,7 @@ class Recorder {
     this.duration = duration;
     this.preview = [];
     this.playing = false;
+    this.chunks = [];
 
     this.stopRecording = this.stopRecording.bind(this);
     this.recorderStopHandler = this.recorderStopHandler.bind(this);
@@ -14,40 +15,51 @@ class Recorder {
     this.videoType = 'video/webm;codecs=vp9';
   }
 
-  recorderStopHandler() {
-    this.playing = false;
-    getSeekableBlob(this.recorder.getBlob(), (videoBlob) => {
-      const url = this.recorder.toURL();
-      const thumbnailBlob = new Blob(this.preview, { type: this.videoType });
+  async recorderStopHandler() {
+      try {
+        this.playing = false;
+        const videoBlob = await getSeekableBlob(new Blob(this.chunks, { type: this.videoType }));
+        const thumbnailBlob = new Blob(this.preview, { type: this.videoType });
+    
+        const url =  URL.createObjectURL(videoBlob);
+        const thumbnailUrl = URL.createObjectURL(thumbnailBlob);
+
+        this.onStopRecorder({ videoBlob, thumbnailBlob, url, thumbnailUrl });
+    } catch (error) {
+      //@TODO log error to error service
+      console.error(error);
+    } finally {
       this.preview = [];
-      this.onStopRecorder({ videoBlob, thumbnailBlob, url });
-    });
+      this.chunks = [];
+    }
   }
 
   startRecording() {
-    this.recorder = new RecordRTC(this.stream, {
-      type: this.videoType,
-      timeSlice: 1000,
-      ondataavailable: (blobs) => {
+    const timeSlice = 1000;
+    if (this.stream) {
+      this.recorder = new MediaRecorder(this.stream, { type: this.videoType });
+
+      this.recorder.ondataavailable = ({ data }) => {
+        this.chunks.push(data);
+
         if (this.preview.length <= 1) {
-          this.preview.push(blobs);
+          this.preview.push(data);
         }
-      },
-    });
+      }
 
-    this.recorder
-      .setRecordingDuration(this.duration)
-      .onRecordingStopped(this.recorderStopHandler);
 
-    this.recorder.startRecording();
-    this.playing = true;
+      this.recorder.onstop = () => {
+        this.recorderStopHandler();
+      }
+  
+      this.recorder.start(timeSlice);
+      this.playing = true;
+    }
   }
 
   stopRecording() {
-    if (this.recorder.getState() === 'recording') {
-      this.recorder.stopRecording(() => {
-        this.recorderStopHandler();
-      });
+    if (this.recorder.state === 'recording') {
+      this.recorder.stop();
     }
   }
 }

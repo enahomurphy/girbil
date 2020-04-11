@@ -5,7 +5,9 @@ import {
 import PropTypes from 'prop-types';
 
 import GlobalSearch from '@/components/GlobalSearch';
-import { Title, Popover } from '@/components/Style';
+import {
+  Title, Popover, Active, Text,
+} from '@/components/Style';
 import {
   Add, Settings, Chevron, Search,
 } from '@/components/Icon';
@@ -15,7 +17,7 @@ import { minimizeApp, quitApp } from '@/lib';
 import { SocketContext } from '@/lib/socket';
 import emitter from '@/lib/emitter';
 import UserInfo from './UserInfo';
-import { Logo, UserOrgDetails } from './style';
+import { Logo, UserOrgDetails, StyledUser } from './style';
 
 const ConversationHeader = (props) => {
   const [isOpen, setOpenSearch] = useState(false);
@@ -61,8 +63,14 @@ const ConversationHeader = (props) => {
             </Title>
             <Chevron />
           </Logo>
-          <UserInfo user={userData} />
+          <StyledUser type="flex" margin="5px 0 0 0" align="center">
+            <Active active width="16px" />
+            <Text color="#EFEFEF" margin="0" align="left">{userData.name}</Text>
+          </StyledUser>
         </UserOrgDetails>
+        <Popover width="330px" className="user-popover">
+          <UserInfo user={userData} />
+        </Popover>
         <NavRight style={{
           width: '90px',
           display: 'flex',

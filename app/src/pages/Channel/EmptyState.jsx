@@ -21,7 +21,7 @@ const EmptyState = () => (
       justify="center"
     >
       <img
-        src="static/images/empty.png"
+        src="static/images/empty.jpg"
         alt="empty"
       />
     </Block>

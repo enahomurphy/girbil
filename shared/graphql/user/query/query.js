@@ -16,6 +16,17 @@ export const USER = gql`
   }
 `;
 
+export const USER_SETTINGS = gql`
+ query settings {
+    settings {
+      settings {
+        hideInviteWidget
+      }
+    }
+  }
+`;
+
 export default {
   USER,
+  USER_SETTINGS,
 };

@@ -6,6 +6,7 @@ import { useLocalStorage } from 'react-use';
 
 import { useVideo, useConversationMeta } from '@/lib/hooks';
 import { query, mutation } from '@shared/graphql/conversations';
+import { query as userQuery, mutation as userMutation } from '@shared/graphql/user';
 import {
   Video, Header, useVideoData, VideoProperties,
 } from '@/components/Video';
@@ -19,6 +20,7 @@ const Message = ({
 }) => {
   const [reactToMessage] = mutation.useAddReaction();
   const [updateState] = mutation.useMessageState();
+
   const [getMessage, { data }] = useLazyQuery(query.GET_MESSAGE, {
     onCompleted({ message }) {
       updateState({ messageId: message.id, state: 'playing' });
@@ -48,9 +50,8 @@ const Message = ({
     },
   });
 
-  const handlePlayback = (value) => {
+  const handlePlayback = async (value) => {
     setPlaybackrate(value);
-    controls.playbackRate(value);
   };
 
   usePlayerPlayPauseEvents(messageId, controls);

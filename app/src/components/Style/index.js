@@ -52,7 +52,7 @@ export const ShortTitle = styled(Title)`
   max-width: 140px;
 `;
 
-export const Button = styled(F7Button)` 
+export const Button = styled(F7Button)`
   min-width: 250px;
   border-radius: 3px;
   margin: ${(props) => props.margin};
@@ -144,18 +144,22 @@ export const Page = styled(f7Page).attrs({
       color:green;
     }
   }
+
+  .pointer {
+    cursor: pointer
+  }
 `;
 
 Page.defaultProps = {
   overflowX: 'auto',
   overflowY: 'overlay',
-  overflow: 'auto',
+  overflow: 'hidden',
 };
 
 export const PageWithScroll = styled(Page)`
-  .page-content {  
+  .page-content {
     scrollbar-width: thin;
- 
+
     &::-webkit-scrollbar-thumb {
       border-radius: 100px;
       max-height: 129px;
@@ -169,6 +173,28 @@ export const PageWithScroll = styled(Page)`
     }
   }
 `;
+
+export const ScrollableList = styled.div`
+  overflow: hidden;
+  overflow-y: scroll;
+  height: ${({ height }) => height};
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 100px;
+    max-height: 129px;
+    background: #636366;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    padding: 0px 2px;
+    background-color: transparent;
+  }
+`;
+
+ScrollableList.defaultProps = {
+  height: '100%',
+};
 
 export const Icon = styled(f7Icon)`
   &.icon[class*="color-"] {
@@ -220,7 +246,7 @@ export const Popover = styled(f7Popover)`
   box-sizing: border-box;
   width: ${({ width }) => width};
   right: ${({ right }) => right};
-  
+
   .item-content {
     padding: 0;
 

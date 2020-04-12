@@ -14,9 +14,9 @@ import { getCustomRepository, getRepository } from 'typeorm';
 
 import { ContextType } from '../../interfaces';
 import { CanView, CanEdit } from '../../middleware/permissions';
-import { User, UserOrganization, Organization } from '../../entity';
+import { User, UserOrganization, UserSetting, Organization } from '../../entity';
 import { UserRepo, OrganizationRepo } from '../../repo';
-import { UserUpdateInput } from './user.input';
+import { UserUpdateInput, UserSettingInput } from './user.input';
 import { UserIDArgs } from './user.args';
 
 @Resolver(User)
@@ -26,6 +26,8 @@ class UserResolver {
   private readonly orgRepo = getCustomRepository(OrganizationRepo);
 
   private readonly userOrgRepo = getRepository(UserOrganization);
+
+  private readonly userSettingRepo = getRepository(UserSetting);
 
   @Authorized('user', 'owner', 'admin')
   @CanView('user')
@@ -42,6 +44,35 @@ class UserResolver {
       @Ctx() { user: { organization } },
   ): Promise<Organization> {
     return this.orgRepo.findUserOrganization(user.id, organization.id);
+  }
+
+  @Authorized('user')
+  @CanView('user')
+  @Query(() => UserSetting, { nullable: true })
+  async settings(
+    @Root() user: User,
+      @Ctx() { user: { id, organization } },
+  ): Promise<UserSetting> {
+    return this.userSettingRepo.findOne({
+      where: {
+        organizationId: organization.id,
+        userId: id,
+      }
+    });
+  }
+
+  @Authorized('user', 'admin', 'owner')
+  @Mutation(() => String)
+  async updateSettings(
+    @Arg('input') { hideInviteWidget }: UserSettingInput,
+      @Ctx() { user: { id, organization } }: ContextType,
+  ): Promise<string> {
+    await this.userRepo.upsertSettings(
+      id,
+      organization.id,
+      hideInviteWidget
+    );
+    return "user setting updated";
   }
 
   @Authorized('user', 'owner', 'admin')

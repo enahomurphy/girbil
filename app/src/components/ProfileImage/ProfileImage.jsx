@@ -40,7 +40,7 @@ export const SimpleProfileImage = ({
     <StyledInitialsBlock url={url} width={width} height={width}>
       <Title
         color="#FFFFFF"
-        size="18px"
+        size="24px"
         transform="capitalize"
       >
         {nameToInitials(name)}

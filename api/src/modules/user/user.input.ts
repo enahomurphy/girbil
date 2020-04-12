@@ -29,3 +29,9 @@ export class UserUpdateInput {
   @Field({ nullable: true })
   avatar?: string
 }
+
+@InputType()
+export class UserSettingInput {
+  @Field({ nullable: true })
+  hideInviteWidget?: boolean
+}

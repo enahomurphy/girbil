@@ -3,5 +3,5 @@ export default (obj, path, defaultValue) => {
     .call(path, /[,[\].]+?/)
     .filter(Boolean)
     .reduce((res, key) => (res !== null && res !== undefined ? res[key] : res), obj);
-  return result === undefined || result === obj ? defaultValue : result;
+  return result === null || result === undefined || result === obj ? defaultValue : result;
 };

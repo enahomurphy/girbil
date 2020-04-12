@@ -18,4 +18,16 @@ export const UPDATE_USER = gql`
   }
 `;
 
+export const UPDATE_USER_SETTINGS = gql`
+  mutation updateSettings(
+    $hideInviteWidget: Boolean
+  ) {
+    updateSettings(
+      input: {
+        hideInviteWidget: $hideInviteWidget
+      },
+    )
+  }
+`;
+
 export default {};

@@ -117,7 +117,7 @@ export class Channel {
   })
   lastUpdatedBy?: User;
 
-  @Field(() => Conversation)
+  @Field(() => Conversation, { nullable: true })
   @ManyToOne(() => Conversation)
   @JoinColumn({
     name: 'id',

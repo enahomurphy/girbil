@@ -154,11 +154,11 @@ workflows:
           web-url: https://staging.girbil.com
           pusher-key: 86c4fa5fdd1abe394452
           pusher-cluster: us3
-          s3-bucket: girbil-app
-          cloud-confrontId: girbil-app
+          s3-bucket: girbil-staging
+          cloud-confrontId: E2YVAQWA5RJNGD
           filters:
             branches:
-              only: master
+              only: staging
 
   deploy_staging_api:
     jobs:
@@ -169,7 +169,7 @@ workflows:
           deployment-group: girbil-staging
           filters:
             branches:
-              only: master
+              only: staging
   
   deploy_production_api:
     jobs:
@@ -178,9 +178,9 @@ workflows:
           bundle-bucket: girbil-server
           bundle-key: girbil-production
           deployment-group: girbil-production
-          # filters:
-          #   branches:
-          #     only: master
+          filters:
+            branches:
+              only: master
   
   deploy_production_web:
     jobs:
@@ -192,7 +192,7 @@ workflows:
           pusher-cluster: us3
           s3-bucket: girbil-app
           cloud-confrontId: E2LU4OKHP48DVB
-          # filters:
-          #   branches:
-          #     only: master
+          filters:
+            branches:
+              only: master
           

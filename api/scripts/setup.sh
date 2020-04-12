@@ -62,6 +62,7 @@ mkdir /home/ubuntu/girbil
 
 sudo chown -R ubuntu:ubuntu /home/ubuntu/girbil
 
+sudo service codedeploy-agent restart
 
 
 ## Debug code deploy

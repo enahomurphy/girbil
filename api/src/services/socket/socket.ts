@@ -8,7 +8,7 @@ export const pusher = new Pusher({
   key: keys.pusher.key,
   secret: keys.pusher.secret,
   cluster: keys.pusher.cluster,
-  encrypted: true,
+  useTLS: true,
 });
 
 export const broadcast = (channel: string, event: events, data: any): void => {

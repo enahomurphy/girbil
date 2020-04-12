@@ -23,22 +23,22 @@ export const useOrgUserListener = () => {
       const channel = socket.subscribe(channelId);
 
       channel.bind(MESSAGE_CREATED, async ({ data }) => {
-        const conversation = await findOrPullConversation(data.conversationId);
+        const conversation = await findOrPullConversation(data.conversationId, true);
 
         if (conversation) {
           addMessage(data);
-        }
 
-        const { sender } = data;
-        if (sender.id !== userId) {
-          if (conversation.receiverType === 'user') {
-            notify(`${sender.name} is talking to you`);
-          } else if (conversation.receiverType === 'channel') {
-            const { channel: conversationChannel } = conversation;
-            notify(`1 new Girbil in ${conversationChannel.name}`);
+          const { sender } = data;
+          if (sender.id !== userId) {
+            if (conversation.receiverType === 'user') {
+              notify(`${sender.name} is talking to you`);
+            } else if (conversation.receiverType === 'channel') {
+              const { channel: conversationChannel } = conversation;
+              notify(`1 new Girbil in ${conversationChannel.name}`);
+            }
+  
+            emitter.emitEvent('update-badge');
           }
-
-          emitter.emitEvent('update-badge');
         }
       });
     }

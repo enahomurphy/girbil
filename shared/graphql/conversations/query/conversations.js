@@ -29,7 +29,7 @@ export const useConversation = (conversationId) => {
 export const useFindOrPullConversation = () => {
   const client = useApolloClient();
 
-  return async (conversationId) => {
+  return async (conversationId, newMessage) => {
     const { conversations } = client.cache.readQuery({
       query: USER_CONVERSATIONS,
     });
@@ -37,6 +37,16 @@ export const useFindOrPullConversation = () => {
     const conversation = conversations.find(({ id }) => conversationId === id);
 
     if (conversation) {
+
+      if (newMessage) {
+        let update = conversations.filter(({ id }) => conversationId !== id);
+
+        client.writeQuery({
+          query: USER_CONVERSATIONS,
+          data: { conversations: [conversation, ...update] },
+        });
+      }
+
       return conversation;
     }
 
@@ -47,11 +57,16 @@ export const useFindOrPullConversation = () => {
     });
 
     const serverConversation = get(data, 'conversation', null);
+    let update  = [];
+
+    if (newMessage) {
+      update = [serverConversation, ...conversations];
+    }
 
     if (serverConversation) {
       client.writeQuery({
         query: USER_CONVERSATIONS,
-        data: { conversations: [...conversations, serverConversation] },
+        data: { conversations: update },
       });
     }
 

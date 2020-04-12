@@ -24,12 +24,22 @@ class ConversationRepository extends Repository<Conversation> {
             WHERE conversation_id = "conversation"."id"
             AND NOT (:userId = ANY(coalesce(read, array[]::uuid[])))
         )
-      `, 'conversation_unread');
+      `, 'conversation_unread')
+      .addSelect(`
+        (
+          SELECT created_at FROM messages 
+          WHERE conversation_id = "conversation"."id"
+          ORDER BY created_at DESC
+          LIMIT 1
+        )
+      `, 'conversation_last_updated');
 
     if (conversationId) {
       query.where('conversation.id = :conversationId');
     } else {
-      query.where('conversation.organizationId = :organizationId');
+      query
+      .where('conversation.organizationId = :organizationId')
+      .orderBy('conversation_last_updated', 'DESC', 'NULLS LAST');
     }
     query.andWhere(`
         ((

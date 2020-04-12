@@ -60,6 +60,16 @@ export class Conversation {
   })
   createdAt?: Date;
 
+  @Field({ nullable: true })
+  @Column({
+    type: 'time with time zone',
+    select: false,
+    insert: false,
+    readonly: true,
+    name: 'last_updated'
+  })
+  lastUpdated?:  Date;
+
   @Field(() => User, { nullable: true })
   @OneToOne(() => User)
   @JoinColumn({

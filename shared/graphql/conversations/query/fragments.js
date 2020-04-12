@@ -29,6 +29,7 @@ export const CONVERSATION_FRAGMENT = gql`
     id
     userId
     receiverType
+    lastUpdated
   }
 `;
 

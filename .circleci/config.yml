@@ -150,8 +150,8 @@ workflows:
     jobs:
       - deploy-web:
           google-clientId: 57578836164-u0uvecq4ciem9ql5om2uv9csl8j24lvj.apps.googleusercontent.com
-          api-url: staging-api.girbil.com
-          web-url: staging.girbil.com
+          api-url: https://staging-api.girbil.com
+          web-url: https://staging.girbil.com
           pusher-key: 86c4fa5fdd1abe394452
           pusher-cluster: us3
           s3-bucket: girbil-app
@@ -186,8 +186,8 @@ workflows:
     jobs:
       - deploy-web:
           google-clientId: 57578836164-u0uvecq4ciem9ql5om2uv9csl8j24lvj.apps.googleusercontent.com
-          api-url: api.girbil.com
-          web-url: app.girbil.com
+          api-url: https://api.girbil.com
+          web-url: https://app.girbil.com
           pusher-key: aa61956c9bfc93fe5e46
           pusher-cluster: us3
           s3-bucket: girbil-app

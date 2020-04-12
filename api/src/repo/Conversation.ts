@@ -29,7 +29,16 @@ class ConversationRepository extends Repository<Conversation> {
     if (conversationId) {
       query.where('conversation.id = :conversationId');
     } else {
-      query.where('conversation.organizationId = :organizationId');
+      query.addSelect(`
+        (
+          SELECT created_at FROM messages 
+          WHERE conversation_id = "conversation"."id"
+          ORDER BY created_at DESC
+          LIMIT 1
+        )
+      `, 'conversation_last_updated')
+      .where('conversation.organizationId = :organizationId')
+      .orderBy('conversation_last_updated', 'DESC', 'NULLS LAST');
     }
     query.andWhere(`
         ((

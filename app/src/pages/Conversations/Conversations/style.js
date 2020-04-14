@@ -4,7 +4,6 @@ import { Title, Block } from '@/components/Style';
 import styled from 'styled-components';
 
 export const StyledUser = styled(Block)`
-  margin-left: 7px;
   cursor: pointer;
 `;
 
@@ -80,7 +79,6 @@ export const Logo = styled.div`
   background: transparent;
   width: fit-content;
   justify-content: flex-start;
-  margin-left: 7px;
   display: flex;
   align-items: center;
   cursor: pointer;

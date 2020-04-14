@@ -4,7 +4,6 @@ import { Title, Block } from '@/components/Style';
 import styled from 'styled-components';
 
 export const StyledUser = styled(Block)`
-  margin-left: 7px;
   cursor: pointer;
 `;
 
@@ -80,7 +79,6 @@ export const Logo = styled.div`
   background: transparent;
   width: fit-content;
   justify-content: flex-start;
-  margin-left: 7px;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -123,7 +121,7 @@ export const InviteContainer = styled.div`
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
   padding: 10px;
-  margin: 0 20px 90px;
+  margin: 0 11px 90px 18px;
   font-size: 12px;
 `;
 

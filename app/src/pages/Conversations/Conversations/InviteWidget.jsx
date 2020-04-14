@@ -18,7 +18,7 @@ const InviteWidget = ({ hideWidget }) => {
       <CloseContainer onClick={hideWidget} className="pointer">
         <Close small />
       </CloseContainer>
-      <span style={{ fontWeight: '600', fontSize: '18 ' }}>
+      <span style={{ fontWeight: '600', fontSize: '18px' }}>
         <span aria-label="fist" role="img">🤜🏻🤛🏻</span>
         Add a few teammates
       </span>

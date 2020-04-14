@@ -13,7 +13,7 @@ const ListItem = ({
   unreadCount, onClick, user, isChannel, isPrivate, subText, getLink, options, id,
 }) => (
   <ListBlock
-    margin="0 10px"
+    margin="0 6px 0 10px"
     padding="8px 3px 8px 8px"
     type="flex"
     align="center"

@@ -123,7 +123,7 @@ export const InviteContainer = styled.div`
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
   padding: 10px;
-  margin: 0 20px 90px;
+  margin: 0 11px 90px 18px;
   font-size: 12px;
 `;
 
